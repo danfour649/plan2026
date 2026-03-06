@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { google } from "googleapis";
 
-import { getServerAuthSession } from "@/auth";
+import { getCurrentUserId } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -14,8 +14,7 @@ function stripHtml(html: string): string {
 }
 
 export async function POST(_req: Request, { params }: Params) {
-  const session = await getServerAuthSession();
-  const userId = session?.user?.id;
+  const userId = await getCurrentUserId();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

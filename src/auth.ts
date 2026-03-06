@@ -47,3 +47,7 @@ export function getServerAuthSession() {
   return getServerSession(authOptions);
 }
 
+export async function getCurrentUserId() {
+  return (await getServerAuthSession())?.user?.id ?? null;
+}
+

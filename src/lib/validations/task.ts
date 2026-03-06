@@ -36,6 +36,3 @@ export const addTaskSchema = z.object({
 export const taskIdSchema = z.object({
   taskId: z.string().min(1, "Task ID is required"),
 });
-
-export type AddTaskInput = z.infer<typeof addTaskSchema>;
-export type TaskIdInput = z.infer<typeof taskIdSchema>;

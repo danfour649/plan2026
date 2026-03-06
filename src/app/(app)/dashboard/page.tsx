@@ -1,4 +1,4 @@
-import { getServerAuthSession } from "@/auth";
+import { getCurrentUserId } from "@/auth";
 import { AddTaskForm } from "@/components/AddTaskForm";
 import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { TaskActionButton } from "@/components/TaskActionButton";
@@ -7,8 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { addTask, completeTask, deleteTask } from "@/lib/actions/tasks";
 
 export default async function DashboardPage() {
-  const session = await getServerAuthSession();
-  const userId = session?.user?.id;
+  const userId = await getCurrentUserId();
 
   if (!userId) return null;
 
