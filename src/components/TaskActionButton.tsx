@@ -42,8 +42,8 @@ export function TaskActionButton({
         type="submit"
         className={
           variant === "muted"
-            ? "rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-600 hover:bg-zinc-50"
-            : "rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm hover:bg-zinc-50"
+            ? "rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 transition hover:bg-red-100"
+            : "rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
         }
       >
         {label}

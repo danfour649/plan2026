@@ -31,7 +31,7 @@ export function AddToCalendarButton({ taskId }: AddToCalendarButtonProps) {
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className="rounded-lg px-2 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-100 disabled:opacity-50"
+      className="rounded-lg px-2 py-1 text-xs font-medium text-blue-700 transition hover:bg-blue-100 disabled:opacity-50"
       title="Add to Google Calendar"
     >
       {loading ? "…" : "Add to Calendar"}

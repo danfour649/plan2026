@@ -24,32 +24,33 @@ export function AddTaskForm({ action }: { action: AddTaskAction }) {
   }, [state]);
 
   return (
-    <form action={formAction} className="mt-4 flex flex-col gap-3 sm:mt-0">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+    <form action={formAction} className="mt-4 flex w-full flex-col gap-3 lg:mt-0 lg:max-w-2xl">
+      <div className="flex w-full flex-col gap-3 xl:flex-row xl:items-start">
         <input
           name="title"
           placeholder="Add a task…"
           required
-          className="w-full min-w-0 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm outline-none ring-zinc-950/10 focus:ring-4 sm:w-80"
+          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4 xl:w-80"
         />
-        <div className="flex items-center gap-2">
-          <label className="text-xs text-zinc-500 whitespace-nowrap">Due (optional)</label>
+        <div className="flex w-full flex-col gap-1 sm:w-auto sm:flex-row sm:items-center">
+          <label className="text-xs whitespace-nowrap text-blue-700">Due (optional)</label>
           <input
             name="dueAt"
             type="datetime-local"
-            className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm outline-none ring-zinc-950/10 focus:ring-4"
+            className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 sm:w-auto"
           />
         </div>
-        <button
-          type="submit"
-          className="shrink-0 rounded-xl bg-zinc-950 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
-        >
-          Add
-        </button>
       </div>
-      <div className="w-full max-w-2xl">
+      <div className="w-full">
+        <label className="mb-2 block text-sm font-medium text-blue-950">Description</label>
         <TaskContentEditor name="content" />
       </div>
+      <button
+        type="submit"
+        className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:w-auto"
+      >
+        Add
+      </button>
     </form>
   );
 }
