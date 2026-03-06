@@ -14,30 +14,40 @@ function wrap(
   return (_prev, formData) => fn(formData);
 }
 
-export function AddTaskForm({ action }: { action: AddTaskAction }) {
+export function AddTaskForm({
+  action,
+  onSuccess,
+}: {
+  action: AddTaskAction;
+  onSuccess?: () => void;
+}) {
   const [state, formAction] = useActionState(wrap(action), null as ActionResult | null);
 
   useEffect(() => {
     if (!state) return;
-    if (state.success) toast.success("Task added");
-    else if (state.error) toast.error(state.error);
-  }, [state]);
+    if (state.success) {
+      toast.success("Task added");
+      onSuccess?.();
+    } else if (state.error) {
+      toast.error(state.error);
+    }
+  }, [onSuccess, state]);
 
   return (
-    <form action={formAction} className="mt-4 flex w-full flex-col gap-3 lg:mt-0 lg:max-w-2xl">
-      <div className="flex w-full flex-col gap-3 xl:flex-row xl:items-start">
+    <form action={formAction} className="flex w-full flex-col gap-4">
+      <div className="flex w-full flex-col gap-3">
         <input
           name="title"
           placeholder="Add a task…"
           required
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4 xl:w-80"
+          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
-        <div className="flex w-full flex-col gap-1 sm:w-auto sm:flex-row sm:items-center">
+        <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-center">
           <label className="text-xs whitespace-nowrap text-blue-700">Due (optional)</label>
           <input
             name="dueAt"
             type="datetime-local"
-            className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 sm:w-auto"
+            className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
           />
         </div>
       </div>
@@ -49,7 +59,7 @@ export function AddTaskForm({ action }: { action: AddTaskAction }) {
         type="submit"
         className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:w-auto"
       >
-        Add
+        Add task
       </button>
     </form>
   );

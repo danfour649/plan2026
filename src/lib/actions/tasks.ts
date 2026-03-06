@@ -46,7 +46,6 @@ export async function completeTask(formData: FormData): Promise<ActionResult> {
     data: { completedAt: new Date() },
   });
   revalidatePath("/dashboard");
-  revalidatePath("/completed");
   return { success: true };
 }
 
@@ -62,7 +61,6 @@ export async function restoreTask(formData: FormData): Promise<ActionResult> {
     data: { completedAt: null },
   });
   revalidatePath("/dashboard");
-  revalidatePath("/completed");
   return { success: true };
 }
 
@@ -77,6 +75,5 @@ export async function deleteTask(formData: FormData): Promise<ActionResult> {
     where: { id: parsed.data.taskId, userId },
   });
   revalidatePath("/dashboard");
-  revalidatePath("/completed");
   return { success: true };
 }

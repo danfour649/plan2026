@@ -7,9 +7,10 @@ type AppNavLinkProps = {
   href: string;
   children: React.ReactNode;
   accent: "blue" | "red";
+  badge?: React.ReactNode;
 };
 
-export function AppNavLink({ href, children, accent }: AppNavLinkProps) {
+export function AppNavLink({ href, children, accent, badge }: AppNavLinkProps) {
   const pathname = usePathname();
   const isActive = pathname === href;
 
@@ -27,9 +28,22 @@ export function AppNavLink({ href, children, accent }: AppNavLinkProps) {
     <Link
       href={href}
       aria-current={isActive ? "page" : undefined}
-      className={`rounded-full px-3 py-1.5 transition ${isActive ? activeClassName : inactiveClassName}`}
+      className={`group inline-flex items-center gap-2 rounded-full px-3 py-1.5 transition ${isActive ? activeClassName : inactiveClassName}`}
     >
-      {children}
+      <span>{children}</span>
+      {badge != null && (
+        <span
+          className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+            isActive
+              ? accent === "red"
+                ? "bg-white/80 text-red-700"
+                : "bg-white/80 text-blue-700"
+              : "bg-zinc-100 text-zinc-600 transition group-hover:bg-white group-hover:text-zinc-900"
+          }`}
+        >
+          {badge}
+        </span>
+      )}
     </Link>
   );
 }
