@@ -1,14 +1,47 @@
-# Tasks Dashboard (Next.js + Prisma + Google Login)
+# Tasks Dashboard
 
-Interactive task dashboard with:
+`plan2026` is a Next.js App Router task dashboard with Google sign-in, per-user task storage in PostgreSQL, optional rich task notes, due dates, and Google Calendar event creation.
 
-- Google login (Auth.js / NextAuth)
-- Per-user tasks stored in PostgreSQL (Prisma), deployable to Vercel
+## Features
+
+- Google sign-in with NextAuth v4 and Prisma-backed database sessions
+- Remaining and completed task views
+- Add tasks with:
+  - required title
+  - optional rich text notes/links
+  - optional due date and time
+- Mark tasks done, restore them, or delete them
+- Add a task to Google Calendar from either task list
+- Server actions for UI mutations and JSON API routes for programmatic access
+
+## Tech stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- Prisma ORM
+- PostgreSQL
+- NextAuth v4
+- Zod
+- Tiptap
+- Sonner
 
 ## Requirements
 
-- Node.js installed (this project was scaffolded with a recent LTS)
-- A Google OAuth Client ID/Secret
+- Node.js installed
+- A PostgreSQL database
+- A Google OAuth client with Calendar access enabled
+
+## Environment variables
+
+Set these in `.env` for local development:
+
+- `DATABASE_URL` - PostgreSQL connection string
+- `AUTH_SECRET` - NextAuth secret
+- `GOOGLE_CLIENT_ID` - Google OAuth client id
+- `GOOGLE_CLIENT_SECRET` - Google OAuth client secret
+- `NEXTAUTH_URL` - usually `http://localhost:3000` locally
 
 ## Local development
 
@@ -18,51 +51,78 @@ Interactive task dashboard with:
 npm install
 ```
 
-2. Configure environment variables in `.env`:
+2. Configure the environment variables listed above in `.env`.
 
-- `DATABASE_URL` = Postgres connection string (e.g. from [Neon](https://neon.tech) for local dev)
-- `AUTH_SECRET` (already generated)
-- **Set these**:
-  - `GOOGLE_CLIENT_ID`
-  - `GOOGLE_CLIENT_SECRET`
-
-3. Create/upgrade the local Postgres DB (run with `DATABASE_URL` set to your dev Postgres):
+3. Run Prisma migrations against your local development database:
 
 ```bash
 npx prisma migrate dev
 ```
 
-4. Start the dev server:
+4. Start the app:
 
 ```bash
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+5. Open `http://localhost:3000`.
 
-### Google OAuth setup (local)
+## Google OAuth setup
 
 In Google Cloud Console:
 
-- **Authorized JavaScript origins**: `http://localhost:3000`
-- **Authorized redirect URIs**: `http://localhost:3000/api/auth/callback/google`
+1. Enable the Google Calendar API for the same project as your OAuth client.
+2. Add this local origin:
+   - `http://localhost:3000`
+3. Add this local redirect URI:
+   - `http://localhost:3000/api/auth/callback/google`
+
+The app requests these Google scopes during sign-in:
+
+- `openid`
+- `email`
+- `profile`
+- `https://www.googleapis.com/auth/calendar.events`
 
 ## API
 
-- `GET /api/tasks` → list tasks for current user
-- `POST /api/tasks` body: `{ "title": "..." }` → create task
-- `PATCH /api/tasks/:id` body: `{ "completed": true|false }` → mark done/restore
-- `DELETE /api/tasks/:id` → delete task
+- `GET /api/tasks` - list all tasks for the signed-in user
+- `POST /api/tasks` - create a task
+- `PATCH /api/tasks/:id` - mark a task complete or restore it
+- `DELETE /api/tasks/:id` - delete a task
+- `POST /api/tasks/:id/calendar` - create a Google Calendar event for a task
 
-## Deploy (Vercel + Postgres)
+### `POST /api/tasks` body
 
-This project is configured for **PostgreSQL** (schema and migrations). Full step-by-step instructions:
+```json
+{
+  "title": "Book flights",
+  "content": "<p>Use the points portal first.</p>",
+  "dueAt": "2026-03-10T14:30"
+}
+```
 
-→ **[DEPLOY.md](./DEPLOY.md)** — Vercel account, GitHub import, Postgres (Neon or Vercel Postgres), env vars, Google OAuth, and deploy.
+Notes:
 
-Summary:
+- `title` is required
+- `content` is optional rich text HTML and is sanitized before storing/rendering
+- `dueAt` is optional; when present it is converted to a date
 
-1. Sign up at [vercel.com](https://vercel.com) and import your GitHub repo.
-2. Create a Postgres database (e.g. [Neon](https://neon.tech) free tier) and add `DATABASE_URL` and other env vars in Vercel.
-3. Add your production URL to Google OAuth (origins + redirect URI).
-4. Deploy; the build runs `prisma generate`, `prisma migrate deploy`, and `next build`.
+### `PATCH /api/tasks/:id` body
+
+```json
+{
+  "completed": true
+}
+```
+
+## Deployment
+
+Deployment instructions live in **[DEPLOY.md](./DEPLOY.md)**.
+
+In short:
+
+1. Create a Vercel project.
+2. Provision PostgreSQL and set the required env vars.
+3. Configure Google OAuth with your production callback URL and Calendar API access.
+4. Deploy; the build runs `prisma generate` and `next build`, and migrations are applied with `prisma migrate deploy`.
