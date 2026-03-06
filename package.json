@@ -7,6 +7,9 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:status": "changeset status --verbose",
     "prisma:generate": "prisma generate",
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
@@ -29,6 +32,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.30.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
