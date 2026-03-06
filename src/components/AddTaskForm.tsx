@@ -3,6 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
+import { TaskContentEditor } from "@/components/TaskContentEditor";
 import type { ActionResult } from "@/lib/actions/tasks";
 
 type AddTaskAction = (formData: FormData) => Promise<ActionResult>;
@@ -23,18 +24,32 @@ export function AddTaskForm({ action }: { action: AddTaskAction }) {
   }, [state]);
 
   return (
-    <form action={formAction} className="mt-4 flex gap-2 sm:mt-0">
-      <input
-        name="title"
-        placeholder="Add a task…"
-        className="w-full min-w-0 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm outline-none ring-zinc-950/10 focus:ring-4 sm:w-80"
-      />
-      <button
-        type="submit"
-        className="shrink-0 rounded-xl bg-zinc-950 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
-      >
-        Add
-      </button>
+    <form action={formAction} className="mt-4 flex flex-col gap-3 sm:mt-0">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+        <input
+          name="title"
+          placeholder="Add a task…"
+          required
+          className="w-full min-w-0 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm outline-none ring-zinc-950/10 focus:ring-4 sm:w-80"
+        />
+        <div className="flex items-center gap-2">
+          <label className="text-xs text-zinc-500 whitespace-nowrap">Due (optional)</label>
+          <input
+            name="dueAt"
+            type="datetime-local"
+            className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm outline-none ring-zinc-950/10 focus:ring-4"
+          />
+        </div>
+        <button
+          type="submit"
+          className="shrink-0 rounded-xl bg-zinc-950 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
+        >
+          Add
+        </button>
+      </div>
+      <div className="w-full max-w-2xl">
+        <TaskContentEditor name="content" />
+      </div>
     </form>
   );
 }

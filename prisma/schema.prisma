@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -65,6 +65,8 @@ model Task {
   id          String    @id @default(cuid())
   userId      String
   title       String
+  content     String?   // optional rich text (sanitized HTML)
+  dueAt       DateTime? // optional due date for Google Calendar
   completedAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

@@ -18,13 +18,22 @@ export async function addTask(formData: FormData): Promise<ActionResult> {
 
   const parsed = addTaskSchema.safeParse({
     title: formData.get("title") ?? "",
+    content: formData.get("content") ?? undefined,
+    dueAt: formData.get("dueAt") ?? undefined,
   });
   if (!parsed.success) {
     const msg = parsed.error.flatten().formErrors[0] ?? "Invalid input";
     return { success: false, error: msg };
   }
 
-  await prisma.task.create({ data: { userId, title: parsed.data.title } });
+  await prisma.task.create({
+    data: {
+      userId,
+      title: parsed.data.title,
+      content: parsed.data.content ?? null,
+      dueAt: parsed.data.dueAt ?? null,
+    },
+  });
   revalidatePath("/dashboard");
   return { success: true };
 }

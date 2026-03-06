@@ -1,6 +1,8 @@
 import { getServerAuthSession } from "@/auth";
 import { AddTaskForm } from "@/components/AddTaskForm";
+import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { TaskActionButton } from "@/components/TaskActionButton";
+import { TaskContent } from "@/components/TaskContent";
 import { prisma } from "@/lib/prisma";
 import { addTask, completeTask, deleteTask } from "@/lib/actions/tasks";
 
@@ -52,14 +54,19 @@ export default async function DashboardPage() {
         ) : (
           <ul className="divide-y divide-zinc-200">
             {remainingTasks.map((task) => (
-              <li key={task.id} className="flex items-center justify-between px-6 py-4">
-                <div className="min-w-0">
-                  <div className="truncate text-sm font-medium">{task.title}</div>
+              <li key={task.id} className="flex items-center justify-between gap-4 px-6 py-4">
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium">{task.title}</div>
+                  <TaskContent content={task.content} />
                   <div className="mt-1 text-xs text-zinc-500">
                     Added {task.createdAt.toLocaleString()}
+                    {task.dueAt && (
+                      <> · Due {task.dueAt.toLocaleString()}</>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <AddToCalendarButton taskId={task.id} />
                   <TaskActionButton action={completeTask} taskId={task.id} label="Mark done" />
                   <TaskActionButton
                     action={deleteTask}

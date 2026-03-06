@@ -25,11 +25,15 @@ export async function POST(req: Request) {
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = (await req.json().catch(() => null)) as unknown;
-  const parsed = addTaskSchema.safeParse(
-    body && typeof body === "object" && "title" in body
-      ? { title: (body as { title?: unknown }).title ?? "" }
-      : { title: "" }
-  );
+  const raw =
+    body && typeof body === "object"
+      ? (body as { title?: unknown; content?: unknown; dueAt?: unknown })
+      : {};
+  const parsed = addTaskSchema.safeParse({
+    title: raw.title ?? "",
+    content: raw.content ?? undefined,
+    dueAt: raw.dueAt ?? undefined,
+  });
 
   if (!parsed.success) {
     const msg = parsed.error.flatten().formErrors[0] ?? "Invalid input";
@@ -37,7 +41,12 @@ export async function POST(req: Request) {
   }
 
   const task = await prisma.task.create({
-    data: { userId, title: parsed.data.title },
+    data: {
+      userId,
+      title: parsed.data.title,
+      content: parsed.data.content ?? null,
+      dueAt: parsed.data.dueAt ?? null,
+    },
   });
   return NextResponse.json({ task }, { status: 201 });
 }

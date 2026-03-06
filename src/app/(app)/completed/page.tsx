@@ -1,5 +1,7 @@
 import { getServerAuthSession } from "@/auth";
+import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { TaskActionButton } from "@/components/TaskActionButton";
+import { TaskContent } from "@/components/TaskContent";
 import { prisma } from "@/lib/prisma";
 import { deleteTask, restoreTask } from "@/lib/actions/tasks";
 
@@ -41,15 +43,17 @@ export default async function CompletedPage() {
         ) : (
           <ul className="divide-y divide-zinc-200">
             {completedTasks.map((task) => (
-              <li key={task.id} className="flex items-center justify-between px-6 py-4">
-                <div className="min-w-0">
-                  <div className="truncate text-sm font-medium">{task.title}</div>
+              <li key={task.id} className="flex items-center justify-between gap-4 px-6 py-4">
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium">{task.title}</div>
+                  <TaskContent content={task.content} />
                   <div className="mt-1 text-xs text-zinc-500">
                     Completed{" "}
                     {task.completedAt ? task.completedAt.toLocaleString() : "—"}
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <AddToCalendarButton taskId={task.id} />
                   <TaskActionButton action={restoreTask} taskId={task.id} label="Restore" />
                   <TaskActionButton
                     action={deleteTask}

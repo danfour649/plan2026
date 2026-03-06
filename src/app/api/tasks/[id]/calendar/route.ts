@@ -1,0 +1,121 @@
+import { NextResponse } from "next/server";
+import { google } from "googleapis";
+
+import { getServerAuthSession } from "@/auth";
+import { prisma } from "@/lib/prisma";
+
+export const runtime = "nodejs";
+
+type Params = { params: Promise<{ id: string }> };
+
+/** Strip HTML tags for plain-text description. */
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+export async function POST(_req: Request, { params }: Params) {
+  const session = await getServerAuthSession();
+  const userId = session?.user?.id;
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id: taskId } = await params;
+
+  const task = await prisma.task.findFirst({
+    where: { id: taskId, userId },
+  });
+  if (!task) {
+    return NextResponse.json({ error: "Task not found" }, { status: 404 });
+  }
+
+  const account = await prisma.account.findFirst({
+    where: { userId, provider: "google" },
+  });
+  if (!account?.access_token) {
+    return NextResponse.json(
+      { error: "Google account not linked or missing calendar permission. Sign out and sign in again with Google." },
+      { status: 403 }
+    );
+  }
+
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+  if (!clientId || !clientSecret) {
+    return NextResponse.json(
+      { error: "Google Calendar is not configured" },
+      { status: 503 }
+    );
+  }
+
+  const oauth2Client = new google.auth.OAuth2(
+    clientId,
+    clientSecret,
+    `${baseUrl}/api/auth/callback/google`
+  );
+
+  oauth2Client.setCredentials({
+    access_token: account.access_token,
+    refresh_token: account.refresh_token ?? undefined,
+    expiry_date: account.expires_at ? account.expires_at * 1000 : undefined,
+  });
+
+  // Refresh token if expired
+  if (account.expires_at && account.expires_at * 1000 < Date.now()) {
+    const { credentials } = await oauth2Client.refreshAccessToken();
+    if (credentials.access_token) {
+      await prisma.account.update({
+        where: { id: account.id },
+        data: {
+          access_token: credentials.access_token,
+          expires_at: credentials.expiry_date ? Math.floor(credentials.expiry_date / 1000) : null,
+        },
+      });
+    }
+  }
+
+  const calendar = google.calendar({ version: "v3", auth: oauth2Client });
+
+  const dueAt = task.dueAt;
+  const description = task.content ? stripHtml(task.content) : undefined;
+
+  let start: { date?: string; dateTime?: string };
+  let end: { date?: string; dateTime?: string };
+
+  if (dueAt) {
+    const startDate = new Date(dueAt);
+    const endDate = new Date(dueAt);
+    endDate.setHours(endDate.getHours() + 1);
+    start = { dateTime: startDate.toISOString() };
+    end = { dateTime: endDate.toISOString() };
+  } else {
+    const today = new Date();
+    const y = today.getFullYear();
+    const m = String(today.getMonth() + 1).padStart(2, "0");
+    const d = String(today.getDate()).padStart(2, "0");
+    const dateStr = `${y}-${m}-${d}`;
+    start = { date: dateStr };
+    end = { date: dateStr };
+  }
+
+  try {
+    const event = await calendar.events.insert({
+      calendarId: "primary",
+      requestBody: {
+        summary: task.title,
+        description: description ?? undefined,
+        start,
+        end,
+      },
+    });
+    const htmlLink = event.data.htmlLink ?? undefined;
+    return NextResponse.json({ ok: true, eventId: event.data.id, htmlLink }, { status: 201 });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Failed to create calendar event";
+    return NextResponse.json(
+      { error: message },
+      { status: 502 }
+    );
+  }
+}

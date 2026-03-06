@@ -20,6 +20,16 @@ export const authOptions: NextAuthOptions = {
         GoogleProvider({
           clientId: googleClientId!,
           clientSecret: googleClientSecret!,
+          authorization: {
+            params: {
+              scope: [
+                "openid",
+                "email",
+                "profile",
+                "https://www.googleapis.com/auth/calendar.events",
+              ].join(" "),
+            },
+          },
         }),
       ]
     : [],
