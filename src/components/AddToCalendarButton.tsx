@@ -21,6 +21,8 @@ export function AddToCalendarButton({ taskId }: AddToCalendarButtonProps) {
       if (data.htmlLink) {
         window.open(data.htmlLink, "_blank");
       }
+    } catch {
+      toast.error("Could not add to Google Calendar");
     } finally {
       setLoading(false);
     }

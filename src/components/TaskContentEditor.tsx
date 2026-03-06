@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
+import Underline from "@tiptap/extension-underline";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -22,6 +23,7 @@ export function TaskContentEditor({
     immediatelyRender: false,
     extensions: [
       StarterKit,
+      Underline,
       Link.configure({
         openOnClick: false,
         HTMLAttributes: { target: "_blank", rel: "noopener noreferrer" },
@@ -59,6 +61,32 @@ export function TaskContentEditor({
   return (
     <div className="rounded-xl border border-blue-100 bg-white/90 focus-within:ring-4 focus-within:ring-blue-200/70">
       <input ref={hiddenInputRef} type="hidden" name={name} defaultValue={defaultValue} />
+      <div className="flex items-center gap-2 rounded-t-xl border-b border-blue-100 bg-blue-50/70 px-3 py-2">
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={`rounded-md px-2.5 py-1 text-sm font-semibold transition ${
+            editor.isActive("bold")
+              ? "bg-blue-600 text-white"
+              : "bg-white text-blue-700 hover:bg-blue-100"
+          }`}
+          aria-pressed={editor.isActive("bold")}
+        >
+          B
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={`rounded-md px-2.5 py-1 text-sm font-semibold transition ${
+            editor.isActive("underline")
+              ? "bg-blue-600 text-white"
+              : "bg-white text-blue-700 hover:bg-blue-100"
+          }`}
+          aria-pressed={editor.isActive("underline")}
+        >
+          U
+        </button>
+      </div>
       <EditorContent editor={editor} />
     </div>
   );

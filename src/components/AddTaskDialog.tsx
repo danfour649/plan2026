@@ -38,20 +38,17 @@ export function AddTaskDialog({ action }: { action: AddTaskAction }) {
           role="presentation"
         >
           <div
-            className="w-full max-w-2xl rounded-3xl border border-blue-100 bg-white p-6 shadow-2xl shadow-blue-950/10"
+            className="w-full max-w-2xl rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10"
             onClick={(event) => event.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="add-task-dialog-title"
           >
-            <div className="mb-6 flex items-start justify-between gap-4">
+            <div className="mb-1 flex items-start justify-between gap-4">
               <div>
                 <h2 id="add-task-dialog-title" className="text-xl font-semibold tracking-tight text-blue-950">
                   Add a task
                 </h2>
-                <p className="mt-1 text-sm text-zinc-600">
-                  Capture the next thing you need to do without leaving the page.
-                </p>
               </div>
               <button
                 type="button"

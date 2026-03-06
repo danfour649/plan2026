@@ -22,6 +22,8 @@ export const authOptions: NextAuthOptions = {
           clientSecret: googleClientSecret!,
           authorization: {
             params: {
+              access_type: "offline",
+              prompt: "consent",
               scope: [
                 "openid",
                 "email",
@@ -39,6 +41,45 @@ export const authOptions: NextAuthOptions = {
     session: async ({ session, user }) => {
       if (session.user) session.user.id = user.id;
       return session;
+    },
+  },
+  events: {
+    signIn: async ({ user, account }) => {
+      if (!user.id || account?.provider !== "google") return;
+
+      await prisma.account.upsert({
+        where: {
+          provider_providerAccountId: {
+            provider: account.provider,
+            providerAccountId: account.providerAccountId,
+          },
+        },
+        update: {
+          type: account.type,
+          access_token: account.access_token ?? null,
+          refresh_token: account.refresh_token ?? null,
+          expires_at: account.expires_at ?? null,
+          token_type: account.token_type ?? null,
+          scope: account.scope ?? null,
+          id_token: account.id_token ?? null,
+          session_state:
+            typeof account.session_state === "string" ? account.session_state : null,
+        },
+        create: {
+          userId: user.id,
+          type: account.type,
+          provider: account.provider,
+          providerAccountId: account.providerAccountId,
+          access_token: account.access_token ?? null,
+          refresh_token: account.refresh_token ?? null,
+          expires_at: account.expires_at ?? null,
+          token_type: account.token_type ?? null,
+          scope: account.scope ?? null,
+          id_token: account.id_token ?? null,
+          session_state:
+            typeof account.session_state === "string" ? account.session_state : null,
+        },
+      });
     },
   },
 };
