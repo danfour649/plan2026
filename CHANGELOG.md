@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.1.2
+
+### Patch Changes
+
+- 667efa7: Clean up task auth plumbing and editor syncing, use the configured app font consistently, and clarify that PostgreSQL is used for both local and deployed environments.
+
 ## 0.1.1
 
 ### Patch Changes
