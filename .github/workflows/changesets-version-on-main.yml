@@ -1,0 +1,50 @@
+name: Changesets Version On Main
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: changesets-version-main
+  cancel-in-progress: false
+
+jobs:
+  version:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Apply changesets versioning
+        run: npm run changeset:version
+
+      - name: Commit generated changelog and version updates
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No versioning changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: version packages [skip ci]"
+          git push

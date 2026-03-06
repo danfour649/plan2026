@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { getServerAuthSession } from "@/auth";
+import { AppNavLink } from "@/components/AppNavLink";
 import { SignOutButton } from "@/components/SignOutButton";
 
 export default async function AppLayout({
@@ -13,20 +13,17 @@ export default async function AppLayout({
   if (!session?.user) redirect("/login");
 
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-950">
-      <header className="border-b border-zinc-200 bg-white">
+    <div className="min-h-screen bg-transparent text-zinc-950">
+      <header className="border-b border-blue-100 bg-white/85 backdrop-blur">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="text-sm font-semibold">
-              Tasks
-            </Link>
+          <div className="flex items-center">
             <nav className="flex items-center gap-4 text-sm text-zinc-700">
-              <Link href="/dashboard" className="hover:text-zinc-950">
+              <AppNavLink href="/dashboard" accent="blue">
                 Dashboard
-              </Link>
-              <Link href="/completed" className="hover:text-zinc-950">
+              </AppNavLink>
+              <AppNavLink href="/completed" accent="red">
                 Completed
-              </Link>
+              </AppNavLink>
             </nav>
           </div>
 
