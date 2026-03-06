@@ -48,7 +48,9 @@ export function TaskContentEditor({
     if (!editor) return;
     editor.on("update", setHiddenInput);
     setHiddenInput();
-    return () => editor.off("update", setHiddenInput);
+    return () => {
+      editor.off("update", setHiddenInput);
+    };
   }, [editor, setHiddenInput]);
 
   const addLink = useCallback(() => {
