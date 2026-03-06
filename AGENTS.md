@@ -9,4 +9,4 @@
 - Use `minor` for new user-facing features or notable workflow additions.
 - Use `major` for breaking changes, incompatible API or schema changes, or required manual migration steps.
 - Run `npm run changeset` when a qualifying change is made and write a short summary focused on user impact.
-- Run `npm run changeset:version` only when intentionally preparing a changelog/version update.
+- Do not run `npm run changeset:version` during normal feature work. GitHub automation runs it after PRs are merged into `main` and commits the resulting changelog, version bump, and consumed changeset cleanup automatically.
