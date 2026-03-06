@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
 
-import { getServerAuthSession } from "@/auth";
+import { getCurrentUserId } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { addTaskSchema } from "@/lib/validations/task";
 
 export const runtime = "nodejs";
 
 export async function GET() {
-  const session = await getServerAuthSession();
-  const userId = session?.user?.id;
+  const userId = await getCurrentUserId();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const tasks = await prisma.task.findMany({
@@ -20,8 +19,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const session = await getServerAuthSession();
-  const userId = session?.user?.id;
+  const userId = await getCurrentUserId();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = (await req.json().catch(() => null)) as unknown;

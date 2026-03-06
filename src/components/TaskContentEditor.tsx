@@ -4,7 +4,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 type TaskContentEditorProps = {
   name: string;
@@ -17,6 +17,7 @@ export function TaskContentEditor({
   defaultValue = "",
   placeholder = "Add a description, notes, or links (optional)…",
 }: TaskContentEditorProps) {
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -37,12 +38,12 @@ export function TaskContentEditor({
   });
 
   const setHiddenInput = useCallback(() => {
-    const el = document.querySelector(`input[name="${name}"]`) as HTMLInputElement;
+    const el = hiddenInputRef.current;
     if (el && editor) {
       const html = editor.getHTML();
       el.value = html === "<p></p>" ? "" : html;
     }
-  }, [name, editor]);
+  }, [editor]);
 
   useEffect(() => {
     if (!editor) return;
@@ -57,7 +58,7 @@ export function TaskContentEditor({
 
   return (
     <div className="rounded-xl border border-blue-100 bg-white/90 focus-within:ring-4 focus-within:ring-blue-200/70">
-      <input type="hidden" name={name} defaultValue={defaultValue} />
+      <input ref={hiddenInputRef} type="hidden" name={name} defaultValue={defaultValue} />
       <EditorContent editor={editor} />
     </div>
   );

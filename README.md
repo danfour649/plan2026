@@ -30,7 +30,7 @@
 ## Requirements
 
 - Node.js installed
-- A PostgreSQL database
+- A PostgreSQL database for local development and testing
 - A Google OAuth client with Calendar access enabled
 
 ## Environment variables
@@ -45,15 +45,17 @@ Set these in `.env` for local development:
 
 ## Local development
 
+This app uses PostgreSQL in every environment, including local development, local testing, and production.
+
 1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-2. Configure the environment variables listed above in `.env`.
+2. Configure the environment variables listed above in `.env`, pointing `DATABASE_URL` at your local development or test Postgres database.
 
-3. Run Prisma migrations against your local development database:
+3. Run Prisma migrations against your local Postgres database:
 
 ```bash
 npx prisma migrate dev
@@ -126,3 +128,5 @@ In short:
 2. Provision PostgreSQL and set the required env vars.
 3. Configure Google OAuth with your production callback URL and Calendar API access.
 4. Deploy; the build runs `prisma generate` and `next build`, and migrations are applied with `prisma migrate deploy`.
+
+The database story is intentionally the same in every environment: PostgreSQL for local work and PostgreSQL in production.

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { getServerAuthSession } from "@/auth";
+import { getCurrentUserId } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
 type Params = { params: Promise<{ id: string }> };
@@ -8,8 +8,7 @@ type Params = { params: Promise<{ id: string }> };
 export const runtime = "nodejs";
 
 export async function PATCH(req: Request, { params }: Params) {
-  const session = await getServerAuthSession();
-  const userId = session?.user?.id;
+  const userId = await getCurrentUserId();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
@@ -40,8 +39,7 @@ export async function PATCH(req: Request, { params }: Params) {
 }
 
 export async function DELETE(_req: Request, { params }: Params) {
-  const session = await getServerAuthSession();
-  const userId = session?.user?.id;
+  const userId = await getCurrentUserId();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;

@@ -2,18 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 
-import { getServerAuthSession } from "@/auth";
+import { getCurrentUserId } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { addTaskSchema, taskIdSchema } from "@/lib/validations/task";
 
 export type ActionResult = { success: true } | { success: false; error: string };
 
-function getUserId(): Promise<string | null> {
-  return getServerAuthSession().then((s) => s?.user?.id ?? null);
-}
-
 export async function addTask(formData: FormData): Promise<ActionResult> {
-  const userId = await getUserId();
+  const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
 
   const parsed = addTaskSchema.safeParse({
@@ -39,7 +35,7 @@ export async function addTask(formData: FormData): Promise<ActionResult> {
 }
 
 export async function completeTask(formData: FormData): Promise<ActionResult> {
-  const userId = await getUserId();
+  const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
 
   const parsed = taskIdSchema.safeParse({ taskId: formData.get("taskId") ?? "" });
@@ -55,7 +51,7 @@ export async function completeTask(formData: FormData): Promise<ActionResult> {
 }
 
 export async function restoreTask(formData: FormData): Promise<ActionResult> {
-  const userId = await getUserId();
+  const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
 
   const parsed = taskIdSchema.safeParse({ taskId: formData.get("taskId") ?? "" });
@@ -71,7 +67,7 @@ export async function restoreTask(formData: FormData): Promise<ActionResult> {
 }
 
 export async function deleteTask(formData: FormData): Promise<ActionResult> {
-  const userId = await getUserId();
+  const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
 
   const parsed = taskIdSchema.safeParse({ taskId: formData.get("taskId") ?? "" });

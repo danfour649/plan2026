@@ -36,10 +36,6 @@ yarn-error.log*
 # vercel
 .vercel
 
-# local SQLite DB (schema is in prisma/migrations; production uses Postgres)
-prisma/dev.db
-prisma/*.db
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts

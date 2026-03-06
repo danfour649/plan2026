@@ -13,14 +13,19 @@ This app uses Next.js, Prisma, PostgreSQL, Google OAuth, and Google Calendar int
 
 ---
 
-## 2. Create a PostgreSQL database
+## 2. Create PostgreSQL databases
 
-You need a production Postgres database. Common choices:
+This app is Postgres-only in every environment. You should use:
+
+- one PostgreSQL database for local development and testing
+- one PostgreSQL database for production
+
+Common hosted production choices:
 
 - [Neon](https://neon.tech)
 - [Vercel Postgres](https://vercel.com/storage/postgres)
 
-Copy the production connection string and use it as `DATABASE_URL` in Vercel.
+Copy the production connection string and use it as `DATABASE_URL` in Vercel. Keep your local `.env` pointed at a separate Postgres database so local work and deployed behavior stay aligned without sharing data.
 
 ---
 
