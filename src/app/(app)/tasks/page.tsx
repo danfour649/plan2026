@@ -24,7 +24,7 @@ function CompletedCheckIcon() {
   );
 }
 
-export default async function DashboardPage({
+export default async function TasksPage({
   searchParams,
 }: {
   searchParams?: Promise<{ showCompleted?: string | string[] }>;
@@ -58,7 +58,7 @@ export default async function DashboardPage({
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="inline-flex rounded-full border border-blue-100 bg-white p-1 text-sm">
               <Link
-                href="/dashboard"
+                href="/tasks"
                 className={`rounded-full px-3 py-1.5 transition ${
                   showCompleted ? "text-zinc-600 hover:bg-blue-50 hover:text-blue-700" : "bg-blue-100 text-blue-700"
                 }`}
@@ -66,7 +66,7 @@ export default async function DashboardPage({
                 Hide completed
               </Link>
               <Link
-                href="/dashboard?showCompleted=1"
+                href="/tasks?showCompleted=1"
                 className={`rounded-full px-3 py-1.5 transition ${
                   showCompleted ? "bg-blue-100 text-blue-700" : "text-zinc-600 hover:bg-blue-50 hover:text-blue-700"
                 }`}
@@ -100,9 +100,7 @@ export default async function DashboardPage({
                   <TaskContent content={task.content} />
                   <div className="mt-1 text-xs text-zinc-500">
                     Added {task.createdAt.toLocaleString()}
-                    {task.dueAt && (
-                      <> · Due {task.dueAt.toLocaleString()}</>
-                    )}
+                    {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
                   </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">

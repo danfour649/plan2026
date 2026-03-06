@@ -30,7 +30,7 @@ export async function addTask(formData: FormData): Promise<ActionResult> {
       dueAt: parsed.data.dueAt ?? null,
     },
   });
-  revalidatePath("/dashboard");
+  revalidatePath("/tasks");
   return { success: true };
 }
 
@@ -45,7 +45,7 @@ export async function completeTask(formData: FormData): Promise<ActionResult> {
     where: { id: parsed.data.taskId, userId },
     data: { completedAt: new Date() },
   });
-  revalidatePath("/dashboard");
+  revalidatePath("/tasks");
   return { success: true };
 }
 
@@ -60,7 +60,7 @@ export async function restoreTask(formData: FormData): Promise<ActionResult> {
     where: { id: parsed.data.taskId, userId },
     data: { completedAt: null },
   });
-  revalidatePath("/dashboard");
+  revalidatePath("/tasks");
   return { success: true };
 }
 
@@ -74,6 +74,6 @@ export async function deleteTask(formData: FormData): Promise<ActionResult> {
   await prisma.task.deleteMany({
     where: { id: parsed.data.taskId, userId },
   });
-  revalidatePath("/dashboard");
+  revalidatePath("/tasks");
   return { success: true };
 }

@@ -22,7 +22,7 @@ export default async function AppLayout({
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
           <div className="flex items-center">
             <nav className="flex items-center gap-4 text-sm text-zinc-700">
-              <AppNavLink href="/dashboard" accent="blue" badge={remainingTaskCount}>
+              <AppNavLink href="/tasks" accent="blue" badge={remainingTaskCount}>
                 Tasks
               </AppNavLink>
             </nav>

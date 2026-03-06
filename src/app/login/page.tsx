@@ -5,7 +5,7 @@ import { GoogleSignInButton } from "./GoogleSignInButton";
 
 export default async function LoginPage() {
   const session = await getServerAuthSession();
-  if (session?.user) redirect("/dashboard");
+  if (session?.user) redirect("/tasks");
 
   const hasGoogleCredentials = Boolean(
     process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
