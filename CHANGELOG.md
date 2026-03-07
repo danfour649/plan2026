@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.7.2
+
+### Patch Changes
+
+- db3a520: Fix task edit dialog and other modals so they appear at the top of the viewport and are scrollable, avoiding the need to scroll the page to see the form when there are many tasks.
+
 ## 0.7.1
 
 ### Patch Changes
