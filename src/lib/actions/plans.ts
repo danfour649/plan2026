@@ -209,3 +209,47 @@ export async function deletePlan(formData: FormData): Promise<void> {
   revalidatePath("/tasks");
   redirect("/plans");
 }
+
+export type SharePlanResult = { success: true } | { success: false; error: string };
+
+export async function sharePlanByEmail(planId: string, email: string): Promise<SharePlanResult> {
+  const userId = await getCurrentUserId();
+  if (!userId) return { success: false, error: "Unauthorized" };
+
+  const parsed = planIdSchema.safeParse(planId);
+  if (!parsed.success) return { success: false, error: "Invalid plan" };
+
+  const plan = await prisma.plan.findFirst({
+    where: { id: parsed.data.planId, userId },
+    select: { id: true },
+  });
+  if (!plan) return { success: false, error: "Plan not found" };
+
+  const normalizedEmail = email.trim().toLowerCase();
+  if (!normalizedEmail) return { success: false, error: "Email is required" };
+
+  const sharedWithUser = await prisma.user.findFirst({
+    where: { email: normalizedEmail },
+    select: { id: true },
+  });
+  if (!sharedWithUser) return { success: false, error: "No user found with that email" };
+  if (sharedWithUser.id === userId) return { success: false, error: "You cannot share a plan with yourself" };
+
+  try {
+    await prisma.planShare.create({
+      data: {
+        planId: plan.id,
+        sharedWithUserId: sharedWithUser.id,
+      },
+    });
+  } catch (e) {
+    const isUniqueViolation =
+      e && typeof e === "object" && "code" in e && (e as { code: string }).code === "P2002";
+    if (isUniqueViolation) return { success: false, error: "Plan is already shared with that user" };
+    throw e;
+  }
+
+  revalidatePath("/plans");
+  revalidatePath(`/plans/${plan.id}`);
+  return { success: true };
+}
