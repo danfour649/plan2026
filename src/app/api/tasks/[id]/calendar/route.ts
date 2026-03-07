@@ -4,6 +4,8 @@ import { google } from "googleapis";
 import { getCurrentUserId } from "@/auth";
 import { GOOGLE_CALENDAR_SCOPE, hasGoogleCalendarScope } from "@/lib/google-oauth";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit } from "@/lib/rate-limit";
+import { isValidTaskId } from "@/lib/validations/task";
 
 export const runtime = "nodejs";
 
@@ -59,14 +61,24 @@ export async function POST(_req: Request, { params }: Params) {
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const limited = checkRateLimit(userId);
+  if (limited) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "Retry-After": String(limited.retryAfterSeconds) } },
+    );
+  }
 
   const { id: taskId } = await params;
+  if (!isValidTaskId(taskId)) {
+    return NextResponse.json({ error: "Invalid task ID format" }, { status: 400 });
+  }
 
   const task = await prisma.task.findFirst({
     where: { id: taskId, userId },
   });
   if (!task) {
-    return NextResponse.json({ error: "Task not found" }, { status: 404 });
+    return NextResponse.json({ error: "Operation failed" }, { status: 404 });
   }
 
   const account = await prisma.account.findFirst({

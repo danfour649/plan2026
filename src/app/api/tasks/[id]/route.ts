@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 
 import { getCurrentUserId } from "@/auth";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { prisma } from "@/lib/prisma";
+import { isValidTaskId } from "@/lib/validations/task";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -10,8 +12,18 @@ export const runtime = "nodejs";
 export async function PATCH(req: Request, { params }: Params) {
   const userId = await getCurrentUserId();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkRateLimit(userId);
+  if (limited) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "Retry-After": String(limited.retryAfterSeconds) } },
+    );
+  }
 
   const { id } = await params;
+  if (!isValidTaskId(id)) {
+    return NextResponse.json({ error: "Invalid task ID format" }, { status: 400 });
+  }
 
   const body = (await req.json().catch(() => null)) as unknown;
   const completed =
@@ -32,7 +44,7 @@ export async function PATCH(req: Request, { params }: Params) {
   });
 
   if (task.count === 0) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Operation failed" }, { status: 404 });
   }
 
   return NextResponse.json({ ok: true });
@@ -41,12 +53,22 @@ export async function PATCH(req: Request, { params }: Params) {
 export async function DELETE(_req: Request, { params }: Params) {
   const userId = await getCurrentUserId();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkRateLimit(userId);
+  if (limited) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "Retry-After": String(limited.retryAfterSeconds) } },
+    );
+  }
 
   const { id } = await params;
+  if (!isValidTaskId(id)) {
+    return NextResponse.json({ error: "Invalid task ID format" }, { status: 400 });
+  }
 
   const deleted = await prisma.task.deleteMany({ where: { id, userId } });
   if (deleted.count === 0) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Operation failed" }, { status: 404 });
   }
 
   return NextResponse.json({ ok: true });

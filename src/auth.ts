@@ -8,9 +8,12 @@ import { prisma } from "@/lib/prisma";
 
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+if (process.env.NODE_ENV === "production" && !process.env.AUTH_SECRET) {
+  throw new Error("AUTH_SECRET environment variable is required in production");
+}
 const authSecret =
   process.env.AUTH_SECRET ??
-  (process.env.NODE_ENV === "development" ? "dev-insecure-secret" : undefined);
+  (process.env.NODE_ENV === "development" ? crypto.randomUUID() : undefined);
 
 const hasGoogleCredentials = Boolean(googleClientId && googleClientSecret);
 

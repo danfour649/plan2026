@@ -115,3 +115,19 @@ npm run dev
 ```
 
 Keeping development and production on PostgreSQL avoids environment drift.
+
+---
+
+## 8. Secret rotation
+
+### AUTH_SECRET
+
+- Generate a new value (e.g. `openssl rand -base64 32` or a long random string).
+- Set the new value in Vercel (or your host) as `AUTH_SECRET` and redeploy.
+- Existing sessions may be invalidated; users will need to sign in again.
+
+### Google OAuth credentials
+
+- In Google Cloud Console, create a new OAuth 2.0 client (or rotate the client secret if your provider supports it).
+- Update `GOOGLE_CLIENT_ID` and/or `GOOGLE_CLIENT_SECRET` in your environment and redeploy.
+- Users who signed in with the old client may need to sign out and sign in again to re-authorize.

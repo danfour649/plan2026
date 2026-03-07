@@ -43,7 +43,7 @@
 Set these in `.env` for local development:
 
 - `DATABASE_URL` - PostgreSQL connection string
-- `AUTH_SECRET` - NextAuth secret
+- `AUTH_SECRET` - NextAuth secret (required in production; see [DEPLOY.md](./DEPLOY.md) for secret rotation)
 - `GOOGLE_CLIENT_ID` - Google OAuth client id
 - `GOOGLE_CLIENT_SECRET` - Google OAuth client secret
 - `NEXTAUTH_URL` - usually `http://localhost:3000` locally

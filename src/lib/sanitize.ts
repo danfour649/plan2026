@@ -1,7 +1,7 @@
 import sanitizeHtml from "sanitize-html";
 
 /** Allowed tags for task rich text content (safe subset for links, emphasis, and lists). */
-const ALLOWED_TAGS = ["p", "br", "strong", "em", "b", "i", "u", "a", "ul", "ol", "li"];
+const ALLOWED_TAGS = ["p", "br", "strong", "em", "b", "i", "a", "ul", "ol", "li"];
 
 /** Allowed attributes (e.g. href for links). */
 const ALLOWED_ATTR = ["href", "target", "rel"];

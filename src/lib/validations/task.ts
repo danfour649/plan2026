@@ -40,8 +40,18 @@ export const addTaskSchema = z.object({
     .max(TASK_URGENCY_MAX, `Urgency must be between ${TASK_URGENCY_MIN} and ${TASK_URGENCY_MAX}`),
 });
 
+/** CUID format used by Prisma @default(cuid()) - 25 chars, 'c' prefix, base36. */
+const CUID_REGEX = /^c[a-z0-9]{24}$/;
+
+export function isValidTaskId(value: string): boolean {
+  return typeof value === "string" && value.length === 25 && CUID_REGEX.test(value);
+}
+
 export const taskIdSchema = z.object({
-  taskId: z.string().min(1, "Task ID is required"),
+  taskId: z
+    .string()
+    .min(1, "Task ID is required")
+    .refine((s) => CUID_REGEX.test(s), "Invalid task ID format"),
 });
 
 export const updateTaskSchema = addTaskSchema.merge(taskIdSchema);
