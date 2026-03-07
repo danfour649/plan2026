@@ -26,7 +26,7 @@ const messages = {
       calendarConnected: "Your account can currently create Google Calendar events from tasks.",
       calendarDisconnected:
         "Google Calendar access has been disconnected. Reconnect with Google to grant Calendar permissions again.",
-      calendarIntro: "Manage your Google Calendar connection for task scheduling.",
+      pageDescription: "Manage your account, language, and Google Calendar connection.",
     },
     tasksPage: {
       title: "Tasks",
@@ -232,7 +232,7 @@ const messages = {
       calendarConnected: "Votre compte peut actuellement créer des événements Google Agenda à partir des tâches.",
       calendarDisconnected:
         "L'accès à Google Agenda a été déconnecté. Reconnectez-vous avec Google pour accorder à nouveau les autorisations.",
-      calendarIntro: "Gérez votre connexion Google Agenda pour la planification des tâches.",
+      pageDescription: "Gérez votre compte, la langue et la connexion Google Agenda.",
     },
     tasksPage: {
       title: "Tâches",
@@ -438,7 +438,7 @@ const messages = {
       calendarConnected: "Your account fit create Google Calendar events from your tasks now.",
       calendarDisconnected:
         "Google Calendar don cut. Connect am again make you fit get permission.",
-      calendarIntro: "Arrangey your Google Calendar connection for your tasks.",
+      pageDescription: "Arrange your account, language, and Google Calendar connection.",
     },
     tasksPage: {
       title: "Waka",

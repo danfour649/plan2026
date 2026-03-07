@@ -10,11 +10,11 @@
   - **PR title:** Use `<ID> <Title Case description>` so the PR shows a clear name, not the branch or raw commit (e.g. **TECH-014 Export plans task to json**). When creating the PR, pass the title explicitly: `gh pr create --title "TECH-014 Export plans task to json" --base main`. If you used `npm run pr` first, fix the title with `gh pr edit --title "TECH-014 Export plans task to json"`.
 - If the user doesn’t specify an ID, infer a short kebab-case branch name and commit message from the task (e.g. `feat/export-plans-tasks-json` and `Add export to JSON for plans and tasks`). Use a Title Case PR title derived from the description (e.g. **Export plans task to json**).
 
-- **Raising the PR on GitHub:** After pushing the branch, **open the Pull Request by default** so the work is ready for review. Use **GitHub CLI** (`gh`). Requirements:
+- **Raising the PR on GitHub:** After pushing the branch, **open the Pull Request in the same task** so the work is ready for review. Do not consider the task done until the PR exists. Use **GitHub CLI** (`gh`). Requirements:
   1. **Install** [GitHub CLI](https://cli.github.com/manual/installation) if needed.
   2. **Authenticate:** Run `gh auth login` (or set `GH_TOKEN` for CI/automation).
   3. **Push:** `git push -u origin <branch>`.
-  4. **Create PR:** Use a **Title Case** PR title (e.g. `TECH-014 Export plans task to json`). Run `gh pr create --title "TECH-014 Export plans task to json" --base main` so the PR name is correct. Do this after the first push for new branches unless the user asks not to. Optional: add `--body "..."` or leave body to be filled from the first commit. The script `npm run pr` uses `--fill` (title from commit); if you use it, run `gh pr edit --title "TECH-014 Export plans task to json"` afterward to set the proper PR title.
+  4. **Create PR (required):** Right after the first push for a new branch, create the PR in the same task. Use a **Title Case** PR title (e.g. `TECH-014 Export plans task to json`). Run `gh pr create --title "TECH-014 Export plans task to json" --base main --fill` (or add `--body "..."`; non-interactive `gh` needs `--fill` or `--body`). If you only committed and pushed without creating the PR, run `gh pr create` before finishing—**never leave a pushed branch without a PR** unless the user asks not to. The script `npm run pr` uses `--fill` (title from commit); if you use it, run `gh pr edit --title "TECH-014 Export plans task to json"` afterward to set the proper PR title.
 
 ## Type checking
 

@@ -32,29 +32,39 @@ export default async function AppLayout({
     <TranslationsProvider locale={locale}>
       <div className="min-h-screen bg-transparent text-zinc-950">
         <header className="border-b border-blue-100 bg-white/85 backdrop-blur">
-          <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-            <div className="flex items-center gap-6">
-            <Plan2026Logo
-              className="-mt-4 mb-1"
-              iconClassName="h-12 w-16"
-              ariaLabel={t.common.goToPlans}
-            />
-              <nav className="flex items-center gap-4 text-sm text-zinc-700">
-                <AppNavLink href="/plans" accent="blue" badge={activePlanCount}>
+          <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-2 py-3 sm:px-6 sm:py-4">
+            <div className="relative z-10 flex min-w-0 flex-1 items-center gap-1 overflow-visible sm:gap-6">
+              <Plan2026Logo
+                className="shrink-0 sm:-mt-4 sm:mb-1"
+                iconClassName="h-8 w-9 sm:h-12 sm:w-16"
+                ariaLabel={t.common.goToPlans}
+              />
+              <nav className="flex min-w-0 shrink items-center gap-0.5 text-sm text-zinc-700 sm:gap-4">
+                <AppNavLink
+                  href="/plans"
+                  accent="blue"
+                  badge={activePlanCount}
+                  className="shrink-0 gap-0 px-1.5 py-1 text-[11px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
+                >
                   {t.nav.plans}
                 </AppNavLink>
-                <AppNavLink href="/tasks" accent="blue" badge={remainingTaskCount}>
+                <AppNavLink
+                  href="/tasks"
+                  accent="blue"
+                  badge={remainingTaskCount}
+                  className="shrink-0 gap-0 px-1.5 py-1 text-[11px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
+                >
                   {t.nav.tasks}
                 </AppNavLink>
               </nav>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="relative z-0 flex shrink-0 items-center justify-end gap-1 pl-2 sm:gap-3 sm:pl-0">
               <AppNavLink
                 href="/settings"
                 accent="blue"
                 ariaLabel={t.nav.settings}
-                className="px-2.5 py-2"
+                className="shrink-0 p-1 sm:px-2.5 sm:py-2"
               >
                 <svg
                   aria-hidden="true"
