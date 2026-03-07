@@ -26,6 +26,7 @@ type EditTaskDialogProps = {
     dueAt: string | null;
     urgency: number;
     completedAt?: string | null;
+    planId?: string | null;
   };
   children?: React.ReactNode;
   triggerClassName?: string;
@@ -34,6 +35,8 @@ type EditTaskDialogProps = {
   completeAction?: CompleteOrRestoreAction;
   restoreAction?: CompleteOrRestoreAction;
   planId?: string;
+  /** When provided, show plan selector in the edit form. */
+  plans?: { id: string; name: string }[];
 };
 
 function isInteractiveTarget(target: EventTarget | null, currentTarget: EventTarget | null): boolean {
@@ -56,6 +59,7 @@ export function EditTaskDialog({
   completeAction,
   restoreAction,
   planId,
+  plans,
 }: EditTaskDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -184,7 +188,9 @@ export function EditTaskDialog({
                 content: task.content ?? undefined,
                 dueAt: task.dueAt,
                 urgency: task.urgency,
+                planId: task.planId ?? undefined,
               }}
+              plans={plans}
             />
 
             {completeAction && restoreAction ? (

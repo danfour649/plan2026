@@ -16,6 +16,12 @@ export default async function AppLayout({
   const remainingTaskCount = await prisma.task.count({
     where: { userId: session.user.id, completedAt: null },
   });
+  const activePlanCount = await prisma.plan.count({
+    where: {
+      userId: session.user.id,
+      status: { notIn: ["completed", "abandoned"] },
+    },
+  });
 
   return (
     <div className="min-h-screen bg-transparent text-zinc-950">
@@ -27,7 +33,7 @@ export default async function AppLayout({
               iconClassName="h-12 w-16"
             />
             <nav className="flex items-center gap-4 text-sm text-zinc-700">
-              <AppNavLink href="/plans" accent="blue">
+              <AppNavLink href="/plans" accent="blue" badge={activePlanCount}>
                 Plans
               </AppNavLink>
               <AppNavLink href="/tasks" accent="blue" badge={remainingTaskCount}>

@@ -59,6 +59,12 @@ export default async function PlanDetailPage({
 
   if (!plan) notFound();
 
+  const plans = await prisma.plan.findMany({
+    where: { userId },
+    orderBy: [{ priority: "desc" }, { name: "asc" }],
+    select: { id: true, name: true },
+  });
+
   const userTasks = await prisma.task.findMany({
     where: { userId },
     orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
@@ -142,6 +148,7 @@ export default async function PlanDetailPage({
                     completeAction={completeTask}
                     restoreAction={restoreTask}
                     planId={plan.id}
+                    plans={plans}
                     triggerClassName="min-w-0 flex-1 cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1 text-left"
                     showButton={false}
                     task={{
@@ -151,6 +158,7 @@ export default async function PlanDetailPage({
                       dueAt: task.dueAt?.toISOString() ?? null,
                       urgency: task.urgency,
                       completedAt: task.completedAt?.toISOString() ?? null,
+                      planId: plan.id,
                     }}
                   >
                     <div className="min-w-0 flex-1">
@@ -172,24 +180,26 @@ export default async function PlanDetailPage({
                       </div>
                     </div>
                   </EditTaskDialog>
-                  <EditTaskDialog
-                    action={updateTask}
-                    deleteAction={deleteTask}
-                    completeAction={completeTask}
-                    restoreAction={restoreTask}
-                    planId={plan.id}
-                    task={{
-                      id: task.id,
-                      title: task.title,
-                      content: task.content,
-                      dueAt: task.dueAt?.toISOString() ?? null,
-                      urgency: task.urgency,
-                      completedAt: task.completedAt?.toISOString() ?? null,
-                    }}
-                  />
-                </li>
-              ))}
-            </ul>
+                <EditTaskDialog
+                  action={updateTask}
+                  deleteAction={deleteTask}
+                  completeAction={completeTask}
+                  restoreAction={restoreTask}
+                  planId={plan.id}
+                  plans={plans}
+                  task={{
+                    id: task.id,
+                    title: task.title,
+                    content: task.content,
+                    dueAt: task.dueAt?.toISOString() ?? null,
+                    urgency: task.urgency,
+                    completedAt: task.completedAt?.toISOString() ?? null,
+                    planId: plan.id,
+                  }}
+                />
+              </li>
+            ))}
+          </ul>
           ) : (
             <div className="px-6 py-8 text-center">
               <p className="text-sm text-zinc-500">No tasks in this plan yet.</p>

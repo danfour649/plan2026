@@ -75,6 +75,12 @@ export default async function TasksPage({
     : [];
   const hasVisibleTasks = remainingTasks.length > 0 || completedTasks.length > 0;
 
+  const plans = await prisma.plan.findMany({
+    where: { userId },
+    orderBy: [{ priority: "desc" }, { name: "asc" }],
+    select: { id: true, name: true },
+  });
+
   return (
     <div className="space-y-8">
       <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
@@ -85,7 +91,7 @@ export default async function TasksPage({
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
             <ShowCompletedToggle showCompleted={showCompleted} />
-            <AddTaskDialog action={addTask} />
+            <AddTaskDialog action={addTask} plans={plans} />
           </div>
         </div>
 
@@ -111,12 +117,14 @@ export default async function TasksPage({
                   deleteAction={deleteTask}
                   triggerClassName="min-w-0 flex-1 cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1"
                   showButton={false}
+                  plans={plans}
                   task={{
                     id: task.id,
                     title: task.title,
                     content: task.content,
                     dueAt: task.dueAt?.toISOString() ?? null,
                     urgency: task.urgency,
+                    planId: task.plan?.id ?? null,
                   }}
                 >
                   <div className="min-w-0 flex-1">
@@ -156,12 +164,14 @@ export default async function TasksPage({
                   <EditTaskDialog
                     action={updateTask}
                     deleteAction={deleteTask}
+                    plans={plans}
                     task={{
                       id: task.id,
                       title: task.title,
                       content: task.content,
                       dueAt: task.dueAt?.toISOString() ?? null,
                       urgency: task.urgency,
+                      planId: task.plan?.id ?? null,
                     }}
                   />
                 </div>
@@ -177,12 +187,14 @@ export default async function TasksPage({
                   deleteAction={deleteTask}
                   triggerClassName="min-w-0 flex-1 cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1"
                   showButton={false}
+                  plans={plans}
                   task={{
                     id: task.id,
                     title: task.title,
                     content: task.content,
                     dueAt: task.dueAt?.toISOString() ?? null,
                     urgency: task.urgency,
+                    planId: task.plan?.id ?? null,
                   }}
                 >
                   <div className="flex min-w-0 flex-1 items-start gap-3">
@@ -224,12 +236,14 @@ export default async function TasksPage({
                   <EditTaskDialog
                     action={updateTask}
                     deleteAction={deleteTask}
+                    plans={plans}
                     task={{
                       id: task.id,
                       title: task.title,
                       content: task.content,
                       dueAt: task.dueAt?.toISOString() ?? null,
                       urgency: task.urgency,
+                      planId: task.plan?.id ?? null,
                     }}
                   />
                 </div>

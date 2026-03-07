@@ -79,6 +79,7 @@ export function PlanForm({
 }: PlanFormProps) {
   const [state, formAction] = useActionState(wrap(action), null as PlanActionResult | null);
   const [newTaskTitles, setNewTaskTitles] = useState<string[]>([""]);
+  const [taskSearchFilter, setTaskSearchFilter] = useState("");
 
   useEffect(() => {
     if (state && !state.success && state.error) {
@@ -289,20 +290,60 @@ export function PlanForm({
         <label className="text-sm font-medium text-blue-950">Tasks in this plan</label>
         <p className="text-xs text-zinc-500">Select existing tasks or add new ones below.</p>
         {userTasks.length > 0 ? (
-          <ul className="flex flex-col gap-2 rounded-xl border border-blue-100 bg-blue-50/30 p-3">
-            {userTasks.map((task) => (
-              <li key={task.id} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="taskIds"
-                  value={task.id}
-                  defaultChecked={initialValues?.taskIds?.includes(task.id)}
-                  className="h-4 w-4 rounded border-blue-200"
-                />
-                <span className="text-sm text-blue-950">{task.title}</span>
-              </li>
-            ))}
-          </ul>
+          <details className="group rounded-xl border border-blue-100 bg-blue-50/30">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-sm font-medium text-blue-950 transition hover:bg-blue-100/50 [&::-webkit-details-marker]:hidden">
+              <span>
+                Select tasks for this plan
+                <span className="ml-1.5 text-zinc-500 font-normal">
+                  ({initialValues?.taskIds?.length ?? 0} selected)
+                </span>
+              </span>
+              <span className="shrink-0 text-zinc-400 transition group-open:rotate-180" aria-hidden>
+                ▼
+              </span>
+            </summary>
+            <div className="border-t border-blue-100 px-3 pb-3 pt-2">
+              <input
+                type="search"
+                value={taskSearchFilter}
+                onChange={(e) => setTaskSearchFilter(e.target.value)}
+                placeholder="Search tasks..."
+                aria-label="Filter tasks by name"
+                className="mb-2 w-full rounded-lg border border-blue-100 bg-white px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-2"
+              />
+              <ul className="flex max-h-48 flex-col gap-1.5 overflow-y-auto rounded-lg border border-blue-100 bg-white p-2">
+                {userTasks.map((task) => {
+                  const matches =
+                    taskSearchFilter.trim() === "" ||
+                    task.title.toLowerCase().includes(taskSearchFilter.toLowerCase());
+                  return (
+                    <li
+                      key={task.id}
+                      className={`flex items-center gap-2 py-1 px-1.5 rounded-md ${matches ? "" : "hidden"}`}
+                    >
+                      <input
+                        type="checkbox"
+                        name="taskIds"
+                        value={task.id}
+                        defaultChecked={initialValues?.taskIds?.includes(task.id)}
+                        className="h-4 w-4 shrink-0 rounded border-blue-200"
+                        id={`plan-form-task-${task.id}`}
+                      />
+                      <label htmlFor={`plan-form-task-${task.id}`} className="min-w-0 flex-1 cursor-pointer truncate text-sm text-blue-950">
+                        {task.title}
+                      </label>
+                    </li>
+                  );
+                })}
+                {taskSearchFilter.trim() !== "" &&
+                  !userTasks.some((t) =>
+                    t.title.toLowerCase().includes(taskSearchFilter.toLowerCase()),
+                  ) ? (
+                  <li className="py-2 px-1.5 text-sm text-zinc-500">No tasks match your search.</li>
+                ) : null}
+              </ul>
+            </div>
+          </details>
         ) : (
           <p className="text-sm text-zinc-500">No tasks yet. Add new tasks below or create some from the Tasks page.</p>
         )}

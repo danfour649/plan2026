@@ -17,10 +17,19 @@ export async function addTask(formData: FormData): Promise<ActionResult> {
     content: formData.get("content") ?? undefined,
     dueAt: formData.get("dueAt") ?? undefined,
     urgency: formData.get("urgency") ?? 4,
+    planId: formData.get("planId") ?? undefined,
   });
   if (!parsed.success) {
     const msg = parsed.error.flatten().formErrors[0] ?? "Invalid input";
     return { success: false, error: msg };
+  }
+
+  if (parsed.data.planId) {
+    const plan = await prisma.plan.findFirst({
+      where: { id: parsed.data.planId, userId },
+      select: { id: true },
+    });
+    if (!plan) return { success: false, error: "Plan not found" };
   }
 
   await prisma.task.create({
@@ -30,9 +39,11 @@ export async function addTask(formData: FormData): Promise<ActionResult> {
       content: parsed.data.content ?? null,
       dueAt: parsed.data.dueAt ?? null,
       urgency: parsed.data.urgency,
+      planId: parsed.data.planId ?? null,
     },
   });
   revalidatePath("/tasks");
+  revalidatePath("/plans");
   return { success: true };
 }
 
@@ -46,10 +57,19 @@ export async function updateTask(formData: FormData): Promise<ActionResult> {
     content: formData.get("content") ?? undefined,
     dueAt: formData.get("dueAt") ?? undefined,
     urgency: formData.get("urgency") ?? 4,
+    planId: formData.get("planId") ?? undefined,
   });
   if (!parsed.success) {
     const msg = parsed.error.flatten().formErrors[0] ?? "Invalid input";
     return { success: false, error: msg };
+  }
+
+  if (parsed.data.planId) {
+    const plan = await prisma.plan.findFirst({
+      where: { id: parsed.data.planId, userId },
+      select: { id: true },
+    });
+    if (!plan) return { success: false, error: "Plan not found" };
   }
 
   const result = await prisma.task.updateMany({
@@ -59,6 +79,7 @@ export async function updateTask(formData: FormData): Promise<ActionResult> {
       content: parsed.data.content ?? null,
       dueAt: parsed.data.dueAt ?? null,
       urgency: parsed.data.urgency,
+      planId: parsed.data.planId ?? null,
     },
   });
 
@@ -67,6 +88,7 @@ export async function updateTask(formData: FormData): Promise<ActionResult> {
   }
 
   revalidatePath("/tasks");
+  revalidatePath("/plans");
   return { success: true };
 }
 
