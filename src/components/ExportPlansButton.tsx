@@ -25,7 +25,7 @@ export function ExportPlansButton({ plans, className }: ExportPlansButtonProps) 
       disabled={disabled}
       className={
         className ??
-        "rounded-xl border border-blue-200 bg-blue-50 p-2 text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+        "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-0 text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
       }
       title={disabled ? "No plans to export" : "Export plans to JSON"}
       aria-label={disabled ? "No plans to export" : "Export plans to JSON"}

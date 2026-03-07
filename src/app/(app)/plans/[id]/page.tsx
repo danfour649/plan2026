@@ -167,7 +167,7 @@ export default async function PlanDetailPage({
                 : "Viewing a plan shared with you."}
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-nowrap items-center gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible">
             <ExportPlanButton plan={planForExport} />
             {isOwner ? (
               <>

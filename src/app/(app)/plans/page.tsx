@@ -101,19 +101,26 @@ export default async function PlansPage({
   return (
     <div className="space-y-8">
       <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
-        <div className="flex flex-col gap-3 border-b border-blue-100 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-blue-100 px-6 py-4 sm:gap-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <h2 className="text-2xl font-bold tracking-tight text-blue-950">Plans</h2>
-            <RefreshPlansButton />
+            <div className="flex shrink-0 items-center gap-1">
+              <RefreshPlansButton />
+              <ExportPlansButton
+                plans={plansForExport}
+                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-0 text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+            </div>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-            <ExportPlansButton plans={plansForExport} />
+          <div className="ml-auto flex flex-nowrap items-center gap-2 sm:gap-4">
             <ShowArchivedPlansToggle showArchived={showArchived} />
             <Link
               href="/plans/new"
-              className="inline-flex w-fit rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:h-auto sm:w-fit sm:px-4 sm:py-2"
+              aria-label="Add plan"
             >
-              Add plan
+              <span className="text-xl font-medium sm:hidden" aria-hidden>+</span>
+              <span className="hidden text-sm font-medium sm:inline">Add plan</span>
             </Link>
           </div>
         </div>
@@ -139,24 +146,24 @@ export default async function PlansPage({
             {plans.map((plan) => (
               <li
                 key={plan.id}
-                className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 transition hover:bg-blue-50/40 sm:flex-nowrap"
+                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-3"
               >
                 <Link
                   href={`/plans/${plan.id}`}
-                  className="flex min-w-0 flex-1 flex-wrap items-center gap-3 sm:flex-nowrap"
+                  className="flex min-w-0 flex-1 flex-wrap items-start gap-3 sm:flex-nowrap sm:items-center"
                 >
                   {plan.imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element -- user-pasted URL, arbitrary host
                     <img
                       src={plan.imageUrl}
                       alt=""
-                      className="h-12 w-12 shrink-0 rounded-lg border border-blue-100 object-cover"
+                      className="h-12 w-12 shrink-0 rounded-lg border border-blue-100 bg-zinc-100 object-contain object-center"
                     />
                   ) : null}
-                  <div className="min-w-0 flex-1 overflow-hidden">
-                    <div className="flex flex-wrap items-center gap-2">
+                  <div className="min-w-0 flex-1 overflow-visible">
+                    <div className="flex flex-wrap items-center gap-2 pt-0.5 pl-0.5">
                       <span
-                        className={`inline-block max-w-full truncate rounded-full px-3 py-1 text-sm font-semibold sm:max-w-[18rem] ${getPriorityOvalClasses(
+                        className={`inline-block max-w-full break-words rounded-full px-3 py-1 text-sm font-semibold sm:max-w-[18rem] sm:truncate ${getPriorityOvalClasses(
                           plan.priority,
                         )}`}
                       >
@@ -179,7 +186,7 @@ export default async function PlansPage({
                       </span>
                     </div>
                     {(plan.goal ?? plan.description) && (
-                      <p className="mt-0.5 line-clamp-1 break-words text-sm text-zinc-500">
+                      <p className="mt-0.5 line-clamp-2 break-words text-sm text-zinc-500 sm:line-clamp-1">
                         {plan.goal ?? plan.description}
                       </p>
                     )}
@@ -197,12 +204,14 @@ export default async function PlansPage({
                   </div>
                 </Link>
                 {plan.userId === userId ? (
-                  <div className="flex flex-wrap items-center gap-2 shrink-0">
-                    <PlanStatusSelect
-                      planId={plan.id}
-                      currentStatus={plan.status}
-                      action={updatePlanStatus}
-                    />
+                  <div className="flex w-full shrink-0 justify-end gap-2 sm:w-auto sm:justify-start">
+                    <div className="hidden sm:block">
+                      <PlanStatusSelect
+                        planId={plan.id}
+                        currentStatus={plan.status}
+                        action={updatePlanStatus}
+                      />
+                    </div>
                     <Link
                       href={`/plans/${plan.id}`}
                       className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
@@ -213,7 +222,7 @@ export default async function PlansPage({
                 ) : (
                   <Link
                     href={`/plans/${plan.id}`}
-                    className="shrink-0 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
+                    className="shrink-0 self-end rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 sm:self-auto"
                   >
                     View
                   </Link>
