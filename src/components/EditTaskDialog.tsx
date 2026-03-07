@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { ExportTaskButton } from "@/components/ExportTaskButton";
 import { TaskForm } from "@/components/TaskForm";
 import type { ActionResult } from "@/lib/actions/tasks";
 
@@ -27,6 +28,9 @@ type EditTaskDialogProps = {
     urgency: number;
     completedAt?: string | null;
     planId?: string | null;
+    planName?: string | null;
+    createdAt?: string;
+    updatedAt?: string;
   };
   children?: React.ReactNode;
   triggerClassName?: string;
@@ -192,6 +196,23 @@ export function EditTaskDialog({
               }}
               plans={plans}
             />
+
+            <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-blue-100 pt-4">
+              <ExportTaskButton
+                task={{
+                  id: task.id,
+                  title: task.title,
+                  content: task.content,
+                  dueAt: task.dueAt,
+                  urgency: task.urgency,
+                  completedAt: task.completedAt ?? null,
+                  planId: task.planId ?? null,
+                  planName: task.planName ?? null,
+                  createdAt: task.createdAt ?? new Date().toISOString(),
+                  updatedAt: task.updatedAt ?? new Date().toISOString(),
+                }}
+              />
+            </div>
 
             {completeAction && restoreAction ? (
               <div className="mt-6 border-t border-blue-100 pt-4">

@@ -1,0 +1,36 @@
+"use client";
+
+import { DownloadIcon } from "@/components/DownloadIcon";
+import type { ExportedPlan } from "@/lib/export";
+import { buildPlansExportPayload, downloadExport } from "@/lib/export";
+
+type ExportPlansButtonProps = {
+  plans: ExportedPlan[];
+  className?: string;
+};
+
+export function ExportPlansButton({ plans, className }: ExportPlansButtonProps) {
+  const disabled = plans.length === 0;
+
+  function handleClick() {
+    const payload = buildPlansExportPayload(plans);
+    const date = new Date().toISOString().slice(0, 10);
+    downloadExport(`plan2026-plans-${date}.json`, payload);
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={disabled}
+      className={
+        className ??
+        "rounded-xl border border-blue-200 bg-blue-50 p-2 text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+      }
+      title={disabled ? "No plans to export" : "Export plans to JSON"}
+      aria-label={disabled ? "No plans to export" : "Export plans to JSON"}
+    >
+      <DownloadIcon className="h-5 w-5" />
+    </button>
+  );
+}
