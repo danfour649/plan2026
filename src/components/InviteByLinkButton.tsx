@@ -43,7 +43,14 @@ export function InviteByLinkButton({ planId }: { planId: string }) {
         disabled={loading}
         className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 disabled:opacity-70"
       >
-        {loading ? "Creating…" : "Invite by link"}
+        {loading ? (
+          "Creating…"
+        ) : (
+          <>
+            <span className="sm:hidden">Invite</span>
+            <span className="hidden sm:inline">Invite by link</span>
+          </>
+        )}
       </button>
       {inviteUrl ? (
         <div className="mt-2 rounded-xl border border-blue-100 bg-blue-50/50 px-3 py-2 text-xs text-zinc-600">
