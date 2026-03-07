@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.7.1
+
+### Patch Changes
+
+- a927b7f: Ensure French and Nigerian Pidgin translations are shown for all app text. Added TranslationsProvider and useTranslations for client components; expanded i18n with all user-facing strings and wired every page and component to use them.
+
 ## 0.7.0
 
 ### Minor Changes
