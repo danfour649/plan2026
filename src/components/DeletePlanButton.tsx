@@ -38,12 +38,12 @@ export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonP
 
       {showConfirm ? (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/45 px-4 py-8"
+          className="fixed inset-0 z-50 flex flex-col items-center overflow-y-auto bg-zinc-950/45 px-4 pt-6 pb-8 sm:pt-8"
           onClick={() => setShowConfirm(false)}
           role="presentation"
         >
           <div
-            className="w-full max-w-md rounded-2xl border border-blue-100 bg-white px-6 py-5 shadow-2xl shadow-blue-950/10"
+            className="w-full max-w-md shrink-0 rounded-2xl border border-blue-100 bg-white px-6 py-5 shadow-2xl shadow-blue-950/10"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"

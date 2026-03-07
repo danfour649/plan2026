@@ -41,12 +41,12 @@ export function SharePlanButton({ planId }: { planId: string }) {
       </button>
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/45 px-4"
+          className="fixed inset-0 z-50 flex flex-col items-center overflow-y-auto bg-zinc-950/45 px-4 pt-6 pb-8 sm:pt-8"
           onClick={() => setIsOpen(false)}
           role="presentation"
         >
           <div
-            className="w-full max-w-sm rounded-2xl border border-blue-100 bg-white p-6 shadow-xl"
+            className="w-full max-w-sm shrink-0 rounded-2xl border border-blue-100 bg-white p-6 shadow-xl"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
