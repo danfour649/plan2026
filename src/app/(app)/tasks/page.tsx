@@ -65,14 +65,20 @@ export default async function TasksPage({
   const remainingTasks = await prisma.task.findMany({
     where: { userId, completedAt: null },
     orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
-    include: { plan: { select: { id: true, name: true } } },
+    include: {
+      plan: { select: { id: true, name: true } },
+      attachments: { select: { id: true, url: true, filename: true, size: true } },
+    },
   });
 
   const completedTasks = showCompleted
     ? await prisma.task.findMany({
         where: { userId, completedAt: { not: null } },
         orderBy: [{ urgency: "desc" }, { completedAt: "desc" }],
-        include: { plan: { select: { id: true, name: true } } },
+        include: {
+          plan: { select: { id: true, name: true } },
+          attachments: { select: { id: true, url: true, filename: true, size: true } },
+        },
       })
     : [];
   const hasVisibleTasks = remainingTasks.length > 0 || completedTasks.length > 0;
@@ -162,6 +168,12 @@ export default async function TasksPage({
                     planName: task.plan?.name ?? null,
                     createdAt: task.createdAt.toISOString(),
                     updatedAt: task.updatedAt.toISOString(),
+                    attachments: task.attachments.map((a) => ({
+                      id: a.id,
+                      url: a.url,
+                      filename: a.filename,
+                      size: a.size,
+                    })),
                   }}
                 >
                   <div className="min-w-0 flex-1">
@@ -212,6 +224,12 @@ export default async function TasksPage({
                       planName: task.plan?.name ?? null,
                       createdAt: task.createdAt.toISOString(),
                       updatedAt: task.updatedAt.toISOString(),
+                      attachments: task.attachments.map((a) => ({
+                        id: a.id,
+                        url: a.url,
+                        filename: a.filename,
+                        size: a.size,
+                      })),
                     }}
                   />
                 </div>
@@ -239,6 +257,12 @@ export default async function TasksPage({
                     planName: task.plan?.name ?? null,
                     createdAt: task.createdAt.toISOString(),
                     updatedAt: task.updatedAt.toISOString(),
+                    attachments: task.attachments.map((a) => ({
+                      id: a.id,
+                      url: a.url,
+                      filename: a.filename,
+                      size: a.size,
+                    })),
                   }}
                 >
                   <div className="flex min-w-0 flex-1 items-start gap-3">
@@ -292,6 +316,12 @@ export default async function TasksPage({
                       planName: task.plan?.name ?? null,
                       createdAt: task.createdAt.toISOString(),
                       updatedAt: task.updatedAt.toISOString(),
+                      attachments: task.attachments.map((a) => ({
+                        id: a.id,
+                        url: a.url,
+                        filename: a.filename,
+                        size: a.size,
+                      })),
                     }}
                   />
                 </div>
