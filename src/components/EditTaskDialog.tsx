@@ -209,7 +209,7 @@ export function EditTaskDialog({
                   planId: task.planId ?? null,
                   planName: task.planName ?? null,
                   createdAt: task.createdAt ?? new Date().toISOString(),
-                  updatedAt: task.updatedAt,
+                  updatedAt: task.updatedAt ?? new Date().toISOString(),
                 }}
               />
             </div>

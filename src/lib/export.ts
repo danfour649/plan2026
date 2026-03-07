@@ -4,49 +4,49 @@
  * Payload includes source and schema hints for future tooling.
  */
 
-export type ExportedTask = {
-  id: string;
-  title: string;
-  content: string | null;
-  dueAt: string | null;
-  urgency: number;
-  completedAt: string | null;
-  planId: string | null;
+import type { Plan, Task } from "@prisma/client";
+
+/** Converts Date fields to ISO strings for JSON-serializable payloads. */
+type Serialized<T> = {
+  [K in keyof T]: T[K] extends Date ? string : T[K] extends Date | null ? string | null : T[K];
+};
+
+/** Task fields we export, with dates as strings. planName and calendar fields optional (dialog export may omit them). */
+export type ExportedTask = Serialized<
+  Pick<Task, "id" | "title" | "content" | "dueAt" | "urgency" | "completedAt" | "planId" | "createdAt" | "updatedAt">
+> & {
   planName?: string | null;
-  createdAt: string;
-  updatedAt?: string;
   googleCalendarEventId?: string | null;
   googleCalendarEventUrl?: string | null;
 };
 
-export type ExportedPlanTask = {
-  id: string;
-  title: string;
-  content: string | null;
-  dueAt: string | null;
-  urgency: number;
-  completedAt: string | null;
-  createdAt: string;
-  updatedAt?: string;
-};
+/** Subset of Task for plan-in-plan export (no planId / calendar fields). */
+export type ExportedPlanTask = Serialized<
+  Pick<Task, "id" | "title" | "content" | "dueAt" | "urgency" | "completedAt" | "createdAt" | "updatedAt">
+>;
 
-export type ExportedPlan = {
-  id: string;
-  name: string;
-  description: string | null;
-  goal: string | null;
-  startAt: string;
-  endAt: string;
-  actualStartAt: string | null;
-  actualEndAt: string | null;
-  status: string;
-  priority: number;
-  percentCompleted: number;
-  notes: string | null;
-  color: string | null;
-  imageUrl: string | null;
-  createdAt: string;
-  updatedAt: string;
+/** Plan fields we export, with dates as strings. tasks or taskSummaries added depending on context. */
+export type ExportedPlan = Serialized<
+  Pick<
+    Plan,
+    | "id"
+    | "name"
+    | "description"
+    | "goal"
+    | "startAt"
+    | "endAt"
+    | "actualStartAt"
+    | "actualEndAt"
+    | "status"
+    | "priority"
+    | "percentCompleted"
+    | "notes"
+    | "color"
+    | "imageUrl"
+    | "createdAt"
+    | "updatedAt"
+  >
+> & {
   tasks?: ExportedPlanTask[];
   /** When plan is from list view, only id and completedAt per task. */
   taskSummaries?: { id: string; completedAt: string | null }[];
