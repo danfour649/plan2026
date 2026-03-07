@@ -45,7 +45,11 @@ export default async function PlanDetailPage({
     where: { id, userId },
     include: {
       tasks: {
-        orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
+        orderBy: [
+          { completedAt: "desc" }, // nulls first (incomplete), then completed last
+          { urgency: "desc" },
+          { createdAt: "desc" },
+        ],
         select: {
           id: true,
           title: true,
