@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AddTaskDialog } from "@/components/AddTaskDialog";
 import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
+import { RefreshTasksButton } from "@/components/RefreshTasksButton";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { TaskContent } from "@/components/TaskContent";
 import { prisma } from "@/lib/prisma";
@@ -74,7 +75,10 @@ export default async function TasksPage({
     <div className="space-y-8">
       <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
         <div className="flex flex-col gap-3 border-b border-blue-100 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-2xl font-bold tracking-tight text-blue-950">Tasks</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-bold tracking-tight text-blue-950">Tasks</h2>
+            <RefreshTasksButton />
+          </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="inline-flex rounded-full border border-blue-100 bg-white p-1 text-sm">
               <Link
