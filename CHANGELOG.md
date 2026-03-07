@@ -1,5 +1,19 @@
 # plan2026
 
+## 0.5.0
+
+### Minor Changes
+
+- 2367578: Add file upload for tasks: attach files to a task from the edit dialog. Files are stored in Vercel Blob (or compatible). Requires `BLOB_READ_WRITE_TOKEN` when deployed. Task attachments are listed in the edit dialog with links and remove action.
+- a73b10e: Add language preference: users can choose English, French (Français), or Nigerian Pidgin in Settings. Nav and settings labels use the selected language. Preference is stored in a cookie.
+
+### Patch Changes
+
+- 99b43fc: Fix add-task dialog on mobile: keep form visible on load by aligning dialog to top and making content scrollable instead of centered off-screen.
+- 60020c4: Improve mobile layout for task and plan lists: stack list rows on small screens so content and actions wrap correctly, add break-words for metadata lines, and fix plan name truncation.
+- 6bddc10: Plans page: show incomplete tasks first, completed tasks at the bottom of the task list.
+- 03b20eb: Add SEO improvements: richer metadata (Open Graph, Twitter card, description), sitemap.xml, and robots.txt. Public pages remain indexable; app routes are disallowed for crawlers.
+
 ## 0.4.0
 
 ### Minor Changes
