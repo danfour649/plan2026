@@ -95,7 +95,7 @@ For React components, add `@vitest-environment jsdom` at the top of the test fil
 
 ### Before you push
 
-A **pre-push** Git hook (via [Husky](https://typicode.github.io/husky/)) runs `npm run prepush`, which runs **lint** and **build**. That way lint and TypeScript/build failures are caught before pushing, so CI and Vercel are less likely to fail. After `npm install`, the hook is installed automatically. To run the same checks manually: `npm run lint` and `npm run build`.
+A **pre-push** Git hook (via [Husky](https://typicode.github.io/husky/)) runs `npm run prepush`, which runs **lint**, **typecheck**, and **next build** (without `prisma generate`). That way you can push while the dev server is running without hitting a Prisma engine lock on Windows; full `npm run build` (with Prisma generate) runs in CI. To run the same checks manually: `npm run prepush`. For a full build including Prisma: `npm run build`.
 
 ### Port 3000 already in use
 

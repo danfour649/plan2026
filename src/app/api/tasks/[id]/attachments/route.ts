@@ -50,7 +50,7 @@ export async function POST(req: Request, { params }: Params) {
   const pathname = `tasks/${taskId}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
 
   const blob = await put(pathname, file, {
-    access: "public",
+    access: "private",
     addRandomSuffix: false,
     contentType: file.type || "application/octet-stream",
     token,

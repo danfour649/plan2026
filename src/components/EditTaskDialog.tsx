@@ -213,7 +213,7 @@ export function EditTaskDialog({
                   {attachments.map((a) => (
                     <li key={a.id} className="flex items-center justify-between gap-2 text-sm">
                       <a
-                        href={a.url}
+                        href={`/api/tasks/${task.id}/attachments/${a.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="truncate text-blue-600 hover:underline"
