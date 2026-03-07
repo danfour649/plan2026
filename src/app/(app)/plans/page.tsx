@@ -1,14 +1,15 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 
 import { getCurrentUserId } from "@/auth";
 import { ExportPlansButton } from "@/components/ExportPlansButton";
 import { RefreshPlansButton } from "@/components/RefreshPlansButton";
 import { ShowArchivedPlansToggle } from "@/components/ShowArchivedPlansToggle";
 import { PlanStatusSelect } from "@/components/PlanStatusSelect";
+import { formatTasksCount, getLocaleFromCookie, getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 import type { ExportedPlan } from "@/lib/export";
 import { updatePlanStatus } from "@/lib/actions/plans";
-import { formatPlanStatus } from "@/lib/validations/plan";
 
 /** Colored oval (ring + light fill) around the plan name by priority. */
 function getPriorityOvalClasses(priority: number) {
@@ -54,7 +55,8 @@ export default async function PlansPage({
 }) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
-
+  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const t = getTranslations(locale);
   const resolvedSearchParams = (await searchParams) ?? {};
   const showArchived = Array.isArray(resolvedSearchParams.showArchived)
     ? resolvedSearchParams.showArchived[0] === "1"
@@ -103,7 +105,7 @@ export default async function PlansPage({
       <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
         <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-blue-100 px-6 py-4 sm:gap-4">
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <h2 className="text-2xl font-bold tracking-tight text-blue-950">Plans</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-blue-950">{t.plansPage.title}</h2>
             <div className="flex shrink-0 items-center gap-1">
               <RefreshPlansButton />
               <ExportPlansButton
@@ -117,10 +119,10 @@ export default async function PlansPage({
             <Link
               href="/plans/new"
               className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:h-auto sm:w-fit sm:px-4 sm:py-2"
-              aria-label="Add plan"
+              aria-label={t.plans.addPlanAria}
             >
               <span className="text-xl font-medium sm:hidden" aria-hidden>+</span>
-              <span className="hidden text-sm font-medium sm:inline">Add plan</span>
+              <span className="hidden text-sm font-medium sm:inline">{t.plansPage.addPlan}</span>
             </Link>
           </div>
         </div>
@@ -130,15 +132,13 @@ export default async function PlansPage({
             <p className="text-4xl font-light text-blue-300" aria-hidden>
               📋
             </p>
-            <p className="mt-3 text-base font-medium text-blue-900">No plans yet</p>
-            <p className="mt-1 text-sm text-zinc-500">
-              Create a plan to group tasks and track progress.
-            </p>
+            <p className="mt-3 text-base font-medium text-blue-900">{t.plansPage.noPlans}</p>
+            <p className="mt-1 text-sm text-zinc-500">{t.plansPage.createPlan}</p>
             <Link
               href="/plans/new"
               className="mt-4 inline-flex rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700"
             >
-              Add plan
+              {t.plansPage.addPlan}
             </Link>
           </div>
         ) : (
@@ -171,7 +171,7 @@ export default async function PlansPage({
                       </span>
                       {plan.userId !== userId ? (
                         <span className="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600">
-                          Shared with me
+                          {t.plansPage.sharedWithMe}
                         </span>
                       ) : null}
                       <span
@@ -179,7 +179,7 @@ export default async function PlansPage({
                           plan.status,
                         )}`}
                       >
-                        {formatPlanStatus(plan.status)}
+                        {t.planStatus[plan.status as keyof typeof t.planStatus] ?? plan.status}
                       </span>
                       <span className="shrink-0 text-sm font-medium text-blue-700">
                         {plan.percentCompleted}%
@@ -193,13 +193,13 @@ export default async function PlansPage({
                     <p className="mt-1 break-words text-xs text-zinc-500">
                       {plan.startAt.toLocaleDateString()} – {plan.endAt.toLocaleDateString()}
                       {" · "}
-                      {(() => {
-                        const total = plan.tasks.length;
-                        const completed = plan.tasks.filter((t) => t.completedAt != null).length;
-                        return total === 0
-                          ? "0 tasks"
-                          : `${completed} of ${total} task${total !== 1 ? "s" : ""} completed`;
-                      })()}
+                      {formatTasksCount(
+                        t.plans.tasksCountZero,
+                        t.plans.tasksCountOne,
+                        t.plans.tasksCountMany,
+                        plan.tasks.length,
+                        plan.tasks.filter((task) => task.completedAt != null).length,
+                      )}
                     </p>
                   </div>
                 </Link>
@@ -216,7 +216,7 @@ export default async function PlansPage({
                       href={`/plans/${plan.id}`}
                       className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
                     >
-                      Edit
+                      {t.plansPage.edit}
                     </Link>
                   </div>
                 ) : (
@@ -224,7 +224,7 @@ export default async function PlansPage({
                     href={`/plans/${plan.id}`}
                     className="shrink-0 self-end rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 sm:self-auto"
                   >
-                    View
+                    {t.plansPage.view}
                   </Link>
                 )}
               </li>

@@ -7,9 +7,12 @@ import { GOOGLE_AUTHORIZATION_PARAMS } from "@/lib/google-oauth";
 export function GoogleSignInButton({
   callbackUrl = "/tasks",
   disabled,
+  label = "Continue with Google",
 }: {
   callbackUrl?: string;
   disabled: boolean;
+  /** Button label (translated by parent). */
+  label?: string;
 }) {
   return (
     <button
@@ -20,7 +23,7 @@ export function GoogleSignInButton({
       }
       className="inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-zinc-300"
     >
-      Continue with Google
+      {label}
     </button>
   );
 }

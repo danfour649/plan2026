@@ -2,11 +2,14 @@
 
 import { useRouter } from "next/navigation";
 
+import { useTranslations } from "@/components/TranslationsProvider";
+
 type ShowCompletedToggleProps = {
   showCompleted: boolean;
 };
 
 export function ShowCompletedToggle({ showCompleted }: ShowCompletedToggleProps) {
+  const t = useTranslations();
   const router = useRouter();
   const activeOnly = !showCompleted;
 
@@ -16,15 +19,15 @@ export function ShowCompletedToggle({ showCompleted }: ShowCompletedToggleProps)
 
   return (
     <div className="flex flex-col items-center gap-0.5 sm:flex-row sm:gap-2">
-      <span className="order-2 text-xs text-zinc-600 sm:order-1 sm:text-sm sm:font-medium sm:text-zinc-700" aria-hidden>Active</span>
+      <span className="order-2 text-xs text-zinc-600 sm:order-1 sm:text-sm sm:font-medium sm:text-zinc-700" aria-hidden>{t.toggle.active}</span>
       <button
         type="button"
         role="switch"
         aria-checked={activeOnly}
         aria-label={
           activeOnly
-            ? "Show only active tasks (turn off to include completed)"
-            : "Include completed tasks (turn on for active only)"
+            ? t.toggle.showActiveTasksOnly
+            : t.toggle.includeCompletedTasks
         }
         onClick={handleToggle}
         className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border shadow-inner transition-colors hover:border-blue-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-1 ${

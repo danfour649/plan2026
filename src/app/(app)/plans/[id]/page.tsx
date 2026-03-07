@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { getCurrentUserId } from "@/auth";
@@ -9,6 +10,7 @@ import { InviteByLinkButton } from "@/components/InviteByLinkButton";
 import { PlanForm } from "@/components/PlanForm";
 import { SharePlanButton } from "@/components/SharePlanButton";
 import { TaskContent } from "@/components/TaskContent";
+import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 import type { ExportedPlan, ExportedPlanTask } from "@/lib/export";
 import { deletePlan, updatePlan } from "@/lib/actions/plans";
@@ -40,7 +42,8 @@ export default async function PlanDetailPage({
 }) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
-
+  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const t = getTranslations(locale);
   const { id } = await params;
 
   const plan = await prisma.plan.findFirst({
@@ -127,15 +130,15 @@ export default async function PlanDetailPage({
     createdAt: plan.createdAt.toISOString(),
     updatedAt: plan.updatedAt.toISOString(),
     tasks: plan.tasks.map(
-      (t): ExportedPlanTask => ({
-        id: t.id,
-        title: t.title,
-        content: t.content,
-        dueAt: t.dueAt?.toISOString() ?? null,
-        urgency: t.urgency,
-        completedAt: t.completedAt?.toISOString() ?? null,
-        createdAt: t.createdAt.toISOString(),
-        updatedAt: t.updatedAt.toISOString(),
+      (taskItem): ExportedPlanTask => ({
+        id: taskItem.id,
+        title: taskItem.title,
+        content: taskItem.content,
+        dueAt: taskItem.dueAt?.toISOString() ?? null,
+        urgency: taskItem.urgency,
+        completedAt: taskItem.completedAt?.toISOString() ?? null,
+        createdAt: taskItem.createdAt.toISOString(),
+        updatedAt: taskItem.updatedAt.toISOString(),
       }),
     ),
   };
@@ -156,15 +159,13 @@ export default async function PlanDetailPage({
               strokeLinejoin="round"
             />
           </svg>
-          Back to plans
+          {t.common.backToPlans}
         </Link>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-blue-950">{plan.name}</h1>
             <p className="mt-1 text-sm text-zinc-500">
-              {isOwner
-                ? "Edit plan and tasks. Changes are saved when you submit."
-                : "Viewing a plan shared with you."}
+              {isOwner ? t.plans.editPlanDescription : t.plans.viewingSharedPlan}
             </p>
           </div>
           <div className="flex flex-nowrap items-center gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible">
@@ -188,7 +189,7 @@ export default async function PlanDetailPage({
               initialValues={initialValues}
               userTasks={userTasks}
               isEdit={true}
-              submitLabel="Save plan"
+              submitLabel={t.common.savePlan}
               singleColumn={true}
             />
           </section>
@@ -196,9 +197,9 @@ export default async function PlanDetailPage({
 
         <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
           <div className="border-b border-blue-100 px-6 py-4">
-            <h2 className="text-xl font-bold tracking-tight text-blue-950">Tasks in this plan</h2>
+            <h2 className="text-xl font-bold tracking-tight text-blue-950">{t.plans.tasksInThisPlan}</h2>
             <p className="mt-1 text-sm text-zinc-500">
-              {isOwner ? "Edit a task below to update it from this page." : "Tasks in this shared plan."}
+              {isOwner ? t.plans.editTaskBelowDescription : t.plans.tasksInSharedPlan}
             </p>
           </div>
           {plan.tasks.length > 0 ? (
@@ -251,9 +252,9 @@ export default async function PlanDetailPage({
                           <TaskContent content={task.content} />
                           <div className="mt-1 break-words text-xs text-zinc-500">
                             {task.completedAt
-                              ? `Completed ${task.completedAt.toLocaleString()}`
-                              : `Added ${task.createdAt.toISOString()}`}
-                            {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
+                              ? `${t.tasks.completed} ${task.completedAt.toLocaleString()}`
+                              : `${t.tasks.added} ${task.createdAt.toISOString()}`}
+                            {task.dueAt && <> · {t.tasks.due} {task.dueAt.toLocaleString()}</>}
                           </div>
                         </div>
                       </EditTaskDialog>
@@ -300,9 +301,9 @@ export default async function PlanDetailPage({
                       <TaskContent content={task.content} />
                       <div className="mt-1 break-words text-xs text-zinc-500">
                         {task.completedAt
-                          ? `Completed ${task.completedAt.toLocaleString()}`
-                          : `Added ${task.createdAt.toISOString()}`}
-                        {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
+                          ? `${t.tasks.completed} ${task.completedAt.toLocaleString()}`
+                          : `${t.tasks.added} ${task.createdAt.toISOString()}`}
+                        {task.dueAt && <> · {t.tasks.due} {task.dueAt.toLocaleString()}</>}
                       </div>
                     </div>
                   )}
@@ -311,9 +312,9 @@ export default async function PlanDetailPage({
             </ul>
           ) : (
             <div className="px-6 py-8 text-center">
-              <p className="text-sm text-zinc-500">No tasks in this plan yet.</p>
+              <p className="text-sm text-zinc-500">{t.plans.noTasksInPlan}</p>
               <p className="mt-1 text-xs text-zinc-400">
-                {isOwner ? "Add or link tasks using the form on the left." : "The plan owner can add tasks."}
+                {isOwner ? t.plans.addOrLinkTasksDescription : t.plans.planOwnerAddTasks}
               </p>
             </div>
           )}

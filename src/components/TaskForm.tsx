@@ -4,6 +4,7 @@ import { useActionState, useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 
 import { TaskContentEditor } from "@/components/TaskContentEditor";
+import { useTranslations } from "@/components/TranslationsProvider";
 import type { ActionResult } from "@/lib/actions/tasks";
 
 type TaskFormAction = (formData: FormData) => Promise<ActionResult>;
@@ -73,6 +74,7 @@ export function TaskForm({
   initialValues,
   plans,
 }: TaskFormProps) {
+  const t = useTranslations();
   const [state, formAction] = useActionState(wrap(action), null as ActionResult | null);
   const defaultDueAtValue = useMemo(
     () => getDefaultDueAtValue(initialValues?.dueAt),
@@ -98,13 +100,13 @@ export function TaskForm({
       <div className="flex w-full flex-col gap-2">
         <input
           name="title"
-          placeholder="Task name"
+          placeholder={t.tasks.taskNamePlaceholder}
           required
           defaultValue={initialValues?.title ?? ""}
           className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
         <div className="flex w-full flex-col gap-1.5">
-          <label className="text-xs whitespace-nowrap text-blue-700">Urgency</label>
+          <label className="text-xs whitespace-nowrap text-blue-700">{t.tasks.urgencyLabel}</label>
           <div className="flex flex-wrap gap-2">
             {URGENCY_OPTIONS.map((option) => (
               <label
@@ -129,13 +131,13 @@ export function TaskForm({
         </div>
         {plans && plans.length > 0 ? (
           <div className="flex w-full flex-col gap-1.5">
-            <label className="text-xs whitespace-nowrap text-blue-700">Plan (optional)</label>
+            <label className="text-xs whitespace-nowrap text-blue-700">{t.tasks.planOptional}</label>
             <select
               name="planId"
               defaultValue={initialValues?.planId ?? ""}
               className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
             >
-              <option value="">None</option>
+              <option value="">{t.form.none}</option>
               {plans.map((plan) => (
                 <option key={plan.id} value={plan.id}>
                   {plan.name}
@@ -161,13 +163,13 @@ export function TaskForm({
               }}
               className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 sm:self-stretch"
             >
-              Clear
+              {t.common.clear}
             </button>
           </div>
         </div>
       </div>
       <div className="w-full">
-        <label className="mb-1 block text-sm font-medium text-blue-950">Description</label>
+        <label className="mb-1 block text-sm font-medium text-blue-950">{t.tasks.descriptionLabel}</label>
         <TaskContentEditor
           name="content"
           defaultValue={initialValues?.content ?? ""}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 
 import { getCurrentUserId } from "@/auth";
 
@@ -11,6 +12,7 @@ import { ShowCompletedToggle } from "@/components/ShowCompletedToggle";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { TaskContent } from "@/components/TaskContent";
 import type { ExportedTask } from "@/lib/export";
+import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
 
@@ -57,6 +59,8 @@ export default async function TasksPage({
   const userId = await getCurrentUserId();
 
   if (!userId) return null;
+  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const t = getTranslations(locale);
   const resolvedSearchParams = (await searchParams) ?? {};
   const showCompleted = Array.isArray(resolvedSearchParams.showCompleted)
     ? resolvedSearchParams.showCompleted[0] === "1"
@@ -90,33 +94,33 @@ export default async function TasksPage({
   });
 
   const allTasksForExport: ExportedTask[] = [
-    ...remainingTasks.map((t) => ({
-      id: t.id,
-      title: t.title,
-      content: t.content,
-      dueAt: t.dueAt?.toISOString() ?? null,
-      urgency: t.urgency,
+    ...remainingTasks.map((task) => ({
+      id: task.id,
+      title: task.title,
+      content: task.content,
+      dueAt: task.dueAt?.toISOString() ?? null,
+      urgency: task.urgency,
       completedAt: null as string | null,
-      planId: t.plan?.id ?? null,
-      planName: t.plan?.name ?? null,
-      createdAt: t.createdAt.toISOString(),
-      updatedAt: t.updatedAt.toISOString(),
-      googleCalendarEventId: t.googleCalendarEventId,
-      googleCalendarEventUrl: t.googleCalendarEventUrl,
+      planId: task.plan?.id ?? null,
+      planName: task.plan?.name ?? null,
+      createdAt: task.createdAt.toISOString(),
+      updatedAt: task.updatedAt.toISOString(),
+      googleCalendarEventId: task.googleCalendarEventId,
+      googleCalendarEventUrl: task.googleCalendarEventUrl,
     })),
-    ...completedTasks.map((t) => ({
-      id: t.id,
-      title: t.title,
-      content: t.content,
-      dueAt: t.dueAt?.toISOString() ?? null,
-      urgency: t.urgency,
-      completedAt: t.completedAt?.toISOString() ?? null,
-      planId: t.plan?.id ?? null,
-      planName: t.plan?.name ?? null,
-      createdAt: t.createdAt.toISOString(),
-      updatedAt: t.updatedAt.toISOString(),
-      googleCalendarEventId: t.googleCalendarEventId,
-      googleCalendarEventUrl: t.googleCalendarEventUrl,
+    ...completedTasks.map((task) => ({
+      id: task.id,
+      title: task.title,
+      content: task.content,
+      dueAt: task.dueAt?.toISOString() ?? null,
+      urgency: task.urgency,
+      completedAt: task.completedAt?.toISOString() ?? null,
+      planId: task.plan?.id ?? null,
+      planName: task.plan?.name ?? null,
+      createdAt: task.createdAt.toISOString(),
+      updatedAt: task.updatedAt.toISOString(),
+      googleCalendarEventId: task.googleCalendarEventId,
+      googleCalendarEventUrl: task.googleCalendarEventUrl,
     })),
   ];
 
@@ -125,7 +129,7 @@ export default async function TasksPage({
       <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
         <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-blue-100 px-6 py-4 sm:gap-4">
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <h2 className="text-2xl font-bold tracking-tight text-blue-950">Tasks</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-blue-950">{t.tasksPage.title}</h2>
             <div className="flex shrink-0 items-center gap-1">
               <RefreshTasksButton />
               <ExportTasksButton
@@ -145,10 +149,8 @@ export default async function TasksPage({
             <p className="text-4xl font-light text-blue-300" aria-hidden>
               ✓
             </p>
-            <p className="mt-3 text-base font-medium text-blue-900">All clear!</p>
-            <p className="mt-1 text-sm text-zinc-500">
-              You’re all caught up. Add a new task when you’re ready.
-            </p>
+            <p className="mt-3 text-base font-medium text-blue-900">{t.tasksPage.allClear}</p>
+            <p className="mt-1 text-sm text-zinc-500">{t.tasksPage.noTasks}</p>
           </div>
         ) : (
           <ul className="divide-y divide-blue-100">
@@ -193,8 +195,8 @@ export default async function TasksPage({
                     </div>
                     <TaskContent content={task.content} />
                     <div className="mt-1 break-words text-xs text-zinc-500">
-                      Added {task.createdAt.toLocaleString()}
-                      {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
+                      {t.tasks.added} {task.createdAt.toLocaleString()}
+                      {task.dueAt && <> · {t.tasks.due} {task.dueAt.toLocaleString()}</>}
                       {task.plan && (
                         <>
                           {" · "}
@@ -202,7 +204,7 @@ export default async function TasksPage({
                             href={`/plans/${task.plan.id}`}
                             className="text-blue-600 hover:underline"
                           >
-                            Plan: {task.plan.name}
+                            {t.tasks.planLabel} {task.plan.name}
                           </Link>
                         </>
                       )}
@@ -215,7 +217,7 @@ export default async function TasksPage({
                       taskId={task.id}
                       initiallyLinked={Boolean(task.googleCalendarEventId)}
                     />
-                    <TaskActionButton action={completeTask} taskId={task.id} label="Mark done" />
+                    <TaskActionButton action={completeTask} taskId={task.id} label={t.tasks.markDone} successMessage={t.tasks.markedDone} />
                   </div>
                   <EditTaskDialog
                     action={updateTask}
@@ -286,7 +288,7 @@ export default async function TasksPage({
                       </div>
                       <TaskContent content={task.content} />
                       <div className="mt-1 break-words text-xs text-zinc-500">
-                        Completed {task.completedAt ? task.completedAt.toLocaleString() : "—"}
+                        {t.tasks.completed} {task.completedAt ? task.completedAt.toLocaleString() : "—"}
                         {task.plan && (
                           <>
                             {" · "}
@@ -294,7 +296,7 @@ export default async function TasksPage({
                               href={`/plans/${task.plan.id}`}
                               className="text-blue-600 hover:underline"
                             >
-                              Plan: {task.plan.name}
+                              {t.tasks.planLabel} {task.plan.name}
                             </Link>
                           </>
                         )}
@@ -308,7 +310,7 @@ export default async function TasksPage({
                       taskId={task.id}
                       initiallyLinked={Boolean(task.googleCalendarEventId)}
                     />
-                    <TaskActionButton action={restoreTask} taskId={task.id} label="Restore" />
+                    <TaskActionButton action={restoreTask} taskId={task.id} label={t.tasks.restore} successMessage={t.tasks.taskRestored} />
                   </div>
                   <EditTaskDialog
                     action={updateTask}

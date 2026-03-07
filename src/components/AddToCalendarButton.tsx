@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import { useTranslations } from "@/components/TranslationsProvider";
+
 type AddToCalendarButtonProps = {
   taskId: string;
   initiallyLinked?: boolean;
@@ -13,6 +15,7 @@ export function AddToCalendarButton({
   taskId,
   initiallyLinked = false,
 }: AddToCalendarButtonProps) {
+  const t = useTranslations();
   const [loading, setLoading] = useState(false);
   const [linked, setLinked] = useState(initiallyLinked);
   const router = useRouter();
@@ -27,17 +30,17 @@ export function AddToCalendarButton({
         created?: boolean;
       };
       if (!res.ok) {
-        toast.error(data.error ?? "Could not add to Google Calendar");
+        toast.error(data.error ?? t.toasts.couldNotAddToCalendar);
         return;
       }
       setLinked(true);
       router.refresh();
-      toast.success(data.created === false ? "Updated in Google Calendar" : "Added to Google Calendar");
+      toast.success(data.created === false ? t.toasts.updatedInCalendar : t.toasts.addedToCalendar);
       if (data.htmlLink) {
         window.open(data.htmlLink, "_blank");
       }
     } catch {
-      toast.error("Could not add to Google Calendar");
+      toast.error(t.toasts.couldNotAddToCalendar);
     } finally {
       setLoading(false);
     }
@@ -49,8 +52,8 @@ export function AddToCalendarButton({
       onClick={handleClick}
       disabled={loading}
       className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-blue-700 transition hover:bg-blue-100 disabled:opacity-50"
-      title={linked ? "Update existing Google Calendar event" : "Add to Google Calendar"}
-      aria-label={linked ? "Update existing Google Calendar event" : "Add to Google Calendar"}
+      title={linked ? t.toasts.updateInCalendar : t.toasts.addToCalendar}
+      aria-label={linked ? t.toasts.updateInCalendar : t.toasts.addToCalendar}
     >
       {loading ? (
         <span aria-hidden="true" className="text-sm leading-none">
@@ -92,7 +95,7 @@ export function AddToCalendarButton({
             )}
           </svg>
           <span className="sr-only">
-            {linked ? "Update existing Google Calendar event" : "Add to Google Calendar"}
+            {linked ? t.toasts.updateInCalendar : t.toasts.addToCalendar}
           </span>
         </>
       )}

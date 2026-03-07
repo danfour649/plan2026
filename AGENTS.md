@@ -45,6 +45,17 @@
 - Do not run `npm run changeset:version` during normal feature work. GitHub automation runs it after PRs are merged into `main` and commits the resulting changelog, version bump, and consumed changeset cleanup automatically.
 - **When starting a new branch that will commit existing (already changed) files:** Before or as part of that first commit, ensure there is a changeset that describes the user-visible impact of those changes. If the work is release-note-worthy and no changeset exists yet, create one in `.changeset/` (do not use the interactive `changeset add` flow). This keeps the branch’s scope documented for release notes when the branch is merged.
 
+## Translations (i18n)
+
+- **All user-facing text must be translated.** The app supports **English**, **French**, and **Nigerian Pidgin**. Any new UI copy (labels, buttons, placeholders, toasts, aria-labels, page headings, messages) must not be hardcoded.
+- **Where translations live:** `src/lib/i18n.ts` defines a single `messages` object with keys `en`, `fr`, and `pidgin`. Each locale has the same structure (e.g. `nav`, `settings`, `common`, `tasks`, `plans`, `planForm`, `planStatus`, `toasts`, etc.). Add new keys under the appropriate section and provide strings for **all three locales**.
+- **How to use translations:**
+  - **Server components (pages, server layout):** Call `getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value)` and `getTranslations(locale)` from `@/lib/i18n`, then use `t.section.key` for every user-visible string.
+  - **Client components:** Use `useTranslations()` from `@/components/TranslationsProvider` (only available inside the app layout that wraps with `TranslationsProvider`). Use `t.section.key` for every user-visible string.
+  - **Components used outside the provider** (e.g. login/invite pages): Either pass translated strings as props from a server parent that has `t`, or have the page read the locale cookie and pass a `label`/`ariaLabel` prop.
+- **Checklist when adding or changing UI text:** (1) Add the key to `messages.en`, `messages.fr`, and `messages.pidgin` in `src/lib/i18n.ts`. (2) Use `t.*` (or a prop fed by `t`) in the component; no raw English (or other) strings in JSX or button/label/placeholder attributes. (3) Run the app and/or grep for obvious hardcoded phrases to avoid regressions.
+- **Template placeholders** in messages use `{{name}}` (e.g. `{{planName}}`, `{{count}}`). Replace them in code with `string.replace("{{name}}", value)`.
+
 ## Documentation Maintenance
 
 - When changing routes, navigation, auth flow, task behavior, settings behavior, data model fields, or major UI structure, update the relevant documentation in the same task.

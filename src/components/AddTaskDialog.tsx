@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { AddTaskForm } from "@/components/AddTaskForm";
+import { useTranslations } from "@/components/TranslationsProvider";
 import type { ActionResult } from "@/lib/actions/tasks";
 
 type AddTaskAction = (formData: FormData) => Promise<ActionResult>;
@@ -14,6 +15,7 @@ export function AddTaskDialog({
   action: AddTaskAction;
   plans?: { id: string; name: string }[];
 }) {
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -33,10 +35,10 @@ export function AddTaskDialog({
         type="button"
         onClick={() => setIsOpen(true)}
         className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:h-auto sm:w-fit sm:px-4 sm:py-2"
-        aria-label="Add task"
+        aria-label={t.common.addTask}
       >
         <span className="text-xl font-medium sm:hidden" aria-hidden>+</span>
-        <span className="hidden text-sm font-medium sm:inline">Add task</span>
+        <span className="hidden text-sm font-medium sm:inline">{t.common.addTask}</span>
       </button>
 
       {isOpen && (
@@ -55,14 +57,14 @@ export function AddTaskDialog({
             <div className="mb-1 flex items-start justify-between gap-4">
               <div>
                 <h2 id="add-task-dialog-title" className="text-xl font-semibold tracking-tight text-blue-950">
-                  Add a task
+                  {t.common.addTask}
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
                 className="rounded-full p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800"
-                aria-label="Close add task dialog"
+                aria-label={t.common.closeAddTaskDialog}
               >
                 <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5" aria-hidden="true">
                   <path

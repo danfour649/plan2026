@@ -3,8 +3,9 @@
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
+import { useTranslations } from "@/components/TranslationsProvider";
 import type { PlanActionResult } from "@/lib/actions/plans";
-import { formatPlanStatus, PLAN_STATUS_VALUES } from "@/lib/validations/plan";
+import { PLAN_STATUS_VALUES } from "@/lib/validations/plan";
 
 type UpdatePlanStatusAction = (formData: FormData) => Promise<PlanActionResult>;
 
@@ -21,16 +22,17 @@ type PlanStatusSelectProps = {
 };
 
 export function PlanStatusSelect({ planId, currentStatus, action }: PlanStatusSelectProps) {
+  const t = useTranslations();
   const [state, formAction] = useActionState(wrap(action), null as PlanActionResult | null);
 
   useEffect(() => {
     if (!state) return;
     if (state.success) {
-      toast.success("Status updated");
+      toast.success(t.toasts.statusUpdated);
     } else {
       toast.error(state.error);
     }
-  }, [state]);
+  }, [state, t.toasts.statusUpdated]);
 
   return (
     <form action={formAction} className="inline-block">
@@ -42,11 +44,11 @@ export function PlanStatusSelect({ planId, currentStatus, action }: PlanStatusSe
           e.currentTarget.form?.requestSubmit();
         }}
         className="rounded-lg border border-blue-200 bg-white px-2.5 py-1.5 text-sm text-blue-950 transition focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-200"
-        aria-label="Change plan status"
+        aria-label={t.calendar.changePlanStatus}
       >
         {PLAN_STATUS_VALUES.map((s) => (
           <option key={s} value={s}>
-            {formatPlanStatus(s)}
+            {t.planStatus[s]}
           </option>
         ))}
       </select>

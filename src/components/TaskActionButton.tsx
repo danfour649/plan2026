@@ -15,6 +15,8 @@ type TaskActionButtonProps = {
   action: TaskAction;
   taskId: string;
   label: string;
+  /** Translated message for success toast. If not provided, uses label. */
+  successMessage?: string;
   variant?: "default" | "muted";
 };
 
@@ -22,6 +24,7 @@ export function TaskActionButton({
   action,
   taskId,
   label,
+  successMessage,
   variant = "default",
 }: TaskActionButtonProps) {
   const [state, formAction] = useActionState(wrapForActionState(action), null as ActionResult | null);
@@ -29,11 +32,11 @@ export function TaskActionButton({
   useEffect(() => {
     if (!state) return;
     if (state.success) {
-      toast.success(label === "Delete" ? "Task deleted" : label === "Mark done" ? "Marked done" : "Task restored");
+      toast.success(successMessage ?? label);
     } else if (state.error) {
       toast.error(state.error);
     }
-  }, [state, label]);
+  }, [state, label, successMessage]);
 
   return (
     <form action={formAction}>

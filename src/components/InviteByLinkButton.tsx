@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { useTranslations } from "@/components/TranslationsProvider";
 import { createPlanInvite } from "@/lib/actions/plans";
 
 export function InviteByLinkButton({ planId }: { planId: string }) {
+  const t = useTranslations();
   const [inviteUrl, setInviteUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +18,7 @@ export function InviteByLinkButton({ planId }: { planId: string }) {
       if (result.success) {
         setInviteUrl(result.inviteUrl);
         await navigator.clipboard.writeText(result.inviteUrl);
-        toast.success("Invite link copied to clipboard");
+        toast.success(t.toasts.inviteLinkCopied);
       } else {
         toast.error(result.error);
       }
@@ -29,9 +31,9 @@ export function InviteByLinkButton({ planId }: { planId: string }) {
     if (!inviteUrl) return;
     try {
       await navigator.clipboard.writeText(inviteUrl);
-      toast.success("Link copied to clipboard");
+      toast.success(t.toasts.linkCopied);
     } catch {
-      toast.error("Failed to copy");
+      toast.error(t.toasts.failedToCopy);
     }
   }
 
@@ -44,11 +46,11 @@ export function InviteByLinkButton({ planId }: { planId: string }) {
         className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 disabled:opacity-70"
       >
         {loading ? (
-          "Creating…"
+          t.toasts.creating
         ) : (
           <>
-            <span className="sm:hidden">Invite</span>
-            <span className="hidden sm:inline">Invite by link</span>
+            <span className="sm:hidden">{t.common.invite}</span>
+            <span className="hidden sm:inline">{t.common.inviteByLink}</span>
           </>
         )}
       </button>
@@ -68,7 +70,7 @@ export function InviteByLinkButton({ planId }: { planId: string }) {
               onClick={handleCopy}
               className="shrink-0 rounded-lg border border-blue-200 bg-white px-2 py-1 text-xs font-medium text-blue-700 transition hover:bg-blue-100"
             >
-              Copy
+              {t.common.copy}
             </button>
           </div>
         </div>

@@ -1,7 +1,9 @@
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getServerAuthSession } from "@/auth";
 import { Plan2026Logo } from "@/components/Plan2026Logo";
+import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
 import { GoogleSignInButton } from "./GoogleSignInButton";
 
 export default async function LoginPage({
@@ -14,6 +16,9 @@ export default async function LoginPage({
   const callbackUrl = resolved?.callbackUrl ?? "/tasks";
   if (session?.user) redirect(callbackUrl);
 
+  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const t = getTranslations(locale);
+
   const hasGoogleCredentials = Boolean(
     process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
   );
@@ -24,22 +29,23 @@ export default async function LoginPage({
         <Plan2026Logo
           className="mb-8"
           iconClassName="h-20 w-24"
+          ariaLabel={t.common.goToPlans}
         />
-        <h1 className="text-2xl font-semibold tracking-tight text-blue-950">Sign in</h1>
-        <p className="mt-2 text-sm text-zinc-600">
-          Use your Google account to access your tasks dashboard.
-        </p>
+        <h1 className="text-2xl font-semibold tracking-tight text-blue-950">{t.login.title}</h1>
+        <p className="mt-2 text-sm text-zinc-600">{t.login.description}</p>
 
         {!hasGoogleCredentials ? (
           <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-            Set <span className="font-medium">GOOGLE_CLIENT_ID</span> and{" "}
-            <span className="font-medium">GOOGLE_CLIENT_SECRET</span> in your{" "}
-            <span className="font-medium">.env</span> to enable Google sign-in.
+            {t.login.envRequired}
           </div>
         ) : null}
 
         <div className="mt-8">
-          <GoogleSignInButton callbackUrl={callbackUrl} disabled={!hasGoogleCredentials} />
+          <GoogleSignInButton
+            callbackUrl={callbackUrl}
+            disabled={!hasGoogleCredentials}
+            label={t.login.continueWithGoogle}
+          />
         </div>
       </div>
     </main>
