@@ -1,17 +1,20 @@
-# Tasks Dashboard
+# Tasks
 
-`plan2026` is a Next.js App Router task dashboard with Google sign-in, per-user task storage in PostgreSQL, optional rich task notes, due dates, and Google Calendar event creation.
+`plan2026` is a Next.js App Router task app with Google sign-in, per-user task storage in PostgreSQL, optional rich task notes, urgency levels, due dates, and Google Calendar event creation.
 
 ## Features
 
 - Google sign-in with NextAuth v4 and Prisma-backed database sessions
-- Remaining and completed task views
-- Add tasks with:
+- A single `/tasks` page for day-to-day work
+- Optional completed-task visibility with a `showCompleted=1` toggle on the tasks page
+- Add and edit tasks in dialogs with:
   - required title
-  - optional rich text notes/links
+  - optional rich text notes and links
   - optional due date and time
+  - urgency from 1 to 7
 - Mark tasks done, restore them, or delete them
-- Add a task to Google Calendar from either task list
+- Add a task to Google Calendar and keep track of whether it has already been linked
+- Settings page to disconnect Google Calendar access
 - Server actions for UI mutations and JSON API routes for programmatic access
 
 ## Tech stack
@@ -69,6 +72,8 @@ npm run dev
 
 5. Open `http://localhost:3000`.
 
+The root route redirects to `/tasks`.
+
 ## Google OAuth setup
 
 In Google Cloud Console:
@@ -109,6 +114,7 @@ Notes:
 - `title` is required
 - `content` is optional rich text HTML and is sanitized before storing/rendering
 - `dueAt` is optional; when present it is converted to a date
+- `urgency` is optional and defaults to `4`
 
 ### `PATCH /api/tasks/:id` body
 

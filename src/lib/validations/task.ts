@@ -7,6 +7,8 @@ export const TASK_TITLE_MAX_LENGTH = 500;
 
 /** Max length for task rich text content (HTML). */
 export const TASK_CONTENT_MAX_LENGTH = 20_000;
+export const TASK_URGENCY_MIN = 1;
+export const TASK_URGENCY_MAX = 7;
 
 export const addTaskSchema = z.object({
   title: z
@@ -31,8 +33,15 @@ export const addTaskSchema = z.object({
       const d = new Date(s);
       return Number.isNaN(d.getTime()) ? undefined : d;
     }),
+  urgency: z.coerce
+    .number()
+    .int()
+    .min(TASK_URGENCY_MIN, `Urgency must be between ${TASK_URGENCY_MIN} and ${TASK_URGENCY_MAX}`)
+    .max(TASK_URGENCY_MAX, `Urgency must be between ${TASK_URGENCY_MIN} and ${TASK_URGENCY_MAX}`),
 });
 
 export const taskIdSchema = z.object({
   taskId: z.string().min(1, "Task ID is required"),
 });
+
+export const updateTaskSchema = addTaskSchema.merge(taskIdSchema);

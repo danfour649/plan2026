@@ -10,7 +10,7 @@
 |-------|--------|
 | **Name** | `plan2026` |
 | **Type** | Next.js 16 App Router web application |
-| **Role** | Authenticated task dashboard with Google sign-in, rich task notes, optional due dates, and Google Calendar export |
+| **Role** | Authenticated task planner with Google sign-in, rich task notes, urgency levels, optional due dates, and Google Calendar export |
 
 **Tech stack:**
 - **Runtime/UI:** Node.js, Next.js 16, React 19, TypeScript
@@ -19,9 +19,9 @@
 - **Auth:** NextAuth v4 with Google provider and Prisma adapter; database sessions; session includes `user.id`
 - **Validation:** Zod in `src/lib/validations/task.ts`
 - **Rich text:** Tiptap editor for optional task content
-- **Sanitization:** `isomorphic-dompurify` in `src/lib/sanitize.ts`
+- **Sanitization:** `sanitize-html` in `src/lib/sanitize.ts`
 - **Calendar integration:** Google Calendar API via `googleapis`
-- **UX:** Sonner toasts, loading skeletons, and empty states on both task lists
+- **UX:** Sonner toasts, loading skeletons, modal task create/edit flows, and an optional completed-task toggle on the main tasks page
 
 ---
 
@@ -29,17 +29,16 @@
 
 ```text
 src/
-  middleware.ts                         # Cookie-based guard for /dashboard and /completed
-  auth.ts                               # NextAuth config, Google scopes, getServerAuthSession
+  proxy.ts                              # Cookie-based guard for /tasks and /settings
+  auth.ts                               # NextAuth config, Google scopes, auth helpers
   app/
     (app)/
       layout.tsx                        # Authenticated shell; nav + SignOutButton
-      dashboard/page.tsx                # Remaining tasks list + AddTaskForm
-      dashboard/loading.tsx             # Dashboard skeleton
-      completed/page.tsx                # Completed tasks list
-      completed/loading.tsx             # Completed skeleton
+      tasks/page.tsx                    # Unified tasks page for remaining and optional completed items
+      tasks/loading.tsx                 # Tasks page skeleton
+      settings/page.tsx                 # Calendar connection settings
     login/
-      page.tsx                          # Login page; disables sign-in when Google creds missing
+      page.tsx                          # Login page; redirects signed-in users to /tasks
       GoogleSignInButton.tsx
     api/
       auth/[...nextauth]/route.ts
@@ -47,19 +46,24 @@ src/
       tasks/[id]/route.ts               # PATCH completed state; DELETE task
       tasks/[id]/calendar/route.ts      # POST Google Calendar event for a task
     layout.tsx                          # Root layout with Sonner Toaster
-    page.tsx                            # Redirects to /dashboard
+    page.tsx                            # Redirects to /tasks
   components/
-    AddTaskForm.tsx                     # Title + dueAt + rich content editor
+    AddTaskDialog.tsx                   # Modal wrapper for task creation
+    EditTaskDialog.tsx                  # Modal wrapper for task editing/deletion
+    TaskForm.tsx                        # Shared form used by create/edit dialogs
     AddToCalendarButton.tsx             # Calls calendar route, opens created event link
+    DisconnectGoogleCalendarButton.tsx  # Revokes stored calendar access
+    RefreshTasksButton.tsx              # Manual refresh for /tasks
     SignOutButton.tsx
-    TaskActionButton.tsx                # Mark done / restore / delete
+    TaskActionButton.tsx                # Mark done / restore actions
     TaskContent.tsx                     # Sanitized rich text renderer
     TaskContentEditor.tsx               # Tiptap-based editor; stores HTML in hidden input
   lib/
-    actions/tasks.ts                    # Shared server actions
+    actions/tasks.ts                    # Shared task server actions
+    actions/settings.ts                 # Google Calendar disconnect action
     prisma.ts                           # Prisma singleton
-    sanitize.ts                         # DOMPurify sanitization for task content
-    validations/task.ts                 # Zod schemas + length limits
+    sanitize.ts                         # sanitize-html rules for task content
+    validations/task.ts                 # Zod schemas + length limits + urgency bounds
   types/next-auth.d.ts                  # Augments session user with `id`
 prisma/
   schema.prisma
@@ -69,7 +73,7 @@ DEPLOY.md
 AI_PROJECT_CONTEXT.md
 ```
 
-**Middleware:** `src/middleware.ts` only checks for the presence of a NextAuth session cookie to reduce redirect flicker. Real auth enforcement still happens in server code with `getServerAuthSession()`.
+**Route protection:** `src/proxy.ts` checks only for the presence of a NextAuth session cookie to reduce redirect flicker on `/tasks` and `/settings`. Real auth enforcement still happens in server code with `getServerAuthSession()` or `getCurrentUserId()`.
 
 ---
 
@@ -89,6 +93,9 @@ AI_PROJECT_CONTEXT.md
 - `title`: required string
 - `content`: optional sanitized rich text HTML
 - `dueAt`: optional `DateTime`
+- `urgency`: integer from `1` to `7`, default `4`
+- `googleCalendarEventId`: optional linked event id
+- `googleCalendarEventUrl`: optional linked event URL
 - `completedAt`: nullable `DateTime`; `null` means remaining
 - `createdAt`, `updatedAt`
 
@@ -115,33 +122,34 @@ All task queries and mutations are scoped by the authenticated `userId`.
   - `profile`
   - `https://www.googleapis.com/auth/calendar.events`
 
-### Dashboard (`/dashboard`)
+### Tasks (`/tasks`)
 
-- Shows remaining tasks (`completedAt = null`)
-- Displays remaining/completed counts
-- Uses `AddTaskForm` to create tasks with:
+- This is the canonical authenticated app route
+- The root route `/` redirects here
+- Always shows remaining tasks (`completedAt = null`)
+- Optionally shows completed tasks when `showCompleted=1` is present in search params
+- Uses one page instead of separate `/dashboard` and `/completed` routes
+- Remaining tasks are ordered by `urgency desc`, then `createdAt desc`
+- Completed tasks are ordered by `urgency desc`, then `completedAt desc`
+- Displays a header toggle for hiding or showing completed tasks
+- Uses `AddTaskDialog` for creation and `EditTaskDialog` for editing/deletion
+- Each task row can show:
   - title
-  - optional due date/time
-  - optional rich content
-- Each task row shows:
-  - title
+  - urgency pill
   - sanitized rich text content when present
-  - created time
+  - created time or completed time
   - due time when present
 - Actions:
   - `Add to Calendar`
-  - `Mark done`
+  - `Mark done` or `Restore`
+  - `Edit`
   - `Delete`
 
-### Completed (`/completed`)
+### Settings (`/settings`)
 
-- Shows tasks with `completedAt != null`
-- Orders by most recently completed
-- Renders title plus optional rich content
-- Actions:
-  - `Add to Calendar`
-  - `Restore`
-  - `Delete`
+- Shows whether Google Calendar access is currently connected
+- Lets the user disconnect Calendar access
+- On disconnect, the app revokes the Google token when possible and clears stored account tokens
 
 ### Rich text content
 
@@ -157,6 +165,7 @@ All task queries and mutations are scoped by the authenticated `userId`.
 - If `task.dueAt` is absent, the route creates an all-day event for the current date
 - Task rich text is converted to plain text for the calendar event description
 - If the stored Google account token is expired, the route attempts a refresh and persists the new access token
+- The task can store the linked Google event id and URL for UI state
 
 ---
 
@@ -176,16 +185,17 @@ Expected body:
 {
   "title": "string",
   "content": "<p>optional html</p>",
-  "dueAt": "optional date string"
+  "dueAt": "optional date string",
+  "urgency": 4
 }
 ```
 
 Validation behavior:
 
-- `title` is required and trimmed
-- `title` max length = `500`
+- `title` is required, trimmed, and max length = `500`
 - `content` is optional, sanitized, and max length = `20000`
 - `dueAt` is optional; invalid values become `undefined`
+- `urgency` is optional in forms, coerced to a number, and must be between `1` and `7`
 
 ### `PATCH /api/tasks/:id`
 
@@ -222,11 +232,13 @@ Error conventions across task APIs:
 
 ## 6. Conventions and Constraints
 
-- **Canonical user identity:** use `(await getServerAuthSession())?.user?.id`
+- **Canonical user identity:** prefer `getCurrentUserId()` for task/settings server actions and pages; `getServerAuthSession()` is still used in the authenticated app layout
+- **Protected app routes:** `/tasks` and `/settings`
+- **Canonical task UI route:** `/tasks`
 - **Prisma runtime:** task APIs explicitly use `runtime = "nodejs"`
 - **Database provider:** Prisma datasource is `postgresql`; there is no SQLite path anymore
-- **Form/UI mutations:** the dashboard UI primarily uses shared server actions from `src/lib/actions/tasks.ts`
-- **API/UI parity:** create, complete, restore, and delete logic exists in both API routes and server actions; keep them behaviorally aligned
+- **Form/UI mutations:** the tasks UI primarily uses shared server actions from `src/lib/actions/tasks.ts`
+- **API/UI parity:** create, update, complete, restore, and delete logic exists across UI actions and API routes; keep them behaviorally aligned
 - **Sanitization:** any user-provided task HTML must go through `sanitizeTaskContent()`
 - **Env vars:** important ones are `DATABASE_URL`, `AUTH_SECRET`, `NEXTAUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
 - **Calendar prerequisites:** Google Calendar API must be enabled and the user must sign in with the calendar scope
@@ -238,19 +250,23 @@ Error conventions across task APIs:
 | Concern | Primary file(s) |
 |--------|------------------|
 | Auth config and Google scopes | `src/auth.ts` |
-| Session helper | `getServerAuthSession()` from `@/auth` |
-| Middleware redirect optimization | `src/middleware.ts` |
+| Authenticated app shell | `src/app/(app)/layout.tsx` |
+| Cookie-based route guard | `src/proxy.ts` |
 | Prisma access | `src/lib/prisma.ts` |
 | Shared task actions | `src/lib/actions/tasks.ts` |
+| Settings action | `src/lib/actions/settings.ts` |
 | Task validation | `src/lib/validations/task.ts` |
 | Task HTML sanitization | `src/lib/sanitize.ts` |
-| Remaining tasks UI | `src/app/(app)/dashboard/page.tsx` |
-| Completed tasks UI | `src/app/(app)/completed/page.tsx` |
-| Add-task form | `src/components/AddTaskForm.tsx` |
+| Unified tasks UI | `src/app/(app)/tasks/page.tsx` |
+| Settings UI | `src/app/(app)/settings/page.tsx` |
+| Add-task dialog | `src/components/AddTaskDialog.tsx` |
+| Edit-task dialog | `src/components/EditTaskDialog.tsx` |
+| Shared task form | `src/components/TaskForm.tsx` |
 | Rich text editor | `src/components/TaskContentEditor.tsx` |
 | Rich text renderer | `src/components/TaskContent.tsx` |
 | Per-task actions | `src/components/TaskActionButton.tsx` |
 | Calendar button | `src/components/AddToCalendarButton.tsx` |
+| Calendar disconnect button | `src/components/DisconnectGoogleCalendarButton.tsx` |
 | Task collection API | `src/app/api/tasks/route.ts` |
 | Task detail API | `src/app/api/tasks/[id]/route.ts` |
 | Calendar event API | `src/app/api/tasks/[id]/calendar/route.ts` |
@@ -262,5 +278,6 @@ Error conventions across task APIs:
 - **NextAuth v4:** still functional, but Auth.js v5 would be the eventual modernization path
 - **Calendar token lifecycle:** refresh handling currently updates the access token and expiry, but broader account/token edge cases are still dependent on Google provider behavior
 - **HTML storage:** task content is stored as sanitized HTML, so any future editor/schema changes should preserve sanitizer compatibility
+- **Task API ordering vs UI ordering:** the API currently returns tasks by completion/creation timestamps, while the page UI groups and sorts remaining/completed items differently for display
 
 End of document.

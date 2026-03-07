@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Task"
+ADD COLUMN "urgency" INTEGER NOT NULL DEFAULT 4;
