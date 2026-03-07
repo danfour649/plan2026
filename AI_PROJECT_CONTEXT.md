@@ -10,18 +10,18 @@
 |-------|--------|
 | **Name** | `plan2026` |
 | **Type** | Next.js 16 App Router web application |
-| **Role** | Authenticated task planner with Google sign-in, rich task notes, urgency levels, optional due dates, and Google Calendar export |
+| **Role** | Authenticated task and plan planner with Google sign-in, rich task notes, urgency levels, optional due dates, plans (with tasks), and Google Calendar export |
 
 **Tech stack:**
 - **Runtime/UI:** Node.js, Next.js 16, React 19, TypeScript
 - **Styling:** Tailwind CSS v4
 - **Database:** Prisma ORM with PostgreSQL only
 - **Auth:** NextAuth v4 with Google provider and Prisma adapter; database sessions; session includes `user.id`
-- **Validation:** Zod in `src/lib/validations/task.ts`
+- **Validation:** Zod in `src/lib/validations/task.ts` and `src/lib/validations/plan.ts`
 - **Rich text:** Tiptap editor for optional task content
 - **Sanitization:** `sanitize-html` in `src/lib/sanitize.ts`
 - **Calendar integration:** Google Calendar API via `googleapis`
-- **UX:** Sonner toasts, loading skeletons, modal task create/edit flows, and an optional completed-task toggle on the main tasks page
+- **UX:** Sonner toasts, loading skeletons, modal task create/edit flows, full-page plan create/edit at `/plans/new` and `/plans/[id]`, and an optional completed-task toggle on the main tasks page
 
 ---
 
@@ -29,13 +29,16 @@
 
 ```text
 src/
-  proxy.ts                              # Cookie-based guard for /tasks and /settings
+  proxy.ts                              # Cookie-based guard for /tasks, /settings, and /plans
   auth.ts                               # NextAuth config, Google scopes, auth helpers
   app/
     (app)/
-      layout.tsx                        # Authenticated shell; tasks nav, settings gear, email, and SignOutButton
-      tasks/page.tsx                    # Unified tasks page for remaining and optional completed items
+      layout.tsx                        # Authenticated shell; tasks nav, plans nav, settings gear, email, SignOutButton
+      tasks/page.tsx                    # Unified tasks page for remaining and optional completed items; shows plan link when task has planId
       tasks/loading.tsx                 # Tasks page skeleton
+      plans/page.tsx                    # Plans list (ordered by priority); links to /plans/new and /plans/[id]
+      plans/new/page.tsx                # Full-page create plan form
+      plans/[id]/page.tsx               # Full-page plan detail and edit form; delete plan
       settings/page.tsx                 # Calendar connection settings
     login/
       page.tsx                          # Login page; redirects signed-in users to /tasks
@@ -64,6 +67,7 @@ src/
     prisma.ts                           # Prisma singleton
     sanitize.ts                         # sanitize-html rules for task content
     validations/task.ts                 # Zod schemas + length limits + urgency bounds
+    validations/plan.ts                 # Zod schemas for plan (name, dates, status, priority, percentCompleted, taskIds, newTaskTitles, etc.)
   types/next-auth.d.ts                  # Augments session user with `id`
 prisma/
   schema.prisma
@@ -73,7 +77,7 @@ DEPLOY.md
 AI_PROJECT_CONTEXT.md
 ```
 
-**Route protection:** `src/proxy.ts` checks only for the presence of a NextAuth session cookie to reduce redirect flicker on `/tasks` and `/settings`. Real auth enforcement still happens in server code with `getServerAuthSession()` or `getCurrentUserId()`.
+**Route protection:** `src/proxy.ts` checks only for the presence of a NextAuth session cookie to reduce redirect flicker on `/tasks`, `/settings`, and `/plans`. Real auth enforcement still happens in server code with `getServerAuthSession()` or `getCurrentUserId()`.
 
 ---
 
@@ -139,6 +143,7 @@ All task queries and mutations are scoped by the authenticated `userId`.
   - sanitized rich text content when present
   - created time or completed time
   - due time when present
+  - “Plan: &lt;name&gt;” link when the task has a `planId`
 - Actions:
   - `Add to Calendar`
   - `Mark done` or `Restore`
@@ -235,8 +240,8 @@ Error conventions across task APIs:
 ## 6. Conventions and Constraints
 
 - **Canonical user identity:** prefer `getCurrentUserId()` for task/settings server actions and pages; `getServerAuthSession()` is still used in the authenticated app layout
-- **Protected app routes:** `/tasks` and `/settings`
-- **Canonical task UI route:** `/tasks`
+- **Protected app routes:** `/tasks`, `/settings`, `/plans`
+- **Canonical task UI route:** `/tasks`; **Plans UI routes:** `/plans`, `/plans/new`, `/plans/[id]`
 - **Prisma runtime:** task APIs explicitly use `runtime = "nodejs"`
 - **Database provider:** Prisma datasource is `postgresql`; there is no SQLite path anymore
 - **Form/UI mutations:** the tasks UI primarily uses shared server actions from `src/lib/actions/tasks.ts`
@@ -260,7 +265,13 @@ Error conventions across task APIs:
 | Task validation | `src/lib/validations/task.ts` |
 | Task HTML sanitization | `src/lib/sanitize.ts` |
 | Unified tasks UI | `src/app/(app)/tasks/page.tsx` |
+| Plans list UI | `src/app/(app)/plans/page.tsx` |
+| Plan create UI | `src/app/(app)/plans/new/page.tsx` |
+| Plan detail/edit UI | `src/app/(app)/plans/[id]/page.tsx` |
 | Settings UI | `src/app/(app)/settings/page.tsx` |
+| Plan form (full-page) | `src/components/PlanForm.tsx` |
+| Plan actions | `src/lib/actions/plans.ts` |
+| Plan validation | `src/lib/validations/plan.ts` |
 | Add-task dialog | `src/components/AddTaskDialog.tsx` |
 | Edit-task dialog | `src/components/EditTaskDialog.tsx` |
 | Shared task form | `src/components/TaskForm.tsx` |
