@@ -309,7 +309,7 @@ Error conventions across task APIs:
 
 - **`npm run lint`** – ESLint (catches rules such as `react-hooks/set-state-in-effect`).
 - **`npm run build`** – Prisma generate + Next.js production build (catches TypeScript and build errors).
-- **`npm run prepush`** – lint + build; run manually or automatically via the **pre-push** Git hook (Husky). The hook ensures lint and build pass before code is pushed, so CI and Vercel are less likely to fail.
+- **`npm run prepush`** – lint + typecheck + next build (no `prisma generate`); run manually or via the **pre-push** Git hook. Skipping Prisma generate avoids engine lock on Windows when the dev server is running. Full **`npm run build`** (with Prisma generate) runs in CI.
 
 ---
 

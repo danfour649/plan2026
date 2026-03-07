@@ -18,7 +18,7 @@
 
 ## Type checking
 
-- **New and changed code must pass TypeScript.** Run `npm run typecheck` before finishing a task. The pre-push hook runs `lint` then `typecheck` then `build`; if typecheck is skipped or build fails earlier (e.g. Prisma generate), type errors can slip through.
+- **New and changed code must pass TypeScript.** Run `npm run typecheck` before finishing a task. The pre-push hook runs `lint` then `typecheck` then `build:next` (Next.js build only, no `prisma generate`) so you can push while the dev server is running without a Prisma engine lock on Windows; CI runs the full `build`.
 - **Why type errors get missed:** Lint is ESLint only and does not run the TypeScript compiler. Type errors are only reported when `tsc` or the Next.js build runs. If you only run `npm run lint` or if `npm run build` fails before the compile step, TypeScript never runs and type errors go unreported.
 - After adding or changing code, run `npm run typecheck` (or `npm run prepush`) and fix any type errors before considering the task done.
 
