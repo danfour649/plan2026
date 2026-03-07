@@ -1,5 +1,12 @@
 # plan2026
 
+## 0.3.0
+
+### Minor Changes
+
+- c8e51d9: Plans now support an "On hold" status in addition to draft, started, completed, and abandoned. On-hold plans appear in the main list (they are not archived) and use a violet pill in the UI.
+- c8e51d9: Plans page now matches tasks: nav uses #plans/#tasks, list has refresh and "Show completed/abandoned" toggle, and each plan row has Edit and a status dropdown. Plan detail page lists tasks with an edit modal so you can edit tasks without leaving the plan.
+
 ## 0.2.1
 
 ### Patch Changes
