@@ -6,11 +6,10 @@ import { ExportPlansButton } from "@/components/ExportPlansButton";
 import { RefreshPlansButton } from "@/components/RefreshPlansButton";
 import { ShowArchivedPlansToggle } from "@/components/ShowArchivedPlansToggle";
 import { PlanStatusSelect } from "@/components/PlanStatusSelect";
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { formatTasksCount, getLocaleFromCookie, getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 import type { ExportedPlan } from "@/lib/export";
 import { updatePlanStatus } from "@/lib/actions/plans";
-import { formatPlanStatus } from "@/lib/validations/plan";
 
 /** Colored oval (ring + light fill) around the plan name by priority. */
 function getPriorityOvalClasses(priority: number) {
@@ -180,7 +179,7 @@ export default async function PlansPage({
                           plan.status,
                         )}`}
                       >
-                        {formatPlanStatus(plan.status)}
+                        {t.planStatus[plan.status as keyof typeof t.planStatus] ?? plan.status}
                       </span>
                       <span className="shrink-0 text-sm font-medium text-blue-700">
                         {plan.percentCompleted}%
@@ -194,13 +193,13 @@ export default async function PlansPage({
                     <p className="mt-1 break-words text-xs text-zinc-500">
                       {plan.startAt.toLocaleDateString()} – {plan.endAt.toLocaleDateString()}
                       {" · "}
-                      {(() => {
-                        const total = plan.tasks.length;
-                        const completed = plan.tasks.filter((t) => t.completedAt != null).length;
-                        return total === 0
-                          ? "0 tasks"
-                          : `${completed} of ${total} task${total !== 1 ? "s" : ""} completed`;
-                      })()}
+                      {formatTasksCount(
+                        t.plans.tasksCountZero,
+                        t.plans.tasksCountOne,
+                        t.plans.tasksCountMany,
+                        plan.tasks.length,
+                        plan.tasks.filter((task) => task.completedAt != null).length,
+                      )}
                     </p>
                   </div>
                 </Link>

@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { PlanActionResult } from "@/lib/actions/plans";
-import { formatPlanStatus, PLAN_STATUS_VALUES } from "@/lib/validations/plan";
+import { PLAN_STATUS_VALUES } from "@/lib/validations/plan";
 
 type PlanFormAction = (formData: FormData) => Promise<PlanActionResult>;
 
@@ -137,10 +137,10 @@ export function PlanForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">Goal (optional)</label>
+        <label className="text-sm font-medium text-blue-950">{t.planForm.goalOptional}</label>
         <input
           name="goal"
-          placeholder="e.g. Ship MVP"
+          placeholder={t.planForm.goalPlaceholder}
           defaultValue={initialValues?.goal ?? ""}
           className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
@@ -148,7 +148,7 @@ export function PlanForm({
 
       <div className={singleColumn ? "flex flex-col gap-4" : "grid gap-4 sm:grid-cols-2"}>
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-blue-950">Start date *</label>
+          <label className="text-sm font-medium text-blue-950">{t.planForm.startDateRequired}</label>
           <input
             name="startAt"
             type="date"
@@ -158,7 +158,7 @@ export function PlanForm({
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-blue-950">End date *</label>
+          <label className="text-sm font-medium text-blue-950">{t.planForm.endDateRequired}</label>
           <input
             name="endAt"
             type="date"
@@ -171,7 +171,7 @@ export function PlanForm({
 
       <div className={singleColumn ? "flex flex-col gap-4" : "grid gap-4 sm:grid-cols-2"}>
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-blue-950">Actual start (optional)</label>
+          <label className="text-sm font-medium text-blue-950">{t.planForm.actualStartOptional}</label>
           <input
             name="actualStartAt"
             type="date"
@@ -180,7 +180,7 @@ export function PlanForm({
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-blue-950">Actual end (optional)</label>
+          <label className="text-sm font-medium text-blue-950">{t.planForm.actualEndOptional}</label>
           <input
             name="actualEndAt"
             type="date"
@@ -192,7 +192,7 @@ export function PlanForm({
 
       {isEdit && (
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-blue-950">Status</label>
+          <label className="text-sm font-medium text-blue-950">{t.planForm.status}</label>
           <select
             name="status"
             defaultValue={defaultStatus}
@@ -200,7 +200,7 @@ export function PlanForm({
           >
             {PLAN_STATUS_VALUES.map((s) => (
               <option key={s} value={s}>
-                {formatPlanStatus(s)}
+                {t.planStatus[s]}
               </option>
             ))}
           </select>
@@ -208,7 +208,7 @@ export function PlanForm({
       )}
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">Priority (1–7)</label>
+        <label className="text-sm font-medium text-blue-950">{t.planForm.priorityLabel}</label>
         <div className="flex flex-wrap gap-2">
           {PRIORITY_OPTIONS.map((option) => (
             <label key={option.value} className="inline-flex cursor-pointer items-center gap-2">
@@ -230,7 +230,7 @@ export function PlanForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">Percent completed (0–100)</label>
+        <label className="text-sm font-medium text-blue-950">{t.planForm.percentCompletedLabel}</label>
         <input
           name="percentCompleted"
           type="number"
@@ -242,7 +242,7 @@ export function PlanForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">Notes (optional)</label>
+        <label className="text-sm font-medium text-blue-950">{t.planForm.notesOptional}</label>
         <textarea
           name="notes"
           placeholder={t.plans.internalNotesPlaceholder}
@@ -253,7 +253,7 @@ export function PlanForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">Color (optional)</label>
+        <label className="text-sm font-medium text-blue-950">{t.planForm.colorOptional}</label>
         <select
           name="color"
           defaultValue={initialValues?.color ?? ""}
@@ -268,11 +268,11 @@ export function PlanForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">Image URL (optional)</label>
+        <label className="text-sm font-medium text-blue-950">{t.planForm.imageUrlOptional}</label>
         <input
           name="imageUrl"
           type="url"
-          placeholder="https://..."
+          placeholder={t.planForm.imageUrlPlaceholder}
           defaultValue={initialValues?.imageUrl ?? ""}
           className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
@@ -289,15 +289,15 @@ export function PlanForm({
       </div>
 
       <div className="flex flex-col gap-3">
-        <label className="text-sm font-medium text-blue-950">Tasks in this plan</label>
-        <p className="text-xs text-zinc-500">Select existing tasks or add new ones below.</p>
+        <label className="text-sm font-medium text-blue-950">{t.planForm.tasksInPlanLabel}</label>
+        <p className="text-xs text-zinc-500">{t.planForm.selectTasksDescription}</p>
         {userTasks.length > 0 ? (
           <details className="group rounded-xl border border-blue-100 bg-blue-50/30">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-sm font-medium text-blue-950 transition hover:bg-blue-100/50 [&::-webkit-details-marker]:hidden">
               <span>
-                Select tasks for this plan
+                {t.planForm.selectTasksSummary}
                 <span className="ml-1.5 text-zinc-500 font-normal">
-                  ({initialValues?.taskIds?.length ?? 0} selected)
+                  ({t.planForm.selectedCount.replace("{{count}}", String(initialValues?.taskIds?.length ?? 0))})
                 </span>
               </span>
               <span className="shrink-0 text-zinc-400 transition group-open:rotate-180" aria-hidden>
@@ -309,8 +309,8 @@ export function PlanForm({
                 type="search"
                 value={taskSearchFilter}
                 onChange={(e) => setTaskSearchFilter(e.target.value)}
-                placeholder="Search tasks..."
-                aria-label="Filter tasks by name"
+                placeholder={t.plans.searchTasksPlaceholder}
+                aria-label={t.plans.filterTasksByName}
                 className="mb-2 w-full rounded-lg border border-blue-100 bg-white px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-2"
               />
               <ul className="flex max-h-48 flex-col gap-1.5 overflow-y-auto rounded-lg border border-blue-100 bg-white p-2">
@@ -341,16 +341,16 @@ export function PlanForm({
                   !userTasks.some((t) =>
                     t.title.toLowerCase().includes(taskSearchFilter.toLowerCase()),
                   ) ? (
-                  <li className="py-2 px-1.5 text-sm text-zinc-500">No tasks match your search.</li>
+                  <li className="py-2 px-1.5 text-sm text-zinc-500">{t.planForm.noTasksMatchSearch}</li>
                 ) : null}
               </ul>
             </div>
           </details>
         ) : (
-          <p className="text-sm text-zinc-500">No tasks yet. Add new tasks below or create some from the Tasks page.</p>
+          <p className="text-sm text-zinc-500">{t.planForm.noTasksYetDescription}</p>
         )}
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium text-blue-950">Add new tasks</span>
+          <span className="text-sm font-medium text-blue-950">{t.planForm.addNewTasksLabel}</span>
           {newTaskTitles.map((title, index) => (
             <div key={index} className="flex gap-2">
               <input
@@ -373,7 +373,7 @@ export function PlanForm({
             onClick={addNewTaskRow}
             className="self-start rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
           >
-            Add another task
+            {t.planForm.addAnotherTask}
           </button>
         </div>
       </div>

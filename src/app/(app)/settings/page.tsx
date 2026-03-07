@@ -34,9 +34,7 @@ export default async function SettingsPage() {
       <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
         <div className="border-b border-blue-100 px-6 py-4">
           <h1 className="text-lg font-semibold text-blue-950">{t.settings.title}</h1>
-          <p className="mt-1 text-sm text-zinc-600">
-            Manage your Google Calendar connection for task scheduling.
-          </p>
+          <p className="mt-1 text-sm text-zinc-600">{t.settings.calendarIntro}</p>
         </div>
 
         <div className="space-y-4 px-6 py-6">

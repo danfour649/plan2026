@@ -49,8 +49,8 @@ export function InviteByLinkButton({ planId }: { planId: string }) {
           t.toasts.creating
         ) : (
           <>
-            <span className="sm:hidden">Invite</span>
-            <span className="hidden sm:inline">Invite by link</span>
+            <span className="sm:hidden">{t.common.invite}</span>
+            <span className="hidden sm:inline">{t.common.inviteByLink}</span>
           </>
         )}
       </button>
@@ -70,7 +70,7 @@ export function InviteByLinkButton({ planId }: { planId: string }) {
               onClick={handleCopy}
               className="shrink-0 rounded-lg border border-blue-200 bg-white px-2 py-1 text-xs font-medium text-blue-700 transition hover:bg-blue-100"
             >
-              Copy
+              {t.common.copy}
             </button>
           </div>
         </div>

@@ -63,7 +63,7 @@ export function SharePlanButton({ planId }: { planId: string }) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="email@example.com"
+                placeholder={t.common.emailPlaceholder}
                 className="rounded-xl border border-blue-200 px-3 py-2 text-sm"
                 required
                 autoFocus

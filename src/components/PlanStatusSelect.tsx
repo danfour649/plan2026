@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { PlanActionResult } from "@/lib/actions/plans";
-import { formatPlanStatus, PLAN_STATUS_VALUES } from "@/lib/validations/plan";
+import { PLAN_STATUS_VALUES } from "@/lib/validations/plan";
 
 type UpdatePlanStatusAction = (formData: FormData) => Promise<PlanActionResult>;
 
@@ -48,7 +48,7 @@ export function PlanStatusSelect({ planId, currentStatus, action }: PlanStatusSe
       >
         {PLAN_STATUS_VALUES.map((s) => (
           <option key={s} value={s}>
-            {formatPlanStatus(s)}
+            {t.planStatus[s]}
           </option>
         ))}
       </select>
