@@ -1,0 +1,53 @@
+# TECH-0026: Get permanent website
+
+**Status:** Not implemented — implementation notes for future work.
+
+**Goal:** Switch from the default Vercel deployment URL (e.g. `plan2026-pi.vercel.app`) to a permanent custom domain.
+
+---
+
+## What is needed
+
+### 1. Domain and DNS
+
+- **Register a domain** (e.g. via a registrar or Vercel Domains) for the desired permanent address (e.g. `plan2026.com` or a subdomain).
+- **DNS access** to add verification and routing records as required by Vercel.
+
+### 2. Vercel configuration
+
+- In the Vercel project: **Settings → Domains** (or **Domains** in the dashboard).
+- **Add the custom domain** (e.g. `plan2026.com` and optionally `www.plan2026.com`).
+- Follow Vercel’s steps to **verify ownership** (often via TXT record or CNAME).
+- Add the **A record** or **CNAME** Vercel specifies so traffic routes to Vercel (exact records are shown in the Vercel UI).
+- Vercel will provision **SSL (HTTPS)** for the custom domain.
+
+### 3. Application configuration
+
+- **`NEXTAUTH_URL`** in production must use the new permanent URL (e.g. `https://plan2026.com`). Update this in Vercel **Environment Variables** for the production environment.
+- If the app uses **absolute URLs** (e.g. for redirects, links, or API callbacks), ensure they use the same origin or a configurable base URL.
+- **Google OAuth:** In the Google Cloud Console, add the new domain to **Authorized redirect URIs** and **Authorized JavaScript origins** for the OAuth client (e.g. `https://plan2026.com`, `https://plan2026.com/api/auth/callback/google`).
+
+### 4. Optional app-side improvements
+
+- **Canonical URLs:** If the app is ever reachable at multiple hostnames, consider adding `<link rel="canonical">` so search engines and shares use the permanent domain.
+- **Redirect from old URL:** If the previous `*.vercel.app` URL was shared or indexed, add a redirect (e.g. in Vercel or in the app) from the old URL to the new domain so links and bookmarks still work.
+
+### 5. Documentation
+
+- Update **README.md** and **AI_PROJECT_CONTEXT.md** (and any deployment docs like **DEPLOY.md**) with the production URL and any domain-related env or OAuth steps.
+- Document the permanent URL in the project’s deployment or runbook so future maintainers know the live site address.
+
+---
+
+## Summary checklist
+
+| Step | Description |
+|------|-------------|
+| 1 | Obtain and configure DNS for the chosen domain |
+| 2 | Add and verify domain in Vercel; add A/CNAME as instructed |
+| 3 | Set `NEXTAUTH_URL` in Vercel to the permanent URL |
+| 4 | Add permanent domain to Google OAuth redirect URIs and origins |
+| 5 | (Optional) Add canonical URLs and redirect from old Vercel URL |
+| 6 | Update README / DEPLOY / AI_PROJECT_CONTEXT with production URL and steps |
+
+No code changes are strictly required if the app already uses `NEXTAUTH_URL` and relative paths; the work is primarily DNS, Vercel settings, Google OAuth config, and documentation.
