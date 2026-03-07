@@ -10,7 +10,7 @@ export default async function LoginPage({
   searchParams?: Promise<{ callbackUrl?: string }>;
 }) {
   const session = await getServerAuthSession();
-  const resolved = await searchParams?.catch(() => ({}));
+  const resolved = await searchParams?.catch((): { callbackUrl?: string } => ({}));
   const callbackUrl = resolved?.callbackUrl ?? "/tasks";
   if (session?.user) redirect(callbackUrl);
 
