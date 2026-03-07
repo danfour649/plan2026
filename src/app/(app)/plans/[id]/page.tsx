@@ -181,7 +181,7 @@ export default async function PlanDetailPage({
               {plan.tasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex items-center justify-between gap-4 px-6 py-4 transition hover:bg-blue-50/40"
+                  className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
                 >
                   <EditTaskDialog
                     action={updateTask}
@@ -216,7 +216,7 @@ export default async function PlanDetailPage({
                         </span>
                       </div>
                       <TaskContent content={task.content} />
-                      <div className="mt-1 text-xs text-zinc-500">
+                      <div className="mt-1 break-words text-xs text-zinc-500">
                         {task.completedAt
                           ? `Completed ${task.completedAt.toLocaleString()}`
                           : `Added ${task.createdAt.toLocaleString()}`}
@@ -224,6 +224,7 @@ export default async function PlanDetailPage({
                       </div>
                     </div>
                   </EditTaskDialog>
+                <div className="flex shrink-0 sm:flex-shrink-0">
                 <EditTaskDialog
                   action={updateTask}
                   deleteAction={deleteTask}
@@ -244,6 +245,7 @@ export default async function PlanDetailPage({
                     updatedAt: task.updatedAt.toISOString(),
                   }}
                 />
+                </div>
               </li>
             ))}
           </ul>

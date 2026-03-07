@@ -148,10 +148,10 @@ export default async function PlansPage({
                       className="h-12 w-12 shrink-0 rounded-lg border border-blue-100 object-cover"
                     />
                   ) : null}
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 overflow-hidden">
                     <div className="flex flex-wrap items-center gap-2">
                       <span
-                        className={`inline-flex max-w-[min(100%,18rem)] rounded-full px-3 py-1 text-sm font-semibold truncate ${getPriorityOvalClasses(
+                        className={`inline-block max-w-full truncate rounded-full px-3 py-1 text-sm font-semibold sm:max-w-[18rem] ${getPriorityOvalClasses(
                           plan.priority,
                         )}`}
                       >
@@ -169,11 +169,11 @@ export default async function PlansPage({
                       </span>
                     </div>
                     {(plan.goal ?? plan.description) && (
-                      <p className="mt-0.5 text-sm text-zinc-500 line-clamp-1">
+                      <p className="mt-0.5 line-clamp-1 break-words text-sm text-zinc-500">
                         {plan.goal ?? plan.description}
                       </p>
                     )}
-                    <p className="mt-1 text-xs text-zinc-500">
+                    <p className="mt-1 break-words text-xs text-zinc-500">
                       {plan.startAt.toLocaleDateString()} – {plan.endAt.toLocaleDateString()}
                       {" · "}
                       {(() => {
