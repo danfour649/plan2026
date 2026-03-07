@@ -39,12 +39,12 @@ export function AddTaskDialog({
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/45 px-4 py-8"
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-zinc-950/45 px-4 py-4 sm:py-8"
           onClick={() => setIsOpen(false)}
           role="presentation"
         >
           <div
-            className="w-full max-w-2xl rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10"
+            className="w-full max-w-2xl max-h-[calc(100dvh-2rem)] flex flex-col rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10 sm:my-auto"
             onClick={(event) => event.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -73,7 +73,9 @@ export function AddTaskDialog({
               </button>
             </div>
 
-            <AddTaskForm action={action} onSuccess={() => setIsOpen(false)} plans={plans} />
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <AddTaskForm action={action} onSuccess={() => setIsOpen(false)} plans={plans} />
+            </div>
           </div>
         </div>
       )}
