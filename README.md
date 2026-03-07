@@ -9,6 +9,7 @@
   - Optional completed-task visibility with a `showCompleted=1` toggle
   - Add and edit tasks in dialogs (title, rich text notes, due date, urgency 1–7)
   - Mark tasks done, restore them, or delete them
+  - Export tasks (or a single task from the edit dialog) to JSON for debugging or AI ingestion
   - Add a task to Google Calendar and keep track of whether it has already been linked
   - Tasks can be linked to a plan; task rows show a “Plan: …” link when set
 - **Plans** – A `/plans` area to group tasks and track progress:
@@ -16,6 +17,7 @@
   - Refresh button and “Show completed / abandoned” toggle on the plans list; each row has an Edit link and a status dropdown
   - Full-page create at `/plans/new` and edit at `/plans/[id]` (no modals)
   - Add existing tasks or create new tasks when editing a plan; on the plan detail page you can edit any task in the plan via an edit-task modal
+  - Export plans (or a single plan from its detail page) to JSON for debugging or AI ingestion
   - Plan fields: goal, actual start/end dates, notes, color
 - Settings page to disconnect Google Calendar access
 - Server actions for UI mutations and JSON API routes for programmatic access

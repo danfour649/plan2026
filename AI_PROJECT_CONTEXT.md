@@ -59,6 +59,10 @@ src/
     RefreshTasksButton.tsx              # Manual refresh for /tasks
     RefreshPlansButton.tsx              # Manual refresh for /plans
     ShowArchivedPlansToggle.tsx        # Toggle show completed/abandoned plans on /plans
+    ExportTasksButton.tsx               # Export tasks list to JSON (tasks page)
+    ExportPlansButton.tsx               # Export plans list to JSON (plans page)
+    ExportPlanButton.tsx                # Export single plan to JSON (plan detail page)
+    ExportTaskButton.tsx                # Export single task to JSON (edit task dialog)
     SignOutButton.tsx
     TaskActionButton.tsx                # Mark done / restore actions
     TaskContent.tsx                     # Sanitized rich text renderer
@@ -66,6 +70,7 @@ src/
   lib/
     actions/tasks.ts                    # Shared task server actions
     actions/settings.ts                 # Google Calendar disconnect action
+    export.ts                           # JSON export types and helpers for plans/tasks (debugging, AI ingestion)
     prisma.ts                           # Prisma singleton
     rate-limit.ts                       # In-memory rate limiter for task API routes
     sanitize.ts                         # sanitize-html rules for task content

@@ -1,10 +1,12 @@
 import Link from "next/link";
 
 import { getCurrentUserId } from "@/auth";
+import { ExportPlansButton } from "@/components/ExportPlansButton";
 import { RefreshPlansButton } from "@/components/RefreshPlansButton";
 import { ShowArchivedPlansToggle } from "@/components/ShowArchivedPlansToggle";
 import { PlanStatusSelect } from "@/components/PlanStatusSelect";
 import { prisma } from "@/lib/prisma";
+import type { ExportedPlan } from "@/lib/export";
 import { updatePlanStatus } from "@/lib/actions/plans";
 import { formatPlanStatus } from "@/lib/validations/plan";
 
@@ -61,12 +63,35 @@ export default async function PlansPage({
   const allPlans = await prisma.plan.findMany({
     where: { userId },
     orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
-    include: { tasks: { select: { completedAt: true } } },
+    include: { tasks: { select: { id: true, completedAt: true } } },
   });
 
   const plans = showArchived
     ? allPlans
     : allPlans.filter((p) => !ARCHIVED_STATUSES.includes(p.status as (typeof ARCHIVED_STATUSES)[number]));
+
+  const plansForExport: ExportedPlan[] = plans.map((p) => ({
+    id: p.id,
+    name: p.name,
+    description: p.description,
+    goal: p.goal,
+    startAt: p.startAt.toISOString(),
+    endAt: p.endAt.toISOString(),
+    actualStartAt: p.actualStartAt?.toISOString() ?? null,
+    actualEndAt: p.actualEndAt?.toISOString() ?? null,
+    status: p.status,
+    priority: p.priority,
+    percentCompleted: p.percentCompleted,
+    notes: p.notes,
+    color: p.color,
+    imageUrl: p.imageUrl,
+    createdAt: p.createdAt.toISOString(),
+    updatedAt: p.updatedAt.toISOString(),
+    taskSummaries: p.tasks.map((t) => ({
+      id: t.id,
+      completedAt: t.completedAt?.toISOString() ?? null,
+    })),
+  }));
 
   return (
     <div className="space-y-8">
@@ -77,6 +102,7 @@ export default async function PlansPage({
             <RefreshPlansButton />
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <ExportPlansButton plans={plansForExport} />
             <ShowArchivedPlansToggle showArchived={showArchived} />
             <Link
               href="/plans/new"

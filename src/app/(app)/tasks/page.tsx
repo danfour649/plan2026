@@ -5,10 +5,12 @@ import { getCurrentUserId } from "@/auth";
 import { AddTaskDialog } from "@/components/AddTaskDialog";
 import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
+import { ExportTasksButton } from "@/components/ExportTasksButton";
 import { RefreshTasksButton } from "@/components/RefreshTasksButton";
 import { ShowCompletedToggle } from "@/components/ShowCompletedToggle";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { TaskContent } from "@/components/TaskContent";
+import type { ExportedTask } from "@/lib/export";
 import { prisma } from "@/lib/prisma";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
 
@@ -81,6 +83,37 @@ export default async function TasksPage({
     select: { id: true, name: true },
   });
 
+  const allTasksForExport: ExportedTask[] = [
+    ...remainingTasks.map((t) => ({
+      id: t.id,
+      title: t.title,
+      content: t.content,
+      dueAt: t.dueAt?.toISOString() ?? null,
+      urgency: t.urgency,
+      completedAt: null as string | null,
+      planId: t.plan?.id ?? null,
+      planName: t.plan?.name ?? null,
+      createdAt: t.createdAt.toISOString(),
+      updatedAt: t.updatedAt.toISOString(),
+      googleCalendarEventId: t.googleCalendarEventId,
+      googleCalendarEventUrl: t.googleCalendarEventUrl,
+    })),
+    ...completedTasks.map((t) => ({
+      id: t.id,
+      title: t.title,
+      content: t.content,
+      dueAt: t.dueAt?.toISOString() ?? null,
+      urgency: t.urgency,
+      completedAt: t.completedAt?.toISOString() ?? null,
+      planId: t.plan?.id ?? null,
+      planName: t.plan?.name ?? null,
+      createdAt: t.createdAt.toISOString(),
+      updatedAt: t.updatedAt.toISOString(),
+      googleCalendarEventId: t.googleCalendarEventId,
+      googleCalendarEventUrl: t.googleCalendarEventUrl,
+    })),
+  ];
+
   return (
     <div className="space-y-8">
       <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
@@ -90,6 +123,7 @@ export default async function TasksPage({
             <RefreshTasksButton />
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <ExportTasksButton tasks={allTasksForExport} />
             <ShowCompletedToggle showCompleted={showCompleted} />
             <AddTaskDialog action={addTask} plans={plans} />
           </div>
@@ -125,6 +159,9 @@ export default async function TasksPage({
                     dueAt: task.dueAt?.toISOString() ?? null,
                     urgency: task.urgency,
                     planId: task.plan?.id ?? null,
+                    planName: task.plan?.name ?? null,
+                    createdAt: task.createdAt.toISOString(),
+                    updatedAt: task.updatedAt.toISOString(),
                   }}
                 >
                   <div className="min-w-0 flex-1">
@@ -172,6 +209,9 @@ export default async function TasksPage({
                       dueAt: task.dueAt?.toISOString() ?? null,
                       urgency: task.urgency,
                       planId: task.plan?.id ?? null,
+                      planName: task.plan?.name ?? null,
+                      createdAt: task.createdAt.toISOString(),
+                      updatedAt: task.updatedAt.toISOString(),
                     }}
                   />
                 </div>
@@ -194,7 +234,11 @@ export default async function TasksPage({
                     content: task.content,
                     dueAt: task.dueAt?.toISOString() ?? null,
                     urgency: task.urgency,
+                    completedAt: task.completedAt?.toISOString() ?? null,
                     planId: task.plan?.id ?? null,
+                    planName: task.plan?.name ?? null,
+                    createdAt: task.createdAt.toISOString(),
+                    updatedAt: task.updatedAt.toISOString(),
                   }}
                 >
                   <div className="flex min-w-0 flex-1 items-start gap-3">
@@ -243,7 +287,11 @@ export default async function TasksPage({
                       content: task.content,
                       dueAt: task.dueAt?.toISOString() ?? null,
                       urgency: task.urgency,
+                      completedAt: task.completedAt?.toISOString() ?? null,
                       planId: task.plan?.id ?? null,
+                      planName: task.plan?.name ?? null,
+                      createdAt: task.createdAt.toISOString(),
+                      updatedAt: task.updatedAt.toISOString(),
                     }}
                   />
                 </div>

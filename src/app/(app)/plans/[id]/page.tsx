@@ -4,9 +4,11 @@ import { notFound } from "next/navigation";
 import { getCurrentUserId } from "@/auth";
 import { DeletePlanButton } from "@/components/DeletePlanButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
+import { ExportPlanButton } from "@/components/ExportPlanButton";
 import { PlanForm } from "@/components/PlanForm";
 import { TaskContent } from "@/components/TaskContent";
 import { prisma } from "@/lib/prisma";
+import type { ExportedPlan, ExportedPlanTask } from "@/lib/export";
 import { deletePlan, updatePlan } from "@/lib/actions/plans";
 import { completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
 
@@ -52,6 +54,7 @@ export default async function PlanDetailPage({
           urgency: true,
           completedAt: true,
           createdAt: true,
+          updatedAt: true,
         },
       },
     },
@@ -89,6 +92,37 @@ export default async function PlanDetailPage({
     taskIds: plan.tasks.map((t) => t.id),
   };
 
+  const planForExport: ExportedPlan = {
+    id: plan.id,
+    name: plan.name,
+    description: plan.description,
+    goal: plan.goal,
+    startAt: plan.startAt.toISOString(),
+    endAt: plan.endAt.toISOString(),
+    actualStartAt: plan.actualStartAt?.toISOString() ?? null,
+    actualEndAt: plan.actualEndAt?.toISOString() ?? null,
+    status: plan.status,
+    priority: plan.priority,
+    percentCompleted: plan.percentCompleted,
+    notes: plan.notes,
+    color: plan.color,
+    imageUrl: plan.imageUrl,
+    createdAt: plan.createdAt.toISOString(),
+    updatedAt: plan.updatedAt.toISOString(),
+    tasks: plan.tasks.map(
+      (t): ExportedPlanTask => ({
+        id: t.id,
+        title: t.title,
+        content: t.content,
+        dueAt: t.dueAt?.toISOString() ?? null,
+        urgency: t.urgency,
+        completedAt: t.completedAt?.toISOString() ?? null,
+        createdAt: t.createdAt.toISOString(),
+        updatedAt: t.updatedAt.toISOString(),
+      }),
+    ),
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-3">
@@ -110,11 +144,14 @@ export default async function PlanDetailPage({
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-blue-950">{plan.name}</h1>
-          <p className="mt-1 text-sm text-zinc-500">
-            Edit plan and tasks. Changes are saved when you submit.
-          </p>
-        </div>
-        <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
+            <p className="mt-1 text-sm text-zinc-500">
+              Edit plan and tasks. Changes are saved when you submit.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <ExportPlanButton plan={planForExport} />
+            <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
+          </div>
         </div>
       </div>
 
@@ -159,6 +196,9 @@ export default async function PlanDetailPage({
                       urgency: task.urgency,
                       completedAt: task.completedAt?.toISOString() ?? null,
                       planId: plan.id,
+                      planName: plan.name,
+                      createdAt: task.createdAt.toISOString(),
+                      updatedAt: task.updatedAt.toISOString(),
                     }}
                   >
                     <div className="min-w-0 flex-1">
@@ -195,6 +235,9 @@ export default async function PlanDetailPage({
                     urgency: task.urgency,
                     completedAt: task.completedAt?.toISOString() ?? null,
                     planId: plan.id,
+                    planName: plan.name,
+                    createdAt: task.createdAt.toISOString(),
+                    updatedAt: task.updatedAt.toISOString(),
                   }}
                 />
               </li>
