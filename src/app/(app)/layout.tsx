@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 import { getServerAuthSession } from "@/auth";
 import { AppNavLink } from "@/components/AppNavLink";
 import { Plan2026Logo } from "@/components/Plan2026Logo";
 import { SignOutButton } from "@/components/SignOutButton";
+import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 
 export default async function AppLayout({
@@ -13,6 +15,8 @@ export default async function AppLayout({
 }) {
   const session = await getServerAuthSession();
   if (!session?.user) redirect("/login");
+  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const t = getTranslations(locale);
   const remainingTaskCount = await prisma.task.count({
     where: { userId: session.user.id, completedAt: null },
   });
@@ -34,10 +38,10 @@ export default async function AppLayout({
             />
             <nav className="flex items-center gap-4 text-sm text-zinc-700">
               <AppNavLink href="/plans" accent="blue" badge={activePlanCount}>
-                Plans
+                {t.nav.plans}
               </AppNavLink>
               <AppNavLink href="/tasks" accent="blue" badge={remainingTaskCount}>
-                Tasks
+                {t.nav.tasks}
               </AppNavLink>
             </nav>
           </div>
@@ -46,7 +50,7 @@ export default async function AppLayout({
             <AppNavLink
               href="/settings"
               accent="blue"
-              ariaLabel="Settings"
+              ariaLabel={t.nav.settings}
               className="px-2.5 py-2"
             >
               <svg

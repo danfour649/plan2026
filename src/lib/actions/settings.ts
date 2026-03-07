@@ -1,8 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 import { getCurrentUserId } from "@/auth";
+import { DEFAULT_LOCALE, getLocaleFromCookie, LOCALE_COOKIE, LOCALES, type Locale } from "@/lib/i18n";
 import type { ActionResult } from "@/lib/actions/tasks";
 import { prisma } from "@/lib/prisma";
 
@@ -71,5 +73,16 @@ export async function disconnectGoogleCalendar(): Promise<ActionResult> {
   revalidatePath("/settings");
   revalidatePath("/tasks");
 
+  return { success: true };
+}
+
+export async function setLocale(formData: FormData): Promise<{ success: true } | { success: false; error: string }> {
+  const userId = await getCurrentUserId();
+  if (!userId) return { success: false, error: "Unauthorized" };
+  const raw = formData.get("locale");
+  const locale = typeof raw === "string" ? getLocaleFromCookie(raw) : DEFAULT_LOCALE;
+  const value = LOCALES.includes(locale as Locale) ? locale : DEFAULT_LOCALE;
+  (await cookies()).set(LOCALE_COOKIE, value, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+  revalidatePath("/", "layout");
   return { success: true };
 }
