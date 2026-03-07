@@ -48,6 +48,8 @@ src/
       tasks/route.ts                    # GET and POST tasks
       tasks/[id]/route.ts               # PATCH completed state; DELETE task
       tasks/[id]/calendar/route.ts      # POST Google Calendar event for a task
+      tasks/[id]/attachments/route.ts   # POST upload file for task (Vercel Blob)
+      tasks/[id]/attachments/[attachmentId]/route.ts  # DELETE attachment
     layout.tsx                          # Root layout with Sonner Toaster
     page.tsx                            # Redirects to /tasks
   components/
@@ -119,6 +121,11 @@ Indexes:
 - `Task(userId, completedAt)`
 
 All task queries and mutations are scoped by the authenticated `userId`.
+
+### TaskAttachment
+
+- `id`, `taskId`, `userId`, `url` (blob URL), `filename`, `size`, `contentType`, `createdAt`
+- Files are uploaded via POST to `/api/tasks/[id]/attachments` and stored in Vercel Blob when `BLOB_READ_WRITE_TOKEN` is set.
 
 ---
 
@@ -293,6 +300,8 @@ Error conventions across task APIs:
 | Task collection API | `src/app/api/tasks/route.ts` |
 | Task detail API | `src/app/api/tasks/[id]/route.ts` |
 | Calendar event API | `src/app/api/tasks/[id]/calendar/route.ts` |
+| Task attachments upload | `src/app/api/tasks/[id]/attachments/route.ts` (POST) |
+| Task attachment delete | `src/app/api/tasks/[id]/attachments/[attachmentId]/route.ts` (DELETE) |
 
 ---
 
