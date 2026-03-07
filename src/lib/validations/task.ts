@@ -38,6 +38,11 @@ export const addTaskSchema = z.object({
     .int()
     .min(TASK_URGENCY_MIN, `Urgency must be between ${TASK_URGENCY_MIN} and ${TASK_URGENCY_MAX}`)
     .max(TASK_URGENCY_MAX, `Urgency must be between ${TASK_URGENCY_MIN} and ${TASK_URGENCY_MAX}`),
+  planId: z
+    .string()
+    .optional()
+    .transform((s) => (s == null || (typeof s === "string" && s.trim() === "") ? undefined : s.trim()))
+    .refine((v) => v === undefined || (v.length === 25 && /^c[a-z0-9]{24}$/.test(v)), "Invalid plan"),
 });
 
 /** CUID format used by Prisma @default(cuid()) - 25 chars, 'c' prefix, base36. */

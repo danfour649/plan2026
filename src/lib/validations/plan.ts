@@ -11,8 +11,14 @@ export const PLAN_PRIORITY_MAX = 7;
 export const PLAN_PERCENT_MIN = 0;
 export const PLAN_PERCENT_MAX = 100;
 
-export const PLAN_STATUS_VALUES = ["draft", "started", "completed", "abandoned"] as const;
+export const PLAN_STATUS_VALUES = ["draft", "started", "on_hold", "completed", "abandoned"] as const;
 export type PlanStatus = (typeof PLAN_STATUS_VALUES)[number];
+
+/** Human-readable label for plan status (e.g. "on_hold" → "On hold"). */
+export function formatPlanStatus(status: string): string {
+  if (status === "on_hold") return "On hold";
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
 
 const optionalDate = z
   .string()
@@ -98,7 +104,7 @@ export const planIdSchema = z.object({
 export const updatePlanSchema = basePlanSchema
   .merge(planIdSchema)
   .extend({
-    status: z.enum(PLAN_STATUS_VALUES, { errorMap: () => ({ message: "Status must be draft, started, completed, or abandoned" }) }),
+    status: z.enum(PLAN_STATUS_VALUES, { errorMap: () => ({ message: "Status must be draft, started, on hold, completed, or abandoned" }) }),
   })
   .refine(
     (data) => data.endAt >= data.startAt,

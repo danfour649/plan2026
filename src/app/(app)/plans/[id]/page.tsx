@@ -1,10 +1,33 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getCurrentUserId } from "@/auth";
 import { DeletePlanButton } from "@/components/DeletePlanButton";
+import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { PlanForm } from "@/components/PlanForm";
+import { TaskContent } from "@/components/TaskContent";
 import { prisma } from "@/lib/prisma";
 import { deletePlan, updatePlan } from "@/lib/actions/plans";
+import { completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
+
+function getUrgencyPillClasses(urgency: number) {
+  switch (urgency) {
+    case 7:
+      return "bg-red-100 text-red-700 ring-1 ring-red-200";
+    case 6:
+      return "bg-orange-100 text-orange-700 ring-1 ring-orange-200";
+    case 5:
+      return "bg-amber-100 text-amber-700 ring-1 ring-amber-200";
+    case 4:
+      return "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200";
+    case 3:
+      return "bg-cyan-100 text-cyan-700 ring-1 ring-cyan-200";
+    case 2:
+      return "bg-sky-100 text-sky-700 ring-1 ring-sky-200";
+    default:
+      return "bg-blue-100 text-blue-700 ring-1 ring-blue-200";
+  }
+}
 
 export default async function PlanDetailPage({
   params,
@@ -18,10 +41,29 @@ export default async function PlanDetailPage({
 
   const plan = await prisma.plan.findFirst({
     where: { id, userId },
-    include: { tasks: { select: { id: true } } },
+    include: {
+      tasks: {
+        orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          dueAt: true,
+          urgency: true,
+          completedAt: true,
+          createdAt: true,
+        },
+      },
+    },
   });
 
   if (!plan) notFound();
+
+  const plans = await prisma.plan.findMany({
+    where: { userId },
+    orderBy: [{ priority: "desc" }, { name: "asc" }],
+    select: { id: true, name: true },
+  });
 
   const userTasks = await prisma.task.findMany({
     where: { userId },
@@ -49,25 +91,123 @@ export default async function PlanDetailPage({
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-blue-950">{plan.name}</h1>
+      <div className="flex flex-col gap-3">
+        <Link
+          href="/plans"
+          className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-blue-700 transition hover:text-blue-800"
+        >
+          <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden="true">
+            <path
+              d="M12.5 15L7.5 10l5-5"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          Back to plans
+        </Link>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-blue-950">{plan.name}</h1>
           <p className="mt-1 text-sm text-zinc-500">
             Edit plan and tasks. Changes are saved when you submit.
           </p>
         </div>
         <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
+        </div>
       </div>
 
-      <section className="rounded-2xl border border-blue-100 bg-white/90 px-6 py-6 shadow-sm shadow-blue-100/40 backdrop-blur">
-        <PlanForm
-          action={updatePlan}
-          initialValues={initialValues}
-          userTasks={userTasks}
-          isEdit={true}
-          submitLabel="Save plan"
-        />
-      </section>
+      <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
+        <section className="rounded-2xl border border-blue-100 bg-white/90 px-6 py-6 shadow-sm shadow-blue-100/40 backdrop-blur">
+          <PlanForm
+            action={updatePlan}
+            initialValues={initialValues}
+            userTasks={userTasks}
+            isEdit={true}
+            submitLabel="Save plan"
+            singleColumn={true}
+          />
+        </section>
+
+        <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
+          <div className="border-b border-blue-100 px-6 py-4">
+            <h2 className="text-xl font-bold tracking-tight text-blue-950">Tasks in this plan</h2>
+            <p className="mt-1 text-sm text-zinc-500">Edit a task below to update it from this page.</p>
+          </div>
+          {plan.tasks.length > 0 ? (
+            <ul className="divide-y divide-blue-100">
+              {plan.tasks.map((task) => (
+                <li
+                  key={task.id}
+                  className="flex items-center justify-between gap-4 px-6 py-4 transition hover:bg-blue-50/40"
+                >
+                  <EditTaskDialog
+                    action={updateTask}
+                    deleteAction={deleteTask}
+                    completeAction={completeTask}
+                    restoreAction={restoreTask}
+                    planId={plan.id}
+                    plans={plans}
+                    triggerClassName="min-w-0 flex-1 cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1 text-left"
+                    showButton={false}
+                    task={{
+                      id: task.id,
+                      title: task.title,
+                      content: task.content,
+                      dueAt: task.dueAt?.toISOString() ?? null,
+                      urgency: task.urgency,
+                      completedAt: task.completedAt?.toISOString() ?? null,
+                      planId: plan.id,
+                    }}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div
+                        className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
+                          task.urgency,
+                        )}`}
+                      >
+                        <span className={task.completedAt ? "truncate line-through" : "truncate"}>
+                          {task.title}
+                        </span>
+                      </div>
+                      <TaskContent content={task.content} />
+                      <div className="mt-1 text-xs text-zinc-500">
+                        {task.completedAt
+                          ? `Completed ${task.completedAt.toLocaleString()}`
+                          : `Added ${task.createdAt.toLocaleString()}`}
+                        {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
+                      </div>
+                    </div>
+                  </EditTaskDialog>
+                <EditTaskDialog
+                  action={updateTask}
+                  deleteAction={deleteTask}
+                  completeAction={completeTask}
+                  restoreAction={restoreTask}
+                  planId={plan.id}
+                  plans={plans}
+                  task={{
+                    id: task.id,
+                    title: task.title,
+                    content: task.content,
+                    dueAt: task.dueAt?.toISOString() ?? null,
+                    urgency: task.urgency,
+                    completedAt: task.completedAt?.toISOString() ?? null,
+                    planId: plan.id,
+                  }}
+                />
+              </li>
+            ))}
+          </ul>
+          ) : (
+            <div className="px-6 py-8 text-center">
+              <p className="text-sm text-zinc-500">No tasks in this plan yet.</p>
+              <p className="mt-1 text-xs text-zinc-400">Add or link tasks using the form on the left.</p>
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
 }

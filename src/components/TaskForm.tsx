@@ -19,7 +19,10 @@ type TaskFormProps = {
     content?: string;
     dueAt?: string | null;
     urgency?: number;
+    planId?: string | null;
   };
+  /** When provided, show a plan selector (optional association). */
+  plans?: { id: string; name: string }[];
 };
 
 const URGENCY_OPTIONS = [
@@ -68,6 +71,7 @@ export function TaskForm({
   submitLabel,
   successMessage,
   initialValues,
+  plans,
 }: TaskFormProps) {
   const [state, formAction] = useActionState(wrap(action), null as ActionResult | null);
   const defaultDueAtValue = useMemo(
@@ -123,6 +127,23 @@ export function TaskForm({
             ))}
           </div>
         </div>
+        {plans && plans.length > 0 ? (
+          <div className="flex w-full flex-col gap-1.5">
+            <label className="text-xs whitespace-nowrap text-blue-700">Plan (optional)</label>
+            <select
+              name="planId"
+              defaultValue={initialValues?.planId ?? ""}
+              className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+            >
+              <option value="">None</option>
+              {plans.map((plan) => (
+                <option key={plan.id} value={plan.id}>
+                  {plan.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : null}
         <div className="flex w-full flex-col gap-1.5">
           <label className="text-xs whitespace-nowrap text-blue-700">Due (optional)</label>
           <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">

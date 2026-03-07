@@ -7,7 +7,13 @@ import type { ActionResult } from "@/lib/actions/tasks";
 
 type AddTaskAction = (formData: FormData) => Promise<ActionResult>;
 
-export function AddTaskDialog({ action }: { action: AddTaskAction }) {
+export function AddTaskDialog({
+  action,
+  plans,
+}: {
+  action: AddTaskAction;
+  plans?: { id: string; name: string }[];
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -67,7 +73,7 @@ export function AddTaskDialog({ action }: { action: AddTaskAction }) {
               </button>
             </div>
 
-            <AddTaskForm action={action} onSuccess={() => setIsOpen(false)} />
+            <AddTaskForm action={action} onSuccess={() => setIsOpen(false)} plans={plans} />
           </div>
         </div>
       )}

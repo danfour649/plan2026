@@ -8,14 +8,14 @@ type Plan2026LogoProps = {
 };
 
 export function Plan2026Logo({
-  href = "/tasks",
+  href = "/plans",
   className,
   iconClassName,
 }: Plan2026LogoProps) {
   return (
     <Link
       href={href}
-      aria-label="Plan 2026 home"
+      aria-label="Go to plans"
       className={`inline-flex items-center justify-center rounded-2xl outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-blue-300 ${className ?? ""}`}
     >
       <span

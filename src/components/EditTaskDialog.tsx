@@ -8,9 +8,10 @@ import type { ActionResult } from "@/lib/actions/tasks";
 
 type EditTaskAction = (formData: FormData) => Promise<ActionResult>;
 type DeleteTaskAction = (formData: FormData) => Promise<ActionResult>;
+type CompleteOrRestoreAction = (formData: FormData) => Promise<ActionResult>;
 
 function wrap(
-  fn: DeleteTaskAction,
+  fn: DeleteTaskAction | CompleteOrRestoreAction,
 ): (prev: ActionResult | null, formData: FormData) => Promise<ActionResult> {
   return (_prev, formData) => fn(formData);
 }
@@ -24,10 +25,18 @@ type EditTaskDialogProps = {
     content: string | null;
     dueAt: string | null;
     urgency: number;
+    completedAt?: string | null;
+    planId?: string | null;
   };
   children?: React.ReactNode;
   triggerClassName?: string;
   showButton?: boolean;
+  /** When set, show "Mark done" (or "Restore" if task is completed) in the dialog. Pass planId to revalidate the plan page after. */
+  completeAction?: CompleteOrRestoreAction;
+  restoreAction?: CompleteOrRestoreAction;
+  planId?: string;
+  /** When provided, show plan selector in the edit form. */
+  plans?: { id: string; name: string }[];
 };
 
 function isInteractiveTarget(target: EventTarget | null, currentTarget: EventTarget | null): boolean {
@@ -47,11 +56,21 @@ export function EditTaskDialog({
   children,
   triggerClassName,
   showButton = true,
+  completeAction,
+  restoreAction,
+  planId,
+  plans,
 }: EditTaskDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const isCompleted = Boolean(task.completedAt);
+  const doneRestoreAction = isCompleted ? restoreAction : completeAction;
   const [deleteState, deleteFormAction] = useActionState(
     wrap(deleteAction),
+    null as ActionResult | null,
+  );
+  const [doneRestoreState, doneRestoreFormAction] = useActionState(
+    wrap(doneRestoreAction ?? (() => Promise.resolve({ success: false, error: "" }))),
     null as ActionResult | null,
   );
 
@@ -76,6 +95,17 @@ export function EditTaskDialog({
       toast.error(deleteState.error);
     }
   }, [deleteState]);
+
+  useEffect(() => {
+    if (!doneRestoreState || !doneRestoreAction) return;
+
+    if (doneRestoreState.success) {
+      toast.success(isCompleted ? "Task restored" : "Marked done");
+      queueMicrotask(() => setIsOpen(false));
+    } else if (doneRestoreState.error) {
+      toast.error(doneRestoreState.error);
+    }
+  }, [doneRestoreState, doneRestoreAction, isCompleted]);
 
   return (
     <>
@@ -158,8 +188,28 @@ export function EditTaskDialog({
                 content: task.content ?? undefined,
                 dueAt: task.dueAt,
                 urgency: task.urgency,
+                planId: task.planId ?? undefined,
               }}
+              plans={plans}
             />
+
+            {completeAction && restoreAction ? (
+              <div className="mt-6 border-t border-blue-100 pt-4">
+                <form action={doneRestoreFormAction} className="flex flex-wrap items-center gap-3">
+                  <input type="hidden" name="taskId" value={task.id} />
+                  {planId ? <input type="hidden" name="planId" value={planId} /> : null}
+                  <p className="text-sm text-zinc-500">
+                    {isCompleted ? "Reopen this task so it appears in your remaining list." : "Mark this task as done."}
+                  </p>
+                  <button
+                    type="submit"
+                    className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+                  >
+                    {isCompleted ? "Restore" : "Mark done"}
+                  </button>
+                </form>
+              </div>
+            ) : null}
 
             <div className="mt-6 border-t border-blue-100 pt-4">
               <form action={deleteFormAction} className="flex flex-col gap-3">
