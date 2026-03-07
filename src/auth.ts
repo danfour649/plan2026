@@ -8,12 +8,21 @@ import { prisma } from "@/lib/prisma";
 
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
-if (process.env.NODE_ENV === "production" && !process.env.AUTH_SECRET) {
-  throw new Error("AUTH_SECRET environment variable is required in production");
+
+/** Resolve secret at runtime so we don't throw during next build (when NODE_ENV is production but AUTH_SECRET is unset in CI). */
+function getAuthSecret(): string | undefined {
+  if (
+    process.env.NODE_ENV === "production" &&
+    !process.env.AUTH_SECRET &&
+    process.env.CI !== "true"
+  ) {
+    throw new Error("AUTH_SECRET environment variable is required in production");
+  }
+  return (
+    process.env.AUTH_SECRET ??
+    (process.env.NODE_ENV === "development" ? crypto.randomUUID() : undefined)
+  );
 }
-const authSecret =
-  process.env.AUTH_SECRET ??
-  (process.env.NODE_ENV === "development" ? crypto.randomUUID() : undefined);
 
 const hasGoogleCredentials = Boolean(googleClientId && googleClientSecret);
 
@@ -30,7 +39,9 @@ export const authOptions: NextAuthOptions = {
         }),
       ]
     : [],
-  secret: authSecret,
+  get secret() {
+    return getAuthSecret();
+  },
   session: { strategy: "database" },
   callbacks: {
     session: async ({ session, user }) => {
