@@ -72,6 +72,14 @@ npm run dev
 
 5. Open `http://localhost:3000`.
 
+### Port 3000 already in use
+
+If you see **"Port 3000 is in use"** or **"Unable to acquire lock at .next/dev/lock"**, a previous dev server is still running. On Windows this often happens when the terminal is closed without stopping the server, or when the process doesn’t receive a shutdown signal.
+
+- **Stop the server properly:** Use **Ctrl+C** in the terminal where `npm run dev` is running instead of closing the window.
+- **Free the port:** Run `npm run dev:kill` to kill the process on port 3000, then run `npm run dev` again.
+- **Manual kill (Windows):** `netstat -ano | findstr :3000`, then `taskkill /PID <pid> /F`. Or use Task Manager → Details → end the `node.exe` process (or "End process tree" on the npm parent).
+
 The root route redirects to `/tasks`.
 
 ## Google OAuth setup
@@ -90,6 +98,8 @@ The app requests these Google scopes during sign-in:
 - `email`
 - `profile`
 - `https://www.googleapis.com/auth/calendar.events`
+
+Google sign-in forces a fresh Google consent step so revoked Calendar permissions can be granted again on reconnect.
 
 ## API
 

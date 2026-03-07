@@ -33,7 +33,7 @@ src/
   auth.ts                               # NextAuth config, Google scopes, auth helpers
   app/
     (app)/
-      layout.tsx                        # Authenticated shell; nav + SignOutButton
+      layout.tsx                        # Authenticated shell; tasks nav, settings gear, email, and SignOutButton
       tasks/page.tsx                    # Unified tasks page for remaining and optional completed items
       tasks/loading.tsx                 # Tasks page skeleton
       settings/page.tsx                 # Calendar connection settings
@@ -149,6 +149,7 @@ All task queries and mutations are scoped by the authenticated `userId`.
 
 - Shows whether Google Calendar access is currently connected
 - Lets the user disconnect Calendar access
+- Shows a reconnect action when Calendar access has been disconnected
 - On disconnect, the app revokes the Google token when possible and clears stored account tokens
 
 ### Rich text content
@@ -165,6 +166,7 @@ All task queries and mutations are scoped by the authenticated `userId`.
 - If `task.dueAt` is absent, the route creates an all-day event for the current date
 - Task rich text is converted to plain text for the calendar event description
 - If the stored Google account token is expired, the route attempts a refresh and persists the new access token
+- If the stored Google account scope is missing `calendar.events`, the route returns a reconnect-required error instead of forwarding Google's raw insufficient-scope response
 - The task can store the linked Google event id and URL for UI state
 
 ---
