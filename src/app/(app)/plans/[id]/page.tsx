@@ -5,7 +5,9 @@ import { getCurrentUserId } from "@/auth";
 import { DeletePlanButton } from "@/components/DeletePlanButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportPlanButton } from "@/components/ExportPlanButton";
+import { InviteByLinkButton } from "@/components/InviteByLinkButton";
 import { PlanForm } from "@/components/PlanForm";
+import { SharePlanButton } from "@/components/SharePlanButton";
 import { TaskContent } from "@/components/TaskContent";
 import { prisma } from "@/lib/prisma";
 import type { ExportedPlan, ExportedPlanTask } from "@/lib/export";
@@ -42,7 +44,13 @@ export default async function PlanDetailPage({
   const { id } = await params;
 
   const plan = await prisma.plan.findFirst({
-    where: { id, userId },
+    where: {
+      id,
+      OR: [
+        { userId },
+        { shares: { some: { sharedWithUserId: userId } } },
+      ],
+    },
     include: {
       tasks: {
         orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
@@ -61,6 +69,8 @@ export default async function PlanDetailPage({
   });
 
   if (!plan) notFound();
+
+  const isOwner = plan.userId === userId;
 
   const plans = await prisma.plan.findMany({
     where: { userId },
@@ -145,19 +155,28 @@ export default async function PlanDetailPage({
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-blue-950">{plan.name}</h1>
             <p className="mt-1 text-sm text-zinc-500">
-              Edit plan and tasks. Changes are saved when you submit.
+              {isOwner
+                ? "Edit plan and tasks. Changes are saved when you submit."
+                : "Viewing a plan shared with you."}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <ExportPlanButton plan={planForExport} />
-            <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
+            {isOwner ? (
+              <>
+                <SharePlanButton planId={plan.id} />
+                <InviteByLinkButton planId={plan.id} />
+                <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
+              </>
+            ) : null}
           </div>
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
-        <section className="rounded-2xl border border-blue-100 bg-white/90 px-6 py-6 shadow-sm shadow-blue-100/40 backdrop-blur">
-          <PlanForm
+        {isOwner ? (
+          <section className="rounded-2xl border border-blue-100 bg-white/90 px-6 py-6 shadow-sm shadow-blue-100/40 backdrop-blur">
+            <PlanForm
             action={updatePlan}
             initialValues={initialValues}
             userTasks={userTasks}
@@ -166,11 +185,14 @@ export default async function PlanDetailPage({
             singleColumn={true}
           />
         </section>
+        ) : null}
 
         <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
           <div className="border-b border-blue-100 px-6 py-4">
             <h2 className="text-xl font-bold tracking-tight text-blue-950">Tasks in this plan</h2>
-            <p className="mt-1 text-sm text-zinc-500">Edit a task below to update it from this page.</p>
+            <p className="mt-1 text-sm text-zinc-500">
+              {isOwner ? "Edit a task below to update it from this page." : "Tasks in this shared plan."}
+            </p>
           </div>
           {plan.tasks.length > 0 ? (
             <ul className="divide-y divide-blue-100">
@@ -179,28 +201,71 @@ export default async function PlanDetailPage({
                   key={task.id}
                   className="flex items-center justify-between gap-4 px-6 py-4 transition hover:bg-blue-50/40"
                 >
-                  <EditTaskDialog
-                    action={updateTask}
-                    deleteAction={deleteTask}
-                    completeAction={completeTask}
-                    restoreAction={restoreTask}
-                    planId={plan.id}
-                    plans={plans}
-                    triggerClassName="min-w-0 flex-1 cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1 text-left"
-                    showButton={false}
-                    task={{
-                      id: task.id,
-                      title: task.title,
-                      content: task.content,
-                      dueAt: task.dueAt?.toISOString() ?? null,
-                      urgency: task.urgency,
-                      completedAt: task.completedAt?.toISOString() ?? null,
-                      planId: plan.id,
-                      planName: plan.name,
-                      createdAt: task.createdAt.toISOString(),
-                      updatedAt: task.updatedAt.toISOString(),
-                    }}
-                  >
+                  {isOwner ? (
+                    <>
+                      <EditTaskDialog
+                        action={updateTask}
+                        deleteAction={deleteTask}
+                        completeAction={completeTask}
+                        restoreAction={restoreTask}
+                        planId={plan.id}
+                        plans={plans}
+                        triggerClassName="min-w-0 flex-1 cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1 text-left"
+                        showButton={false}
+                        task={{
+                          id: task.id,
+                          title: task.title,
+                          content: task.content,
+                          dueAt: task.dueAt?.toISOString() ?? null,
+                          urgency: task.urgency,
+                          completedAt: task.completedAt?.toISOString() ?? null,
+                          planId: plan.id,
+                          planName: plan.name,
+                          createdAt: task.createdAt.toISOString(),
+                          updatedAt: task.updatedAt.toISOString(),
+                        }}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <div
+                            className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
+                              task.urgency,
+                            )}`}
+                          >
+                            <span className={task.completedAt ? "truncate line-through" : "truncate"}>
+                              {task.title}
+                            </span>
+                          </div>
+                          <TaskContent content={task.content} />
+                          <div className="mt-1 text-xs text-zinc-500">
+                            {task.completedAt
+                              ? `Completed ${task.completedAt.toLocaleString()}`
+                              : `Added ${task.createdAt.toLocaleString()}`}
+                            {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
+                          </div>
+                        </div>
+                      </EditTaskDialog>
+                      <EditTaskDialog
+                        action={updateTask}
+                        deleteAction={deleteTask}
+                        completeAction={completeTask}
+                        restoreAction={restoreTask}
+                        planId={plan.id}
+                        plans={plans}
+                        task={{
+                          id: task.id,
+                          title: task.title,
+                          content: task.content,
+                          dueAt: task.dueAt?.toISOString() ?? null,
+                          urgency: task.urgency,
+                          completedAt: task.completedAt?.toISOString() ?? null,
+                          planId: plan.id,
+                          planName: plan.name,
+                          createdAt: task.createdAt.toISOString(),
+                          updatedAt: task.updatedAt.toISOString(),
+                        }}
+                      />
+                    </>
+                  ) : (
                     <div className="min-w-0 flex-1">
                       <div
                         className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
@@ -219,34 +284,16 @@ export default async function PlanDetailPage({
                         {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
                       </div>
                     </div>
-                  </EditTaskDialog>
-                <EditTaskDialog
-                  action={updateTask}
-                  deleteAction={deleteTask}
-                  completeAction={completeTask}
-                  restoreAction={restoreTask}
-                  planId={plan.id}
-                  plans={plans}
-                  task={{
-                    id: task.id,
-                    title: task.title,
-                    content: task.content,
-                    dueAt: task.dueAt?.toISOString() ?? null,
-                    urgency: task.urgency,
-                    completedAt: task.completedAt?.toISOString() ?? null,
-                    planId: plan.id,
-                    planName: plan.name,
-                    createdAt: task.createdAt.toISOString(),
-                    updatedAt: task.updatedAt.toISOString(),
-                  }}
-                />
-              </li>
-            ))}
-          </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
           ) : (
             <div className="px-6 py-8 text-center">
               <p className="text-sm text-zinc-500">No tasks in this plan yet.</p>
-              <p className="mt-1 text-xs text-zinc-400">Add or link tasks using the form on the left.</p>
+              <p className="mt-1 text-xs text-zinc-400">
+                {isOwner ? "Add or link tasks using the form on the left." : "The plan owner can add tasks."}
+              </p>
             </div>
           )}
         </section>

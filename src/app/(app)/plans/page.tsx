@@ -61,7 +61,12 @@ export default async function PlansPage({
     : resolvedSearchParams.showArchived === "1";
 
   const allPlans = await prisma.plan.findMany({
-    where: { userId },
+    where: {
+      OR: [
+        { userId },
+        { shares: { some: { sharedWithUserId: userId } } },
+      ],
+    },
     orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
     include: { tasks: { select: { id: true, completedAt: true } } },
   });
@@ -157,6 +162,11 @@ export default async function PlansPage({
                       >
                         {plan.name}
                       </span>
+                      {plan.userId !== userId ? (
+                        <span className="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600">
+                          Shared with me
+                        </span>
+                      ) : null}
                       <span
                         className={`inline-flex shrink-0 rounded-full px-3 py-1 text-sm font-medium ${getStatusPillClasses(
                           plan.status,
@@ -186,19 +196,28 @@ export default async function PlansPage({
                     </p>
                   </div>
                 </Link>
-                <div className="flex flex-wrap items-center gap-2 shrink-0">
-                  <PlanStatusSelect
-                    planId={plan.id}
-                    currentStatus={plan.status}
-                    action={updatePlanStatus}
-                  />
+                {plan.userId === userId ? (
+                  <div className="flex flex-wrap items-center gap-2 shrink-0">
+                    <PlanStatusSelect
+                      planId={plan.id}
+                      currentStatus={plan.status}
+                      action={updatePlanStatus}
+                    />
+                    <Link
+                      href={`/plans/${plan.id}`}
+                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
+                    >
+                      Edit
+                    </Link>
+                  </div>
+                ) : (
                   <Link
                     href={`/plans/${plan.id}`}
-                    className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
+                    className="shrink-0 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
                   >
-                    Edit
+                    View
                   </Link>
-                </div>
+                )}
               </li>
             ))}
           </ul>

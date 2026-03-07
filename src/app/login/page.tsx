@@ -4,9 +4,15 @@ import { getServerAuthSession } from "@/auth";
 import { Plan2026Logo } from "@/components/Plan2026Logo";
 import { GoogleSignInButton } from "./GoogleSignInButton";
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ callbackUrl?: string }>;
+}) {
   const session = await getServerAuthSession();
-  if (session?.user) redirect("/tasks");
+  const resolved = await searchParams?.catch(() => ({}));
+  const callbackUrl = resolved?.callbackUrl ?? "/tasks";
+  if (session?.user) redirect(callbackUrl);
 
   const hasGoogleCredentials = Boolean(
     process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
@@ -33,7 +39,7 @@ export default async function LoginPage() {
         ) : null}
 
         <div className="mt-8">
-          <GoogleSignInButton disabled={!hasGoogleCredentials} />
+          <GoogleSignInButton callbackUrl={callbackUrl} disabled={!hasGoogleCredentials} />
         </div>
       </div>
     </main>
