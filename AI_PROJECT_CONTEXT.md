@@ -65,8 +65,9 @@ src/
     actions/tasks.ts                    # Shared task server actions
     actions/settings.ts                 # Google Calendar disconnect action
     prisma.ts                           # Prisma singleton
+    rate-limit.ts                       # In-memory rate limiter for task API routes
     sanitize.ts                         # sanitize-html rules for task content
-    validations/task.ts                 # Zod schemas + length limits + urgency bounds
+    validations/task.ts                 # Zod schemas + length limits + CUID taskId + urgency bounds
     validations/plan.ts                 # Zod schemas for plan (name, dates, status, priority, percentCompleted, taskIds, newTaskTitles, etc.)
   types/next-auth.d.ts                  # Augments session user with `id`
 prisma/
@@ -77,7 +78,9 @@ DEPLOY.md
 AI_PROJECT_CONTEXT.md
 ```
 
-**Route protection:** `src/proxy.ts` checks only for the presence of a NextAuth session cookie to reduce redirect flicker on `/tasks`, `/settings`, and `/plans`. Real auth enforcement still happens in server code with `getServerAuthSession()` or `getCurrentUserId()`.
+**Route protection:** `src/proxy.ts` checks only for the presence of a NextAuth session cookie to reduce redirect flicker on `/tasks`, `/settings`, and `/plans`. Full session validation (including rejection of invalid or expired cookies) happens in the app layout via `getServerAuthSession()`; all API and server actions use `getCurrentUserId()` or equivalent.
+
+**CSRF:** Forms and API endpoints expect same-origin requests. NextAuth session cookies use SameSite (Lax by default). CSRF protection relies on this same-origin + SameSite behavior; state-changing requests should come from the app origin. If you add endpoints callable from other origins, protect them (e.g. custom header or token).
 
 ---
 

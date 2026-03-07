@@ -63,7 +63,7 @@ export async function updateTask(formData: FormData): Promise<ActionResult> {
   });
 
   if (result.count === 0) {
-    return { success: false, error: "Task not found" };
+    return { success: false, error: "Operation failed" };
   }
 
   revalidatePath("/tasks");
@@ -77,10 +77,11 @@ export async function completeTask(formData: FormData): Promise<ActionResult> {
   const parsed = taskIdSchema.safeParse({ taskId: formData.get("taskId") ?? "" });
   if (!parsed.success) return { success: false, error: "Invalid task" };
 
-  await prisma.task.updateMany({
+  const result = await prisma.task.updateMany({
     where: { id: parsed.data.taskId, userId },
     data: { completedAt: new Date() },
   });
+  if (result.count === 0) return { success: false, error: "Operation failed" };
   revalidatePath("/tasks");
   return { success: true };
 }
@@ -92,10 +93,11 @@ export async function restoreTask(formData: FormData): Promise<ActionResult> {
   const parsed = taskIdSchema.safeParse({ taskId: formData.get("taskId") ?? "" });
   if (!parsed.success) return { success: false, error: "Invalid task" };
 
-  await prisma.task.updateMany({
+  const result = await prisma.task.updateMany({
     where: { id: parsed.data.taskId, userId },
     data: { completedAt: null },
   });
+  if (result.count === 0) return { success: false, error: "Operation failed" };
   revalidatePath("/tasks");
   return { success: true };
 }
@@ -107,9 +109,10 @@ export async function deleteTask(formData: FormData): Promise<ActionResult> {
   const parsed = taskIdSchema.safeParse({ taskId: formData.get("taskId") ?? "" });
   if (!parsed.success) return { success: false, error: "Invalid task" };
 
-  await prisma.task.deleteMany({
+  const result = await prisma.task.deleteMany({
     where: { id: parsed.data.taskId, userId },
   });
+  if (result.count === 0) return { success: false, error: "Operation failed" };
   revalidatePath("/tasks");
   return { success: true };
 }
