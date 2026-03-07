@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { google } from "googleapis";
 
 import { getCurrentUserId } from "@/auth";
+import { GOOGLE_CALENDAR_SCOPE, hasGoogleCalendarScope } from "@/lib/google-oauth";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -29,6 +30,30 @@ function isGoogleNotFoundError(err: unknown): boolean {
   );
 }
 
+function isGoogleInsufficientScopeError(err: unknown): boolean {
+  if (typeof err !== "object" || err === null) return false;
+
+  const message =
+    "message" in err && typeof err.message === "string" ? err.message : "";
+  const code = "code" in err ? err.code : undefined;
+  const responseData =
+    "response" in err &&
+    typeof err.response === "object" &&
+    err.response !== null &&
+    "data" in err.response
+      ? err.response.data
+      : undefined;
+  const responseText =
+    typeof responseData === "string"
+      ? responseData
+      : JSON.stringify(responseData ?? "");
+
+  return (
+    code === 403 &&
+    /insufficient authentication scopes/i.test(`${message} ${responseText}`)
+  );
+}
+
 export async function POST(_req: Request, { params }: Params) {
   const userId = await getCurrentUserId();
   if (!userId) {
@@ -51,6 +76,14 @@ export async function POST(_req: Request, { params }: Params) {
     return NextResponse.json(
       { error: "Google account not linked or missing calendar permission. Sign out and sign in again with Google." },
       { status: 403 }
+    );
+  }
+  if (account.scope && !hasGoogleCalendarScope(account.scope)) {
+    return NextResponse.json(
+      {
+        error: `Google account is missing ${GOOGLE_CALENDAR_SCOPE}. Reconnect Google Calendar to grant access again.`,
+      },
+      { status: 403 },
     );
   }
 
@@ -176,6 +209,15 @@ export async function POST(_req: Request, { params }: Params) {
       { status: created ? 201 : 200 }
     );
   } catch (err) {
+    if (isGoogleInsufficientScopeError(err)) {
+      return NextResponse.json(
+        {
+          error: `Google account is missing ${GOOGLE_CALENDAR_SCOPE}. Reconnect Google Calendar to grant access again.`,
+        },
+        { status: 403 },
+      );
+    }
+
     const message = err instanceof Error ? err.message : "Failed to create calendar event";
     return NextResponse.json(
       { error: message },

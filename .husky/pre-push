@@ -1,0 +1,3 @@
+#!/bin/sh
+# Run lint and build before push so CI-style failures are caught locally.
+npm run prepush

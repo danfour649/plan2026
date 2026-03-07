@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { getCurrentUserId } from "@/auth";
 import { DisconnectGoogleCalendarButton } from "@/components/DisconnectGoogleCalendarButton";
+import { ReconnectGoogleCalendarButton } from "@/components/ReconnectGoogleCalendarButton";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
@@ -51,16 +52,14 @@ export default async function SettingsPage() {
               <p className="text-sm text-zinc-600">
                 {isCalendarConnected
                   ? "Your account can currently create Google Calendar events from tasks."
-                  : "Google Calendar access has been disconnected. Sign out and sign back in with Google when you want to reconnect it."}
+                  : "Google Calendar access has been disconnected. Reconnect with Google to grant Calendar permissions again."}
               </p>
             </div>
 
             {isCalendarConnected ? (
               <DisconnectGoogleCalendarButton />
             ) : (
-              <p className="text-sm text-zinc-500">
-                No active Google Calendar connection to remove.
-              </p>
+              <ReconnectGoogleCalendarButton />
             )}
           </div>
         </div>
