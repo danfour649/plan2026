@@ -38,12 +38,12 @@ export function AppNavLink({
       href={href}
       aria-current={isActive ? "page" : undefined}
       aria-label={ariaLabel}
-      className={`group inline-flex items-center gap-2 rounded-full px-3 py-1.5 transition ${isActive ? activeClassName : inactiveClassName} ${className ?? ""}`}
+      className={`group inline-flex items-center gap-0 rounded-full px-3 py-1.5 transition sm:gap-2 ${isActive ? activeClassName : inactiveClassName} ${className ?? ""}`}
     >
       <span>{children}</span>
       {badge != null && (
         <span
-          className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+          className={`inline-flex shrink-0 rounded-full px-1 py-0.5 text-[10px] font-medium leading-tight sm:px-2 sm:text-xs ${
             isActive
               ? accent === "red"
                 ? "bg-white/80 text-red-700"
