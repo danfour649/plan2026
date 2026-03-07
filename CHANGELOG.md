@@ -1,5 +1,13 @@
 # plan2026
 
+## 0.1.5
+
+### Patch Changes
+
+- 838a2ef: Fix Google Calendar reconnects after permissions are revoked by forcing fresh Google consent and showing a reconnect action in Settings.
+- 838a2ef: Replace the Settings text tab with a gear icon in the header and move it beside the signed-in email address.
+- 838a2ef: TECH-0008 Fix build
+
 ## 0.1.4
 
 ### Patch Changes
