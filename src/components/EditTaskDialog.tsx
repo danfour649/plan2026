@@ -49,6 +49,7 @@ export function EditTaskDialog({
   showButton = true,
 }: EditTaskDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteState, deleteFormAction] = useActionState(
     wrap(deleteAction),
     null as ActionResult | null,
@@ -161,15 +162,41 @@ export function EditTaskDialog({
             />
 
             <div className="mt-6 border-t border-blue-100 pt-4">
-              <form action={deleteFormAction} className="flex items-center justify-between gap-3">
-                <p className="text-sm text-zinc-500">Remove this task permanently.</p>
+              <form action={deleteFormAction} className="flex flex-col gap-3">
                 <input type="hidden" name="taskId" value={task.id} />
-                <button
-                  type="submit"
-                  className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100"
-                >
-                  Delete task
-                </button>
+                {!showDeleteConfirm ? (
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm text-zinc-500">Remove this task permanently.</p>
+                    <button
+                      type="button"
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100"
+                    >
+                      Delete task
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-3">
+                    <p className="text-sm text-zinc-600">
+                      Are you sure you want to delete this task? This cannot be undone.
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setShowDeleteConfirm(false)}
+                        className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                      >
+                        Delete task
+                      </button>
+                    </div>
+                  </div>
+                )}
               </form>
             </div>
           </div>

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { getCurrentUserId } from "@/auth";
 
 import { AddTaskDialog } from "@/components/AddTaskDialog";
@@ -61,12 +63,14 @@ export default async function TasksPage({
   const remainingTasks = await prisma.task.findMany({
     where: { userId, completedAt: null },
     orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
+    include: { plan: { select: { id: true, name: true } } },
   });
 
   const completedTasks = showCompleted
     ? await prisma.task.findMany({
         where: { userId, completedAt: { not: null } },
         orderBy: [{ urgency: "desc" }, { completedAt: "desc" }],
+        include: { plan: { select: { id: true, name: true } } },
       })
     : [];
   const hasVisibleTasks = remainingTasks.length > 0 || completedTasks.length > 0;
@@ -127,6 +131,17 @@ export default async function TasksPage({
                     <div className="mt-1 text-xs text-zinc-500">
                       Added {task.createdAt.toLocaleString()}
                       {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
+                      {task.plan && (
+                        <>
+                          {" · "}
+                          <Link
+                            href={`/plans/${task.plan.id}`}
+                            className="text-blue-600 hover:underline"
+                          >
+                            Plan: {task.plan.name}
+                          </Link>
+                        </>
+                      )}
                     </div>
                   </div>
                 </EditTaskDialog>
@@ -183,6 +198,17 @@ export default async function TasksPage({
                       <TaskContent content={task.content} />
                       <div className="mt-1 text-xs text-zinc-500">
                         Completed {task.completedAt ? task.completedAt.toLocaleString() : "—"}
+                        {task.plan && (
+                          <>
+                            {" · "}
+                            <Link
+                              href={`/plans/${task.plan.id}`}
+                              className="text-blue-600 hover:underline"
+                            >
+                              Plan: {task.plan.name}
+                            </Link>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>

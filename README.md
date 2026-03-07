@@ -1,19 +1,21 @@
-# Tasks
+# Plan 2026
 
-`plan2026` is a Next.js App Router task app with Google sign-in, per-user task storage in PostgreSQL, optional rich task notes, urgency levels, due dates, and Google Calendar event creation.
+`plan2026` is a Next.js App Router task and plan app with Google sign-in, per-user task and plan storage in PostgreSQL, optional rich task notes, urgency levels, due dates, and Google Calendar event creation.
 
 ## Features
 
 - Google sign-in with NextAuth v4 and Prisma-backed database sessions
-- A single `/tasks` page for day-to-day work
-- Optional completed-task visibility with a `showCompleted=1` toggle on the tasks page
-- Add and edit tasks in dialogs with:
-  - required title
-  - optional rich text notes and links
-  - optional due date and time
-  - urgency from 1 to 7
-- Mark tasks done, restore them, or delete them
-- Add a task to Google Calendar and keep track of whether it has already been linked
+- **Tasks** – A single `/tasks` page for day-to-day work:
+  - Optional completed-task visibility with a `showCompleted=1` toggle
+  - Add and edit tasks in dialogs (title, rich text notes, due date, urgency 1–7)
+  - Mark tasks done, restore them, or delete them
+  - Add a task to Google Calendar and keep track of whether it has already been linked
+  - Tasks can be linked to a plan; task rows show a “Plan: …” link when set
+- **Plans** – A `/plans` area to group tasks and track progress:
+  - List of plans ordered by priority (1–7, like task urgency); each plan has name, status (draft / started / completed / abandoned), percent completed, dates, and optional image (paste URL)
+  - Full-page create at `/plans/new` and edit at `/plans/[id]` (no modals)
+  - Add existing tasks or create new tasks when editing a plan
+  - Plan fields: goal, actual start/end dates, notes, color
 - Settings page to disconnect Google Calendar access
 - Server actions for UI mutations and JSON API routes for programmatic access
 
@@ -84,7 +86,7 @@ If you see **"Port 3000 is in use"** or **"Unable to acquire lock at .next/dev/l
 - **Free the port:** Run `npm run dev:kill` to kill the process on port 3000, then run `npm run dev` again.
 - **Manual kill (Windows):** `netstat -ano | findstr :3000`, then `taskkill /PID <pid> /F`. Or use Task Manager → Details → end the `node.exe` process (or "End process tree" on the npm parent).
 
-The root route redirects to `/tasks`.
+The root route redirects to `/tasks`. The app shell includes **Tasks** and **Plans** nav links; **Plans** lists your plans and links to **Add plan** (`/plans/new`) and to each plan’s detail/edit page (`/plans/[id]`).
 
 ## Google OAuth setup
 

@@ -17,7 +17,7 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Protect app routes: require session cookie so we redirect before layout runs
-  if (pathname.startsWith("/tasks") || pathname.startsWith("/settings")) {
+  if (pathname.startsWith("/tasks") || pathname.startsWith("/settings") || pathname.startsWith("/plans")) {
     if (!hasSessionCookie(request)) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
@@ -30,5 +30,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/tasks/:path*", "/settings/:path*"],
+  matcher: ["/tasks/:path*", "/settings/:path*", "/plans/:path*"],
 };

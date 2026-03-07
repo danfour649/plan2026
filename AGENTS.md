@@ -1,5 +1,11 @@
 # Agent Instructions
 
+## Type checking
+
+- **New and changed code must pass TypeScript.** Run `npm run typecheck` before finishing a task. The pre-push hook runs `lint` then `typecheck` then `build`; if typecheck is skipped or build fails earlier (e.g. Prisma generate), type errors can slip through.
+- **Why type errors get missed:** Lint is ESLint only and does not run the TypeScript compiler. Type errors are only reported when `tsc` or the Next.js build runs. If you only run `npm run lint` or if `npm run build` fails before the compile step, TypeScript never runs and type errors go unreported.
+- After adding or changing code, run `npm run typecheck` (or `npm run prepush`) and fix any type errors before considering the task done.
+
 ## Changesets
 
 - This repo uses Changesets to track release-note-worthy changes.
@@ -21,6 +27,7 @@
 
 - Replace `patch` with `minor` or `major` when appropriate.
 - Do not run `npm run changeset:version` during normal feature work. GitHub automation runs it after PRs are merged into `main` and commits the resulting changelog, version bump, and consumed changeset cleanup automatically.
+- **When starting a new branch that will commit existing (already changed) files:** Before or as part of that first commit, ensure there is a changeset that describes the user-visible impact of those changes. If the work is release-note-worthy and no changeset exists yet, create one in `.changeset/` (do not use the interactive `changeset add` flow). This keeps the branch’s scope documented for release notes when the branch is merged.
 
 ## Documentation Maintenance
 
