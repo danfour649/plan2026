@@ -17,11 +17,12 @@ model User {
   emailVerified DateTime?
   image         String?
 
-  accounts    Account[]
-  sessions    Session[]
-  tasks       Task[]
-  plans       Plan[]
-  plansSharedWithMe PlanShare[]
+  accounts            Account[]
+  sessions            Session[]
+  tasks               Task[]
+  plans               Plan[]
+  taskAttachments     TaskAttachment[]
+  plansSharedWithMe   PlanShare[]
 }
 
 model Account {
@@ -77,12 +78,30 @@ model Task {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
-  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  plan Plan? @relation(fields: [planId], references: [id], onDelete: SetNull)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan        Plan?        @relation(fields: [planId], references: [id], onDelete: SetNull)
+  attachments TaskAttachment[]
 
   @@index([userId])
   @@index([userId, completedAt])
   @@index([planId])
+}
+
+model TaskAttachment {
+  id          String   @id @default(cuid())
+  taskId      String
+  userId      String
+  url         String   // Vercel Blob or other blob storage URL
+  filename    String
+  size        Int      // bytes
+  contentType String   @default("application/octet-stream")
+  createdAt   DateTime @default(now())
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([userId])
 }
 
 model Plan {

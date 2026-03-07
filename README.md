@@ -50,6 +50,7 @@ Set these in `.env` for local development:
 - `GOOGLE_CLIENT_ID` - Google OAuth client id
 - `GOOGLE_CLIENT_SECRET` - Google OAuth client secret
 - `NEXTAUTH_URL` - usually `http://localhost:3000` locally
+- `BLOB_READ_WRITE_TOKEN` - (optional) Vercel Blob token for task file attachments; create a Blob store in the Vercel project and pull env with `vercel env pull`
 
 ## Local development
 
@@ -76,6 +77,21 @@ npm run dev
 ```
 
 5. Open `http://localhost:3000`.
+
+## Testing
+
+The project uses [Vitest](https://vitest.dev/) for unit and integration tests. Run tests with:
+
+- `npm test` – run tests once
+- `npm run test:watch` – run tests in watch mode
+- `npm run test:coverage` – run tests with coverage report
+
+Tests live next to source files (e.g. `src/lib/export.test.ts`). Good candidates for unit tests:
+
+- **`src/lib/*`** – export helpers, sanitize, validations, rate limiter (no DB)
+- **Zod schemas** – parse/refine behavior in `src/lib/validations/task.ts` and `plan.ts`
+
+For React components, add `@vitest-environment jsdom` at the top of the test file and use [React Testing Library](https://testing-library.com/react) (already installed). For API routes or server actions that hit the database, use a test database or mock Prisma. Optional: [Playwright](https://playwright.dev/) for end-to-end flows (e.g. login, create task).
 
 ### Before you push
 

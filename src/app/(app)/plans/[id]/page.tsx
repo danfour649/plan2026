@@ -52,7 +52,11 @@ export default async function PlanDetailPage({
     },
     include: {
       tasks: {
-        orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
+        orderBy: [
+          { completedAt: "desc" }, // nulls first (incomplete), then completed last
+          { urgency: "desc" },
+          { createdAt: "desc" },
+        ],
         select: {
           id: true,
           title: true,
@@ -62,6 +66,9 @@ export default async function PlanDetailPage({
           completedAt: true,
           createdAt: true,
           updatedAt: true,
+          attachments: {
+            select: { id: true, url: true, filename: true, size: true },
+          },
         },
       },
     },
@@ -197,7 +204,7 @@ export default async function PlanDetailPage({
               {plan.tasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex items-center justify-between gap-4 px-6 py-4 transition hover:bg-blue-50/40"
+                  className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
                 >
                   {isOwner ? (
                     <>
@@ -221,6 +228,12 @@ export default async function PlanDetailPage({
                           planName: plan.name,
                           createdAt: task.createdAt.toISOString(),
                           updatedAt: task.updatedAt.toISOString(),
+                          attachments: task.attachments.map((a) => ({
+                            id: a.id,
+                            url: a.url,
+                            filename: a.filename,
+                            size: a.size,
+                          })),
                         }}
                       >
                         <div className="min-w-0 flex-1">
@@ -234,7 +247,7 @@ export default async function PlanDetailPage({
                             </span>
                           </div>
                           <TaskContent content={task.content} />
-                          <div className="mt-1 text-xs text-zinc-500">
+                          <div className="mt-1 break-words text-xs text-zinc-500">
                             {task.completedAt
                               ? `Completed ${task.completedAt.toLocaleString()}`
                               : `Added ${task.createdAt.toISOString()}`}
@@ -242,26 +255,34 @@ export default async function PlanDetailPage({
                           </div>
                         </div>
                       </EditTaskDialog>
-                      <EditTaskDialog
-                        action={updateTask}
-                        deleteAction={deleteTask}
-                        completeAction={completeTask}
-                        restoreAction={restoreTask}
-                        planId={plan.id}
-                        plans={plans}
-                        task={{
-                          id: task.id,
-                          title: task.title,
-                          content: task.content,
-                          dueAt: task.dueAt?.toISOString() ?? null,
-                          urgency: task.urgency,
-                          completedAt: task.completedAt?.toISOString() ?? null,
-                          planId: plan.id,
-                          planName: plan.name,
-                          createdAt: task.createdAt.toISOString(),
-                          updatedAt: task.updatedAt.toISOString(),
-                        }}
-                      />
+                      <div className="flex shrink-0 sm:flex-shrink-0">
+                        <EditTaskDialog
+                          action={updateTask}
+                          deleteAction={deleteTask}
+                          completeAction={completeTask}
+                          restoreAction={restoreTask}
+                          planId={plan.id}
+                          plans={plans}
+                          task={{
+                            id: task.id,
+                            title: task.title,
+                            content: task.content,
+                            dueAt: task.dueAt?.toISOString() ?? null,
+                            urgency: task.urgency,
+                            completedAt: task.completedAt?.toISOString() ?? null,
+                            planId: plan.id,
+                            planName: plan.name,
+                            createdAt: task.createdAt.toISOString(),
+                            updatedAt: task.updatedAt.toISOString(),
+                            attachments: task.attachments.map((a) => ({
+                              id: a.id,
+                              url: a.url,
+                              filename: a.filename,
+                              size: a.size,
+                            })),
+                          }}
+                        />
+                      </div>
                     </>
                   ) : (
                     <div className="min-w-0 flex-1">
@@ -275,10 +296,10 @@ export default async function PlanDetailPage({
                         </span>
                       </div>
                       <TaskContent content={task.content} />
-                      <div className="mt-1 text-xs text-zinc-500">
+                      <div className="mt-1 break-words text-xs text-zinc-500">
                         {task.completedAt
                           ? `Completed ${task.completedAt.toLocaleString()}`
-                          : `Added ${task.createdAt.toLocaleString()}`}
+                          : `Added ${task.createdAt.toISOString()}`}
                         {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
                       </div>
                     </div>
@@ -289,7 +310,9 @@ export default async function PlanDetailPage({
           ) : (
             <div className="px-6 py-8 text-center">
               <p className="text-sm text-zinc-500">No tasks in this plan yet.</p>
-              <p className="mt-1 text-xs text-zinc-400">Add or link tasks using the form on the left.</p>
+              <p className="mt-1 text-xs text-zinc-400">
+                {isOwner ? "Add or link tasks using the form on the left." : "The plan owner can add tasks."}
+              </p>
             </div>
           )}
         </section>

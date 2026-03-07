@@ -65,14 +65,20 @@ export default async function TasksPage({
   const remainingTasks = await prisma.task.findMany({
     where: { userId, completedAt: null },
     orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
-    include: { plan: { select: { id: true, name: true } } },
+    include: {
+      plan: { select: { id: true, name: true } },
+      attachments: { select: { id: true, url: true, filename: true, size: true } },
+    },
   });
 
   const completedTasks = showCompleted
     ? await prisma.task.findMany({
         where: { userId, completedAt: { not: null } },
         orderBy: [{ urgency: "desc" }, { completedAt: "desc" }],
-        include: { plan: { select: { id: true, name: true } } },
+        include: {
+          plan: { select: { id: true, name: true } },
+          attachments: { select: { id: true, url: true, filename: true, size: true } },
+        },
       })
     : [];
   const hasVisibleTasks = remainingTasks.length > 0 || completedTasks.length > 0;
@@ -144,7 +150,7 @@ export default async function TasksPage({
             {remainingTasks.map((task) => (
               <li
                 key={task.id}
-                className="flex items-center justify-between gap-4 px-6 py-4 transition hover:bg-blue-50/40"
+                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
               >
                 <EditTaskDialog
                   action={updateTask}
@@ -162,6 +168,12 @@ export default async function TasksPage({
                     planName: task.plan?.name ?? null,
                     createdAt: task.createdAt.toISOString(),
                     updatedAt: task.updatedAt.toISOString(),
+                    attachments: task.attachments.map((a) => ({
+                      id: a.id,
+                      url: a.url,
+                      filename: a.filename,
+                      size: a.size,
+                    })),
                   }}
                 >
                   <div className="min-w-0 flex-1">
@@ -173,7 +185,7 @@ export default async function TasksPage({
                       <span className="truncate">{task.title}</span>
                     </div>
                     <TaskContent content={task.content} />
-                    <div className="mt-1 text-xs text-zinc-500">
+                    <div className="mt-1 break-words text-xs text-zinc-500">
                       Added {task.createdAt.toLocaleString()}
                       {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
                       {task.plan && (
@@ -190,7 +202,7 @@ export default async function TasksPage({
                     </div>
                   </div>
                 </EditTaskDialog>
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex min-w-0 flex-shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <AddToCalendarButton
                       taskId={task.id}
@@ -212,6 +224,12 @@ export default async function TasksPage({
                       planName: task.plan?.name ?? null,
                       createdAt: task.createdAt.toISOString(),
                       updatedAt: task.updatedAt.toISOString(),
+                      attachments: task.attachments.map((a) => ({
+                        id: a.id,
+                        url: a.url,
+                        filename: a.filename,
+                        size: a.size,
+                      })),
                     }}
                   />
                 </div>
@@ -220,7 +238,7 @@ export default async function TasksPage({
             {completedTasks.map((task) => (
               <li
                 key={task.id}
-                className="flex items-center justify-between gap-4 px-6 py-4 transition hover:bg-emerald-50/40"
+                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-emerald-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
               >
                 <EditTaskDialog
                   action={updateTask}
@@ -239,6 +257,12 @@ export default async function TasksPage({
                     planName: task.plan?.name ?? null,
                     createdAt: task.createdAt.toISOString(),
                     updatedAt: task.updatedAt.toISOString(),
+                    attachments: task.attachments.map((a) => ({
+                      id: a.id,
+                      url: a.url,
+                      filename: a.filename,
+                      size: a.size,
+                    })),
                   }}
                 >
                   <div className="flex min-w-0 flex-1 items-start gap-3">
@@ -252,7 +276,7 @@ export default async function TasksPage({
                         <span className="truncate line-through">{task.title}</span>
                       </div>
                       <TaskContent content={task.content} />
-                      <div className="mt-1 text-xs text-zinc-500">
+                      <div className="mt-1 break-words text-xs text-zinc-500">
                         Completed {task.completedAt ? task.completedAt.toLocaleString() : "—"}
                         {task.plan && (
                           <>
@@ -269,7 +293,7 @@ export default async function TasksPage({
                     </div>
                   </div>
                 </EditTaskDialog>
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex min-w-0 flex-shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <AddToCalendarButton
                       taskId={task.id}
@@ -292,6 +316,12 @@ export default async function TasksPage({
                       planName: task.plan?.name ?? null,
                       createdAt: task.createdAt.toISOString(),
                       updatedAt: task.updatedAt.toISOString(),
+                      attachments: task.attachments.map((a) => ({
+                        id: a.id,
+                        url: a.url,
+                        filename: a.filename,
+                        size: a.size,
+                      })),
                     }}
                   />
                 </div>

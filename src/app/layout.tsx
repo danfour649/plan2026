@@ -14,11 +14,29 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXTAUTH_URL ?? "https://plan2026-pi.vercel.app"),
   title: {
     default: "Plan 2026",
     template: "%s | Plan 2026",
   },
-  description: "Task planning dashboard for Plan 2026",
+  description:
+    "Plan 2026 is a task and plan planner with Google sign-in. Manage tasks, set urgency and due dates, group work in plans, and export to Google Calendar.",
+  openGraph: {
+    title: "Plan 2026 – Task and plan planner",
+    description:
+      "Manage tasks and plans with Google sign-in. Set urgency, due dates, and export to Google Calendar.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Plan 2026 – Task and plan planner",
+    description:
+      "Manage tasks and plans with Google sign-in. Set urgency, due dates, and export to Google Calendar.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
