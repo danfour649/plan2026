@@ -15,8 +15,8 @@ export function ShowCompletedToggle({ showCompleted }: ShowCompletedToggleProps)
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm font-medium text-zinc-700">Active</span>
+    <div className="flex flex-col items-center gap-0.5 sm:flex-row sm:gap-2">
+      <span className="order-2 text-xs text-zinc-600 sm:order-1 sm:text-sm sm:font-medium sm:text-zinc-700" aria-hidden>Active</span>
       <button
         type="button"
         role="switch"

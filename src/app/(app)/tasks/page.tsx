@@ -134,7 +134,7 @@ export default async function TasksPage({
               />
             </div>
           </div>
-          <div className="ml-auto flex flex-wrap items-center gap-2 sm:gap-4">
+          <div className="ml-auto flex flex-nowrap items-center gap-2 sm:gap-4">
             <ShowCompletedToggle showCompleted={showCompleted} />
             <AddTaskDialog action={addTask} plans={plans} />
           </div>

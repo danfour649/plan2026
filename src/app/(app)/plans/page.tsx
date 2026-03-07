@@ -112,7 +112,7 @@ export default async function PlansPage({
               />
             </div>
           </div>
-          <div className="ml-auto flex flex-wrap items-center gap-2 sm:gap-4">
+          <div className="ml-auto flex flex-nowrap items-center gap-2 sm:gap-4">
             <ShowArchivedPlansToggle showArchived={showArchived} />
             <Link
               href="/plans/new"
@@ -146,11 +146,11 @@ export default async function PlansPage({
             {plans.map((plan) => (
               <li
                 key={plan.id}
-                className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 transition hover:bg-blue-50/40 sm:flex-nowrap"
+                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-3"
               >
                 <Link
                   href={`/plans/${plan.id}`}
-                  className="flex min-w-0 flex-1 flex-wrap items-center gap-3 sm:flex-nowrap"
+                  className="flex min-w-0 flex-1 flex-wrap items-start gap-3 sm:flex-nowrap sm:items-center"
                 >
                   {plan.imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element -- user-pasted URL, arbitrary host
@@ -163,7 +163,7 @@ export default async function PlansPage({
                   <div className="min-w-0 flex-1 overflow-visible">
                     <div className="flex flex-wrap items-center gap-2 pt-0.5 pl-0.5">
                       <span
-                        className={`inline-block max-w-full truncate rounded-full px-3 py-1 text-sm font-semibold sm:max-w-[18rem] ${getPriorityOvalClasses(
+                        className={`inline-block max-w-full break-words rounded-full px-3 py-1 text-sm font-semibold sm:max-w-[18rem] sm:truncate ${getPriorityOvalClasses(
                           plan.priority,
                         )}`}
                       >
@@ -186,7 +186,7 @@ export default async function PlansPage({
                       </span>
                     </div>
                     {(plan.goal ?? plan.description) && (
-                      <p className="mt-0.5 line-clamp-1 break-words text-sm text-zinc-500">
+                      <p className="mt-0.5 line-clamp-2 break-words text-sm text-zinc-500 sm:line-clamp-1">
                         {plan.goal ?? plan.description}
                       </p>
                     )}
@@ -204,12 +204,14 @@ export default async function PlansPage({
                   </div>
                 </Link>
                 {plan.userId === userId ? (
-                  <div className="flex flex-wrap items-center gap-2 shrink-0">
-                    <PlanStatusSelect
-                      planId={plan.id}
-                      currentStatus={plan.status}
-                      action={updatePlanStatus}
-                    />
+                  <div className="flex w-full shrink-0 justify-end gap-2 sm:w-auto sm:justify-start">
+                    <div className="hidden sm:block">
+                      <PlanStatusSelect
+                        planId={plan.id}
+                        currentStatus={plan.status}
+                        action={updatePlanStatus}
+                      />
+                    </div>
                     <Link
                       href={`/plans/${plan.id}`}
                       className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
@@ -220,7 +222,7 @@ export default async function PlansPage({
                 ) : (
                   <Link
                     href={`/plans/${plan.id}`}
-                    className="shrink-0 rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
+                    className="shrink-0 self-end rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 sm:self-auto"
                   >
                     View
                   </Link>
