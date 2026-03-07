@@ -144,7 +144,7 @@ export default async function TasksPage({
             {remainingTasks.map((task) => (
               <li
                 key={task.id}
-                className="flex items-center justify-between gap-4 px-6 py-4 transition hover:bg-blue-50/40"
+                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
               >
                 <EditTaskDialog
                   action={updateTask}
@@ -173,7 +173,7 @@ export default async function TasksPage({
                       <span className="truncate">{task.title}</span>
                     </div>
                     <TaskContent content={task.content} />
-                    <div className="mt-1 text-xs text-zinc-500">
+                    <div className="mt-1 break-words text-xs text-zinc-500">
                       Added {task.createdAt.toLocaleString()}
                       {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
                       {task.plan && (
@@ -190,7 +190,7 @@ export default async function TasksPage({
                     </div>
                   </div>
                 </EditTaskDialog>
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex min-w-0 flex-shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <AddToCalendarButton
                       taskId={task.id}
@@ -220,7 +220,7 @@ export default async function TasksPage({
             {completedTasks.map((task) => (
               <li
                 key={task.id}
-                className="flex items-center justify-between gap-4 px-6 py-4 transition hover:bg-emerald-50/40"
+                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-emerald-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
               >
                 <EditTaskDialog
                   action={updateTask}
@@ -252,7 +252,7 @@ export default async function TasksPage({
                         <span className="truncate line-through">{task.title}</span>
                       </div>
                       <TaskContent content={task.content} />
-                      <div className="mt-1 text-xs text-zinc-500">
+                      <div className="mt-1 break-words text-xs text-zinc-500">
                         Completed {task.completedAt ? task.completedAt.toLocaleString() : "—"}
                         {task.plan && (
                           <>
@@ -269,7 +269,7 @@ export default async function TasksPage({
                     </div>
                   </div>
                 </EditTaskDialog>
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex min-w-0 flex-shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <AddToCalendarButton
                       taskId={task.id}
