@@ -211,7 +211,6 @@ export function EditTaskDialog({
                   createdAt: task.createdAt ?? new Date().toISOString(),
                   updatedAt: task.updatedAt,
                 }}
-                label="Export task to JSON"
               />
             </div>
 
