@@ -94,7 +94,7 @@ model Plan {
   endAt           DateTime
   actualStartAt   DateTime?
   actualEndAt     DateTime?
-  status          String    @default("draft") // draft | started | completed | abandoned
+  status          String    @default("draft") // draft | started | on_hold | completed | abandoned
   priority        Int       @default(4) // 1-7 like task urgency
   percentCompleted Int      @default(0)
   notes           String?

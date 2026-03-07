@@ -4,7 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import type { PlanActionResult } from "@/lib/actions/plans";
-import { PLAN_STATUS_VALUES } from "@/lib/validations/plan";
+import { formatPlanStatus, PLAN_STATUS_VALUES } from "@/lib/validations/plan";
 
 type PlanFormAction = (formData: FormData) => Promise<PlanActionResult>;
 
@@ -65,9 +65,18 @@ type PlanFormProps = {
   userTasks: { id: string; title: string }[];
   isEdit?: boolean;
   submitLabel: string;
+  /** When true, use single column for date fields (one per line) instead of side-by-side grids. */
+  singleColumn?: boolean;
 };
 
-export function PlanForm({ action, initialValues, userTasks, isEdit = false, submitLabel }: PlanFormProps) {
+export function PlanForm({
+  action,
+  initialValues,
+  userTasks,
+  isEdit = false,
+  submitLabel,
+  singleColumn = false,
+}: PlanFormProps) {
   const [state, formAction] = useActionState(wrap(action), null as PlanActionResult | null);
   const [newTaskTitles, setNewTaskTitles] = useState<string[]>([""]);
 
@@ -134,7 +143,7 @@ export function PlanForm({ action, initialValues, userTasks, isEdit = false, sub
         />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className={singleColumn ? "flex flex-col gap-4" : "grid gap-4 sm:grid-cols-2"}>
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-blue-950">Start date *</label>
           <input
@@ -157,7 +166,7 @@ export function PlanForm({ action, initialValues, userTasks, isEdit = false, sub
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className={singleColumn ? "flex flex-col gap-4" : "grid gap-4 sm:grid-cols-2"}>
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-blue-950">Actual start (optional)</label>
           <input
@@ -188,7 +197,7 @@ export function PlanForm({ action, initialValues, userTasks, isEdit = false, sub
           >
             {PLAN_STATUS_VALUES.map((s) => (
               <option key={s} value={s}>
-                {s.charAt(0).toUpperCase() + s.slice(1)}
+                {formatPlanStatus(s)}
               </option>
             ))}
           </select>

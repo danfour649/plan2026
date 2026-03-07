@@ -12,9 +12,10 @@
   - Add a task to Google Calendar and keep track of whether it has already been linked
   - Tasks can be linked to a plan; task rows show a “Plan: …” link when set
 - **Plans** – A `/plans` area to group tasks and track progress:
-  - List of plans ordered by priority (1–7, like task urgency); each plan has name, status (draft / started / completed / abandoned), percent completed, dates, and optional image (paste URL)
+  - List of plans ordered by priority (1–7, like task urgency); each plan has name, status (draft / started / on hold / completed / abandoned), percent completed, dates, and optional image (paste URL)
+  - Refresh button and “Show completed / abandoned” toggle on the plans list; each row has an Edit link and a status dropdown
   - Full-page create at `/plans/new` and edit at `/plans/[id]` (no modals)
-  - Add existing tasks or create new tasks when editing a plan
+  - Add existing tasks or create new tasks when editing a plan; on the plan detail page you can edit any task in the plan via an edit-task modal
   - Plan fields: goal, actual start/end dates, notes, color
 - Settings page to disconnect Google Calendar access
 - Server actions for UI mutations and JSON API routes for programmatic access

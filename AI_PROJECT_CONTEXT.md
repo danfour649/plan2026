@@ -36,9 +36,9 @@ src/
       layout.tsx                        # Authenticated shell; tasks nav, plans nav, settings gear, email, SignOutButton
       tasks/page.tsx                    # Unified tasks page for remaining and optional completed items; shows plan link when task has planId
       tasks/loading.tsx                 # Tasks page skeleton
-      plans/page.tsx                    # Plans list (ordered by priority); links to /plans/new and /plans/[id]
+      plans/page.tsx                    # Plans list (ordered by priority); refresh, show completed/abandoned toggle; per-row Edit and status dropdown; links to /plans/new and /plans/[id]
       plans/new/page.tsx                # Full-page create plan form
-      plans/[id]/page.tsx               # Full-page plan detail and edit form; delete plan
+      plans/[id]/page.tsx               # Full-page plan detail and edit form; delete plan; tasks-in-plan list with edit-task modal
       settings/page.tsx                 # Calendar connection settings
     login/
       page.tsx                          # Login page; redirects signed-in users to /tasks
@@ -57,6 +57,8 @@ src/
     AddToCalendarButton.tsx             # Calls calendar route, opens created event link
     DisconnectGoogleCalendarButton.tsx  # Revokes stored calendar access
     RefreshTasksButton.tsx              # Manual refresh for /tasks
+    RefreshPlansButton.tsx              # Manual refresh for /plans
+    ShowArchivedPlansToggle.tsx        # Toggle show completed/abandoned plans on /plans
     SignOutButton.tsx
     TaskActionButton.tsx                # Mark done / restore actions
     TaskContent.tsx                     # Sanitized rich text renderer

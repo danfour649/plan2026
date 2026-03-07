@@ -5,7 +5,13 @@ import { redirect } from "next/navigation";
 
 import { getCurrentUserId } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { createPlanSchema, planIdSchema, updatePlanSchema } from "@/lib/validations/plan";
+import {
+  createPlanSchema,
+  planIdSchema,
+  PLAN_STATUS_VALUES,
+  updatePlanSchema,
+  type PlanStatus,
+} from "@/lib/validations/plan";
 import { TASK_TITLE_MAX_LENGTH } from "@/lib/validations/task";
 
 export type PlanActionResult = { success: true } | { success: false; error: string };
@@ -156,6 +162,33 @@ export async function updatePlan(formData: FormData): Promise<PlanActionResult> 
   revalidatePath(`/plans/${planId}`);
   revalidatePath("/tasks");
   redirect("/plans");
+}
+
+/** Updates only plan status. Use from list view for quick status change. */
+export async function updatePlanStatus(formData: FormData): Promise<PlanActionResult> {
+  const userId = await getCurrentUserId();
+  if (!userId) return { success: false, error: "Unauthorized" };
+
+  const planId = formData.get("planId");
+  const status = formData.get("status");
+  if (typeof planId !== "string" || !planId || typeof status !== "string" || !status) {
+    return { success: false, error: "Missing plan or status" };
+  }
+  if (!(PLAN_STATUS_VALUES as readonly string[]).includes(status)) {
+    return { success: false, error: "Invalid status" };
+  }
+
+  const result = await prisma.plan.updateMany({
+    where: { id: planId, userId },
+    data: { status: status as PlanStatus },
+  });
+
+  if (result.count === 0) return { success: false, error: "Plan not found" };
+
+  revalidatePath("/plans");
+  revalidatePath(`/plans/${planId}`);
+  revalidatePath("/tasks");
+  return { success: true };
 }
 
 /** Server action for form action use. Returns void; throws on error so it can be passed directly to <form action>. */

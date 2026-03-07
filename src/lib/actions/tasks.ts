@@ -83,6 +83,8 @@ export async function completeTask(formData: FormData): Promise<ActionResult> {
   });
   if (result.count === 0) return { success: false, error: "Operation failed" };
   revalidatePath("/tasks");
+  const planId = formData.get("planId");
+  if (typeof planId === "string" && planId.trim()) revalidatePath(`/plans/${planId.trim()}`);
   return { success: true };
 }
 
@@ -99,6 +101,8 @@ export async function restoreTask(formData: FormData): Promise<ActionResult> {
   });
   if (result.count === 0) return { success: false, error: "Operation failed" };
   revalidatePath("/tasks");
+  const planId = formData.get("planId");
+  if (typeof planId === "string" && planId.trim()) revalidatePath(`/plans/${planId.trim()}`);
   return { success: true };
 }
 
