@@ -2,18 +2,18 @@
 
 ## PR branches and commits
 
-- **All changes to this project should be done in a PR branch**, not directly on `main`. When the user asks for a feature, fix, or refactor, create a branch first, then make changes and commit there.
+- **All changes to this project should be done in a PR branch**, not directly on `main`. When the user asks for a feature, fix, or refactor, create a branch first, then make changes and commit there. **By default, open a new Pull Request** for that branch once changes are pushed (see “Raising the PR on GitHub” below).
 - **Every PR branch should have an appropriate changeset** (see Changesets below) when the work is release-note-worthy. Create the changeset as part of the same work, before or in the first commit.
 - **Shortcut for branch + commit message:** If the user gives a ticket or tech ID (e.g. `TECH-014`) and a short description, use them consistently:
   - **Branch:** `tech/<ID>-<kebab-case-description>` (e.g. `tech/TECH-014-export-plans-tasks-json`). Use a different prefix than `tech/` if the user specifies one (e.g. `fix/`, `feat/`).
   - **Commit message:** `<ID> <description>` (e.g. `TECH-014 add ability to export plans and tasks to json`). Omit the ID if the user didn’t provide one; then use a short imperative message (e.g. `Add export to JSON for plans and tasks`).
 - If the user doesn’t specify an ID, infer a short kebab-case branch name and commit message from the task (e.g. `feat/export-plans-tasks-json` and `Add export to JSON for plans and tasks`).
 
-- **Raising the PR on GitHub:** After pushing the branch, open the Pull Request with **GitHub CLI** (`gh`). Requirements:
+- **Raising the PR on GitHub:** After pushing the branch, **open the Pull Request by default** so the work is ready for review. Use **GitHub CLI** (`gh`). Requirements:
   1. **Install** [GitHub CLI](https://cli.github.com/manual/installation) if needed.
   2. **Authenticate:** Run `gh auth login` (or set `GH_TOKEN` for CI/automation).
   3. **Push:** `git push -u origin <branch>`.
-  4. **Create PR:** Run `npm run pr` — this runs `gh pr create --fill --base main`, using the current branch and filling title/body from your commit(s). Or run `gh pr create --title "Your title" --base main` (and optional `--body "..."`) manually.
+  4. **Create PR:** Run `npm run pr` — this runs `gh pr create --fill --base main`, using the current branch and filling title/body from your commit(s). Do this after the first push for new branches unless the user asks not to. Or run `gh pr create --title "Your title" --base main` (and optional `--body "..."`) manually.
 
 ## Type checking
 
