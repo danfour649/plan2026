@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.2.1
+
+### Patch Changes
+
+- d85a376: Security hardening: require AUTH_SECRET in production (dev uses random secret), CUID validation for task IDs, rate limiting on task API routes, CSP and security headers, generic error messages for task operations, reduced Prisma logging, and HTML sanitizer no longer allows `<u>`. Docs updated for CSRF and secret rotation.
+
 ## 0.2.0
 
 ### Minor Changes
