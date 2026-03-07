@@ -59,6 +59,9 @@ export default async function PlanDetailPage({
           completedAt: true,
           createdAt: true,
           updatedAt: true,
+          attachments: {
+            select: { id: true, url: true, filename: true, size: true },
+          },
         },
       },
     },
@@ -203,6 +206,12 @@ export default async function PlanDetailPage({
                       planName: plan.name,
                       createdAt: task.createdAt.toISOString(),
                       updatedAt: task.updatedAt.toISOString(),
+                      attachments: task.attachments.map((a) => ({
+                        id: a.id,
+                        url: a.url,
+                        filename: a.filename,
+                        size: a.size,
+                      })),
                     }}
                   >
                     <div className="min-w-0 flex-1">
@@ -243,6 +252,12 @@ export default async function PlanDetailPage({
                     planName: plan.name,
                     createdAt: task.createdAt.toISOString(),
                     updatedAt: task.updatedAt.toISOString(),
+                    attachments: task.attachments.map((a) => ({
+                      id: a.id,
+                      url: a.url,
+                      filename: a.filename,
+                      size: a.size,
+                    })),
                   }}
                 />
                 </div>

@@ -31,6 +31,7 @@ type EditTaskDialogProps = {
     planName?: string | null;
     createdAt?: string;
     updatedAt?: string;
+    attachments?: { id: string; url: string; filename: string; size: number }[];
   };
   children?: React.ReactNode;
   triggerClassName?: string;
@@ -67,7 +68,13 @@ export function EditTaskDialog({
 }: EditTaskDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [attachments, setAttachments] = useState(task.attachments ?? []);
+  const [uploading, setUploading] = useState(false);
   const isCompleted = Boolean(task.completedAt);
+
+  useEffect(() => {
+    if (isOpen) setAttachments(task.attachments ?? []);
+  }, [isOpen, task.attachments]);
   const doneRestoreAction = isCompleted ? restoreAction : completeAction;
   const [deleteState, deleteFormAction] = useActionState(
     wrap(deleteAction),
@@ -196,6 +203,82 @@ export function EditTaskDialog({
               }}
               plans={plans}
             />
+
+            <div className="mt-4 border-t border-blue-100 pt-4">
+              <p className="mb-2 text-sm font-medium text-zinc-700">Attachments</p>
+              {attachments.length > 0 ? (
+                <ul className="mb-2 space-y-1">
+                  {attachments.map((a) => (
+                    <li key={a.id} className="flex items-center justify-between gap-2 text-sm">
+                      <a
+                        href={a.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="truncate text-blue-600 hover:underline"
+                      >
+                        {a.filename}
+                      </a>
+                      <span className="shrink-0 text-zinc-400">
+                        ({(a.size / 1024).toFixed(1)} KB)
+                      </span>
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          const res = await fetch(`/api/tasks/${task.id}/attachments/${a.id}`, {
+                            method: "DELETE",
+                          });
+                          if (res.ok) setAttachments((prev) => prev.filter((x) => x.id !== a.id));
+                          else toast.error("Failed to remove attachment");
+                        }}
+                        className="shrink-0 rounded px-2 py-1 text-red-600 hover:bg-red-50"
+                        aria-label={`Remove ${a.filename}`}
+                      >
+                        Remove
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              <label className="flex cursor-pointer items-center gap-2 text-sm text-blue-600 hover:underline">
+                <input
+                  type="file"
+                  className="sr-only"
+                  disabled={uploading}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setUploading(true);
+                    try {
+                      const fd = new FormData();
+                      fd.set("file", file);
+                      const res = await fetch(`/api/tasks/${task.id}/attachments`, {
+                        method: "POST",
+                        body: fd,
+                      });
+                      const data = await res.json().catch(() => ({}));
+                      if (res.ok && data.id) {
+                        setAttachments((prev) => [
+                          ...prev,
+                          {
+                            id: data.id,
+                            url: data.url,
+                            filename: data.filename,
+                            size: data.size,
+                          },
+                        ]);
+                        toast.success("File attached");
+                      } else {
+                        toast.error(data.error ?? "Upload failed");
+                      }
+                    } finally {
+                      setUploading(false);
+                      e.target.value = "";
+                    }
+                  }}
+                />
+                {uploading ? "Uploading…" : "Add file"}
+              </label>
+            </div>
 
             <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-blue-100 pt-4">
               <ExportTaskButton
