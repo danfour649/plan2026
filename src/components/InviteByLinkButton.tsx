@@ -25,6 +25,16 @@ export function InviteByLinkButton({ planId }: { planId: string }) {
     }
   }
 
+  async function handleCopy() {
+    if (!inviteUrl) return;
+    try {
+      await navigator.clipboard.writeText(inviteUrl);
+      toast.success("Link copied to clipboard");
+    } catch {
+      toast.error("Failed to copy");
+    }
+  }
+
   return (
     <>
       <button
@@ -37,8 +47,23 @@ export function InviteByLinkButton({ planId }: { planId: string }) {
       </button>
       {inviteUrl ? (
         <div className="mt-2 rounded-xl border border-blue-100 bg-blue-50/50 px-3 py-2 text-xs text-zinc-600">
-          <p className="font-medium text-zinc-700">Link (copied):</p>
-          <code className="break-all">{inviteUrl}</code>
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href={inviteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="break-all text-blue-600 underline hover:text-blue-800"
+            >
+              {inviteUrl}
+            </a>
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="shrink-0 rounded-lg border border-blue-200 bg-white px-2 py-1 text-xs font-medium text-blue-700 transition hover:bg-blue-100"
+            >
+              Copy
+            </button>
+          </div>
         </div>
       ) : null}
     </>

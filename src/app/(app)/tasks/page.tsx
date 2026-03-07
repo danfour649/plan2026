@@ -123,13 +123,18 @@ export default async function TasksPage({
   return (
     <div className="space-y-8">
       <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
-        <div className="flex flex-col gap-3 border-b border-blue-100 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-blue-100 px-6 py-4 sm:gap-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <h2 className="text-2xl font-bold tracking-tight text-blue-950">Tasks</h2>
-            <RefreshTasksButton />
+            <div className="flex shrink-0 items-center gap-1">
+              <RefreshTasksButton />
+              <ExportTasksButton
+                tasks={allTasksForExport}
+                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-0 text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+            </div>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-            <ExportTasksButton tasks={allTasksForExport} />
+          <div className="ml-auto flex flex-wrap items-center gap-2 sm:gap-4">
             <ShowCompletedToggle showCompleted={showCompleted} />
             <AddTaskDialog action={addTask} plans={plans} />
           </div>
@@ -176,13 +181,15 @@ export default async function TasksPage({
                     })),
                   }}
                 >
-                  <div className="min-w-0 flex-1">
-                    <div
-                      className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
-                        task.urgency,
-                      )}`}
-                    >
-                      <span className="truncate">{task.title}</span>
+                  <div className="min-w-0 flex-1 overflow-visible">
+                    <div className="pt-0.5 pl-0.5">
+                      <div
+                        className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
+                          task.urgency,
+                        )}`}
+                      >
+                        <span className="truncate">{task.title}</span>
+                      </div>
                     </div>
                     <TaskContent content={task.content} />
                     <div className="mt-1 break-words text-xs text-zinc-500">
@@ -265,15 +272,17 @@ export default async function TasksPage({
                     })),
                   }}
                 >
-                  <div className="flex min-w-0 flex-1 items-start gap-3">
+                  <div className="flex min-w-0 flex-1 items-start gap-3 overflow-visible">
                     <CompletedCheckIcon />
-                    <div className="min-w-0 flex-1">
-                      <div
-                        className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
-                          task.urgency,
-                        )}`}
-                      >
-                        <span className="truncate line-through">{task.title}</span>
+                    <div className="min-w-0 flex-1 overflow-visible">
+                      <div className="pt-0.5 pl-0.5">
+                        <div
+                          className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
+                            task.urgency,
+                          )}`}
+                        >
+                          <span className="truncate line-through">{task.title}</span>
+                        </div>
                       </div>
                       <TaskContent content={task.content} />
                       <div className="mt-1 break-words text-xs text-zinc-500">

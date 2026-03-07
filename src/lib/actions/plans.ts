@@ -216,7 +216,7 @@ export async function sharePlanByEmail(planId: string, email: string): Promise<S
   const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
 
-  const parsed = planIdSchema.safeParse(planId);
+  const parsed = planIdSchema.safeParse({ planId });
   if (!parsed.success) return { success: false, error: "Invalid plan" };
 
   const plan = await prisma.plan.findFirst({
@@ -264,7 +264,7 @@ export async function createPlanInvite(planId: string): Promise<CreateInviteResu
   const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
 
-  const parsed = planIdSchema.safeParse(planId);
+  const parsed = planIdSchema.safeParse({ planId });
   if (!parsed.success) return { success: false, error: "Invalid plan" };
 
   const plan = await prisma.plan.findFirst({

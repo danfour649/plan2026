@@ -32,9 +32,11 @@ export function AddTaskDialog({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700"
+        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:h-auto sm:w-fit sm:px-4 sm:py-2"
+        aria-label="Add task"
       >
-        Add task
+        <span className="text-xl font-medium sm:hidden" aria-hidden>+</span>
+        <span className="hidden text-sm font-medium sm:inline">Add task</span>
       </button>
 
       {isOpen && (
