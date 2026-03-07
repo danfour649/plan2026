@@ -70,7 +70,7 @@ export function EditTaskDialog({
 
     if (deleteState.success) {
       toast.success("Task deleted");
-      setIsOpen(false);
+      queueMicrotask(() => setIsOpen(false));
     } else if (deleteState.error) {
       toast.error(deleteState.error);
     }

@@ -275,7 +275,15 @@ Error conventions across task APIs:
 
 ---
 
-## 8. Notable Risks / Future Notes
+## 8. Scripts and quality gates
+
+- **`npm run lint`** – ESLint (catches rules such as `react-hooks/set-state-in-effect`).
+- **`npm run build`** – Prisma generate + Next.js production build (catches TypeScript and build errors).
+- **`npm run prepush`** – lint + build; run manually or automatically via the **pre-push** Git hook (Husky). The hook ensures lint and build pass before code is pushed, so CI and Vercel are less likely to fail.
+
+---
+
+## 9. Notable Risks / Future Notes
 
 - **NextAuth v4:** still functional, but Auth.js v5 would be the eventual modernization path
 - **Calendar token lifecycle:** refresh handling currently updates the access token and expiry, but broader account/token edge cases are still dependent on Google provider behavior
