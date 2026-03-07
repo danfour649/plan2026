@@ -20,6 +20,15 @@ function formatDateOnly(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
+function isGoogleNotFoundError(err: unknown): boolean {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    "code" in err &&
+    err.code === 404
+  );
+}
+
 export async function POST(_req: Request, { params }: Params) {
   const userId = await getCurrentUserId();
   if (!userId) {
@@ -118,18 +127,54 @@ export async function POST(_req: Request, { params }: Params) {
     end = { date: formatDateOnly(nextDay) };
   }
 
+  const requestBody = {
+    summary: task.title,
+    description: description ?? undefined,
+    start,
+    end,
+  };
+
   try {
-    const event = await calendar.events.insert({
-      calendarId: "primary",
-      requestBody: {
-        summary: task.title,
-        description: description ?? undefined,
-        start,
-        end,
+    let event;
+    let created = false;
+
+    if (task.googleCalendarEventId) {
+      try {
+        event = await calendar.events.update({
+          calendarId: "primary",
+          eventId: task.googleCalendarEventId,
+          requestBody,
+        });
+      } catch (err) {
+        if (!isGoogleNotFoundError(err)) {
+          throw err;
+        }
+      }
+    }
+
+    if (!event) {
+      event = await calendar.events.insert({
+        calendarId: "primary",
+        requestBody,
+      });
+      created = true;
+    }
+
+    const eventId = event.data.id ?? null;
+    const htmlLink = event.data.htmlLink ?? null;
+
+    await prisma.task.update({
+      where: { id: task.id },
+      data: {
+        googleCalendarEventId: eventId,
+        googleCalendarEventUrl: htmlLink,
       },
     });
-    const htmlLink = event.data.htmlLink ?? undefined;
-    return NextResponse.json({ ok: true, eventId: event.data.id, htmlLink }, { status: 201 });
+
+    return NextResponse.json(
+      { ok: true, created, eventId: eventId ?? undefined, htmlLink: htmlLink ?? undefined },
+      { status: created ? 201 : 200 }
+    );
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to create calendar event";
     return NextResponse.json(

@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
           authorization: {
             params: {
               access_type: "offline",
-              prompt: "consent",
+              include_granted_scopes: "true",
               scope: [
                 "openid",
                 "email",
@@ -57,7 +57,9 @@ export const authOptions: NextAuthOptions = {
         update: {
           type: account.type,
           access_token: account.access_token ?? null,
-          refresh_token: account.refresh_token ?? null,
+          // Google may omit refresh_token on later logins, so keep the existing one
+          // unless Google explicitly returns a replacement.
+          refresh_token: account.refresh_token ?? undefined,
           expires_at: account.expires_at ?? null,
           token_type: account.token_type ?? null,
           scope: account.scope ?? null,

@@ -25,6 +25,9 @@ export default async function AppLayout({
               <AppNavLink href="/tasks" accent="blue" badge={remainingTaskCount}>
                 Tasks
               </AppNavLink>
+              <AppNavLink href="/settings" accent="blue">
+                Settings
+              </AppNavLink>
             </nav>
           </div>
 

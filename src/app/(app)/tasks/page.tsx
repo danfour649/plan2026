@@ -3,10 +3,30 @@ import Link from "next/link";
 
 import { AddTaskDialog } from "@/components/AddTaskDialog";
 import { AddToCalendarButton } from "@/components/AddToCalendarButton";
+import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { TaskContent } from "@/components/TaskContent";
 import { prisma } from "@/lib/prisma";
-import { addTask, completeTask, deleteTask, restoreTask } from "@/lib/actions/tasks";
+import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
+
+function getUrgencyPillClasses(urgency: number) {
+  switch (urgency) {
+    case 7:
+      return "bg-red-100 text-red-700 ring-1 ring-red-200";
+    case 6:
+      return "bg-orange-100 text-orange-700 ring-1 ring-orange-200";
+    case 5:
+      return "bg-amber-100 text-amber-700 ring-1 ring-amber-200";
+    case 4:
+      return "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200";
+    case 3:
+      return "bg-cyan-100 text-cyan-700 ring-1 ring-cyan-200";
+    case 2:
+      return "bg-sky-100 text-sky-700 ring-1 ring-sky-200";
+    default:
+      return "bg-blue-100 text-blue-700 ring-1 ring-blue-200";
+  }
+}
 
 function CompletedCheckIcon() {
   return (
@@ -39,13 +59,13 @@ export default async function TasksPage({
 
   const remainingTasks = await prisma.task.findMany({
     where: { userId, completedAt: null },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
   });
 
   const completedTasks = showCompleted
     ? await prisma.task.findMany({
         where: { userId, completedAt: { not: null } },
-        orderBy: { completedAt: "desc" },
+        orderBy: [{ urgency: "desc" }, { completedAt: "desc" }],
       })
     : [];
   const hasVisibleTasks = remainingTasks.length > 0 || completedTasks.length > 0;
@@ -54,7 +74,7 @@ export default async function TasksPage({
     <div className="space-y-8">
       <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
         <div className="flex flex-col gap-3 border-b border-blue-100 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-sm font-semibold text-blue-950">Tasks</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-blue-950">Tasks</h2>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="inline-flex rounded-full border border-blue-100 bg-white p-1 text-sm">
               <Link
@@ -95,22 +115,52 @@ export default async function TasksPage({
                 key={task.id}
                 className="flex items-center justify-between gap-4 px-6 py-4 transition hover:bg-blue-50/40"
               >
-                <div className="min-w-0 flex-1">
-                  <div className="text-sm font-medium text-zinc-900">{task.title}</div>
-                  <TaskContent content={task.content} />
-                  <div className="mt-1 text-xs text-zinc-500">
-                    Added {task.createdAt.toLocaleString()}
-                    {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
+                <EditTaskDialog
+                  action={updateTask}
+                  deleteAction={deleteTask}
+                  triggerClassName="min-w-0 flex-1 cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1"
+                  showButton={false}
+                  task={{
+                    id: task.id,
+                    title: task.title,
+                    content: task.content,
+                    dueAt: task.dueAt?.toISOString() ?? null,
+                    urgency: task.urgency,
+                  }}
+                >
+                  <div className="min-w-0 flex-1">
+                    <div
+                      className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
+                        task.urgency,
+                      )}`}
+                    >
+                      <span className="truncate">{task.title}</span>
+                    </div>
+                    <TaskContent content={task.content} />
+                    <div className="mt-1 text-xs text-zinc-500">
+                      Added {task.createdAt.toLocaleString()}
+                      {task.dueAt && <> · Due {task.dueAt.toLocaleString()}</>}
+                    </div>
                   </div>
-                </div>
+                </EditTaskDialog>
                 <div className="flex flex-wrap items-center gap-2">
-                  <AddToCalendarButton taskId={task.id} />
-                  <TaskActionButton action={completeTask} taskId={task.id} label="Mark done" />
-                  <TaskActionButton
-                    action={deleteTask}
-                    taskId={task.id}
-                    label="Delete"
-                    variant="muted"
+                  <div className="flex flex-wrap items-center gap-2">
+                    <AddToCalendarButton
+                      taskId={task.id}
+                      initiallyLinked={Boolean(task.googleCalendarEventId)}
+                    />
+                    <TaskActionButton action={completeTask} taskId={task.id} label="Mark done" />
+                  </div>
+                  <EditTaskDialog
+                    action={updateTask}
+                    deleteAction={deleteTask}
+                    task={{
+                      id: task.id,
+                      title: task.title,
+                      content: task.content,
+                      dueAt: task.dueAt?.toISOString() ?? null,
+                      urgency: task.urgency,
+                    }}
                   />
                 </div>
               </li>
@@ -120,24 +170,54 @@ export default async function TasksPage({
                 key={task.id}
                 className="flex items-center justify-between gap-4 px-6 py-4 transition hover:bg-emerald-50/40"
               >
-                <div className="flex min-w-0 flex-1 items-start gap-3">
-                  <CompletedCheckIcon />
-                  <div className="min-w-0 flex-1">
-                    <div className="text-sm font-medium text-zinc-700 line-through">{task.title}</div>
-                    <TaskContent content={task.content} />
-                    <div className="mt-1 text-xs text-zinc-500">
-                      Completed {task.completedAt ? task.completedAt.toLocaleString() : "—"}
+                <EditTaskDialog
+                  action={updateTask}
+                  deleteAction={deleteTask}
+                  triggerClassName="min-w-0 flex-1 cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1"
+                  showButton={false}
+                  task={{
+                    id: task.id,
+                    title: task.title,
+                    content: task.content,
+                    dueAt: task.dueAt?.toISOString() ?? null,
+                    urgency: task.urgency,
+                  }}
+                >
+                  <div className="flex min-w-0 flex-1 items-start gap-3">
+                    <CompletedCheckIcon />
+                    <div className="min-w-0 flex-1">
+                      <div
+                        className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
+                          task.urgency,
+                        )}`}
+                      >
+                        <span className="truncate line-through">{task.title}</span>
+                      </div>
+                      <TaskContent content={task.content} />
+                      <div className="mt-1 text-xs text-zinc-500">
+                        Completed {task.completedAt ? task.completedAt.toLocaleString() : "—"}
+                      </div>
                     </div>
                   </div>
-                </div>
+                </EditTaskDialog>
                 <div className="flex flex-wrap items-center gap-2">
-                  <AddToCalendarButton taskId={task.id} />
-                  <TaskActionButton action={restoreTask} taskId={task.id} label="Restore" />
-                  <TaskActionButton
-                    action={deleteTask}
-                    taskId={task.id}
-                    label="Delete"
-                    variant="muted"
+                  <div className="flex flex-wrap items-center gap-2">
+                    <AddToCalendarButton
+                      taskId={task.id}
+                      initiallyLinked={Boolean(task.googleCalendarEventId)}
+                    />
+                    <TaskActionButton action={restoreTask} taskId={task.id} label="Restore" />
+                  </div>
+                  <EditTaskDialog
+                    action={updateTask}
+                    deleteAction={deleteTask}
+                    task={{
+                      id: task.id,
+                      title: task.title,
+                      content: task.content,
+                      dueAt: task.dueAt?.toISOString() ?? null,
+                      urgency: task.urgency,
+                    }}
                   />
                 </div>
               </li>
