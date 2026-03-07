@@ -1,10 +1,10 @@
 import { getCurrentUserId } from "@/auth";
-import Link from "next/link";
 
 import { AddTaskDialog } from "@/components/AddTaskDialog";
 import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { RefreshTasksButton } from "@/components/RefreshTasksButton";
+import { ShowCompletedToggle } from "@/components/ShowCompletedToggle";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { TaskContent } from "@/components/TaskContent";
 import { prisma } from "@/lib/prisma";
@@ -79,25 +79,8 @@ export default async function TasksPage({
             <h2 className="text-2xl font-bold tracking-tight text-blue-950">Tasks</h2>
             <RefreshTasksButton />
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="inline-flex rounded-full border border-blue-100 bg-white p-1 text-sm">
-              <Link
-                href="/tasks"
-                className={`rounded-full px-3 py-1.5 transition ${
-                  showCompleted ? "text-zinc-600 hover:bg-blue-50 hover:text-blue-700" : "bg-blue-100 text-blue-700"
-                }`}
-              >
-                Hide completed
-              </Link>
-              <Link
-                href="/tasks?showCompleted=1"
-                className={`rounded-full px-3 py-1.5 transition ${
-                  showCompleted ? "bg-blue-100 text-blue-700" : "text-zinc-600 hover:bg-blue-50 hover:text-blue-700"
-                }`}
-              >
-                Show completed
-              </Link>
-            </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <ShowCompletedToggle showCompleted={showCompleted} />
             <AddTaskDialog action={addTask} />
           </div>
         </div>
