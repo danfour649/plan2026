@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 import { ExportTaskButton } from "@/components/ExportTaskButton";
 import { TaskForm } from "@/components/TaskForm";
+import { useTranslations } from "@/components/TranslationsProvider";
 import type { ActionResult } from "@/lib/actions/tasks";
 
 type EditTaskAction = (formData: FormData) => Promise<ActionResult>;
@@ -66,6 +67,7 @@ export function EditTaskDialog({
   planId,
   plans,
 }: EditTaskDialogProps) {
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [attachments, setAttachments] = useState(task.attachments ?? []);
@@ -100,23 +102,23 @@ export function EditTaskDialog({
     if (!deleteState) return;
 
     if (deleteState.success) {
-      toast.success("Task deleted");
+      toast.success(t.tasks.taskDeleted);
       queueMicrotask(() => setIsOpen(false));
     } else if (deleteState.error) {
       toast.error(deleteState.error);
     }
-  }, [deleteState]);
+  }, [deleteState, t.tasks.taskDeleted]);
 
   useEffect(() => {
     if (!doneRestoreState || !doneRestoreAction) return;
 
     if (doneRestoreState.success) {
-      toast.success(isCompleted ? "Task restored" : "Marked done");
+      toast.success(isCompleted ? t.tasks.taskRestored : t.tasks.markedDone);
       queueMicrotask(() => setIsOpen(false));
     } else if (doneRestoreState.error) {
       toast.error(doneRestoreState.error);
     }
-  }, [doneRestoreState, doneRestoreAction, isCompleted]);
+  }, [doneRestoreState, doneRestoreAction, isCompleted, t.tasks.markedDone, t.tasks.taskRestored]);
 
   return (
     <>
@@ -145,7 +147,7 @@ export function EditTaskDialog({
           onClick={() => setIsOpen(true)}
           className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
         >
-          Edit
+          {t.common.edit}
         </button>
       ) : null}
 
@@ -168,14 +170,14 @@ export function EditTaskDialog({
                   id={`edit-task-dialog-title-${task.id}`}
                   className="text-xl font-semibold tracking-tight text-blue-950"
                 >
-                  Edit task
+                  {t.tasks.editTask}
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
                 className="rounded-full p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800"
-                aria-label="Close edit task dialog"
+                aria-label={t.common.closeEditTaskDialog}
               >
                 <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5" aria-hidden="true">
                   <path
@@ -191,8 +193,8 @@ export function EditTaskDialog({
             <TaskForm
               action={action}
               onSuccess={() => setIsOpen(false)}
-              submitLabel="Save changes"
-              successMessage="Task updated"
+              submitLabel={t.common.saveChanges}
+              successMessage={t.tasks.taskUpdated}
               initialValues={{
                 taskId: task.id,
                 title: task.title,
@@ -205,7 +207,7 @@ export function EditTaskDialog({
             />
 
             <div className="mt-4 border-t border-blue-100 pt-4">
-              <p className="mb-2 text-sm font-medium text-zinc-700">Attachments</p>
+              <p className="mb-2 text-sm font-medium text-zinc-700">{t.common.attachments}</p>
               {attachments.length > 0 ? (
                 <ul className="mb-2 space-y-1">
                   {attachments.map((a) => (
@@ -228,12 +230,12 @@ export function EditTaskDialog({
                             method: "DELETE",
                           });
                           if (res.ok) setAttachments((prev) => prev.filter((x) => x.id !== a.id));
-                          else toast.error("Failed to remove attachment");
+                          else toast.error(t.tasks.failedToRemoveAttachment);
                         }}
                         className="shrink-0 rounded px-2 py-1 text-red-600 hover:bg-red-50"
-                        aria-label={`Remove ${a.filename}`}
+                        aria-label={`${t.common.remove} ${a.filename}`}
                       >
-                        Remove
+                        {t.common.remove}
                       </button>
                     </li>
                   ))}
@@ -266,9 +268,9 @@ export function EditTaskDialog({
                             size: data.size,
                           },
                         ]);
-                        toast.success("File attached");
+                        toast.success(t.tasks.fileAttached);
                       } else {
-                        toast.error(data.error ?? "Upload failed");
+                        toast.error(data.error ?? t.tasks.uploadFailed);
                       }
                     } finally {
                       setUploading(false);
@@ -276,7 +278,7 @@ export function EditTaskDialog({
                     }
                   }}
                 />
-                {uploading ? "Uploading…" : "Add file"}
+                {uploading ? t.tasks.uploading : t.tasks.addFile}
               </label>
             </div>
 
@@ -303,13 +305,13 @@ export function EditTaskDialog({
                   <input type="hidden" name="taskId" value={task.id} />
                   {planId ? <input type="hidden" name="planId" value={planId} /> : null}
                   <p className="text-sm text-zinc-500">
-                    {isCompleted ? "Reopen this task so it appears in your remaining list." : "Mark this task as done."}
+                    {isCompleted ? t.tasks.reopenTaskDescription : t.tasks.markTaskDoneDescription}
                   </p>
                   <button
                     type="submit"
                     className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
                   >
-                    {isCompleted ? "Restore" : "Mark done"}
+                    {isCompleted ? t.tasks.restore : t.tasks.markDone}
                   </button>
                 </form>
               </div>
@@ -320,19 +322,19 @@ export function EditTaskDialog({
                 <input type="hidden" name="taskId" value={task.id} />
                 {!showDeleteConfirm ? (
                   <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm text-zinc-500">Remove this task permanently.</p>
+                    <p className="text-sm text-zinc-500">{t.tasks.removeTaskPermanently}</p>
                     <button
                       type="button"
                       onClick={() => setShowDeleteConfirm(true)}
                       className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100"
                     >
-                      Delete task
+                      {t.tasks.deleteTask}
                     </button>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-3">
                     <p className="text-sm text-zinc-600">
-                      Are you sure you want to delete this task? This cannot be undone.
+                      {t.tasks.deleteTaskConfirm}
                     </p>
                     <div className="flex flex-wrap gap-3">
                       <button
@@ -340,13 +342,13 @@ export function EditTaskDialog({
                         onClick={() => setShowDeleteConfirm(false)}
                         className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
                       >
-                        Cancel
+                        {t.common.cancel}
                       </button>
                       <button
                         type="submit"
                         className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
                       >
-                        Delete task
+                        {t.tasks.deleteTask}
                       </button>
                     </div>
                   </div>

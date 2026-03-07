@@ -1,6 +1,7 @@
 "use client";
 
 import { DownloadIcon } from "@/components/DownloadIcon";
+import { useTranslations } from "@/components/TranslationsProvider";
 import type { ExportedTask } from "@/lib/export";
 import { buildTaskExportPayload, downloadExport } from "@/lib/export";
 
@@ -10,6 +11,7 @@ type ExportTaskButtonProps = {
 };
 
 export function ExportTaskButton({ task, className }: ExportTaskButtonProps) {
+  const t = useTranslations();
   function handleClick() {
     const payload = buildTaskExportPayload(task);
     const slug = task.title.replace(/[^a-z0-9]+/gi, "-").slice(0, 20) || "task";
@@ -24,8 +26,8 @@ export function ExportTaskButton({ task, className }: ExportTaskButtonProps) {
         className ??
         "rounded-xl border border-blue-200 bg-blue-50 p-2 text-blue-700 transition hover:bg-blue-100"
       }
-      title="Export this task to JSON"
-      aria-label="Export this task to JSON"
+      title={t.calendar.exportThisTaskToJson}
+      aria-label={t.calendar.exportThisTaskToJson}
     >
       <DownloadIcon className="h-5 w-5" />
     </button>

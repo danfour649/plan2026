@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { useTranslations } from "@/components/TranslationsProvider";
+
 type DeletePlanAction = (formData: FormData) => Promise<void>;
 
 type DeletePlanButtonProps = {
@@ -11,6 +13,7 @@ type DeletePlanButtonProps = {
 };
 
 export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonProps) {
+  const t = useTranslations();
   const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
@@ -29,8 +32,8 @@ export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonP
         onClick={() => setShowConfirm(true)}
         className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100"
       >
-        <span className="sm:hidden">Delete</span>
-        <span className="hidden sm:inline">Delete plan</span>
+        <span className="sm:hidden">{t.plans.deletePlanShort}</span>
+        <span className="hidden sm:inline">{t.plans.deletePlan}</span>
       </button>
 
       {showConfirm ? (
@@ -50,11 +53,10 @@ export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonP
               id="delete-plan-confirm-title"
               className="text-lg font-semibold tracking-tight text-blue-950"
             >
-              Delete plan?
+              {t.plans.deletePlanConfirmTitle}
             </h2>
             <p className="mt-2 text-sm text-zinc-600">
-              Are you sure you want to delete <strong>{planName}</strong>? Tasks in this plan will be
-              kept but unlinked.
+              {t.plans.deletePlanConfirmMessage.replace("{planName}", planName)}
             </p>
             <div className="mt-5 flex flex-wrap justify-end gap-3">
               <button
@@ -62,7 +64,7 @@ export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonP
                 onClick={() => setShowConfirm(false)}
                 className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
               >
-                Cancel
+                {t.common.cancel}
               </button>
               <form action={action} className="inline">
                 <input type="hidden" name="planId" value={planId} />
@@ -70,7 +72,7 @@ export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonP
                   type="submit"
                   className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
                 >
-                  Delete plan
+                  {t.plans.deletePlan}
                 </button>
               </form>
             </div>

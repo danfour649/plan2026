@@ -3,7 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { useTranslations } from "@/components/TranslationsProvider";
+
 export function RefreshTasksButton() {
+  const t = useTranslations();
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -17,8 +20,8 @@ export function RefreshTasksButton() {
       }}
       disabled={refreshing}
       className="group relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
-      title="Reload tasks"
-      aria-label="Reload tasks"
+      title={t.calendar.reloadTasks}
+      aria-label={t.calendar.reloadTasks}
     >
       <svg
         viewBox="0 0 20 20"
@@ -41,7 +44,7 @@ export function RefreshTasksButton() {
         />
       </svg>
       <span className="pointer-events-none absolute left-full top-1/2 ml-2 -translate-y-1/2 rounded-md bg-zinc-950 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-sm transition group-hover:opacity-100">
-        {refreshing ? "Refreshing..." : "Reload"}
+        {refreshing ? t.common.refreshing : t.common.reload}
       </span>
     </button>
   );

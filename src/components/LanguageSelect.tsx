@@ -3,10 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
+import { useTranslations } from "@/components/TranslationsProvider";
 import { LOCALE_LABELS, LOCALES, type Locale } from "@/lib/i18n";
 import { setLocale } from "@/lib/actions/settings";
 
 export function LanguageSelect({ currentLocale }: { currentLocale: Locale }) {
+  const t = useTranslations();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -28,7 +30,7 @@ export function LanguageSelect({ currentLocale }: { currentLocale: Locale }) {
       onChange={handleChange}
       disabled={isPending}
       className="w-full max-w-xs rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm disabled:opacity-70"
-      aria-label="Language"
+      aria-label={t.settings.language}
     >
       {LOCALES.map((loc) => (
         <option key={loc} value={loc}>

@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { useTranslations } from "@/components/TranslationsProvider";
 import type { PlanActionResult } from "@/lib/actions/plans";
 import { formatPlanStatus, PLAN_STATUS_VALUES } from "@/lib/validations/plan";
 
@@ -19,12 +20,12 @@ const PRIORITY_OPTIONS = [
 ];
 
 const COLOR_OPTIONS = [
-  { value: "", label: "None" },
-  { value: "blue", label: "Blue" },
-  { value: "green", label: "Green" },
-  { value: "amber", label: "Amber" },
-  { value: "red", label: "Red" },
-  { value: "violet", label: "Violet" },
+  { value: "", labelKey: "none" as const },
+  { value: "blue", labelKey: "blue" as const },
+  { value: "green", labelKey: "green" as const },
+  { value: "amber", labelKey: "amber" as const },
+  { value: "red", labelKey: "red" as const },
+  { value: "violet", labelKey: "violet" as const },
 ];
 
 function toDateInputValue(d: Date | string | null | undefined): string {
@@ -77,6 +78,7 @@ export function PlanForm({
   submitLabel,
   singleColumn = false,
 }: PlanFormProps) {
+  const t = useTranslations();
   const [state, formAction] = useActionState(wrap(action), null as PlanActionResult | null);
   const [newTaskTitles, setNewTaskTitles] = useState<string[]>([""]);
   const [taskSearchFilter, setTaskSearchFilter] = useState("");
@@ -113,10 +115,10 @@ export function PlanForm({
       ) : null}
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">Name *</label>
+        <label className="text-sm font-medium text-blue-950">{t.common.nameRequired}</label>
         <input
           name="name"
-          placeholder="Plan name"
+          placeholder={t.plans.planNamePlaceholder}
           required
           defaultValue={initialValues?.name ?? ""}
           className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
@@ -124,10 +126,10 @@ export function PlanForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">Description (optional)</label>
+        <label className="text-sm font-medium text-blue-950">{t.common.descriptionOptional}</label>
         <textarea
           name="description"
-          placeholder="Describe the plan"
+          placeholder={t.plans.describePlanPlaceholder}
           rows={3}
           defaultValue={initialValues?.description ?? ""}
           className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
@@ -243,7 +245,7 @@ export function PlanForm({
         <label className="text-sm font-medium text-blue-950">Notes (optional)</label>
         <textarea
           name="notes"
-          placeholder="Internal notes"
+          placeholder={t.plans.internalNotesPlaceholder}
           rows={2}
           defaultValue={initialValues?.notes ?? ""}
           className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
@@ -259,7 +261,7 @@ export function PlanForm({
         >
           {COLOR_OPTIONS.map((c) => (
             <option key={c.value || "none"} value={c.value}>
-              {c.label}
+              {t.form[c.labelKey]}
             </option>
           ))}
         </select>
@@ -354,7 +356,7 @@ export function PlanForm({
               <input
                 name="newTaskTitle"
                 defaultValue={title}
-                placeholder="New task title"
+                placeholder={t.plans.newTaskTitlePlaceholder}
                 className="flex-1 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
               />
               <button
@@ -362,7 +364,7 @@ export function PlanForm({
                 onClick={() => removeNewTaskRow(index)}
                 className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
               >
-                Remove
+                {t.common.remove}
               </button>
             </div>
           ))}

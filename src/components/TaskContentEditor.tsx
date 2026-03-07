@@ -7,6 +7,8 @@ import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import { useCallback, useEffect, useRef } from "react";
 
+import { useTranslations } from "@/components/TranslationsProvider";
+
 type TaskContentEditorProps = {
   name: string;
   defaultValue?: string;
@@ -16,8 +18,10 @@ type TaskContentEditorProps = {
 export function TaskContentEditor({
   name,
   defaultValue = "",
-  placeholder = "Add a description, notes, or links (optional)…",
+  placeholder,
 }: TaskContentEditorProps) {
+  const t = useTranslations();
+  const resolvedPlaceholder = placeholder ?? t.tasks.taskDescriptionPlaceholder;
   const hiddenInputRef = useRef<HTMLInputElement>(null);
   const editor = useEditor({
     immediatelyRender: false,
@@ -28,7 +32,7 @@ export function TaskContentEditor({
         openOnClick: false,
         HTMLAttributes: { target: "_blank", rel: "noopener noreferrer" },
       }),
-      Placeholder.configure({ placeholder }),
+      Placeholder.configure({ placeholder: resolvedPlaceholder }),
     ],
     content: defaultValue,
     editorProps: {
