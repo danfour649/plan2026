@@ -5,6 +5,7 @@ import { getCurrentUserId } from "@/auth";
 import { DeletePlanButton } from "@/components/DeletePlanButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportPlanButton } from "@/components/ExportPlanButton";
+import { InviteByLinkButton } from "@/components/InviteByLinkButton";
 import { PlanForm } from "@/components/PlanForm";
 import { SharePlanButton } from "@/components/SharePlanButton";
 import { TaskContent } from "@/components/TaskContent";
@@ -171,6 +172,7 @@ export default async function PlanDetailPage({
             {isOwner ? (
               <>
                 <SharePlanButton planId={plan.id} />
+                <InviteByLinkButton planId={plan.id} />
                 <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
               </>
             ) : null}

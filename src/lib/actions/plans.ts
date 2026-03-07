@@ -253,3 +253,40 @@ export async function sharePlanByEmail(planId: string, email: string): Promise<S
   revalidatePath(`/plans/${plan.id}`);
   return { success: true };
 }
+
+const INVITE_EXPIRY_DAYS = 7;
+
+export type CreateInviteResult =
+  | { success: true; inviteUrl: string }
+  | { success: false; error: string };
+
+export async function createPlanInvite(planId: string): Promise<CreateInviteResult> {
+  const userId = await getCurrentUserId();
+  if (!userId) return { success: false, error: "Unauthorized" };
+
+  const parsed = planIdSchema.safeParse(planId);
+  if (!parsed.success) return { success: false, error: "Invalid plan" };
+
+  const plan = await prisma.plan.findFirst({
+    where: { id: parsed.data.planId, userId },
+    select: { id: true },
+  });
+  if (!plan) return { success: false, error: "Plan not found" };
+
+  const token = crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "").slice(0, 8);
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + INVITE_EXPIRY_DAYS);
+
+  await prisma.planInvite.create({
+    data: {
+      planId: plan.id,
+      token,
+      expiresAt,
+    },
+  });
+
+  const baseUrl = process.env.NEXTAUTH_URL ?? "https://plan2026-pi.vercel.app";
+  const inviteUrl = `${baseUrl}/invite/${token}`;
+  revalidatePath(`/plans/${plan.id}`);
+  return { success: true, inviteUrl };
+}
