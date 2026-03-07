@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.1.4
+
+### Patch Changes
+
+- 6eb08a5: Add a branded Plan 2026 logo to the app header and sign-in screen for a more polished identity.
+
 ## 0.1.3
 
 ### Patch Changes
