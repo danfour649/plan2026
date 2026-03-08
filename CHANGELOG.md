@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.10.0
+
+### Minor Changes
+
+- 33c6aa2: Plan form: urgency and percent complete moved to top; percent complete is a slider. Plans list shows progress bar graphic for percent complete.
+
 ## 0.9.3
 
 ### Patch Changes
