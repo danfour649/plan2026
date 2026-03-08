@@ -9,6 +9,7 @@ Outstanding tasks that are too large for a single small PR are documented in **s
 | [TECH-0030-supply-list.md](./TECH-0030-supply-list.md) | Supply list (“List” tab) for plans/tasks with optional price, description, link. |
 | [TECH-0031-ai-advice-on-plans.md](./TECH-0031-ai-advice-on-plans.md) | AI advice bot that reviews a plan and tasks and suggests next steps. |
 | [TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md) | Schedule/Calendar tab and page showing tasks and plans on a calendar. |
+| [BULK-PLAN-2026-03-REMAINING.md](./BULK-PLAN-2026-03-REMAINING.md) | Remaining tasks from bulk plan export (TECH-0038+ and references to above). |
 
 ---
 
