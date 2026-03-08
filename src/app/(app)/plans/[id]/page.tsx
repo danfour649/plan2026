@@ -6,6 +6,7 @@ import { getCurrentUserId } from "@/auth";
 import { DeletePlanButton } from "@/components/DeletePlanButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportPlanButton } from "@/components/ExportPlanButton";
+import { TaskActionButton } from "@/components/TaskActionButton";
 import { InviteByLinkButton } from "@/components/InviteByLinkButton";
 import { PlanForm } from "@/components/PlanForm";
 import { SharePlanButton } from "@/components/SharePlanButton";
@@ -15,6 +16,13 @@ import { prisma } from "@/lib/prisma";
 import type { ExportedPlan, ExportedPlanTask } from "@/lib/export";
 import { deletePlan, updatePlan } from "@/lib/actions/plans";
 import { completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
+
+function formatShortDate(d: Date): string {
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+function formatShortDateTime(d: Date): string {
+  return `${formatShortDate(d)} ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`;
+}
 
 function getUrgencyPillClasses(urgency: number) {
   switch (urgency) {
@@ -250,15 +258,28 @@ export default async function PlanDetailPage({
                             </span>
                           </div>
                           <TaskContent content={task.content} />
-                          <div className="mt-1 break-words text-xs text-zinc-500">
-                            {task.completedAt
-                              ? `${t.tasks.completed} ${task.completedAt.toLocaleString()}`
-                              : `${t.tasks.added} ${task.createdAt.toISOString()}`}
-                            {task.dueAt && <> · {t.tasks.due} {task.dueAt.toLocaleString()}</>}
+                          <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
+                            {task.completedAt ? (
+                              <span>{t.tasks.completed} {formatShortDate(new Date(task.completedAt))}</span>
+                            ) : (
+                              <span>{t.tasks.added} {formatShortDate(task.createdAt)}</span>
+                            )}
+                            {task.dueAt && (
+                              <span className="sm:before:content-['·'] sm:before:mr-1">
+                                {t.tasks.due} {formatShortDateTime(new Date(task.dueAt))}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </EditTaskDialog>
-                      <div className="flex shrink-0 sm:flex-shrink-0">
+                      <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
+                        <TaskActionButton
+                          action={task.completedAt ? restoreTask : completeTask}
+                          taskId={task.id}
+                          planId={plan.id}
+                          label={task.completedAt ? t.tasks.restore : t.tasks.markDone}
+                          successMessage={task.completedAt ? t.tasks.taskRestored : t.tasks.markedDone}
+                        />
                         <EditTaskDialog
                           action={updateTask}
                           deleteAction={deleteTask}
@@ -299,11 +320,17 @@ export default async function PlanDetailPage({
                         </span>
                       </div>
                       <TaskContent content={task.content} />
-                      <div className="mt-1 break-words text-xs text-zinc-500">
-                        {task.completedAt
-                          ? `${t.tasks.completed} ${task.completedAt.toLocaleString()}`
-                          : `${t.tasks.added} ${task.createdAt.toISOString()}`}
-                        {task.dueAt && <> · {t.tasks.due} {task.dueAt.toLocaleString()}</>}
+                      <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
+                        {task.completedAt ? (
+                          <span>{t.tasks.completed} {formatShortDate(new Date(task.completedAt))}</span>
+                        ) : (
+                          <span>{t.tasks.added} {formatShortDate(task.createdAt)}</span>
+                        )}
+                        {task.dueAt && (
+                          <span className="sm:before:content-['·'] sm:before:mr-1">
+                            {t.tasks.due} {formatShortDateTime(new Date(task.dueAt))}
+                          </span>
+                        )}
                       </div>
                     </div>
                   )}
