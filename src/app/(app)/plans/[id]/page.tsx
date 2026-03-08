@@ -66,7 +66,8 @@ export default async function PlanDetailPage({
     include: {
       tasks: {
         orderBy: [
-          { completedAt: "asc" }, // incomplete first (nulls), completed tasks at bottom
+          // PostgreSQL: DESC => NULLS FIRST, so incomplete (null) first, completed at bottom
+          { completedAt: "desc" },
           { urgency: "desc" },
           { createdAt: "desc" },
         ],

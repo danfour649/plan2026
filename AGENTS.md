@@ -72,6 +72,7 @@
   3. **Changesets:** For each implemented task, add a changeset in `.changeset/` with enough detail that the resulting CHANGELOG entry captures the full gist of the change. Use a short kebab-case filename and the standard changeset format.
   4. **Speed vs. checks:** The user may ask to **skip local build and typecheck** to get PRs out faster; in that case do not run `npm run typecheck` or `npm run build` before pushing. Rely on CI or the user to report build failures.
   5. **PR title:** Use the pattern `<ID> <Title Case description>` (e.g. `TECH-0041 Bulk task PR pipeline in AGENTS.md`) when creating PRs via `gh pr create --title "..." --base main --fill`.
+- **Sort order and nulls:** When implementing “incomplete first, completed last” (or any sort by a nullable column), check the DB’s null ordering. In PostgreSQL, `ASC` implies `NULLS LAST` and `DESC` implies `NULLS FIRST`; so for “incomplete (null) first, completed last” use `orderBy: [{ completedAt: "desc" }]`, not `asc`.
 
 ### Testing bulk-task PRs one at a time
 
