@@ -51,3 +51,16 @@
 | 6 | Update README / DEPLOY / AI_PROJECT_CONTEXT with production URL and steps |
 
 No code changes are strictly required if the app already uses `NEXTAUTH_URL` and relative paths; the work is primarily DNS, Vercel settings, Google OAuth config, and documentation.
+
+---
+
+## Recommended next steps (order of operations)
+
+1. **Decide the domain** (e.g. `plan2026.com` or a subdomain) and confirm you have (or can get) DNS access at your registrar or Vercel Domains.
+2. **Register or transfer the domain** if needed; then in Vercel → project → **Settings → Domains**, add the domain and follow the verification steps (TXT/CNAME). Add the A or CNAME record Vercel shows so traffic routes to Vercel.
+3. **Set `NEXTAUTH_URL`** in Vercel environment variables to the permanent URL (e.g. `https://plan2026.com`) for the production environment.
+4. **Update Google OAuth:** In Google Cloud Console, add the new domain to Authorized redirect URIs and Authorized JavaScript origins; remove or keep the old `*.vercel.app` URL depending on whether you will redirect it.
+5. **Optional:** Add a redirect from the old Vercel URL to the new domain (Vercel supports this in Domains or via config) so existing links keep working.
+6. **Document** the production URL and any domain/OAuth steps in README, AI_PROJECT_CONTEXT, and any runbook.
+
+If anything fails (e.g. SSL, OAuth redirect), double-check the exact URL (no trailing slash), that DNS has propagated, and that `NEXTAUTH_URL` matches the domain the user is visiting.
