@@ -433,7 +433,7 @@ const messages = {
     },
   },
   pidgin: {
-    nav: { plans: "Plans", tasks: "Waka", settings: "Settings" },
+    nav: { plans: "Plans", tasks: "Work", settings: "Settings" },
     settings: {
       title: "How e go be",
       language: "Language",
@@ -447,7 +447,7 @@ const messages = {
       pageDescription: "Arrange your account, language, and Google Calendar connection.",
     },
     tasksPage: {
-      title: "Waka",
+      title: "Work",
       addTask: "Put task",
       allClear: "Everywhere good!",
       noTasks: "You don finish everything. Put new task when you ready.",
