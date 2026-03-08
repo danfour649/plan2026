@@ -159,6 +159,10 @@ Notes:
 }
 ```
 
+## Assets
+
+- **Header logo:** `public/plan2026-logo-c.png` — trimmed in GIMP to remove transparent padding (TECH-0033). If you replace it, crop tight to the artwork or the header may show extra space.
+
 ## Deployment
 
 Deployment instructions live in **[DEPLOY.md](./DEPLOY.md)**.

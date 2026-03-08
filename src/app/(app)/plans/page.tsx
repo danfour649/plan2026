@@ -181,8 +181,20 @@ export default async function PlansPage({
                       >
                         {t.planStatus[plan.status as keyof typeof t.planStatus] ?? plan.status}
                       </span>
-                      <span className="shrink-0 text-sm font-medium text-blue-700">
-                        {plan.percentCompleted}%
+                      <span
+                        className="inline-flex shrink-0 items-center gap-1.5"
+                        title={`${plan.percentCompleted}%`}
+                        aria-label={`${plan.percentCompleted}% complete`}
+                      >
+                        <span className="h-2 w-12 overflow-hidden rounded-full bg-blue-100">
+                          <span
+                            className="block h-full rounded-full bg-blue-600 transition-all"
+                            style={{ width: `${plan.percentCompleted}%` }}
+                          />
+                        </span>
+                        <span className="text-xs font-medium text-blue-700 tabular-nums">
+                          {plan.percentCompleted}%
+                        </span>
                       </span>
                     </div>
                     {(plan.goal ?? plan.description) && (

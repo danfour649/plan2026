@@ -32,11 +32,11 @@ export default async function AppLayout({
     <TranslationsProvider locale={locale}>
       <div className="min-h-screen bg-transparent text-zinc-950">
         <header className="border-b border-blue-100 bg-white/85 backdrop-blur">
-          <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-2 py-3 sm:px-6 sm:py-4">
+          <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-2 py-2 sm:px-6 sm:py-3">
             <div className="relative z-10 flex min-w-0 flex-1 items-center gap-1 overflow-visible sm:gap-6">
               <Plan2026Logo
-                className="shrink-0 sm:-mt-4 sm:mb-1"
-                iconClassName="h-8 w-9 sm:h-12 sm:w-16"
+                className="shrink-0 self-center -mt-2.5"
+                iconClassName="h-10 w-12 sm:h-16 sm:w-24"
                 ariaLabel={t.common.goToPlans}
               />
               <nav className="flex min-w-0 shrink items-center gap-0.5 text-sm text-zinc-700 sm:gap-4">
@@ -88,7 +88,7 @@ export default async function AppLayout({
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-5xl px-6 py-10">{children}</main>
+        <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10">{children}</main>
       </div>
     </TranslationsProvider>
   );
