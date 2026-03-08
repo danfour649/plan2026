@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.10.2
+
+### Patch Changes
+
+- fa22ef5: New task form: due date is blank by default instead of tomorrow 9am.
+
 ## 0.10.1
 
 ### Patch Changes
