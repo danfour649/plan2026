@@ -1,0 +1,377 @@
+{
+  "exportedAt": "2026-03-08T19:31:43.673Z",
+  "source": "plan2026",
+  "exportType": "plan",
+  "data": {
+    "plan": {
+      "id": "cmmftd9i20001lb04kgvm269t",
+      "name": "Plan 2026 - App creation and testing",
+      "description": "This app is for making plans and keeping track of tasks, sharing tasks and plans with others.",
+      "goal": "Plan 2026 ready early release testing",
+      "startAt": "2026-03-03T00:00:00.000Z",
+      "endAt": "2026-03-19T00:00:00.000Z",
+      "actualStartAt": "2026-03-03T00:00:00.000Z",
+      "actualEndAt": null,
+      "status": "started",
+      "priority": 6,
+      "percentCompleted": 52,
+      "notes": null,
+      "color": "blue",
+      "imageUrl": "https://plan2026-pi.vercel.app/_next/image?url=%2Fplan2026-logo-c.png&w=128&q=75",
+      "createdAt": "2026-03-07T04:19:01.850Z",
+      "updatedAt": "2026-03-07T20:48:58.429Z",
+      "tasks": [
+        {
+          "id": "cmmgsqc9u0001ld04sav3mbu1",
+          "title": "Remove the logo webp transparent extra space",
+          "content": "<p>The image when added as a Url at<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://plan2026-pi.vercel.app/_next/image?url=%2Fplan2026-logo-c.png&amp;w=128&amp;q=75\">https://plan2026-pi.vercel.app/_next/image?url=%2Fplan2026-logo-c.png&amp;w=128&amp;q=75</a>  <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://plan2026-pi.vercel.app/_next/image?url=%2Fplan2026-logo-c.png&amp;w=128&amp;q=75\"> </a>is off center from vercel url is appearing off center due to a weird transparent upper and left border in the image. I believe it is also making the topmost header of the app have a taller top margin than expected</p>",
+          "dueAt": "2026-03-08T03:00:00.000Z",
+          "urgency": 7,
+          "completedAt": null,
+          "createdAt": "2026-03-07T20:48:58.531Z",
+          "updatedAt": "2026-03-08T19:31:08.619Z"
+        },
+        {
+          "id": "cmmhat2ys0001jl04vnn79v71",
+          "title": "Plans edit page mobile friendly",
+          "content": "<p>The plan edit page is not mobile friendly. Can we examine how to make things work on small screens? Perhaps make the input boxes scale vertically when there is longer input? Things need to be pushed together vertically and not extend so far horizontally in mobile view for the task edit form.</p>",
+          "dueAt": "2026-03-09T03:00:00.000Z",
+          "urgency": 6,
+          "completedAt": null,
+          "createdAt": "2026-03-08T05:14:59.524Z",
+          "updatedAt": "2026-03-08T19:05:30.098Z"
+        },
+        {
+          "id": "cmmh95y1a0001bumg49pbyuf5",
+          "title": "Urgency and % complete placement on plan form, slider bar",
+          "content": "<p>move the urgency of a plan to the top of the edit form, also move the % complete to the top and change the % complete to a slider bar. Use a graphic to display it on the plans list instead of just 0% or 52%. goal is to make it appealing to finish with like a thermometer or coloured triangle from min 0 to max 100% complete</p>",
+          "dueAt": "2026-03-09T12:00:00.000Z",
+          "urgency": 6,
+          "completedAt": null,
+          "createdAt": "2026-03-08T04:29:00.426Z",
+          "updatedAt": "2026-03-08T04:29:00.426Z"
+        },
+        {
+          "id": "cmmh78m8a0001i804zm8tddb4",
+          "title": "Add supply list",
+          "content": "<p>I want to be able to create a list of necessary supplies for either a plan or a task. We need to add a new tab called 'List' that will be like a shopping list. Each item on the list can have optional price, description, link (ie Amazon)</p><p> This should produce a 'cost' for the task and plan displaying the total cost of all associated items. </p>",
+          "dueAt": "2026-03-08T06:00:00.000Z",
+          "urgency": 6,
+          "completedAt": null,
+          "createdAt": "2026-03-08T03:35:05.866Z",
+          "updatedAt": "2026-03-08T19:07:26.944Z"
+        },
+        {
+          "id": "cmmi5cggu0001ju04jmsmp6bb",
+          "title": "Onboarding/ login screen",
+          "content": "<p>Want to improve the onboarding screen for new users. Use this as inspiration: https://www.xda-developers.com/i-asked-gemini-claude-and-chatgpt-to-create-a-website-and-there-was-one-obvious-winner/</p>",
+          "dueAt": "2026-03-09T09:00:00.000Z",
+          "urgency": 5,
+          "completedAt": null,
+          "createdAt": "2026-03-08T19:29:51.967Z",
+          "updatedAt": "2026-03-08T19:29:51.967Z"
+        },
+        {
+          "id": "cmmi3m0820001ji046ita88rp",
+          "title": "Add task button on the task list of a plan scrolling",
+          "content": "<p>In mobile view the add task button on the task list is too far to the right, need to keep it in view</p>",
+          "dueAt": "2026-03-09T09:00:00.000Z",
+          "urgency": 5,
+          "completedAt": null,
+          "createdAt": "2026-03-08T18:41:18.243Z",
+          "updatedAt": "2026-03-08T18:41:18.243Z"
+        },
+        {
+          "id": "cmmi2h50q0001l504j9pu5lce",
+          "title": "Fix translation",
+          "content": "<p>Some pidgin translations are wrong, example is Waka for tasks, it seems like woaka is better or maybe 'work' instead. Suggest ways our translations can be verified. This mistranslation to 'waka' is problematic because it is a swear word in Nigerian pidgin.</p>",
+          "dueAt": "2026-03-09T03:00:00.000Z",
+          "urgency": 5,
+          "completedAt": null,
+          "createdAt": "2026-03-08T18:09:31.562Z",
+          "updatedAt": "2026-03-08T19:03:11.423Z"
+        },
+        {
+          "id": "cmmh9jalo0003bumg9qfwzjum",
+          "title": "make X of Y completed a graphic",
+          "content": "<p>on the main plans page, I would like to change the X of Y completed into a graphic, I'm thinking like a bunch of boxes marked green and red for completed / not completed tasks within the plan. Need to make some concepts for this.</p>",
+          "dueAt": "2026-03-09T12:00:00.000Z",
+          "urgency": 5,
+          "completedAt": null,
+          "createdAt": "2026-03-08T04:39:23.244Z",
+          "updatedAt": "2026-03-08T04:39:23.244Z"
+        },
+        {
+          "id": "cmmh7bmku0001l704kv6pyp55",
+          "title": "Fix how the task date and associated plan are displayed on mobile view, one per line",
+          "content": "<p>Deadline, start date and associated plan are displayed on mobile view, one per line. Simplify the dates and times displayed in mobile. Move the status button to the left of the edit button </p>",
+          "dueAt": "2026-03-08T03:00:00.000Z",
+          "urgency": 5,
+          "completedAt": null,
+          "createdAt": "2026-03-08T03:37:26.286Z",
+          "updatedAt": "2026-03-08T03:40:10.918Z"
+        },
+        {
+          "id": "cmmi4u8tc0001js042pn9rcg5",
+          "title": "Modify color attribute to flags",
+          "content": "<p>Change the color plan attribute to flags, display a color flag on the plans list.</p>",
+          "dueAt": "2026-03-09T09:00:00.000Z",
+          "urgency": 4,
+          "completedAt": null,
+          "createdAt": "2026-03-08T19:15:42.240Z",
+          "updatedAt": "2026-03-08T19:15:42.240Z"
+        },
+        {
+          "id": "cmmhpeds70001ky0483fzc84g",
+          "title": "Help pages",
+          "content": "<p>Want to add a help page on how to use this app, let's start with just a basic help section for tasks and plans, with instructions on how to use the app. The help section should also have an app versioning history based on the changelog and an about section showing this apps version and contributor info.</p>",
+          "dueAt": "2026-03-09T06:00:00.000Z",
+          "urgency": 4,
+          "completedAt": null,
+          "createdAt": "2026-03-08T12:03:27.943Z",
+          "updatedAt": "2026-03-08T19:09:58.489Z"
+        },
+        {
+          "id": "cmmgp9he90001l504b82izip6",
+          "title": "Allow mark as done to tasks in the plan edit page",
+          "content": null,
+          "dueAt": "2026-03-08T09:00:00.000Z",
+          "urgency": 4,
+          "completedAt": null,
+          "createdAt": "2026-03-07T19:11:53.169Z",
+          "updatedAt": "2026-03-07T20:48:58.495Z"
+        },
+        {
+          "id": "cmmfvn74x0001l704759mii6h",
+          "title": "Google oauth live",
+          "content": null,
+          "dueAt": null,
+          "urgency": 4,
+          "completedAt": null,
+          "createdAt": "2026-03-07T05:22:44.577Z",
+          "updatedAt": "2026-03-08T19:17:09.686Z"
+        },
+        {
+          "id": "cmmh8ys4j0001jl04ywg6ugqw",
+          "title": "Add facebook login",
+          "content": "<p>Like the existing google login system, I would like to explore using facebook or other identity providers for sign up / sign in. Additionally what would be needed to allow signup with email/password? </p>",
+          "dueAt": "2026-03-09T09:00:00.000Z",
+          "urgency": 3,
+          "completedAt": null,
+          "createdAt": "2026-03-08T04:23:26.179Z",
+          "updatedAt": "2026-03-08T04:23:26.179Z"
+        },
+        {
+          "id": "cmmh7webr0001l704e7g71h3f",
+          "title": "AI advice on plans",
+          "content": "<p>How could I integrate AI advice bot onto a plan? Something that would automatically review the plan, associated tasks and provide advice and next steps for the plan</p>",
+          "dueAt": "2026-03-08T09:00:00.000Z",
+          "urgency": 3,
+          "completedAt": null,
+          "createdAt": "2026-03-08T03:53:35.368Z",
+          "updatedAt": "2026-03-08T03:53:35.368Z"
+        },
+        {
+          "id": "cmmh7mgmy0001jx04gc0tiny8",
+          "title": "Add a calendar tab and new page",
+          "content": "<p>A calendar to show tasks and ongoing projects. This will be called schedule and added as a new upper tab and page. Compare using a plug-in or import for this versus building all from scratch.</p>",
+          "dueAt": "2026-03-08T09:00:00.000Z",
+          "urgency": 3,
+          "completedAt": null,
+          "createdAt": "2026-03-08T03:45:51.803Z",
+          "updatedAt": "2026-03-08T03:45:51.803Z"
+        },
+        {
+          "id": "cmmfsnz2u0003bu9wm9ktxj1i",
+          "title": "Get permanent website",
+          "content": "<p>Look at switching to permanent address on vercel</p>",
+          "dueAt": "2026-03-08T09:00:00.000Z",
+          "urgency": 3,
+          "completedAt": null,
+          "createdAt": "2026-03-07T03:59:21.942Z",
+          "updatedAt": "2026-03-07T20:48:58.495Z"
+        },
+        {
+          "id": "cmmi3j0vo0005jo04witegeul",
+          "title": "Print checklist from plan",
+          "content": "<p>Able to print a checklist from an open plan containing the list of unfinished tasks sorted by priority.</p>",
+          "dueAt": "2026-03-21T09:00:00.000Z",
+          "urgency": 2,
+          "completedAt": null,
+          "createdAt": "2026-03-08T18:38:59.124Z",
+          "updatedAt": "2026-03-08T18:38:59.124Z"
+        },
+        {
+          "id": "cmmhtuw9o0001jv04x1gfjwx8",
+          "title": "Start with a prebuilt plan",
+          "content": "<p>Ability to choose a prebuilt plan from a template.</p>",
+          "dueAt": "2026-03-09T09:00:00.000Z",
+          "urgency": 2,
+          "completedAt": null,
+          "createdAt": "2026-03-08T14:08:16.860Z",
+          "updatedAt": "2026-03-08T18:00:21.245Z"
+        },
+        {
+          "id": "cmmht07o30001l804n3nl620w",
+          "title": "Share to social media / external plans",
+          "content": "<p>Able to share plan or task externally, the link produced should bring the recipient (even if not signed in) to a public view page where they can set the task status only other task information should be displayed read only. Make sure to secure the endpoint used for public (unauthenticated user) to change status of the task and add it to their calendar. We will also want to let the user add their email or sign up for an account via standard flow. Only allow access to plans and tasks that the owner has linked to be public.</p>",
+          "dueAt": "2026-03-09T06:00:00.000Z",
+          "urgency": 2,
+          "completedAt": null,
+          "createdAt": "2026-03-08T13:44:25.299Z",
+          "updatedAt": "2026-03-08T19:01:50.717Z"
+        },
+        {
+          "id": "cmmhtvmn40001jm044536w3eh",
+          "title": "New task no date - should be blank by default",
+          "content": null,
+          "dueAt": "2026-03-09T06:00:00.000Z",
+          "urgency": 1,
+          "completedAt": null,
+          "createdAt": "2026-03-08T14:08:51.041Z",
+          "updatedAt": "2026-03-08T15:16:27.403Z"
+        },
+        {
+          "id": "cmmgh0d1p0001lb04t1ludr99",
+          "title": "Mobile app",
+          "content": "<p>Create an Android and iOS app for plan 2026. Should use the existing site to implement </p>",
+          "dueAt": "2026-03-08T09:00:00.000Z",
+          "urgency": 1,
+          "completedAt": null,
+          "createdAt": "2026-03-07T15:20:50.702Z",
+          "updatedAt": "2026-03-07T20:48:58.495Z"
+        },
+        {
+          "id": "cmmftd9is0003lb0416ze4ihg",
+          "title": "security remediation",
+          "content": null,
+          "dueAt": "2026-03-08T12:00:00.000Z",
+          "urgency": 7,
+          "completedAt": "2026-03-08T18:01:59.911Z",
+          "createdAt": "2026-03-07T04:19:01.876Z",
+          "updatedAt": "2026-03-08T18:01:59.912Z"
+        },
+        {
+          "id": "cmmgeze4q0003ju042ow6ijym",
+          "title": "Move tasks up in plan, sort completed tasks lower",
+          "content": "<p>Tasks should be displayed more prominently on the plans page. Move completed tasks to the bottom of the task list in plans</p>",
+          "dueAt": "2026-03-08T09:00:00.000Z",
+          "urgency": 4,
+          "completedAt": "2026-03-08T05:22:12.476Z",
+          "createdAt": "2026-03-07T14:24:06.219Z",
+          "updatedAt": "2026-03-08T05:22:12.480Z"
+        },
+        {
+          "id": "cmmgrmzl90001l5049zxbc39f",
+          "title": "Mail sent button after creating link",
+          "content": "<p>After creating a link, beside the copy button a new button should create a mail to action with title something like \"you're invited to plan: (name of linked plan\". The email body should contain some details about the plan, the link to the plan and other reasonable information about the email invite to encourage accessing the plan</p>",
+          "dueAt": "2026-03-08T09:00:00.000Z",
+          "urgency": 4,
+          "completedAt": "2026-03-08T05:09:20.035Z",
+          "createdAt": "2026-03-07T20:18:22.510Z",
+          "updatedAt": "2026-03-08T05:09:20.037Z"
+        },
+        {
+          "id": "cmmgf0u6n0005ju04n7b0ruld",
+          "title": "Mobile add /  edit task form bug",
+          "content": "<p>Tasks further down the list when opening the edit form should be visible right away, you shouldnt have to scroll up to edit a task. From both the task list and inside a plan.</p>",
+          "dueAt": "2026-03-07T23:00:00.000Z",
+          "urgency": 7,
+          "completedAt": "2026-03-08T04:41:22.443Z",
+          "createdAt": "2026-03-07T14:25:13.679Z",
+          "updatedAt": "2026-03-08T04:41:22.446Z"
+        },
+        {
+          "id": "cmmgz4chl0001lb04l9gyxy5a",
+          "title": "Add task dialogue from plans page",
+          "content": "<p>I want to be able to add tasks from the plans page using the full tasks dialogue. Not having to add then save.</p>",
+          "dueAt": "2026-03-08T09:00:00.000Z",
+          "urgency": 7,
+          "completedAt": "2026-03-08T04:29:33.965Z",
+          "createdAt": "2026-03-07T23:47:49.689Z",
+          "updatedAt": "2026-03-08T04:29:33.968Z"
+        },
+        {
+          "id": "cmmgf6dy30001buz8rvp84n42",
+          "title": "share tasks and plans",
+          "content": "<p>ability to share tasks and plans with another user.</p>",
+          "dueAt": "2026-03-08T12:00:00.000Z",
+          "urgency": 3,
+          "completedAt": "2026-03-07T20:39:31.524Z",
+          "createdAt": "2026-03-07T14:29:32.572Z",
+          "updatedAt": "2026-03-07T20:48:58.495Z"
+        },
+        {
+          "id": "cmmfvu6rw0001jr04nasx209v",
+          "title": "Translation to french and pigin",
+          "content": "<p>Allow users to set their language to french and Nigerian pidgin</p>",
+          "dueAt": "2026-03-08T09:00:00.000Z",
+          "urgency": 3,
+          "completedAt": "2026-03-07T20:39:11.715Z",
+          "createdAt": "2026-03-07T05:28:10.700Z",
+          "updatedAt": "2026-03-07T20:48:58.495Z"
+        },
+        {
+          "id": "cmmfuzrnk0001buf4dd9q26hc",
+          "title": "seach engine optimization",
+          "content": "<p>Optimize the app for search engine optimization </p>",
+          "dueAt": "2026-03-08T09:00:00.000Z",
+          "urgency": 2,
+          "completedAt": "2026-03-07T20:38:47.607Z",
+          "createdAt": "2026-03-07T05:04:31.424Z",
+          "updatedAt": "2026-03-07T20:48:58.495Z"
+        },
+        {
+          "id": "cmmghibix0001jm04xrqhc3nv",
+          "title": "Send invite to plan",
+          "content": "<p>Ability to forward invitations to other users to join a plan. How can we securely allow two users to work on one plan</p>",
+          "dueAt": "2026-03-17T09:00:00.000Z",
+          "urgency": 2,
+          "completedAt": "2026-03-07T20:38:31.306Z",
+          "createdAt": "2026-03-07T15:34:48.537Z",
+          "updatedAt": "2026-03-07T20:48:58.495Z"
+        },
+        {
+          "id": "cmmfsnz5t0005bu9wkbyx5wlf",
+          "title": "Upload files Consider blob storage",
+          "content": "<p>Need file upload </p>",
+          "dueAt": "2026-03-08T06:00:00.000Z",
+          "urgency": 5,
+          "completedAt": "2026-03-07T20:37:13.792Z",
+          "createdAt": "2026-03-07T03:59:22.049Z",
+          "updatedAt": "2026-03-07T20:48:58.495Z"
+        },
+        {
+          "id": "cmmgex56c0001ju04f9zkwx08",
+          "title": "Mobile ui fixes",
+          "content": "<p>Several of the list display items do not show up correctly or wrap awkwardly in mobile view</p>",
+          "dueAt": "2026-03-08T06:00:00.000Z",
+          "urgency": 6,
+          "completedAt": "2026-03-07T20:36:34.613Z",
+          "createdAt": "2026-03-07T14:22:21.301Z",
+          "updatedAt": "2026-03-07T20:48:58.495Z"
+        },
+        {
+          "id": "cmmgf7ac70003buz8bc9b7zme",
+          "title": "export plan and tasks",
+          "content": "<p>ability to export plans and tasks as json or another export option?</p>",
+          "dueAt": "2026-03-08T12:00:00.000Z",
+          "urgency": 7,
+          "completedAt": "2026-03-07T15:16:46.484Z",
+          "createdAt": "2026-03-07T14:30:14.551Z",
+          "updatedAt": "2026-03-07T20:48:58.495Z"
+        },
+        {
+          "id": "cmmfa9gb80006buno6uuvbm27",
+          "title": "deploy to vercel",
+          "content": "<p><a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://plan2026-pi.vercel.app/\">https://plan2026-pi.vercel.app/</a></p>",
+          "dueAt": null,
+          "urgency": 4,
+          "completedAt": "2026-03-07T05:03:31.364Z",
+          "createdAt": "2026-03-06T19:24:11.348Z",
+          "updatedAt": "2026-03-07T20:48:58.495Z"
+        }
+      ]
+    }
+  }
+}
