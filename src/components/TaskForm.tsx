@@ -59,11 +59,7 @@ function getDefaultDueAtValue(initialDueAt?: string | null) {
       return formatDateTimeLocal(parsed);
     }
   }
-
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setHours(9, 0, 0, 0);
-  return formatDateTimeLocal(tomorrow);
+  return "";
 }
 
 export function TaskForm({
