@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.7.3
+
+### Patch Changes
+
+- baf8207: Document bulk task → PR pipeline in AGENTS.md: when tasks are provided in JSON form, create one PR per task with incrementing tech IDs, implement or document future work, add detailed changesets, and optionally skip local build/typecheck for speed.
+
 ## 0.7.2
 
 ### Patch Changes
