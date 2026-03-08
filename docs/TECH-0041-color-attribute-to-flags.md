@@ -4,6 +4,8 @@
 
 **Goal:** Change the plan “color” attribute from a simple color (e.g. blue, green, amber) to a “flag” concept, and display a flag graphic (e.g. emoji or icon) on the plans list and in the plan form instead of (or in addition to) a colour pill.
 
+**Why deferred:** Deferred in bulk run due to run scope. **Estimated effort:** small — no schema change; UI rename and display mapping (e.g. color → emoji) in form and plans list; i18n for “Flag”.
+
 ---
 
 ## What is needed

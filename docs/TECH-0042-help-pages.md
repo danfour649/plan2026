@@ -4,6 +4,8 @@
 
 **Goal:** Add a help section that explains how to use the app (tasks and plans), includes app version history based on the changelog, and an “About” section with app version and contributor information.
 
+**Why deferred:** Deferred in bulk run due to run scope. **Estimated effort:** medium — new route(s), copy, and i18n for all locales; version from package.json or build.
+
 ---
 
 ## What is needed

@@ -4,6 +4,8 @@
 
 **Goal:** Explore adding Facebook (or other identity providers) for sign-up/sign-in, and assess what would be needed to allow sign-up with email and password in addition to OAuth.
 
+**Why deferred:** Deferred in bulk run due to scope. **Estimated effort:** large — new provider(s), and email/password requires schema (password hash), registration flow, and Credentials provider.
+
 ---
 
 ## What is needed
