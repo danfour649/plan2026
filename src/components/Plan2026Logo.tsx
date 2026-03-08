@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+/** Logo asset: `public/plan2026-logo-c.png` was trimmed in GIMP to remove transparent padding (TECH-0033). */
 type Plan2026LogoProps = {
   href?: string;
   className?: string;
@@ -30,7 +31,7 @@ export function Plan2026Logo({
           aria-hidden="true"
           fill
           sizes="96px"
-          className="object-cover object-center"
+          className="object-contain object-center"
           priority
         />
       </span>
