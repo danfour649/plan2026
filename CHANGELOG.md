@@ -1,5 +1,23 @@
 # plan2026
 
+## 0.10.0
+
+### Minor Changes
+
+- 33c6aa2: Plan form: urgency and percent complete moved to top; percent complete is a slider. Plans list shows progress bar graphic for percent complete.
+
+## 0.9.3
+
+### Patch Changes
+
+- 44d08b3: Plan edit page and form are more mobile friendly: reduced padding on small screens, full-width inputs, stacked layout for add-task row, and resizable textareas.
+
+## 0.9.2
+
+### Patch Changes
+
+- db9ff4f: Logo no longer shows off-center due to transparent padding: image is clipped with object-cover and header margin compensation removed.
+
 ## 0.9.1
 
 ### Patch Changes
