@@ -153,12 +153,14 @@ export default async function PlansPage({
                   className="flex min-w-0 flex-1 flex-wrap items-start gap-3 sm:flex-nowrap sm:items-center"
                 >
                   {plan.imageUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element -- user-pasted URL, arbitrary host
-                    <img
-                      src={plan.imageUrl}
-                      alt=""
-                      className="h-12 w-12 shrink-0 rounded-lg border border-blue-100 bg-zinc-100 object-contain object-center"
-                    />
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-blue-100 bg-zinc-100">
+                      {/* eslint-disable-next-line @next/next/no-img-element -- user-pasted URL, arbitrary host */}
+                      <img
+                        src={plan.imageUrl}
+                        alt=""
+                        className="max-h-full max-w-full object-contain object-center"
+                      />
+                    </div>
                   ) : null}
                   <div className="min-w-0 flex-1 overflow-visible">
                     <div className="flex flex-wrap items-center gap-2 pt-0.5 pl-0.5">
