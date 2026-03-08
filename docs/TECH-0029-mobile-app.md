@@ -71,3 +71,15 @@ Options that “use the existing site”:
 | 6 | Verify mobile UX (touch, layout) and document mobile app in project docs. |
 
 Implementing TECH-0020 and TECH-0021 (mobile form and UI fixes) will improve the experience for both the responsive site and any future mobile app that reuses it.
+
+---
+
+## Recommended next steps (order of operations)
+
+1. **Choose approach:** **PWA** if you want installability with no app-store process and minimal new surface (manifest + service worker + icons). **Capacitor** if you need store distribution or native APIs while still loading the existing Next.js site in a WebView.
+2. **PWA path:** Add a web app manifest (name, icons, `display: standalone`, start URL), ensure icons in required sizes, optionally add a service worker (e.g. Next.js PWA plugin). Test “Add to Home Screen” on iOS (Safari) and Android (Chrome). Document in README how to install.
+3. **Capacitor path:** Add Capacitor to the repo (`npm install @capacitor/core @capacitor/cli`, `npx cap init`). Configure the app to load the **production URL** of the deployed site (simplest) or a static export (harder with auth). Implement auth: use an in-app browser or system browser for Google sign-in and **deep links** (Android App Links / iOS Universal Links) so the OAuth redirect opens the app and the WebView can use the session. Test sign-in and navigation to plans/tasks.
+4. **Stores (if applicable):** Create developer accounts (Apple, Google); add privacy policy and store listings; configure signing and provisioning. PWA does not require this step.
+5. **Document** in README and AI_PROJECT_CONTEXT how the mobile app is built (PWA vs Capacitor), how to run it locally (e.g. `npx cap open ios`), and any env or URL configuration it expects.
+
+If OAuth fails in the app, the usual cause is redirect URI or cookie domain: the redirect URI must point to the app’s deep link, and the WebView must load a URL that matches the cookie domain (e.g. the same production origin).
