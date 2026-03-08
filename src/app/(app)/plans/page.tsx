@@ -153,11 +153,11 @@ export default async function PlansPage({
                   className="flex min-w-0 flex-1 flex-wrap items-start gap-3 sm:flex-nowrap sm:items-center"
                 >
                   {plan.imageUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element -- user-pasted URL, arbitrary host
-                    <img
-                      src={plan.imageUrl}
-                      alt=""
-                      className="h-12 w-12 shrink-0 rounded-lg border border-blue-100 bg-zinc-100 object-contain object-center"
+                    <div
+                      className="h-14 w-14 shrink-0 rounded-lg border border-blue-100 bg-zinc-100 bg-contain bg-center bg-no-repeat"
+                      style={{ backgroundImage: `url(${plan.imageUrl})` }}
+                      role="img"
+                      aria-label=""
                     />
                   ) : null}
                   <div className="min-w-0 flex-1 overflow-visible">

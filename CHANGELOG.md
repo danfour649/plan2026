@@ -1,5 +1,35 @@
 # plan2026
 
+## 0.8.3
+
+### Patch Changes
+
+- 92e1918: Image placement for plan image URL: plan images (when added as URL) are now centered and no longer cropped; the bottom of the picture is no longer cut off. Plan form preview and plan list use object-contain with centered alignment inside a flex container.
+
+## 0.8.2
+
+### Patch Changes
+
+- 896326d: Mobile task date and plan display: deadline, added/completed date, and associated plan are shown one per line on mobile with simplified short dates (e.g. "Mar 8, 2026"); status (Mark done / Restore) button is to the left of the Edit button on both the tasks list and the plan detail page. TaskActionButton now supports an optional planId for plan page revalidation.
+
+## 0.8.1
+
+### Patch Changes
+
+- 5530655: Mobile add/edit task form: when opening the edit task dialog from the task list or from inside a plan, the dialog is now scrolled into view so users do not have to scroll up to see the form (fixes tasks further down the list being off-screen).
+
+## 0.8.0
+
+### Minor Changes
+
+- 1f1e8cd: Add task dialogue from plans page: plan detail page now shows an "Add task" button that opens the full add-task dialog with the current plan pre-selected, so users can add tasks directly to the plan without adding then saving separately. Plan detail revalidates when a task is added to that plan.
+
+## 0.7.3
+
+### Patch Changes
+
+- baf8207: Document bulk task → PR pipeline in AGENTS.md: when tasks are provided in JSON form, create one PR per task with incrementing tech IDs, implement or document future work, add detailed changesets, and optionally skip local build/typecheck for speed.
+
 ## 0.7.2
 
 ### Patch Changes

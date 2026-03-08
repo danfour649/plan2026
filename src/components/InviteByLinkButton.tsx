@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useTranslations } from "@/components/TranslationsProvider";
 import { createPlanInvite } from "@/lib/actions/plans";
 
-export function InviteByLinkButton({ planId }: { planId: string }) {
+export function InviteByLinkButton({ planId, planName }: { planId: string; planName: string }) {
   const t = useTranslations();
   const [inviteUrl, setInviteUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -72,6 +72,13 @@ export function InviteByLinkButton({ planId }: { planId: string }) {
             >
               {t.common.copy}
             </button>
+            <a
+              href={`mailto:?subject=${encodeURIComponent(t.invite.emailSubject.replace("{{planName}}", planName))}&body=${encodeURIComponent(t.invite.emailBody.replace("{{planName}}", planName).replace("{{url}}", inviteUrl))}`}
+              className="shrink-0 rounded-lg border border-blue-200 bg-white px-2 py-1 text-xs font-medium text-blue-700 transition hover:bg-blue-100"
+              aria-label={t.common.emailInvite}
+            >
+              {t.common.emailInvite}
+            </a>
           </div>
         </div>
       ) : null}

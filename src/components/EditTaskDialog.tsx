@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { ExportTaskButton } from "@/components/ExportTaskButton";
@@ -69,6 +69,7 @@ export function EditTaskDialog({
 }: EditTaskDialogProps) {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [attachments, setAttachments] = useState(task.attachments ?? []);
   const [uploading, setUploading] = useState(false);
@@ -96,6 +97,14 @@ export function EditTaskDialog({
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
+      requestAnimationFrame(() => {
+        dialogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
   }, [isOpen]);
 
   useEffect(() => {
@@ -158,6 +167,7 @@ export function EditTaskDialog({
           role="presentation"
         >
           <div
+            ref={dialogRef}
             className="w-full max-w-2xl shrink-0 rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10"
             onClick={(event) => event.stopPropagation()}
             role="dialog"
