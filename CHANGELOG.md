@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.9.2
+
+### Patch Changes
+
+- db9ff4f: Logo no longer shows off-center due to transparent padding: image is clipped with object-cover and header margin compensation removed.
+
 ## 0.9.1
 
 ### Patch Changes
