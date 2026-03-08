@@ -91,7 +91,9 @@ export function PlanForm({
   }, [state]);
 
   useEffect(() => {
-    setPercentCompleted(initialValues?.percentCompleted ?? 0);
+    const next = initialValues?.percentCompleted ?? 0;
+    const id = setTimeout(() => setPercentCompleted(next), 0);
+    return () => clearTimeout(id);
   }, [initialValues?.percentCompleted]);
 
   const addNewTaskRow = () => setNewTaskTitles((prev) => [...prev, ""]);
