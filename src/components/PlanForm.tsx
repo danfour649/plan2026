@@ -109,7 +109,7 @@ export function PlanForm({
         })();
 
   return (
-    <form action={formAction} className="flex w-full flex-col gap-6">
+    <form action={formAction} className="flex w-full max-w-full flex-col gap-4 sm:gap-6">
       {isEdit && initialValues?.planId ? (
         <input type="hidden" name="planId" value={initialValues.planId} />
       ) : null}
@@ -132,7 +132,7 @@ export function PlanForm({
           placeholder={t.plans.describePlanPlaceholder}
           rows={3}
           defaultValue={initialValues?.description ?? ""}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+          className="min-h-[4.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
       </div>
 
@@ -237,7 +237,7 @@ export function PlanForm({
           min={0}
           max={100}
           defaultValue={initialValues?.percentCompleted ?? 0}
-          className="w-full max-w-[8rem] rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+          className="w-full max-w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 sm:max-w-[8rem]"
         />
       </div>
 
@@ -248,7 +248,7 @@ export function PlanForm({
           placeholder={t.plans.internalNotesPlaceholder}
           rows={2}
           defaultValue={initialValues?.notes ?? ""}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+          className="min-h-[3.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
       </div>
 
@@ -257,7 +257,7 @@ export function PlanForm({
         <select
           name="color"
           defaultValue={initialValues?.color ?? ""}
-          className="w-full max-w-xs rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+          className="w-full max-w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 sm:max-w-xs"
         >
           {COLOR_OPTIONS.map((c) => (
             <option key={c.value || "none"} value={c.value}>
@@ -352,12 +352,12 @@ export function PlanForm({
         <div className="flex flex-col gap-2">
           <span className="text-sm font-medium text-blue-950">{t.planForm.addNewTasksLabel}</span>
           {newTaskTitles.map((title, index) => (
-            <div key={index} className="flex gap-2">
+            <div key={index} className="flex min-w-0 flex-col gap-2 sm:flex-row sm:gap-2">
               <input
                 name="newTaskTitle"
                 defaultValue={title}
                 placeholder={t.plans.newTaskTitlePlaceholder}
-                className="flex-1 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+                className="min-w-0 flex-1 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
               />
               <button
                 type="button"

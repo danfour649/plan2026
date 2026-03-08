@@ -193,7 +193,7 @@ export default async function PlanDetailPage({
 
       <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
         {isOwner ? (
-          <section className="rounded-2xl border border-blue-100 bg-white/90 px-6 py-6 shadow-sm shadow-blue-100/40 backdrop-blur">
+          <section className="rounded-2xl border border-blue-100 bg-white/90 px-3 py-4 shadow-sm shadow-blue-100/40 backdrop-blur sm:px-6 sm:py-6">
             <PlanForm
               action={updatePlan}
               initialValues={initialValues}
@@ -206,7 +206,7 @@ export default async function PlanDetailPage({
         ) : null}
 
         <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
-          <div className="border-b border-blue-100 px-6 py-4">
+          <div className="border-b border-blue-100 px-3 py-3 sm:px-6 sm:py-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h2 className="text-xl font-bold tracking-tight text-blue-950">{t.plans.tasksInThisPlan}</h2>
@@ -224,7 +224,7 @@ export default async function PlanDetailPage({
               {plan.tasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                  className="flex flex-col gap-3 px-3 py-3 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
                 >
                   {isOwner ? (
                     <>
@@ -347,7 +347,7 @@ export default async function PlanDetailPage({
               ))}
             </ul>
           ) : (
-            <div className="px-6 py-8 text-center">
+            <div className="px-3 py-6 text-center sm:px-6 sm:py-8">
               <p className="text-sm text-zinc-500">{t.plans.noTasksInPlan}</p>
               <p className="mt-1 text-xs text-zinc-400">
                 {isOwner ? t.plans.addOrLinkTasksDescription : t.plans.planOwnerAddTasks}
