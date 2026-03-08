@@ -4,6 +4,8 @@
 
 **Goal:** Let users choose a prebuilt plan from a set of templates when creating a new plan, so they can start from a suggested structure (e.g. “Project launch”, “Trip planning”) instead of a blank plan.
 
+**Why deferred:** Deferred in bulk run due to run scope. **Estimated effort:** medium — static template data (JSON), template picker in new-plan flow, pre-fill form; i18n for template names.
+
 ---
 
 ## What is needed

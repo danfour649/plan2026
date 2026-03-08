@@ -4,6 +4,8 @@
 
 **Goal:** On the plan detail page, keep the “Add task” button in view when the user scrolls the task list on mobile, so they don’t have to scroll back up to add a task.
 
+**Why deferred:** Deferred in bulk run due to run scope (not because the task is large). **Estimated effort:** small — layout/CSS only (sticky header or similar), single component, no schema or i18n.
+
 ---
 
 ## What is needed

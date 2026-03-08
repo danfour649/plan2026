@@ -4,6 +4,8 @@
 
 **Goal:** Allow the user to print a checklist from an open plan that lists unfinished tasks, sorted by priority (and optionally by due date), in a print-friendly format.
 
+**Why deferred:** Deferred in bulk run due to run scope. **Estimated effort:** small — reuse plan + tasks data; add “Print checklist” button and print view or @media print styles; no schema.
+
 ---
 
 ## What is needed

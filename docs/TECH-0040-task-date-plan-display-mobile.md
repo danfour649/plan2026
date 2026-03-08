@@ -4,6 +4,8 @@
 
 **Goal:** On mobile view, simplify how task deadline, start date, and associated plan are displayed (e.g. one per line or shortened), and move the status button (Mark done / Restore) to the left of the Edit button for better thumb reach and clarity.
 
+**Why deferred:** Deferred in bulk run due to run scope (not because the task is large). **Estimated effort:** small — responsive layout and button order in existing task row(s), no schema or new APIs; may touch plan detail and tasks page.
+
 ---
 
 ## What is needed

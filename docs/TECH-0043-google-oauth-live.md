@@ -4,6 +4,8 @@
 
 **Goal:** Enable and verify Google OAuth in a production (live) environment so users can sign in with Google on the real deployment (e.g. permanent domain or production Vercel URL).
 
+**Why deferred:** Deferred in bulk run (config/deploy work, not code-heavy). **Estimated effort:** medium — Google Cloud Console + production env vars and verification; no app code change if dev OAuth already works.
+
 ---
 
 ## What is needed

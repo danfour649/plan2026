@@ -4,6 +4,8 @@
 
 **Goal:** Improve the onboarding experience for new users and the login screen. Use as inspiration the comparison article (e.g. “I asked Gemini, Claude and ChatGPT to create a website…” style) to inform layout, copy, and first-run experience.
 
+**Why deferred:** Deferred in bulk run due to run scope. **Estimated effort:** small–medium — login page copy/layout and optional welcome modal; i18n for new strings.
+
 ---
 
 ## What is needed

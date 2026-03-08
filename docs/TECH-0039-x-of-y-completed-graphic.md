@@ -4,6 +4,8 @@
 
 **Goal:** On the main plans list page, replace (or supplement) the plain “X of Y completed” text with a graphic — e.g. a row of boxes or segments that are green for completed tasks and red (or grey) for incomplete, so progress is visible at a glance.
 
+**Why deferred:** Deferred in bulk run due to run scope. **Estimated effort:** small — plans list already has task counts; add segment bar UI in plan card, no schema.
+
 ---
 
 ## What is needed
