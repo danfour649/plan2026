@@ -114,7 +114,7 @@ export function PlanForm({
         })();
 
   return (
-    <form action={formAction} className="flex w-full flex-col gap-6">
+    <form action={formAction} className="flex min-w-0 max-w-full flex-col gap-4 overflow-x-hidden sm:gap-6">
       {isEdit && initialValues?.planId ? (
         <input type="hidden" name="planId" value={initialValues.planId} />
       ) : null}
@@ -180,7 +180,7 @@ export function PlanForm({
           placeholder={t.plans.describePlanPlaceholder}
           rows={3}
           defaultValue={initialValues?.description ?? ""}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+          className="min-h-[4.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
       </div>
 
@@ -194,46 +194,46 @@ export function PlanForm({
         />
       </div>
 
-      <div className={singleColumn ? "flex flex-col gap-4" : "grid gap-4 sm:grid-cols-2"}>
-        <div className="flex flex-col gap-2">
+      <div className={singleColumn ? "flex flex-col gap-4" : "grid min-w-0 gap-4 sm:grid-cols-2"}>
+        <div className="flex min-w-0 flex-col gap-2">
           <label className="text-sm font-medium text-blue-950">{t.planForm.startDateRequired}</label>
           <input
             name="startAt"
             type="date"
             required
             defaultValue={defaultStart}
-            className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
           />
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-col gap-2">
           <label className="text-sm font-medium text-blue-950">{t.planForm.endDateRequired}</label>
           <input
             name="endAt"
             type="date"
             required
             defaultValue={defaultEnd}
-            className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
           />
         </div>
       </div>
 
-      <div className={singleColumn ? "flex flex-col gap-4" : "grid gap-4 sm:grid-cols-2"}>
-        <div className="flex flex-col gap-2">
+      <div className={singleColumn ? "flex flex-col gap-4" : "grid min-w-0 gap-4 sm:grid-cols-2"}>
+        <div className="flex min-w-0 flex-col gap-2">
           <label className="text-sm font-medium text-blue-950">{t.planForm.actualStartOptional}</label>
           <input
             name="actualStartAt"
             type="date"
             defaultValue={toDateInputValue(initialValues?.actualStartAt)}
-            className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
           />
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-col gap-2">
           <label className="text-sm font-medium text-blue-950">{t.planForm.actualEndOptional}</label>
           <input
             name="actualEndAt"
             type="date"
             defaultValue={toDateInputValue(initialValues?.actualEndAt)}
-            className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
           />
         </div>
       </div>
@@ -244,7 +244,7 @@ export function PlanForm({
           <select
             name="status"
             defaultValue={defaultStatus}
-            className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
           >
             {PLAN_STATUS_VALUES.map((s) => (
               <option key={s} value={s}>
@@ -262,7 +262,7 @@ export function PlanForm({
           placeholder={t.plans.internalNotesPlaceholder}
           rows={2}
           defaultValue={initialValues?.notes ?? ""}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+          className="min-h-[3.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
       </div>
 
@@ -271,7 +271,7 @@ export function PlanForm({
         <select
           name="color"
           defaultValue={initialValues?.color ?? ""}
-          className="w-full max-w-xs rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+          className="min-w-0 w-full max-w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 sm:max-w-xs"
         >
           {COLOR_OPTIONS.map((c) => (
             <option key={c.value || "none"} value={c.value}>
@@ -302,7 +302,7 @@ export function PlanForm({
         ) : null}
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex min-w-0 flex-col gap-3">
         <label className="text-sm font-medium text-blue-950">{t.planForm.tasksInPlanLabel}</label>
         <p className="text-xs text-zinc-500">{t.planForm.selectTasksDescription}</p>
         {userTasks.length > 0 ? (
@@ -366,12 +366,12 @@ export function PlanForm({
         <div className="flex flex-col gap-2">
           <span className="text-sm font-medium text-blue-950">{t.planForm.addNewTasksLabel}</span>
           {newTaskTitles.map((title, index) => (
-            <div key={index} className="flex gap-2">
+            <div key={index} className="flex min-w-0 flex-col gap-2 sm:flex-row sm:gap-2">
               <input
                 name="newTaskTitle"
                 defaultValue={title}
                 placeholder={t.plans.newTaskTitlePlaceholder}
-                className="flex-1 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+                className="min-w-0 flex-1 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
               />
               <button
                 type="button"
@@ -394,7 +394,7 @@ export function PlanForm({
 
       <button
         type="submit"
-        className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:w-auto"
+        className="min-h-[2.75rem] w-full min-w-0 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:w-auto"
       >
         {submitLabel}
       </button>
