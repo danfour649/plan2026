@@ -173,7 +173,7 @@ export default async function PlanDetailPage({
             {isOwner ? (
               <>
                 <SharePlanButton planId={plan.id} />
-                <InviteByLinkButton planId={plan.id} />
+                <InviteByLinkButton planId={plan.id} planName={plan.name} />
                 <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
               </>
             ) : null}
