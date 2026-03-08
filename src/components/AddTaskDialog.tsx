@@ -11,9 +11,12 @@ type AddTaskAction = (formData: FormData) => Promise<ActionResult>;
 export function AddTaskDialog({
   action,
   plans,
+  defaultPlanId,
 }: {
   action: AddTaskAction;
   plans?: { id: string; name: string }[];
+  /** When opening from a plan page, pre-select this plan so the new task is added to it. */
+  defaultPlanId?: string;
 }) {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
@@ -78,7 +81,7 @@ export function AddTaskDialog({
             </div>
 
             <div className="min-h-0 flex-1 overflow-y-auto">
-              <AddTaskForm action={action} onSuccess={() => setIsOpen(false)} plans={plans} />
+              <AddTaskForm action={action} onSuccess={() => setIsOpen(false)} plans={plans} defaultPlanId={defaultPlanId} />
             </div>
           </div>
         </div>
