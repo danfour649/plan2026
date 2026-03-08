@@ -63,3 +63,12 @@
 - If a documented file path, package name, route, or component is renamed or removed, update or remove the stale reference instead of leaving historical wording in place.
 - Do a quick search for outdated route names, file names, and package references after structural app changes.
 - Do not create a changeset for documentation-only updates unless the user explicitly asks for one or the documentation change accompanies a qualifying product change.
+
+## Bulk task → PR pipeline
+
+- When the user provides a set of tasks in JSON form (e.g. exported plan/task list), treat this as a **bulk task → PR pipeline**:
+  1. **One PR per task** when feasible: create a branch, implement the task (or document future work if scope is too large), add a changeset, commit, push, and open a PR. Use incrementing tech IDs (e.g. TECH-0041, TECH-0042, …) and descriptive branch names (e.g. `tech/TECH-0041-bulk-task-pr-pipeline`).
+  2. **Implement or document:** For each task, either implement it in code or add/update existing future-work documentation (e.g. `docs/FUTURE_WORK.md` or similar) describing what is needed when the scope is too large for a single PR.
+  3. **Changesets:** For each implemented task, add a changeset in `.changeset/` with enough detail that the resulting CHANGELOG entry captures the full gist of the change. Use a short kebab-case filename and the standard changeset format.
+  4. **Speed vs. checks:** The user may ask to **skip local build and typecheck** to get PRs out faster; in that case do not run `npm run typecheck` or `npm run build` before pushing. Rely on CI or the user to report build failures.
+  5. **PR title:** Use the pattern `<ID> <Title Case description>` (e.g. `TECH-0041 Bulk task PR pipeline in AGENTS.md`) when creating PRs via `gh pr create --title "..." --base main --fill`.
