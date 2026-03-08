@@ -10,10 +10,13 @@ export function AddTaskForm({
   action,
   onSuccess,
   plans,
+  defaultPlanId,
 }: {
   action: AddTaskAction;
   onSuccess?: () => void;
   plans?: { id: string; name: string }[];
+  /** Pre-select this plan when adding a task (e.g. from a plan detail page). */
+  defaultPlanId?: string;
 }) {
   const t = useTranslations();
   return (
@@ -23,6 +26,7 @@ export function AddTaskForm({
       submitLabel={t.common.addTask}
       successMessage={t.tasks.taskAdded}
       plans={plans}
+      initialValues={defaultPlanId ? { planId: defaultPlanId } : undefined}
     />
   );
 }

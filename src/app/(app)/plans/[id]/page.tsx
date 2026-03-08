@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { getCurrentUserId } from "@/auth";
+import { AddTaskDialog } from "@/components/AddTaskDialog";
 import { DeletePlanButton } from "@/components/DeletePlanButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportPlanButton } from "@/components/ExportPlanButton";
@@ -15,7 +16,7 @@ import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 import type { ExportedPlan, ExportedPlanTask } from "@/lib/export";
 import { deletePlan, updatePlan } from "@/lib/actions/plans";
-import { completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
+import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
 
 function formatShortDate(d: Date): string {
   return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
@@ -205,10 +206,17 @@ export default async function PlanDetailPage({
 
         <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
           <div className="border-b border-blue-100 px-6 py-4">
-            <h2 className="text-xl font-bold tracking-tight text-blue-950">{t.plans.tasksInThisPlan}</h2>
-            <p className="mt-1 text-sm text-zinc-500">
-              {isOwner ? t.plans.editTaskBelowDescription : t.plans.tasksInSharedPlan}
-            </p>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight text-blue-950">{t.plans.tasksInThisPlan}</h2>
+                <p className="mt-1 text-sm text-zinc-500">
+                  {isOwner ? t.plans.editTaskBelowDescription : t.plans.tasksInSharedPlan}
+                </p>
+              </div>
+              {isOwner ? (
+                <AddTaskDialog action={addTask} plans={plans} defaultPlanId={plan.id} />
+              ) : null}
+            </div>
           </div>
           {plan.tasks.length > 0 ? (
             <ul className="divide-y divide-blue-100">
