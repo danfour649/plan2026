@@ -57,7 +57,7 @@ export default async function PlanDetailPage({
     include: {
       tasks: {
         orderBy: [
-          { completedAt: "desc" }, // nulls first (incomplete), then completed last
+          { completedAt: "asc" }, // incomplete first (nulls), completed tasks at bottom
           { urgency: "desc" },
           { createdAt: "desc" },
         ],
