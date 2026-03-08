@@ -82,12 +82,17 @@ export function PlanForm({
   const [state, formAction] = useActionState(wrap(action), null as PlanActionResult | null);
   const [newTaskTitles, setNewTaskTitles] = useState<string[]>([""]);
   const [taskSearchFilter, setTaskSearchFilter] = useState("");
+  const [percentCompleted, setPercentCompleted] = useState(initialValues?.percentCompleted ?? 0);
 
   useEffect(() => {
     if (state && !state.success && state.error) {
       toast.error(state.error);
     }
   }, [state]);
+
+  useEffect(() => {
+    setPercentCompleted(initialValues?.percentCompleted ?? 0);
+  }, [initialValues?.percentCompleted]);
 
   const addNewTaskRow = () => setNewTaskTitles((prev) => [...prev, ""]);
   const removeNewTaskRow = (index: number) =>
@@ -113,6 +118,49 @@ export function PlanForm({
       {isEdit && initialValues?.planId ? (
         <input type="hidden" name="planId" value={initialValues.planId} />
       ) : null}
+
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-blue-950">{t.planForm.priorityLabel}</label>
+        <div className="flex flex-wrap gap-2">
+          {PRIORITY_OPTIONS.map((option) => (
+            <label key={option.value} className="inline-flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="priority"
+                value={option.value}
+                defaultChecked={defaultPriority === option.value}
+                className="peer sr-only"
+              />
+              <span
+                className={`rounded-full px-3 py-1.5 text-sm font-medium transition hover:opacity-90 peer-checked:ring-2 peer-checked:ring-blue-400 peer-checked:ring-offset-2 ${option.className}`}
+              >
+                {option.label}
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium text-blue-950">{t.planForm.percentCompletedLabel}</label>
+        <div className="flex flex-wrap items-center gap-3">
+          <input
+            name="percentCompleted"
+            type="range"
+            min={0}
+            max={100}
+            value={percentCompleted}
+            onChange={(e) => setPercentCompleted(Number(e.target.value))}
+            className="h-2.5 w-full min-w-0 flex-1 rounded-full bg-blue-100 accent-blue-600 sm:max-w-[12rem]"
+            aria-valuenow={percentCompleted}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          />
+          <span className="shrink-0 w-10 text-right text-sm font-medium text-blue-950" aria-hidden="true">
+            {percentCompleted}%
+          </span>
+        </div>
+      </div>
 
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-blue-950">{t.common.nameRequired}</label>
@@ -206,40 +254,6 @@ export function PlanForm({
           </select>
         </div>
       )}
-
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">{t.planForm.priorityLabel}</label>
-        <div className="flex flex-wrap gap-2">
-          {PRIORITY_OPTIONS.map((option) => (
-            <label key={option.value} className="inline-flex cursor-pointer items-center gap-2">
-              <input
-                type="radio"
-                name="priority"
-                value={option.value}
-                defaultChecked={defaultPriority === option.value}
-                className="peer sr-only"
-              />
-              <span
-                className={`rounded-full px-3 py-1.5 text-sm font-medium transition hover:opacity-90 peer-checked:ring-2 peer-checked:ring-blue-400 peer-checked:ring-offset-2 ${option.className}`}
-              >
-                {option.label}
-              </span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">{t.planForm.percentCompletedLabel}</label>
-        <input
-          name="percentCompleted"
-          type="number"
-          min={0}
-          max={100}
-          defaultValue={initialValues?.percentCompleted ?? 0}
-          className="w-full max-w-[8rem] rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
-        />
-      </div>
 
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-blue-950">{t.planForm.notesOptional}</label>
