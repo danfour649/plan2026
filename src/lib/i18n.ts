@@ -131,6 +131,9 @@ const messages = {
       tasksCountZero: "0 tasks",
       tasksCountOne: "{{completed}} of {{total}} task completed",
       tasksCountMany: "{{completed}} of {{total}} tasks completed",
+      printChecklist: "Print checklist",
+      printChecklistAria: "Print checklist of unfinished tasks",
+      printedOn: "Printed on {{date}}",
     },
     planStatus: {
       draft: "Draft",
@@ -340,6 +343,9 @@ const messages = {
       tasksCountZero: "0 tâche",
       tasksCountOne: "{{completed}} sur {{total}} tâche terminée",
       tasksCountMany: "{{completed}} sur {{total}} tâches terminées",
+      printChecklist: "Imprimer la liste",
+      printChecklistAria: "Imprimer la liste des tâches non terminées",
+      printedOn: "Imprimé le {{date}}",
     },
     planStatus: {
       draft: "Brouillon",
@@ -549,6 +555,9 @@ const messages = {
       tasksCountZero: "0 work",
       tasksCountOne: "{{completed}} of {{total}} work don finish",
       tasksCountMany: "{{completed}} of {{total}} work don finish",
+      printChecklist: "Print checklist",
+      printChecklistAria: "Print checklist of work wey no don",
+      printedOn: "Print for {{date}}",
     },
     planStatus: {
       draft: "Rough work",

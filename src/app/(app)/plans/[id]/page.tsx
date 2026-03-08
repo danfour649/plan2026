@@ -180,6 +180,13 @@ export default async function PlanDetailPage({
           </div>
           <div className="flex min-w-0 flex-nowrap items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
             <ExportPlanButton plan={planForExport} />
+            <Link
+              href={`/plans/${plan.id}/print`}
+              className="inline-flex shrink-0 items-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
+              aria-label={t.plans.printChecklistAria}
+            >
+              {t.plans.printChecklist}
+            </Link>
             {isOwner ? (
               <>
                 <SharePlanButton planId={plan.id} />
