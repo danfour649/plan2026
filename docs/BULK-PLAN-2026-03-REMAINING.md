@@ -1,5 +1,7 @@
 # Bulk plan (2026-03) – remaining tasks
 
+**Completed and merged:** TECH-0033 (logo/header), TECH-0034 (plan edit mobile), TECH-0035 (urgency/percent/slider), TECH-0036 (Pidgin Work), TECH-0037 (new task date blank). Analysis docs for finished tasks have been removed.
+
 Remaining items from the “Plan 2026 - App creation and testing” export that are not yet implemented. Each has a **dedicated analysis doc** (same format as [TECH-0026-permanent-website.md](./TECH-0026-permanent-website.md)) for implementation notes and checklists.
 
 | ID | Title | Analysis doc |
