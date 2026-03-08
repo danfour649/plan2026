@@ -72,3 +72,13 @@
   3. **Changesets:** For each implemented task, add a changeset in `.changeset/` with enough detail that the resulting CHANGELOG entry captures the full gist of the change. Use a short kebab-case filename and the standard changeset format.
   4. **Speed vs. checks:** The user may ask to **skip local build and typecheck** to get PRs out faster; in that case do not run `npm run typecheck` or `npm run build` before pushing. Rely on CI or the user to report build failures.
   5. **PR title:** Use the pattern `<ID> <Title Case description>` (e.g. `TECH-0041 Bulk task PR pipeline in AGENTS.md`) when creating PRs via `gh pr create --title "..." --base main --fill`.
+
+### Testing bulk-task PRs one at a time
+
+- When the user wants to **interactively test** each bulk-task PR before merging:
+  1. **Checkout the branch** for the PR (e.g. `git checkout tech/TECH-0042-add-task-dialogue-from-plans-page`).
+  2. **Merge latest main** into the branch (`git pull origin main` or `git merge main`). Resolve any merge conflicts, then push the branch.
+  3. **Remind the user** what the task was and what to verify in the browser (or in docs); they run the app locally and confirm.
+  4. When the user confirms and asks to **merge**: merge the branch into `main`, push `main`, then **delete the branch** locally and on the remote (`git branch -d <branch>`, `git push origin --delete <branch>`).
+  5. **Move to the next PR**: checkout the next branch, merge latest main, fix conflicts if any, push; repeat from step 3.
+- Use `--no-verify` on push when the user has asked to skip hooks (e.g. for speed during bulk testing).
