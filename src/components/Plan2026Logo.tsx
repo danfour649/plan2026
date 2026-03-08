@@ -30,7 +30,7 @@ export function Plan2026Logo({
           aria-hidden="true"
           fill
           sizes="96px"
-          className="object-cover object-center scale-150"
+          className="object-cover object-center"
           priority
         />
       </span>
