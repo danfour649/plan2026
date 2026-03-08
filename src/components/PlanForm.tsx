@@ -277,12 +277,12 @@ export function PlanForm({
           className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
         {initialValues?.imageUrl ? (
-          <div className="mt-1">
-            {/* eslint-disable-next-line @next/next/no-img-element -- user-pasted URL, arbitrary host */}
-            <img
-              src={initialValues.imageUrl}
-              alt=""
-              className="max-h-32 rounded-lg border border-blue-100 object-cover"
+          <div className="mt-1 flex justify-start">
+            <div
+              className="h-40 w-40 max-w-full rounded-lg border border-blue-100 bg-zinc-50 bg-contain bg-center bg-no-repeat"
+              style={{ backgroundImage: `url(${initialValues.imageUrl})` }}
+              role="img"
+              aria-label=""
             />
           </div>
         ) : null}

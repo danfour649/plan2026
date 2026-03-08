@@ -18,6 +18,8 @@ type TaskActionButtonProps = {
   /** Translated message for success toast. If not provided, uses label. */
   successMessage?: string;
   variant?: "default" | "muted";
+  /** When provided (e.g. on plan detail page), submitted with form so the plan page can revalidate. */
+  planId?: string;
 };
 
 export function TaskActionButton({
@@ -26,6 +28,7 @@ export function TaskActionButton({
   label,
   successMessage,
   variant = "default",
+  planId,
 }: TaskActionButtonProps) {
   const [state, formAction] = useActionState(wrapForActionState(action), null as ActionResult | null);
 
@@ -41,6 +44,7 @@ export function TaskActionButton({
   return (
     <form action={formAction}>
       <input type="hidden" name="taskId" value={taskId} />
+      {planId ? <input type="hidden" name="planId" value={planId} /> : null}
       <button
         type="submit"
         className={

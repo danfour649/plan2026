@@ -35,6 +35,13 @@ function getUrgencyPillClasses(urgency: number) {
   }
 }
 
+function formatShortDate(d: Date): string {
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+function formatShortDateTime(d: Date): string {
+  return `${formatShortDate(d)} ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`;
+}
+
 function CompletedCheckIcon() {
   return (
     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
@@ -194,32 +201,30 @@ export default async function TasksPage({
                       </div>
                     </div>
                     <TaskContent content={task.content} />
-                    <div className="mt-1 break-words text-xs text-zinc-500">
-                      {t.tasks.added} {task.createdAt.toLocaleString()}
-                      {task.dueAt && <> · {t.tasks.due} {task.dueAt.toLocaleString()}</>}
+                    <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
+                      <span>{t.tasks.added} {formatShortDate(task.createdAt)}</span>
+                      {task.dueAt && (
+                        <span className="sm:before:content-['·'] sm:before:mr-1">
+                          {t.tasks.due} {formatShortDateTime(task.dueAt)}
+                        </span>
+                      )}
                       {task.plan && (
-                        <>
-                          {" · "}
+                        <span className="sm:before:content-['·'] sm:before:mr-1">
                           <Link
                             href={`/plans/${task.plan.id}`}
                             className="text-blue-600 hover:underline"
                           >
                             {t.tasks.planLabel} {task.plan.name}
                           </Link>
-                        </>
+                        </span>
                       )}
                     </div>
                   </div>
                 </EditTaskDialog>
                 <div className="flex min-w-0 flex-shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <AddToCalendarButton
-                      taskId={task.id}
-                      initiallyLinked={Boolean(task.googleCalendarEventId)}
-                    />
                     <TaskActionButton action={completeTask} taskId={task.id} label={t.tasks.markDone} successMessage={t.tasks.markedDone} />
-                  </div>
-                  <EditTaskDialog
+                    <EditTaskDialog
                     action={updateTask}
                     deleteAction={deleteTask}
                     plans={plans}
@@ -241,6 +246,11 @@ export default async function TasksPage({
                       })),
                     }}
                   />
+                    <AddToCalendarButton
+                      taskId={task.id}
+                      initiallyLinked={Boolean(task.googleCalendarEventId)}
+                    />
+                  </div>
                 </div>
               </li>
             ))}
@@ -287,18 +297,17 @@ export default async function TasksPage({
                         </div>
                       </div>
                       <TaskContent content={task.content} />
-                      <div className="mt-1 break-words text-xs text-zinc-500">
-                        {t.tasks.completed} {task.completedAt ? task.completedAt.toLocaleString() : "—"}
+                      <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
+                        <span>{t.tasks.completed} {task.completedAt ? formatShortDate(task.completedAt) : "—"}</span>
                         {task.plan && (
-                          <>
-                            {" · "}
+                          <span className="sm:before:content-['·'] sm:before:mr-1">
                             <Link
                               href={`/plans/${task.plan.id}`}
                               className="text-blue-600 hover:underline"
                             >
                               {t.tasks.planLabel} {task.plan.name}
                             </Link>
-                          </>
+                          </span>
                         )}
                       </div>
                     </div>
@@ -306,35 +315,35 @@ export default async function TasksPage({
                 </EditTaskDialog>
                 <div className="flex min-w-0 flex-shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
                   <div className="flex flex-wrap items-center gap-2">
+                    <TaskActionButton action={restoreTask} taskId={task.id} label={t.tasks.restore} successMessage={t.tasks.taskRestored} />
+                    <EditTaskDialog
+                      action={updateTask}
+                      deleteAction={deleteTask}
+                      plans={plans}
+                      task={{
+                        id: task.id,
+                        title: task.title,
+                        content: task.content,
+                        dueAt: task.dueAt?.toISOString() ?? null,
+                        urgency: task.urgency,
+                        completedAt: task.completedAt?.toISOString() ?? null,
+                        planId: task.plan?.id ?? null,
+                        planName: task.plan?.name ?? null,
+                        createdAt: task.createdAt.toISOString(),
+                        updatedAt: task.updatedAt.toISOString(),
+                        attachments: task.attachments.map((a) => ({
+                          id: a.id,
+                          url: a.url,
+                          filename: a.filename,
+                          size: a.size,
+                        })),
+                      }}
+                    />
                     <AddToCalendarButton
                       taskId={task.id}
                       initiallyLinked={Boolean(task.googleCalendarEventId)}
                     />
-                    <TaskActionButton action={restoreTask} taskId={task.id} label={t.tasks.restore} successMessage={t.tasks.taskRestored} />
                   </div>
-                  <EditTaskDialog
-                    action={updateTask}
-                    deleteAction={deleteTask}
-                    plans={plans}
-                    task={{
-                      id: task.id,
-                      title: task.title,
-                      content: task.content,
-                      dueAt: task.dueAt?.toISOString() ?? null,
-                      urgency: task.urgency,
-                      completedAt: task.completedAt?.toISOString() ?? null,
-                      planId: task.plan?.id ?? null,
-                      planName: task.plan?.name ?? null,
-                      createdAt: task.createdAt.toISOString(),
-                      updatedAt: task.updatedAt.toISOString(),
-                      attachments: task.attachments.map((a) => ({
-                        id: a.id,
-                        url: a.url,
-                        filename: a.filename,
-                        size: a.size,
-                      })),
-                    }}
-                  />
                 </div>
               </li>
             ))}
