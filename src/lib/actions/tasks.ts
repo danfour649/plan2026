@@ -44,6 +44,7 @@ export async function addTask(formData: FormData): Promise<ActionResult> {
   });
   revalidatePath("/tasks");
   revalidatePath("/plans");
+  if (parsed.data.planId) revalidatePath(`/plans/${parsed.data.planId}`);
   return { success: true };
 }
 
