@@ -28,6 +28,16 @@ const COLOR_OPTIONS = [
   { value: "violet", labelKey: "violet" as const },
 ];
 
+/** Flag emoji per plan color (for display as "flag" in UI; DB field remains "color"). */
+const FLAG_EMOJI: Record<string, string> = {
+  "": "",
+  blue: "🔵",
+  green: "🟢",
+  amber: "🟡",
+  red: "🔴",
+  violet: "🟣",
+};
+
 function toDateInputValue(d: Date | string | null | undefined): string {
   if (!d) return "";
   const date = typeof d === "string" ? new Date(d) : d;
@@ -269,7 +279,7 @@ export function PlanForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">{t.planForm.colorOptional}</label>
+        <label className="text-sm font-medium text-blue-950">{t.planForm.flagOptional}</label>
         <select
           name="color"
           defaultValue={initialValues?.color ?? ""}
@@ -277,7 +287,7 @@ export function PlanForm({
         >
           {COLOR_OPTIONS.map((c) => (
             <option key={c.value || "none"} value={c.value}>
-              {t.form[c.labelKey]}
+              {FLAG_EMOJI[c.value] ? `${FLAG_EMOJI[c.value]} ${t.form[c.labelKey]}` : t.form[c.labelKey]}
             </option>
           ))}
         </select>

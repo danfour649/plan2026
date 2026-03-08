@@ -48,6 +48,13 @@ function getStatusPillClasses(status: string) {
 
 const ARCHIVED_STATUSES = ["completed", "abandoned"] as const;
 
+/** Flag emoji for plan color (same mapping as PlanForm). */
+function getFlagEmoji(color: string | null | undefined): string {
+  if (!color) return "";
+  const map: Record<string, string> = { blue: "🔵", green: "🟢", amber: "🟡", red: "🔴", violet: "🟣" };
+  return map[color] ?? "";
+}
+
 export default async function PlansPage({
   searchParams,
 }: {
@@ -162,6 +169,11 @@ export default async function PlansPage({
                   ) : null}
                   <div className="min-w-0 flex-1 overflow-visible">
                     <div className="flex flex-wrap items-center gap-2 pt-0.5 pl-0.5">
+                      {getFlagEmoji(plan.color) ? (
+                        <span className="shrink-0 text-base leading-none" aria-hidden>
+                          {getFlagEmoji(plan.color)}
+                        </span>
+                      ) : null}
                       <span
                         className={`inline-block max-w-full break-words rounded-full px-3 py-1 text-sm font-semibold sm:max-w-[18rem] sm:truncate ${getPriorityOvalClasses(
                           plan.priority,
