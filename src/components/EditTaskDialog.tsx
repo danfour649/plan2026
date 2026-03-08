@@ -70,11 +70,18 @@ export function EditTaskDialog({
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const isMountedRef = useRef(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [attachments, setAttachments] = useState(task.attachments ?? []);
   const [uploading, setUploading] = useState(false);
   const isCompleted = Boolean(task.completedAt);
 
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
   useEffect(() => {
     if (isOpen) setAttachments(task.attachments ?? []);
   }, [isOpen, task.attachments]);
@@ -112,7 +119,9 @@ export function EditTaskDialog({
 
     if (deleteState.success) {
       toast.success(t.tasks.taskDeleted);
-      queueMicrotask(() => setIsOpen(false));
+      queueMicrotask(() => {
+        if (isMountedRef.current) setIsOpen(false);
+      });
     } else if (deleteState.error) {
       toast.error(deleteState.error);
     }
@@ -123,7 +132,9 @@ export function EditTaskDialog({
 
     if (doneRestoreState.success) {
       toast.success(isCompleted ? t.tasks.taskRestored : t.tasks.markedDone);
-      queueMicrotask(() => setIsOpen(false));
+      queueMicrotask(() => {
+        if (isMountedRef.current) setIsOpen(false);
+      });
     } else if (doneRestoreState.error) {
       toast.error(doneRestoreState.error);
     }
