@@ -35,7 +35,7 @@ export default async function AppLayout({
           <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-2 py-3 sm:px-6 sm:py-4">
             <div className="relative z-10 flex min-w-0 flex-1 items-center gap-1 overflow-visible sm:gap-6">
               <Plan2026Logo
-                className="shrink-0 sm:-mt-4 sm:mb-1"
+                className="shrink-0"
                 iconClassName="h-8 w-9 sm:h-12 sm:w-16"
                 ariaLabel={t.common.goToPlans}
               />

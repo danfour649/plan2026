@@ -22,7 +22,7 @@ export function Plan2026Logo({
       className={`inline-flex items-center justify-center rounded-2xl outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-blue-300 ${className ?? ""}`}
     >
       <span
-        className={`relative flex h-16 w-24 items-center justify-center ${iconClassName ?? ""}`}
+        className={`relative flex h-16 w-24 shrink-0 overflow-hidden rounded-lg ${iconClassName ?? ""}`}
       >
         <Image
           src="/plan2026-logo-c.png"
@@ -30,7 +30,7 @@ export function Plan2026Logo({
           aria-hidden="true"
           fill
           sizes="96px"
-          className="object-contain"
+          className="object-cover object-center"
           priority
         />
       </span>
