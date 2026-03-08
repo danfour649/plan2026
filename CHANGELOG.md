@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.10.1
+
+### Patch Changes
+
+- 6938d02: Pidgin: rename "Waka" to "Work" for tasks label to avoid offensive term.
+
 ## 0.10.0
 
 ### Minor Changes
