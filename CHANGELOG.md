@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.17.0
+
+### Minor Changes
+
+- d53eef1: Add optional Facebook login: when `AUTH_FACEBOOK_ID` and `AUTH_FACEBOOK_SECRET` are set, the login page shows "Continue with Facebook" and NextAuth uses the Facebook provider. Documented in README (Facebook app setup, redirect URI).
+
 ## 0.16.0
 
 ### Minor Changes
