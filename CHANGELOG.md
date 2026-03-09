@@ -1,5 +1,15 @@
 # plan2026
 
+## 0.18.0
+
+### Minor Changes
+
+- c554c3a: Add Facebook login as an authentication option.
+
+### Patch Changes
+
+- 1239db5: Mobile and nav UI improvements: logo top margin on mobile; larger nav icons and currency icon for supplies; illuminated lightbulb; help/about/settings/sign-out icons and label in hamburger menu; larger, bolder nav badges with tighter spacing; mobile nav bubbles overlap slightly to remove gaps; supplies icon nudged left on mobile. Input contrast: text and placeholders use darker colors (text-zinc-900, placeholder:text-zinc-500) across PlanForm, PlanSupplyList, SupplyItemForm, SharePlanButton, TaskContentEditor, NewPlanSection.
+
 ## 0.17.0
 
 ### Minor Changes

@@ -14,7 +14,9 @@ concurrency:
 
 jobs:
   version:
-    if: github.actor != 'github-actions[bot]'
+    # Skip only when this workflow's own version commit triggered the run (avoids loop).
+    # Using commit message instead of actor so versioning runs even when merges are done by bot/app.
+    if: ${{ !github.event.head_commit || !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-latest
 
     steps:
