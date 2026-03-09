@@ -1,6 +1,6 @@
 # TECH-0031: AI advice on plans
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** On hold — concerned about costs if API key is stolen or misused (AI calls on an account with payment required). Do not implement until directed.
 
 **Goal:** Integrate an AI “advice bot” that can review a plan, its associated tasks, and suggest next steps or improvements.
 
