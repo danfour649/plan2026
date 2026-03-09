@@ -38,9 +38,9 @@ src/
       tasks/loading.tsx                 # Tasks page skeleton
       plans/page.tsx                    # Plans list (ordered by priority); refresh, show completed/abandoned toggle; per-row Edit and status dropdown; links to /plans/new and /plans/[id]
       plans/new/page.tsx                # Full-page create plan form; optional "Start from template" (see src/data/planTemplates.ts)
-      plans/[id]/page.tsx               # Full-page plan detail and edit form; delete plan; tasks-in-plan list with edit-task modal
-      help/page.tsx                     # Help: how to use tasks and plans, recent updates, link to changelog
-      about/page.tsx                    # About: app name, version (from package.json), contributors
+      plans/[id]/page.tsx               # Full-page plan detail and edit form; delete plan; tasks-in-plan list; List tab for supply items
+      help/page.tsx                     # Help: how to use tasks and plans
+      about/page.tsx                    # About: app name, version (from package.json), contributors, recent updates
       settings/page.tsx                 # Calendar connection settings
     login/
       page.tsx                          # Login page; redirects signed-in users to /tasks

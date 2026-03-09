@@ -22,7 +22,8 @@ export function proxy(request: NextRequest) {
     pathname.startsWith("/settings") ||
     pathname.startsWith("/plans") ||
     pathname.startsWith("/help") ||
-    pathname.startsWith("/about")
+    pathname.startsWith("/about") ||
+    pathname.startsWith("/supplies")
   ) {
     if (!hasSessionCookie(request)) {
       const loginUrl = new URL("/login", request.url);
@@ -36,5 +37,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/tasks/:path*", "/settings/:path*", "/plans/:path*", "/help/:path*", "/about/:path*"],
+  matcher: ["/tasks/:path*", "/settings/:path*", "/plans/:path*", "/help/:path*", "/about/:path*", "/supplies/:path*"],
 };

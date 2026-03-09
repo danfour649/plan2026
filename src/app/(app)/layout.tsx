@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { getServerAuthSession } from "@/auth";
 import { AppNavLink } from "@/components/AppNavLink";
 import { HeaderRightNav } from "@/components/HeaderRightNav";
+import { CheckboxIcon, LightbulbIcon, ShoppingCartIcon } from "@/components/NavIcons";
 import { Plan2026Logo } from "@/components/Plan2026Logo";
 import { TranslationsProvider } from "@/components/TranslationsProvider";
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
@@ -27,6 +28,16 @@ export default async function AppLayout({
       status: { notIn: ["completed", "abandoned"] },
     },
   });
+  const suppliesCount = await prisma.supplyItem.count({
+    where: {
+      plan: {
+        OR: [
+          { userId: session.user.id },
+          { shares: { some: { sharedWithUserId: session.user.id } } },
+        ],
+      },
+    },
+  });
 
   return (
     <TranslationsProvider locale={locale}>
@@ -44,17 +55,37 @@ export default async function AppLayout({
                   href="/plans"
                   accent="blue"
                   badge={activePlanCount}
+                  ariaLabel={t.nav.plans}
                   className="shrink-0 gap-0 px-1.5 py-1 text-[11px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
                 >
-                  {t.nav.plans}
+                  <span className="inline-flex sm:hidden">
+                    <LightbulbIcon className="h-5 w-5" />
+                  </span>
+                  <span className="hidden sm:inline">{t.nav.plans}</span>
                 </AppNavLink>
                 <AppNavLink
                   href="/tasks"
                   accent="blue"
                   badge={remainingTaskCount}
+                  ariaLabel={t.nav.tasks}
                   className="shrink-0 gap-0 px-1.5 py-1 text-[11px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
                 >
-                  {t.nav.tasks}
+                  <span className="inline-flex sm:hidden">
+                    <CheckboxIcon className="h-5 w-5" />
+                  </span>
+                  <span className="hidden sm:inline">{t.nav.tasks}</span>
+                </AppNavLink>
+                <AppNavLink
+                  href="/supplies"
+                  accent="blue"
+                  badge={suppliesCount > 0 ? suppliesCount : undefined}
+                  ariaLabel={t.nav.supplies}
+                  className="shrink-0 gap-0 px-1.5 py-1 text-[11px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
+                >
+                  <span className="inline-flex sm:hidden">
+                    <ShoppingCartIcon className="h-5 w-5" />
+                  </span>
+                  <span className="hidden sm:inline">{t.nav.supplies}</span>
                 </AppNavLink>
               </nav>
             </div>
