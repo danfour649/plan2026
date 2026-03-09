@@ -1,6 +1,6 @@
 # TECH-0044: Facebook login (and other IdPs / email–password)
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** Implemented (Facebook provider in NextAuth; login page button when env set; README and AI_PROJECT_CONTEXT updated). Email/password sign-up remains future work.
 
 **Goal:** Explore adding Facebook (or other identity providers) for sign-up/sign-in, and assess what would be needed to allow sign-up with email and password in addition to OAuth.
 
