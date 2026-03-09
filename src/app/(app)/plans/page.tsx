@@ -153,115 +153,131 @@ export default async function PlansPage({
             {plans.map((plan) => (
               <li
                 key={plan.id}
-                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-3"
+                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 sm:flex-row sm:items-end sm:justify-between sm:gap-3"
               >
                 <Link
                   href={`/plans/${plan.id}`}
-                  className="flex min-w-0 flex-1 flex-wrap items-start gap-3 sm:flex-nowrap sm:items-center"
+                  className="flex min-w-0 flex-1 flex-col gap-2"
                 >
-                  {plan.imageUrl ? (
-                    <div
-                      className="h-14 w-14 shrink-0 rounded-lg border border-blue-100 bg-zinc-100 bg-contain bg-center bg-no-repeat"
-                      style={{ backgroundImage: `url(${plan.imageUrl})` }}
-                      role="img"
-                      aria-label=""
-                    />
-                  ) : null}
-                  <div className="min-w-0 flex-1 overflow-visible">
-                    <div className="flex flex-wrap items-center gap-2 pt-0.5 pl-0.5">
-                      {getFlagEmoji(plan.color) ? (
-                        <span className="shrink-0 text-base leading-none" aria-hidden>
-                          {getFlagEmoji(plan.color)}
-                        </span>
-                      ) : null}
-                      <span
-                        className={`inline-block max-w-full break-words rounded-full px-3 py-1 text-sm font-semibold sm:max-w-[18rem] sm:truncate ${getPriorityOvalClasses(
-                          plan.priority,
-                        )}`}
-                      >
-                        {plan.name}
+                  {/* Row 1 (sm): name + status + % + flag on one line; name above image when image present */}
+                  <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 pt-0.5 pl-0.5 sm:flex-nowrap sm:gap-2">
+                    <span
+                      className={`inline-block min-w-0 max-w-full shrink-0 break-words rounded-full px-3 py-1 text-sm font-semibold sm:max-w-[14rem] sm:truncate ${getPriorityOvalClasses(
+                        plan.priority,
+                      )}`}
+                    >
+                      {plan.name}
+                    </span>
+                    {plan.userId !== userId ? (
+                      <span className="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600">
+                        {t.plansPage.sharedWithMe}
                       </span>
-                      {plan.userId !== userId ? (
-                        <span className="shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600">
-                          {t.plansPage.sharedWithMe}
-                        </span>
-                      ) : null}
-                      <span
-                        className={`inline-flex shrink-0 rounded-full px-3 py-1 text-sm font-medium ${getStatusPillClasses(
-                          plan.status,
-                        )}`}
-                      >
-                        {t.planStatus[plan.status as keyof typeof t.planStatus] ?? plan.status}
+                    ) : null}
+                    <span
+                      className={`inline-flex shrink-0 rounded-full px-3 py-1 text-sm font-medium ${getStatusPillClasses(
+                        plan.status,
+                      )}`}
+                    >
+                      {t.planStatus[plan.status as keyof typeof t.planStatus] ?? plan.status}
+                    </span>
+                    <span
+                      className="inline-flex shrink-0 items-center gap-1.5"
+                      title={`${plan.percentCompleted}%`}
+                      aria-label={`${plan.percentCompleted}% complete`}
+                    >
+                      <span className="h-2 w-12 overflow-hidden rounded-full bg-blue-100">
+                        <span
+                          className="block h-full rounded-full bg-blue-600 transition-all"
+                          style={{ width: `${plan.percentCompleted}%` }}
+                        />
                       </span>
-                      <span
-                        className="inline-flex shrink-0 items-center gap-1.5"
-                        title={`${plan.percentCompleted}%`}
-                        aria-label={`${plan.percentCompleted}% complete`}
-                      >
-                        <span className="h-2 w-12 overflow-hidden rounded-full bg-blue-100">
-                          <span
-                            className="block h-full rounded-full bg-blue-600 transition-all"
-                            style={{ width: `${plan.percentCompleted}%` }}
-                          />
-                        </span>
-                        <span className="text-xs font-medium text-blue-700 tabular-nums">
-                          {plan.percentCompleted}%
-                        </span>
+                      <span className="text-xs font-medium text-blue-700 tabular-nums">
+                        {plan.percentCompleted}%
                       </span>
-                    </div>
-                    {(plan.goal ?? plan.description) && (
-                      <p className="mt-0.5 line-clamp-2 break-words text-sm text-zinc-500 sm:line-clamp-1">
-                        {plan.goal ?? plan.description}
-                      </p>
-                    )}
-                    <p className="mt-1 break-words text-xs text-zinc-500">
-                      {plan.startAt.toLocaleDateString()} – {plan.endAt.toLocaleDateString()}
-                      {" · "}
-                      {formatTasksCount(
-                        t.plans.tasksCountZero,
-                        t.plans.tasksCountOne,
-                        t.plans.tasksCountMany,
-                        plan.tasks.length,
-                        plan.tasks.filter((task) => task.completedAt != null).length,
-                      )}
-                    </p>
-                    {plan.tasks.length > 0 ? (
+                    </span>
+                    {getFlagEmoji(plan.color) ? (
+                      <span className="shrink-0 text-base leading-none" aria-hidden>
+                        {getFlagEmoji(plan.color)}
+                      </span>
+                    ) : null}
+                  </div>
+                  {/* Row 2: image (if any) + description, dates, task count, dots */}
+                  <div className="flex min-w-0 flex-1 flex-wrap items-start gap-3 sm:flex-nowrap sm:items-start">
+                    {plan.imageUrl ? (
                       <div
-                        className="mt-1.5 flex flex-wrap items-center gap-1"
-                        aria-label={t.plans.tasksCountAria
-                          .replace("{{completed}}", String(plan.tasks.filter((t) => t.completedAt != null).length))
-                          .replace("{{total}}", String(plan.tasks.length))}
-                      >
-                        <span className="flex shrink-0 flex-row flex-nowrap items-center gap-0.5" role="img">
+                        className="h-14 w-14 shrink-0 rounded-lg border border-blue-100 bg-zinc-100 bg-contain bg-center bg-no-repeat"
+                        style={{ backgroundImage: `url(${plan.imageUrl})` }}
+                        role="img"
+                        aria-label=""
+                      />
+                    ) : null}
+                    <div className="min-w-0 flex-1 overflow-visible">
+                      {(plan.goal ?? plan.description) && (
+                        <p className="mt-0.5 line-clamp-2 break-words text-sm text-zinc-500 sm:line-clamp-1">
+                          {plan.goal ?? plan.description}
+                        </p>
+                      )}
+                      <p className="mt-1 break-words text-xs text-zinc-500">
+                        {plan.startAt.toLocaleDateString()} – {plan.endAt.toLocaleDateString()}
+                      </p>
+                      <p className="mt-0.5 break-words text-xs text-zinc-500">
+                        {formatTasksCount(
+                          t.plans.tasksCountZero,
+                          t.plans.tasksCountOne,
+                          t.plans.tasksCountMany,
+                          plan.tasks.length,
+                          plan.tasks.filter((task) => task.completedAt != null).length,
+                        )}
+                      </p>
+                      {plan.tasks.length > 0 ? (
+                        <div
+                          className="mt-1.5 flex max-w-full flex-wrap items-center gap-0.5"
+                          role="img"
+                          aria-label={t.plans.tasksCountAria
+                            .replace("{{completed}}", String(plan.tasks.filter((t) => t.completedAt != null).length))
+                            .replace("{{total}}", String(plan.tasks.length))}
+                        >
                           {(() => {
                             const total = plan.tasks.length;
                             const completed = plan.tasks.filter((t) => t.completedAt != null).length;
-                            const maxSegments = 20;
-                            const showSegments = Math.min(total, maxSegments);
-                            const completedInBar = Math.min(completed, showSegments);
-                            const overflow = total > maxSegments ? total - maxSegments : 0;
+                            const maxSegments = 100;
+                            if (total <= maxSegments) {
+                              return (
+                                <>
+                                  {Array.from({ length: total }, (_, i) => (
+                                    <span
+                                      key={i}
+                                      className={`h-2 w-2 shrink-0 rounded-sm ${
+                                        i < completed ? "bg-emerald-500" : "bg-zinc-200"
+                                      }`}
+                                      aria-hidden
+                                    />
+                                  ))}
+                                </>
+                              );
+                            }
+                            const showSegments = maxSegments;
+                            const completedScaled = Math.round((completed / total) * showSegments);
                             return (
                               <>
                                 {Array.from({ length: showSegments }, (_, i) => (
                                   <span
                                     key={i}
                                     className={`h-2 w-2 shrink-0 rounded-sm ${
-                                      i < completedInBar ? "bg-emerald-500" : "bg-zinc-200"
+                                      i < completedScaled ? "bg-emerald-500" : "bg-zinc-200"
                                     }`}
                                     aria-hidden
                                   />
                                 ))}
-                                {overflow > 0 ? (
-                                  <span className="ml-0.5 text-xs text-zinc-400" aria-hidden>
-                                    +{overflow}
-                                  </span>
-                                ) : null}
+                                <span className="ml-0.5 text-xs text-zinc-400" aria-hidden>
+                                  +{total - maxSegments}
+                                </span>
                               </>
                             );
                           })()}
-                        </span>
-                      </div>
-                    ) : null}
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
                 </Link>
                 {plan.userId === userId ? (

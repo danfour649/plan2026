@@ -5,11 +5,11 @@ import { notFound } from "next/navigation";
 import { getCurrentUserId } from "@/auth";
 import { AddTaskDialog } from "@/components/AddTaskDialog";
 import { DeletePlanButton } from "@/components/DeletePlanButton";
+import { EditPlanFormWrapper } from "@/components/EditPlanFormWrapper";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportPlanButton } from "@/components/ExportPlanButton";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { InviteByLinkButton } from "@/components/InviteByLinkButton";
-import { PlanForm } from "@/components/PlanForm";
 import { SharePlanButton } from "@/components/SharePlanButton";
 import { TaskContent } from "@/components/TaskContent";
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
@@ -156,57 +156,65 @@ export default async function PlanDetailPage({
     ),
   };
 
+  const titleRow = (
+    <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="min-w-0">
+        <h1 className="truncate text-2xl font-bold tracking-tight text-blue-950">{plan.name}</h1>
+        <p className="mt-1 text-sm text-zinc-500">
+          {isOwner ? t.plans.editPlanDescription : t.plans.viewingSharedPlan}
+        </p>
+      </div>
+      <div className="flex min-w-0 flex-nowrap items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+        <ExportPlanButton plan={planForExport} />
+        {isOwner ? (
+          <>
+            <SharePlanButton planId={plan.id} />
+            <InviteByLinkButton planId={plan.id} planName={plan.name} />
+            <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
+          </>
+        ) : null}
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-w-0 overflow-x-hidden space-y-8">
-      <div className="flex min-w-0 flex-col gap-3">
-        <Link
-          href="/plans"
-          className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-blue-700 transition hover:text-blue-800"
-        >
-          <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden="true">
-            <path
-              d="M12.5 15L7.5 10l5-5"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          {t.common.backToPlans}
-        </Link>
-        <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <h1 className="truncate text-2xl font-bold tracking-tight text-blue-950">{plan.name}</h1>
-            <p className="mt-1 text-sm text-zinc-500">
-              {isOwner ? t.plans.editPlanDescription : t.plans.viewingSharedPlan}
-            </p>
-          </div>
-          <div className="flex min-w-0 flex-nowrap items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
-            <ExportPlanButton plan={planForExport} />
-            {isOwner ? (
-              <>
-                <SharePlanButton planId={plan.id} />
-                <InviteByLinkButton planId={plan.id} planName={plan.name} />
-                <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
-              </>
-            ) : null}
-          </div>
-        </div>
-      </div>
-
       <div className="grid min-w-0 gap-6 lg:grid-cols-2 lg:gap-8">
         {isOwner ? (
-          <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 px-3 py-4 shadow-sm shadow-blue-100/40 backdrop-blur sm:px-6 sm:py-6">
-            <PlanForm
-              action={updatePlan}
-              initialValues={initialValues}
-              userTasks={userTasks}
-              isEdit={true}
-              submitLabel={t.common.savePlan}
-              singleColumn={true}
-            />
-          </section>
-        ) : null}
+          <EditPlanFormWrapper
+            planId={plan.id}
+            action={updatePlan}
+            initialValues={initialValues}
+            userTasks={userTasks}
+            submitLabel={t.common.savePlan}
+            singleColumn={true}
+            backLabel={t.common.backToPlans}
+            confirmMessage={t.plans.discardEditPlanConfirm}
+            discardLeaveLabel={t.plansPage.discardLeave}
+            discardStayLabel={t.plansPage.discardStay}
+          >
+            {titleRow}
+          </EditPlanFormWrapper>
+        ) : (
+          <div className="flex min-w-0 flex-col gap-3">
+            <Link
+              href="/plans"
+              className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-blue-700 transition hover:text-blue-800"
+            >
+              <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden="true">
+                <path
+                  d="M12.5 15L7.5 10l5-5"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {t.common.backToPlans}
+            </Link>
+            {titleRow}
+          </div>
+        )}
 
         <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
           <div className="sticky top-0 z-10 border-b border-blue-100 bg-white/90 px-3 py-3 backdrop-blur max-sm:sticky sm:static sm:bg-transparent sm:backdrop-blur-none sm:px-6 sm:py-4">

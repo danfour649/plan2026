@@ -1,10 +1,14 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { PlanActionResult } from "@/lib/actions/plans";
+import { clearEditPlanFormDirty, getEditPlanFormDirty } from "@/lib/editPlanDirty";
+import { clearNewPlanFormDirty, getNewPlanFormDirty } from "@/lib/newPlanDirty";
 import { PLAN_STATUS_VALUES } from "@/lib/validations/plan";
 
 type PlanFormAction = (formData: FormData) => Promise<PlanActionResult>;
@@ -78,6 +82,14 @@ type PlanFormProps = {
   submitLabel: string;
   /** When true, use single column for date fields (one per line) instead of side-by-side grids. */
   singleColumn?: boolean;
+  /** Optional id for the form element. */
+  formId?: string;
+  /** When set (e.g. on new plan page), Cancel shows confirm if form is dirty. */
+  discardConfirmMessage?: string;
+  /** When user clicks Cancel and form is dirty, open custom confirm dialog (parent shows it). */
+  onRequestDiscardConfirm?: (open: boolean) => void;
+  /** Callback when user edits any field (e.g. sets module-level dirty flag). */
+  onDirtyChange?: () => void;
 };
 
 export function PlanForm({
@@ -87,8 +99,14 @@ export function PlanForm({
   isEdit = false,
   submitLabel,
   singleColumn = false,
+  formId,
+  discardConfirmMessage,
+  onRequestDiscardConfirm,
+  onDirtyChange,
 }: PlanFormProps) {
   const t = useTranslations();
+  const router = useRouter();
+  const markDirty = () => onDirtyChange?.();
   const [state, formAction] = useActionState(wrap(action), null as PlanActionResult | null);
   const [newTaskTitles, setNewTaskTitles] = useState<string[]>([""]);
   const [taskSearchFilter, setTaskSearchFilter] = useState("");
@@ -126,7 +144,11 @@ export function PlanForm({
         })();
 
   return (
-    <form action={formAction} className="flex min-w-0 max-w-full flex-col gap-4 overflow-x-hidden sm:gap-6">
+    <form
+      id={formId}
+      action={formAction}
+      className="flex min-w-0 max-w-full flex-col gap-4 overflow-x-hidden sm:gap-6"
+    >
       {isEdit && initialValues?.planId ? (
         <input type="hidden" name="planId" value={initialValues.planId} />
       ) : null}
@@ -141,6 +163,7 @@ export function PlanForm({
                 name="priority"
                 value={option.value}
                 defaultChecked={defaultPriority === option.value}
+                onChange={markDirty}
                 className="peer sr-only"
               />
               <span
@@ -162,7 +185,10 @@ export function PlanForm({
             min={0}
             max={100}
             value={percentCompleted}
-            onChange={(e) => setPercentCompleted(Number(e.target.value))}
+            onChange={(e) => {
+              setPercentCompleted(Number(e.target.value));
+              markDirty();
+            }}
             className="h-2.5 w-full min-w-0 flex-1 rounded-full bg-blue-100 accent-blue-600 sm:max-w-[12rem]"
             aria-valuenow={percentCompleted}
             aria-valuemin={0}
@@ -181,6 +207,7 @@ export function PlanForm({
           placeholder={t.plans.planNamePlaceholder}
           required
           defaultValue={initialValues?.name ?? ""}
+          onInput={markDirty}
           className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
       </div>
@@ -192,6 +219,7 @@ export function PlanForm({
           placeholder={t.plans.describePlanPlaceholder}
           rows={3}
           defaultValue={initialValues?.description ?? ""}
+          onInput={markDirty}
           className="min-h-[4.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
       </div>
@@ -202,6 +230,7 @@ export function PlanForm({
           name="goal"
           placeholder={t.planForm.goalPlaceholder}
           defaultValue={initialValues?.goal ?? ""}
+          onInput={markDirty}
           className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
       </div>
@@ -214,6 +243,7 @@ export function PlanForm({
             type="date"
             required
             defaultValue={defaultStart}
+            onChange={markDirty}
             className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
           />
         </div>
@@ -224,6 +254,7 @@ export function PlanForm({
             type="date"
             required
             defaultValue={defaultEnd}
+            onChange={markDirty}
             className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
           />
         </div>
@@ -236,6 +267,7 @@ export function PlanForm({
             name="actualStartAt"
             type="date"
             defaultValue={toDateInputValue(initialValues?.actualStartAt)}
+            onChange={markDirty}
             className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
           />
         </div>
@@ -245,6 +277,7 @@ export function PlanForm({
             name="actualEndAt"
             type="date"
             defaultValue={toDateInputValue(initialValues?.actualEndAt)}
+            onChange={markDirty}
             className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
           />
         </div>
@@ -256,6 +289,7 @@ export function PlanForm({
           <select
             name="status"
             defaultValue={defaultStatus}
+            onChange={markDirty}
             className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
           >
             {PLAN_STATUS_VALUES.map((s) => (
@@ -274,6 +308,7 @@ export function PlanForm({
           placeholder={t.plans.internalNotesPlaceholder}
           rows={2}
           defaultValue={initialValues?.notes ?? ""}
+          onInput={markDirty}
           className="min-h-[3.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
       </div>
@@ -283,6 +318,7 @@ export function PlanForm({
         <select
           name="color"
           defaultValue={initialValues?.color ?? ""}
+          onChange={markDirty}
           className="min-w-0 w-full max-w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 sm:max-w-xs"
         >
           {COLOR_OPTIONS.map((c) => (
@@ -300,6 +336,7 @@ export function PlanForm({
           type="url"
           placeholder={t.planForm.imageUrlPlaceholder}
           defaultValue={initialValues?.imageUrl ?? ""}
+          onInput={markDirty}
           className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
         {initialValues?.imageUrl ? (
@@ -354,6 +391,7 @@ export function PlanForm({
                         name="taskIds"
                         value={task.id}
                         defaultChecked={initialValues?.taskIds?.includes(task.id)}
+                        onChange={markDirty}
                         className="h-4 w-4 shrink-0 rounded border-blue-200"
                         id={`plan-form-task-${task.id}`}
                       />
@@ -383,6 +421,7 @@ export function PlanForm({
                 name="newTaskTitle"
                 defaultValue={title}
                 placeholder={t.plans.newTaskTitlePlaceholder}
+                onInput={markDirty}
                 className="min-w-0 flex-1 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
               />
               <button
@@ -404,12 +443,52 @@ export function PlanForm({
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="min-h-[2.75rem] w-full min-w-0 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:w-auto"
-      >
-        {submitLabel}
-      </button>
+      <div className="flex min-w-0 flex-wrap items-center gap-2">
+        <button
+          type="submit"
+          className="min-h-[2.75rem] min-w-0 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700"
+        >
+          {submitLabel}
+        </button>
+        {!isEdit && discardConfirmMessage ? (
+          <button
+            type="button"
+            onClick={() => {
+              if (getNewPlanFormDirty()) {
+                onRequestDiscardConfirm?.(true);
+                return;
+              }
+              clearNewPlanFormDirty();
+              router.push("/plans");
+            }}
+            className="min-h-[2.75rem] rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+          >
+            {t.common.cancel}
+          </button>
+        ) : isEdit && onRequestDiscardConfirm && discardConfirmMessage ? (
+          <button
+            type="button"
+            onClick={() => {
+              if (getEditPlanFormDirty()) {
+                onRequestDiscardConfirm(true);
+                return;
+              }
+              clearEditPlanFormDirty();
+              router.push(initialValues?.planId ? `/plans/${initialValues.planId}` : "/plans");
+            }}
+            className="min-h-[2.75rem] rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+          >
+            {t.common.cancel}
+          </button>
+        ) : (
+          <Link
+            href={isEdit && initialValues?.planId ? `/plans/${initialValues.planId}` : "/plans"}
+            className="min-h-[2.75rem] rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+          >
+            {t.common.cancel}
+          </Link>
+        )}
+      </div>
     </form>
   );
 }

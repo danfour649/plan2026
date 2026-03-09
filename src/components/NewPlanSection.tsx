@@ -1,0 +1,115 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { CancelNewPlanLink } from "@/components/CancelNewPlanLink";
+import { PlanForm } from "@/components/PlanForm";
+import { clearNewPlanFormDirty, setNewPlanFormDirty } from "@/lib/newPlanDirty";
+import type { PlanActionResult } from "@/lib/actions/plans";
+
+type NewPlanSectionProps = {
+  action: (formData: FormData) => Promise<PlanActionResult>;
+  userTasks: { id: string; title: string }[];
+  cancelLabel: string;
+  confirmMessage: string;
+  discardLeaveLabel: string;
+  discardStayLabel: string;
+  newPlanTitle: string;
+  newPlanDescription: string;
+  createPlanLabel: string;
+};
+
+export function NewPlanSection({
+  action,
+  userTasks,
+  cancelLabel,
+  confirmMessage,
+  discardLeaveLabel,
+  discardStayLabel,
+  newPlanTitle,
+  newPlanDescription,
+  createPlanLabel,
+}: NewPlanSectionProps) {
+  const router = useRouter();
+  const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
+
+  useEffect(() => {
+    return () => clearNewPlanFormDirty();
+  }, []);
+
+  useEffect(() => {
+    if (!showDiscardConfirm) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setShowDiscardConfirm(false);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [showDiscardConfirm]);
+
+  const handleLeave = () => {
+    clearNewPlanFormDirty();
+    setShowDiscardConfirm(false);
+    router.push("/plans");
+  };
+
+  return (
+    <div className="min-w-0 space-y-8 overflow-x-hidden">
+      <div className="flex min-w-0 flex-col gap-3">
+        <CancelNewPlanLink label={cancelLabel} onRequestConfirm={setShowDiscardConfirm} />
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-blue-950">{newPlanTitle}</h1>
+          <p className="mt-1 text-sm text-zinc-500">{newPlanDescription}</p>
+        </div>
+      </div>
+      <section className="rounded-2xl border border-blue-100 bg-white/90 px-6 py-6 shadow-sm shadow-blue-100/40 backdrop-blur">
+        <PlanForm
+          formId="new-plan-form"
+          action={action}
+          userTasks={userTasks}
+          isEdit={false}
+          submitLabel={createPlanLabel}
+          discardConfirmMessage={confirmMessage}
+          onDirtyChange={setNewPlanFormDirty}
+          onRequestDiscardConfirm={setShowDiscardConfirm}
+        />
+      </section>
+
+      {showDiscardConfirm ? (
+        <div
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-y-auto bg-zinc-950/45 px-4 py-6"
+          onClick={() => setShowDiscardConfirm(false)}
+          role="presentation"
+        >
+          <div
+            className="w-full max-w-md shrink-0 rounded-2xl border border-blue-100 bg-white px-6 py-5 shadow-2xl shadow-blue-950/10"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="discard-confirm-title"
+          >
+            <h2 id="discard-confirm-title" className="text-lg font-semibold tracking-tight text-blue-950">
+              {confirmMessage}
+            </h2>
+            <div className="mt-5 flex flex-wrap justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setShowDiscardConfirm(false)}
+                className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+              >
+                {discardStayLabel}
+              </button>
+              <button
+                type="button"
+                onClick={handleLeave}
+                className="rounded-xl border border-amber-200 bg-amber-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-amber-700"
+              >
+                {discardLeaveLabel}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
