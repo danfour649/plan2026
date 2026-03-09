@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { getServerAuthSession } from "@/auth";
 import { Plan2026Logo } from "@/components/Plan2026Logo";
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
-import { FacebookSignInButton } from "./FacebookSignInButton";
 import { GoogleSignInButton } from "./GoogleSignInButton";
 
 export default async function LoginPage({
@@ -22,9 +21,6 @@ export default async function LoginPage({
 
   const hasGoogleCredentials = Boolean(
     process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
-  );
-  const hasFacebookCredentials = Boolean(
-    process.env.AUTH_FACEBOOK_ID && process.env.AUTH_FACEBOOK_SECRET,
   );
 
   return (
@@ -52,19 +48,12 @@ export default async function LoginPage({
           </div>
         ) : null}
 
-        <div className="mt-8 flex flex-col gap-3">
+        <div className="mt-8">
           <GoogleSignInButton
             callbackUrl={callbackUrl}
             disabled={!hasGoogleCredentials}
             label={t.login.continueWithGoogle}
           />
-          {hasFacebookCredentials ? (
-            <FacebookSignInButton
-              callbackUrl={callbackUrl}
-              disabled={false}
-              label={t.login.continueWithFacebook}
-            />
-          ) : null}
         </div>
       </div>
     </main>

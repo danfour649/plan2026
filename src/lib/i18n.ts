@@ -284,7 +284,6 @@ const messages = {
       benefit3: "Works in your language",
       envRequired: "Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in your .env to enable Google sign-in.",
       continueWithGoogle: "Continue with Google",
-      continueWithFacebook: "Continue with Facebook",
     },
     invite: {
       invalidTitle: "Invalid or expired invite",
@@ -583,7 +582,6 @@ const messages = {
       benefit3: "Disponible dans votre langue",
       envRequired: "Configurez Google Auth dans votre .env.",
       continueWithGoogle: "Continuer avec Google",
-      continueWithFacebook: "Continuer avec Facebook",
     },
     invite: {
       invalidTitle: "Invitation invalide",
@@ -882,7 +880,6 @@ const messages = {
       benefit3: "E dey work for your language",
       envRequired: "You need to set up Google Auth for inside .env.",
       continueWithGoogle: "Enter with Google",
-      continueWithFacebook: "Enter with Facebook",
     },
     invite: {
       invalidTitle: "Invite link don die",
