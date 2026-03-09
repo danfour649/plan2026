@@ -1,5 +1,15 @@
 # plan2026
 
+## 0.11.0
+
+### Minor Changes
+
+- b4e133a: Discard-changes confirmation for new and edit plan forms (custom dialog when leaving with unsaved data).
+
+### Patch Changes
+
+- c78de33: Plan "color" is now shown as "Flag" in the UI: form label is "Flag (optional)" with emoji per option; plans list shows a flag emoji next to the plan name when set.
+
 ## 0.10.5
 
 ### Patch Changes
