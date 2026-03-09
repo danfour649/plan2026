@@ -1,6 +1,6 @@
 # TECH-0045: Onboarding / login screen
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** Implemented (login page value proposition and benefits; optional welcome modal and empty-state refinements can follow).
 
 **Goal:** Improve the onboarding experience for new users and the login screen. Use as inspiration the comparison article (e.g. “I asked Gemini, Claude and ChatGPT to create a website…” style) to inform layout, copy, and first-run experience.
 
