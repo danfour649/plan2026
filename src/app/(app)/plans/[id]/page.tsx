@@ -21,6 +21,9 @@ import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/li
 function formatShortDate(d: Date): string {
   return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
+function formatShortDateOnly(d: Date): string {
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
 function formatShortDateTime(d: Date): string {
   return `${formatShortDate(d)} ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`;
 }
@@ -269,26 +272,31 @@ export default async function PlanDetailPage({
                           <TaskContent content={task.content} />
                           <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
                             {task.completedAt ? (
-                              <span>{t.tasks.completed} {formatShortDate(new Date(task.completedAt))}</span>
+                              <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
                             ) : (
-                              <span>{t.tasks.added} {formatShortDate(task.createdAt)}</span>
+                              <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
                             )}
                             {task.dueAt && (
                               <span className="sm:before:content-['·'] sm:before:mr-1">
-                                {t.tasks.due} {formatShortDateTime(new Date(task.dueAt))}
+                                {t.tasks.due}{" "}
+                                <span className="max-sm:hidden sm:inline">{formatShortDateTime(new Date(task.dueAt))}</span>
+                                <span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.dueAt))}</span>
                               </span>
                             )}
                           </div>
                         </div>
                       </EditTaskDialog>
                       <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
-                        <TaskActionButton
-                          action={task.completedAt ? restoreTask : completeTask}
-                          taskId={task.id}
-                          planId={plan.id}
-                          label={task.completedAt ? t.tasks.restore : t.tasks.markDone}
-                          successMessage={task.completedAt ? t.tasks.taskRestored : t.tasks.markedDone}
-                        />
+                        <span className="order-1">
+                          <TaskActionButton
+                            action={task.completedAt ? restoreTask : completeTask}
+                            taskId={task.id}
+                            planId={plan.id}
+                            label={task.completedAt ? t.tasks.restore : t.tasks.markDone}
+                            successMessage={task.completedAt ? t.tasks.taskRestored : t.tasks.markedDone}
+                          />
+                        </span>
+                        <span className="order-2">
                         <EditTaskDialog
                           action={updateTask}
                           deleteAction={deleteTask}
@@ -315,6 +323,7 @@ export default async function PlanDetailPage({
                             })),
                           }}
                         />
+                        </span>
                       </div>
                     </>
                   ) : (
@@ -331,13 +340,15 @@ export default async function PlanDetailPage({
                       <TaskContent content={task.content} />
                       <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
                         {task.completedAt ? (
-                          <span>{t.tasks.completed} {formatShortDate(new Date(task.completedAt))}</span>
+                          <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
                         ) : (
-                          <span>{t.tasks.added} {formatShortDate(task.createdAt)}</span>
+                          <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
                         )}
                         {task.dueAt && (
                           <span className="sm:before:content-['·'] sm:before:mr-1">
-                            {t.tasks.due} {formatShortDateTime(new Date(task.dueAt))}
+                            {t.tasks.due}{" "}
+                            <span className="max-sm:hidden sm:inline">{formatShortDateTime(new Date(task.dueAt))}</span>
+                            <span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.dueAt))}</span>
                           </span>
                         )}
                       </div>
