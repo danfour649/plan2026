@@ -99,7 +99,7 @@ export function TaskForm({
           placeholder={t.tasks.taskNamePlaceholder}
           required
           defaultValue={initialValues?.title ?? ""}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-black outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
         />
         <div className="flex w-full flex-col gap-1.5">
           <label className="text-xs whitespace-nowrap text-blue-700">{t.tasks.urgencyLabel}</label>
@@ -138,7 +138,7 @@ export function TaskForm({
             <select
               name="planId"
               defaultValue={initialValues?.planId ?? ""}
-              className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+              className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-black outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
             >
               <option value="">{t.form.none}</option>
               {plans.map((plan) => (
@@ -157,7 +157,7 @@ export function TaskForm({
               name="dueAt"
               type="datetime-local"
               defaultValue={defaultDueAtValue}
-              className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+              className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-black outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
             />
             <button
               type="button"
