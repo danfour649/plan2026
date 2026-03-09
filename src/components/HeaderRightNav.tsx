@@ -45,6 +45,44 @@ function MenuIcon({ className }: { className?: string }) {
   );
 }
 
+function HelpIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+      <path d="M12 17h.01" />
+    </svg>
+  );
+}
+
+function AboutIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" />
+      <path d="M12 8h.01" />
+    </svg>
+  );
+}
+
 export function HeaderRightNav({ userEmail }: { userEmail: string | null | undefined }) {
   const t = useTranslations();
   const pathname = usePathname();
@@ -117,29 +155,36 @@ export function HeaderRightNav({ userEmail }: { userEmail: string | null | undef
               href="/help"
               role="menuitem"
               onClick={() => setMenuOpen(false)}
-              className={`block px-4 py-2.5 text-sm ${pathname === "/help" ? "bg-blue-100 font-medium text-blue-800" : "text-zinc-700 hover:bg-blue-50"}`}
+              className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === "/help" ? "bg-blue-100 font-medium text-blue-800" : "text-zinc-700 hover:bg-blue-50"}`}
             >
+              <HelpIcon className="h-5 w-5 shrink-0" />
               {t.nav.help}
             </Link>
             <Link
               href="/about"
               role="menuitem"
               onClick={() => setMenuOpen(false)}
-              className={`block px-4 py-2.5 text-sm ${pathname === "/about" ? "bg-blue-100 font-medium text-blue-800" : "text-zinc-700 hover:bg-blue-50"}`}
+              className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === "/about" ? "bg-blue-100 font-medium text-blue-800" : "text-zinc-700 hover:bg-blue-50"}`}
             >
+              <AboutIcon className="h-5 w-5 shrink-0" />
               {t.nav.about}
             </Link>
             <Link
               href="/settings"
               role="menuitem"
               onClick={() => setMenuOpen(false)}
-              className="block px-4 py-2.5 text-sm text-zinc-700 hover:bg-blue-50"
+              className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === "/settings" ? "bg-blue-100 font-medium text-blue-800" : "text-zinc-700 hover:bg-blue-50"}`}
             >
+              <SettingsIcon className="h-5 w-5 shrink-0" />
               {t.nav.settings}
             </Link>
             <div className="border-t border-blue-100 pt-2 mt-2">
-              <div className="px-4 py-2">
-                <SignOutButton />
+              <div className="px-2 pb-1">
+                <SignOutButton
+                  alwaysShowLabel
+                  iconClassName="h-5 w-5 shrink-0"
+                  className="flex w-full items-center justify-start gap-3 rounded-lg px-3 py-2.5 text-sm text-red-700 transition hover:bg-red-50"
+                />
               </div>
             </div>
           </div>

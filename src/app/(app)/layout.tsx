@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { getServerAuthSession } from "@/auth";
 import { AppNavLink } from "@/components/AppNavLink";
 import { HeaderRightNav } from "@/components/HeaderRightNav";
-import { CheckboxIcon, LightbulbIcon, ShoppingCartIcon } from "@/components/NavIcons";
+import { CheckboxIcon, CurrencyIcon, LightbulbIcon } from "@/components/NavIcons";
 import { Plan2026Logo } from "@/components/Plan2026Logo";
 import { TranslationsProvider } from "@/components/TranslationsProvider";
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
@@ -46,7 +46,7 @@ export default async function AppLayout({
           <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-2 py-2 sm:px-6 sm:py-3">
             <div className="relative z-10 flex min-w-0 flex-1 items-center gap-1 overflow-visible sm:gap-6">
               <Plan2026Logo
-                className="shrink-0 self-center -mt-2.5"
+                className="shrink-0 self-center mt-2 sm:-mt-2.5"
                 iconClassName="h-10 w-12 sm:h-16 sm:w-24"
                 ariaLabel={t.common.goToPlans}
               />
@@ -58,8 +58,8 @@ export default async function AppLayout({
                   ariaLabel={t.nav.plans}
                   className="shrink-0 gap-0 px-1.5 py-1 text-[11px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
                 >
-                  <span className="inline-flex sm:hidden">
-                    <LightbulbIcon className="h-5 w-5" />
+                  <span className="inline-flex mt-1 sm:mt-0 sm:hidden">
+                    <LightbulbIcon className="h-11 w-11" />
                   </span>
                   <span className="hidden sm:inline">{t.nav.plans}</span>
                 </AppNavLink>
@@ -70,8 +70,8 @@ export default async function AppLayout({
                   ariaLabel={t.nav.tasks}
                   className="shrink-0 gap-0 px-1.5 py-1 text-[11px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
                 >
-                  <span className="inline-flex sm:hidden">
-                    <CheckboxIcon className="h-5 w-5" />
+                  <span className="inline-flex mt-1 sm:mt-0 sm:hidden">
+                    <CheckboxIcon className="h-11 w-11" />
                   </span>
                   <span className="hidden sm:inline">{t.nav.tasks}</span>
                 </AppNavLink>
@@ -82,8 +82,8 @@ export default async function AppLayout({
                   ariaLabel={t.nav.supplies}
                   className="shrink-0 gap-0 px-1.5 py-1 text-[11px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
                 >
-                  <span className="inline-flex sm:hidden">
-                    <ShoppingCartIcon className="h-5 w-5" />
+                  <span className="inline-flex mt-1 sm:mt-0 sm:hidden">
+                    <CurrencyIcon className="h-11 w-11" />
                   </span>
                   <span className="hidden sm:inline">{t.nav.supplies}</span>
                 </AppNavLink>

@@ -23,17 +23,34 @@ function ExitDoorIcon({ className }: { className?: string }) {
   );
 }
 
-export function SignOutButton() {
+type SignOutButtonProps = {
+  /** When true, label is always visible (e.g. in hamburger menu). */
+  alwaysShowLabel?: boolean;
+  className?: string;
+  /** Optional class for the icon (e.g. h-5 w-5 in menu). */
+  iconClassName?: string;
+};
+
+export function SignOutButton({
+  alwaysShowLabel,
+  className,
+  iconClassName,
+}: SignOutButtonProps = {}) {
   const t = useTranslations();
   return (
     <button
       type="button"
       onClick={() => signOut({ callbackUrl: "/login" })}
       aria-label={t.common.signOut}
-      className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 p-2 text-red-700 transition hover:bg-red-100 sm:px-3 sm:py-2"
+      className={
+        className ??
+        "inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 p-2 text-red-700 transition hover:bg-red-100 sm:px-3 sm:py-2"
+      }
     >
-      <ExitDoorIcon className="h-4 w-4 sm:h-4 sm:w-4" />
-      <span className="hidden sm:inline sm:text-sm">{t.common.signOut}</span>
+      <ExitDoorIcon className={iconClassName ?? "h-4 w-4 sm:h-4 sm:w-4"} />
+      <span className={alwaysShowLabel ? "text-sm" : "hidden sm:inline sm:text-sm"}>
+        {t.common.signOut}
+      </span>
     </button>
   );
 }
