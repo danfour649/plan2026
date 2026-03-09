@@ -36,6 +36,13 @@ export async function createSupplyItem(
   const price = priceRaw !== null && priceRaw !== "" ? Number(priceRaw) : null;
   const description = formData.get("description");
   const link = formData.get("link");
+  const quantityRaw = formData.get("quantity");
+  const quantityParsed = quantityRaw != null && quantityRaw !== "" ? parseInt(String(quantityRaw), 10) : 1;
+  const quantity = Number.isNaN(quantityParsed) || quantityParsed < 1 ? 1 : Math.min(quantityParsed, 999_999);
+  const acquiredStatusRaw = formData.get("acquiredStatus");
+  const acquiredStatus = ["needed", "ordered", "pending", "purchased"].includes(String(acquiredStatusRaw))
+    ? String(acquiredStatusRaw)
+    : "needed";
 
   const maxOrder = await prisma.supplyItem
     .aggregate({
@@ -52,11 +59,14 @@ export async function createSupplyItem(
       price: price != null && !Number.isNaN(price) ? price : null,
       description: description != null && String(description).trim() !== "" ? String(description).trim().slice(0, 2000) : null,
       link: link != null && String(link).trim() !== "" ? String(link).trim().slice(0, 2000) : null,
+      quantity,
+      acquiredStatus,
       order: maxOrder + 1,
     },
   });
 
   revalidatePath(`/plans/${planId}`);
+  revalidatePath("/supplies");
   return { success: true };
 }
 
@@ -82,6 +92,13 @@ export async function updateSupplyItem(
   const price = priceRaw !== null && priceRaw !== "" ? Number(priceRaw) : null;
   const description = formData.get("description");
   const link = formData.get("link");
+  const quantityRaw = formData.get("quantity");
+  const quantityParsed = quantityRaw != null && quantityRaw !== "" ? parseInt(String(quantityRaw), 10) : 1;
+  const quantity = Number.isNaN(quantityParsed) || quantityParsed < 1 ? 1 : Math.min(quantityParsed, 999_999);
+  const acquiredStatusRaw = formData.get("acquiredStatus");
+  const acquiredStatus = ["needed", "ordered", "pending", "purchased"].includes(String(acquiredStatusRaw))
+    ? String(acquiredStatusRaw)
+    : "needed";
 
   await prisma.supplyItem.update({
     where: { id: itemId },
@@ -90,10 +107,13 @@ export async function updateSupplyItem(
       price: price != null && !Number.isNaN(price) ? price : null,
       description: description != null && String(description).trim() !== "" ? String(description).trim().slice(0, 2000) : null,
       link: link != null && String(link).trim() !== "" ? String(link).trim().slice(0, 2000) : null,
+      quantity,
+      acquiredStatus,
     },
   });
 
   revalidatePath(`/plans/${planId}`);
+  revalidatePath("/supplies");
   return { success: true };
 }
 
@@ -110,5 +130,6 @@ export async function deleteSupplyItem(planId: string, itemId: string): Promise<
 
   await prisma.supplyItem.delete({ where: { id: itemId } });
   revalidatePath(`/plans/${planId}`);
+  revalidatePath("/supplies");
   return { success: true };
 }

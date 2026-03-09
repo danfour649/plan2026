@@ -47,7 +47,7 @@ export default async function PlanDetailPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams?: Promise<{ taskPage?: string | string[]; taskLimit?: string | string[]; tab?: string | string[] }>;
+  searchParams?: Promise<{ taskPage?: string | string[]; taskLimit?: string | string[]; tab?: string | string[]; edit?: string | string[] }>;
 }) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
@@ -59,6 +59,8 @@ export default async function PlanDetailPage({
   const taskLimit = parseLimit(resolvedSearchParams.taskLimit, PLAN_TASKS_PAGE_SIZE);
   const tabRaw = Array.isArray(resolvedSearchParams.tab) ? resolvedSearchParams.tab[0] : resolvedSearchParams.tab;
   const tab = tabRaw === "list" ? "list" : "tasks";
+  const editRaw = Array.isArray(resolvedSearchParams.edit) ? resolvedSearchParams.edit[0] : resolvedSearchParams.edit;
+  const editItemId = editRaw && /^[a-z0-9]+$/i.test(editRaw) ? editRaw : undefined;
 
   const plan = await prisma.plan.findFirst({
     where: {
@@ -149,6 +151,8 @@ export default async function PlanDetailPage({
     price: item.price != null ? Number(item.price) : null,
     description: item.description ?? null,
     link: item.link ?? null,
+    quantity: item.quantity ?? 1,
+    acquiredStatus: item.acquiredStatus ?? "needed",
     order: item.order,
   }));
 
@@ -316,7 +320,7 @@ export default async function PlanDetailPage({
           </div>
           {tab === "list" ? (
             <div className="px-3 py-4 sm:px-6 sm:py-6">
-              <PlanSupplyList planId={plan.id} items={supplyItemsForClient} isOwner={isOwner} />
+              <PlanSupplyList planId={plan.id} items={supplyItemsForClient} isOwner={isOwner} initialEditingItemId={editItemId} />
             </div>
           ) : planTasks.length > 0 ? (
             <ul className="divide-y divide-blue-100">
