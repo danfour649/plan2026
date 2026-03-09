@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { toast } from "sonner";
 
 import { ExportTaskButton } from "@/components/ExportTaskButton";
@@ -69,7 +70,7 @@ export function EditTaskDialog({
 }: EditTaskDialogProps) {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const isMountedRef = useRef(true);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [attachments, setAttachments] = useState(task.attachments ?? []);
@@ -106,10 +107,11 @@ export function EditTaskDialog({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [isOpen]);
 
+  // Reset overlay scroll so the dialog form is in view when opened (does not move page scroll).
   useEffect(() => {
     if (isOpen) {
       requestAnimationFrame(() => {
-        dialogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        overlayRef.current?.scrollTo({ top: 0, behavior: "auto" });
       });
     }
   }, [isOpen]);
@@ -171,20 +173,22 @@ export function EditTaskDialog({
         </button>
       ) : null}
 
-      {isOpen ? (
-        <div
-          className="fixed inset-0 z-50 flex flex-col items-center overflow-y-auto bg-zinc-950/45 px-4 pt-6 pb-8 sm:pt-8"
-          onClick={() => setIsOpen(false)}
-          role="presentation"
-        >
+      {isOpen &&
+        typeof document !== "undefined" &&
+        createPortal(
           <div
-            ref={dialogRef}
-            className="w-full max-w-2xl shrink-0 rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10"
-            onClick={(event) => event.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={`edit-task-dialog-title-${task.id}`}
+            ref={overlayRef}
+            className="fixed inset-0 z-50 flex flex-col items-center overflow-y-auto bg-zinc-950/45 px-4 pt-6 pb-8 sm:pt-8"
+            onClick={() => setIsOpen(false)}
+            role="presentation"
           >
+            <div
+              className="w-full max-w-2xl shrink-0 rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={`edit-task-dialog-title-${task.id}`}
+            >
             <div className="mb-1 flex items-start justify-between gap-4">
               <div>
                 <h2
@@ -377,8 +381,9 @@ export function EditTaskDialog({
               </form>
             </div>
           </div>
-        </div>
-      ) : null}
+        </div>,
+          document.body,
+        )}
     </>
   );
 }
