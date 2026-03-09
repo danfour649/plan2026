@@ -213,6 +213,43 @@ export default async function PlansPage({
                         plan.tasks.filter((task) => task.completedAt != null).length,
                       )}
                     </p>
+                    {plan.tasks.length > 0 ? (
+                      <div
+                        className="mt-1.5 flex flex-wrap items-center gap-1"
+                        aria-label={t.plans.tasksCountAria
+                          .replace("{{completed}}", String(plan.tasks.filter((t) => t.completedAt != null).length))
+                          .replace("{{total}}", String(plan.tasks.length))}
+                      >
+                        <span className="flex shrink-0 flex-row flex-nowrap items-center gap-0.5" role="img">
+                          {(() => {
+                            const total = plan.tasks.length;
+                            const completed = plan.tasks.filter((t) => t.completedAt != null).length;
+                            const maxSegments = 20;
+                            const showSegments = Math.min(total, maxSegments);
+                            const completedInBar = Math.min(completed, showSegments);
+                            const overflow = total > maxSegments ? total - maxSegments : 0;
+                            return (
+                              <>
+                                {Array.from({ length: showSegments }, (_, i) => (
+                                  <span
+                                    key={i}
+                                    className={`h-2 w-2 shrink-0 rounded-sm ${
+                                      i < completedInBar ? "bg-emerald-500" : "bg-zinc-200"
+                                    }`}
+                                    aria-hidden
+                                  />
+                                ))}
+                                {overflow > 0 ? (
+                                  <span className="ml-0.5 text-xs text-zinc-400" aria-hidden>
+                                    +{overflow}
+                                  </span>
+                                ) : null}
+                              </>
+                            );
+                          })()}
+                        </span>
+                      </div>
+                    ) : null}
                   </div>
                 </Link>
                 {plan.userId === userId ? (

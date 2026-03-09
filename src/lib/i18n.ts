@@ -131,6 +131,7 @@ const messages = {
       tasksCountZero: "0 tasks",
       tasksCountOne: "{{completed}} of {{total}} task completed",
       tasksCountMany: "{{completed}} of {{total}} tasks completed",
+      tasksCountAria: "{{completed}} of {{total}} tasks completed",
     },
     planStatus: {
       draft: "Draft",
@@ -340,6 +341,7 @@ const messages = {
       tasksCountZero: "0 tâche",
       tasksCountOne: "{{completed}} sur {{total}} tâche terminée",
       tasksCountMany: "{{completed}} sur {{total}} tâches terminées",
+      tasksCountAria: "{{completed}} sur {{total}} tâches terminées",
     },
     planStatus: {
       draft: "Brouillon",
@@ -549,6 +551,7 @@ const messages = {
       tasksCountZero: "0 work",
       tasksCountOne: "{{completed}} of {{total}} work don finish",
       tasksCountMany: "{{completed}} of {{total}} work don finish",
+      tasksCountAria: "{{completed}} of {{total}} work don finish",
     },
     planStatus: {
       draft: "Rough work",
