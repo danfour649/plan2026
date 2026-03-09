@@ -15,7 +15,7 @@ export type Messages = typeof messages.en;
 
 const messages = {
   en: {
-    nav: { plans: "Plans", tasks: "Tasks", settings: "Settings" },
+    nav: { plans: "Plans", tasks: "Tasks", settings: "Settings", help: "Help", about: "About", menu: "Menu" },
     settings: {
       title: "Settings",
       language: "Language",
@@ -248,9 +248,28 @@ const messages = {
       emailSubject: "You're invited to plan: {{planName}}",
       emailBody: "You've been invited to collaborate on a plan in Plan 2026.\n\nPlan: {{planName}}\n\nOpen this link to accept the invite and view the plan:\n{{url}}\n\n— Plan 2026",
     },
+    help: {
+      title: "Help",
+      howToUse: "How to use Plan 2026",
+      howToTasksTitle: "Tasks",
+      howToTasks: "Create and manage tasks from the Tasks page or from within a plan. You can add a due date, link a task to a plan, set urgency, and attach files. Mark tasks done when complete; you can restore them later if needed.",
+      howToPlansTitle: "Plans",
+      howToPlans: "Plans group tasks and track progress. Create a plan from the Plans page, set dates and status, then add or link tasks. Share plans with others via invite link or email. Use the status (Draft, Started, On hold, Completed, Abandoned) and percent complete to track progress.",
+      versionHistoryTitle: "Recent updates",
+      versionHistoryIntro: "Highlights from recent releases:",
+      viewFullChangelog: "View full changelog",
+    },
+    about: {
+      title: "About",
+      appName: "Plan 2026",
+      versionLabel: "Version",
+      contributors: "Contributors",
+      contributorsIntro: "Built by Daniel Fitzgerald.",
+      recentUpdatesTitle: "Recent updates",
+    },
   },
   fr: {
-    nav: { plans: "Plans", tasks: "Tâches", settings: "Paramètres" },
+    nav: { plans: "Plans", tasks: "Tâches", settings: "Paramètres", help: "Aide", about: "À propos", menu: "Menu" },
     settings: {
       title: "Paramètres",
       language: "Langue",
@@ -483,9 +502,28 @@ const messages = {
       emailSubject: "Vous êtes invité au plan : {{planName}}",
       emailBody: "Vous avez été invité à collaborer sur un plan dans Plan 2026.\n\nPlan : {{planName}}\n\nOuvrez ce lien pour accepter et voir le plan :\n{{url}}\n\n— Plan 2026",
     },
+    help: {
+      title: "Aide",
+      howToUse: "Comment utiliser Plan 2026",
+      howToTasksTitle: "Tâches",
+      howToTasks: "Créez et gérez des tâches depuis la page Tâches ou dans un plan. Vous pouvez ajouter une échéance, lier une tâche à un plan, définir l'urgence et joindre des fichiers. Marquez les tâches comme terminées ; vous pourrez les rouvrir si besoin.",
+      howToPlansTitle: "Plans",
+      howToPlans: "Les plans regroupent des tâches et suivent la progression. Créez un plan depuis la page Plans, définissez les dates et le statut, puis ajoutez ou liez des tâches. Partagez les plans par lien ou e-mail. Utilisez le statut (Brouillon, En cours, En pause, Terminé, Abandonné) et le pourcentage pour suivre l'avancement.",
+      versionHistoryTitle: "Mises à jour récentes",
+      versionHistoryIntro: "Résumé des dernières versions :",
+      viewFullChangelog: "Voir le journal des changements",
+    },
+    about: {
+      title: "À propos",
+      appName: "Plan 2026",
+      versionLabel: "Version",
+      contributors: "Contributeurs",
+      contributorsIntro: "Développé par Daniel Fitzgerald.",
+      recentUpdatesTitle: "Mises à jour récentes",
+    },
   },
   pidgin: {
-    nav: { plans: "Plans", tasks: "Work", settings: "Settings" },
+    nav: { plans: "Plans", tasks: "Work", settings: "Settings", help: "Help", about: "About", menu: "Menu" },
     settings: {
       title: "How e go be",
       language: "Language",
@@ -717,6 +755,25 @@ const messages = {
       signIn: "Enter",
       emailSubject: "Dem don invite you for plan: {{planName}}",
       emailBody: "Dem don invite you to join one plan for Plan 2026.\n\nPlan: {{planName}}\n\nOpen dis link to accept and see di plan:\n{{url}}\n\n— Plan 2026",
+    },
+    help: {
+      title: "Help",
+      howToUse: "How to use Plan 2026",
+      howToTasksTitle: "Work",
+      howToTasks: "You fit create and manage work from di Work page or inside one plan. You fit add due date, link work to plan, set urgency, and add files. Mark as done when you finish; you fit restore am later if need.",
+      howToPlansTitle: "Plans",
+      howToPlans: "Plans dey group work and show progress. Create plan from Plans page, set dates and status, then add or link work. Share plan with people by invite link or email. Use status (Draft, Started, On hold, Completed, Abandoned) and percent complete to see how e dey go.",
+      versionHistoryTitle: "Recent updates",
+      versionHistoryIntro: "Wetin don change recently:",
+      viewFullChangelog: "See full changelog",
+    },
+    about: {
+      title: "About",
+      appName: "Plan 2026",
+      versionLabel: "Version",
+      contributors: "Contributors",
+      contributorsIntro: "Daniel Fitzgerald build am.",
+      recentUpdatesTitle: "Recent updates",
     },
   },
 } satisfies Record<Locale, Record<string, unknown>>;
