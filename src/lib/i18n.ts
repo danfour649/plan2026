@@ -274,6 +274,19 @@ const messages = {
     sharePlan: {
       title: "Share plan",
       description: "Enter the email of a user who has signed in to Plan 2026. They will see this plan in their list.",
+      getPublicLink: "Get public link",
+    },
+    sharePage: {
+      title: "Shared plan",
+      linkExpired: "Link expired or invalid",
+      linkExpiredDescription: "This link is invalid or has expired. Only the plan owner can create a new share link.",
+      markDone: "Mark done",
+      restore: "Restore",
+      planLabel: "Plan",
+      goalLabel: "Goal",
+      tasksLabel: "Tasks",
+      noTasks: "No tasks",
+      signInToManage: "Sign in to manage your own plans",
     },
     login: {
       title: "Sign in",
@@ -573,6 +586,19 @@ const messages = {
     sharePlan: {
       title: "Partager le plan",
       description: "Entrez l'e-mail d'un utilisateur Plan 2026.",
+      getPublicLink: "Lien public",
+    },
+    sharePage: {
+      title: "Plan partagé",
+      linkExpired: "Lien expiré ou invalide",
+      linkExpiredDescription: "Ce lien est invalide ou a expiré. Seul le propriétaire du plan peut créer un nouveau lien.",
+      markDone: "Marquer fait",
+      restore: "Rouvrir",
+      planLabel: "Plan",
+      goalLabel: "Objectif",
+      tasksLabel: "Tâches",
+      noTasks: "Aucune tâche",
+      signInToManage: "Connectez-vous pour gérer vos plans",
     },
     login: {
       title: "Connexion",
@@ -872,6 +898,19 @@ const messages = {
     sharePlan: {
       title: "Share plan",
       description: "Put di email of person wey get Plan 2026 account. Dem go see am for dia own list.",
+      getPublicLink: "Get public link",
+    },
+    sharePage: {
+      title: "Shared plan",
+      linkExpired: "Link expire or no valid",
+      linkExpiredDescription: "Dis link no valid or e don expire. Only di plan owner fit create new share link.",
+      markDone: "Mark done",
+      restore: "Restore",
+      planLabel: "Plan",
+      goalLabel: "Goal",
+      tasksLabel: "Work",
+      noTasks: "No work",
+      signInToManage: "Sign in to manage your own plans",
     },
     login: {
       title: "Enter",

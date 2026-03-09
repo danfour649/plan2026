@@ -12,6 +12,7 @@ import { ExportPlanButton } from "@/components/ExportPlanButton";
 import { PlanSupplyList } from "@/components/PlanSupplyList";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { InviteByLinkButton } from "@/components/InviteByLinkButton";
+import { ShareByPublicLinkButton } from "@/components/ShareByPublicLinkButton";
 import { SharePlanButton } from "@/components/SharePlanButton";
 import { TaskContent } from "@/components/TaskContent";
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
@@ -229,6 +230,7 @@ export default async function PlanDetailPage({
           <>
             <SharePlanButton planId={plan.id} />
             <InviteByLinkButton planId={plan.id} planName={plan.name} />
+            <ShareByPublicLinkButton planId={plan.id} />
             <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
           </>
         ) : null}

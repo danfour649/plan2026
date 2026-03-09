@@ -299,3 +299,40 @@ export async function createPlanInvite(planId: string): Promise<CreateInviteResu
   revalidatePath(`/plans/${plan.id}`);
   return { success: true, inviteUrl };
 }
+
+export type CreateShareLinkResult =
+  | { success: true; shareUrl: string }
+  | { success: false; error: string };
+
+/** Generate a long random token for public share links (64 hex chars). */
+function generateShareToken(): string {
+  return crypto.getRandomValues(new Uint8Array(32)).reduce((acc, b) => acc + b.toString(16).padStart(2, "0"), "");
+}
+
+export async function createPlanShareLink(planId: string): Promise<CreateShareLinkResult> {
+  const userId = await getCurrentUserId();
+  if (!userId) return { success: false, error: "Unauthorized" };
+
+  const parsed = planIdSchema.safeParse({ planId });
+  if (!parsed.success) return { success: false, error: "Invalid plan" };
+
+  const plan = await prisma.plan.findFirst({
+    where: { id: parsed.data.planId, userId },
+    select: { id: true },
+  });
+  if (!plan) return { success: false, error: "Plan not found" };
+
+  const token = generateShareToken();
+  await prisma.planShareLink.create({
+    data: {
+      planId: plan.id,
+      token,
+      allowStatusUpdate: true,
+    },
+  });
+
+  const baseUrl = process.env.NEXTAUTH_URL ?? "https://plan2026-pi.vercel.app";
+  const shareUrl = `${baseUrl}/share/${token}`;
+  revalidatePath(`/plans/${plan.id}`);
+  return { success: true, shareUrl };
+}
