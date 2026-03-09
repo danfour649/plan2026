@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.11.1
+
+### Patch Changes
+
+- f838046: Added "Print checklist" on plan detail: links to a print view that shows plan name, printed date, and unfinished tasks (sorted by priority then due date). Print view has a Print button and @media print hides chrome so only the checklist is printed.
+
 ## 0.11.0
 
 ### Minor Changes
