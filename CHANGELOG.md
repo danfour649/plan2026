@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.10.5
+
+### Patch Changes
+
+- 9dce14b: On mobile, task rows now show shorter dates (e.g. "Mar 8") and plan names truncate; status button (Mark done / Restore) is explicitly ordered first before Edit on both plan detail and tasks page.
+
 ## 0.10.4
 
 ### Patch Changes
