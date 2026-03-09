@@ -50,13 +50,13 @@ export default async function AppLayout({
                 iconClassName="h-10 w-12 sm:h-16 sm:w-24"
                 ariaLabel={t.common.goToPlans}
               />
-              <nav className="flex min-w-0 shrink items-center gap-0.5 text-sm text-zinc-700 sm:gap-4">
+              <nav className="flex min-w-0 shrink items-center gap-0 text-sm text-zinc-700 sm:gap-4">
                 <AppNavLink
                   href="/plans"
                   accent="blue"
                   badge={activePlanCount}
                   ariaLabel={t.nav.plans}
-                  className="shrink-0 gap-0 px-1.5 py-1 text-[11px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
+                  className="-mx-1.5 shrink-0 gap-0 px-0.5 py-1 text-[11px] sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
                 >
                   <span className="inline-flex mt-1 sm:mt-0 sm:hidden">
                     <LightbulbIcon className="h-11 w-11" />
@@ -68,7 +68,7 @@ export default async function AppLayout({
                   accent="blue"
                   badge={remainingTaskCount}
                   ariaLabel={t.nav.tasks}
-                  className="shrink-0 gap-0 px-1.5 py-1 text-[11px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
+                  className="-mx-1.5 shrink-0 gap-0 px-0.5 py-1 text-[11px] sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
                 >
                   <span className="inline-flex mt-1 sm:mt-0 sm:hidden">
                     <CheckboxIcon className="h-11 w-11" />
@@ -80,7 +80,7 @@ export default async function AppLayout({
                   accent="blue"
                   badge={suppliesCount > 0 ? suppliesCount : undefined}
                   ariaLabel={t.nav.supplies}
-                  className="shrink-0 gap-0 px-1.5 py-1 text-[11px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
+                  className="-ml-2 -mx-1.5 shrink-0 gap-0 px-0.5 py-1 text-[11px] sm:ml-0 sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
                 >
                   <span className="inline-flex mt-1 sm:mt-0 sm:hidden">
                     <CurrencyIcon className="h-11 w-11" />

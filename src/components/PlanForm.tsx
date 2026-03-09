@@ -222,7 +222,7 @@ export function PlanForm({
           required
           defaultValue={initialValues?.name ?? templateInitialValues?.name ?? ""}
           onInput={markDirty}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
         />
       </div>
 
@@ -234,7 +234,7 @@ export function PlanForm({
           rows={3}
           defaultValue={initialValues?.description ?? ""}
           onInput={markDirty}
-          className="min-h-[4.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+          className="min-h-[4.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
         />
       </div>
 
@@ -245,7 +245,7 @@ export function PlanForm({
           placeholder={t.planForm.goalPlaceholder}
           defaultValue={initialValues?.goal ?? templateInitialValues?.goal ?? ""}
           onInput={markDirty}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
         />
       </div>
 
@@ -258,7 +258,7 @@ export function PlanForm({
             required
             defaultValue={defaultStart}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
           />
         </div>
         <div className="flex min-w-0 flex-col gap-2">
@@ -269,7 +269,7 @@ export function PlanForm({
             required
             defaultValue={defaultEnd}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
           />
         </div>
       </div>
@@ -282,7 +282,7 @@ export function PlanForm({
             type="date"
             defaultValue={toDateInputValue(initialValues?.actualStartAt)}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
           />
         </div>
         <div className="flex min-w-0 flex-col gap-2">
@@ -292,7 +292,7 @@ export function PlanForm({
             type="date"
             defaultValue={toDateInputValue(initialValues?.actualEndAt)}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
           />
         </div>
       </div>
@@ -304,7 +304,7 @@ export function PlanForm({
             name="status"
             defaultValue={defaultStatus}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
           >
             {PLAN_STATUS_VALUES.map((s) => (
               <option key={s} value={s}>
@@ -323,7 +323,7 @@ export function PlanForm({
           rows={2}
           defaultValue={initialValues?.notes ?? ""}
           onInput={markDirty}
-          className="min-h-[3.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+          className="min-h-[3.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
         />
       </div>
 
@@ -333,7 +333,7 @@ export function PlanForm({
           name="color"
           defaultValue={initialValues?.color ?? ""}
           onChange={markDirty}
-          className="min-w-0 w-full max-w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 sm:max-w-xs"
+          className="min-w-0 w-full max-w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 sm:max-w-xs"
         >
           {COLOR_OPTIONS.map((c) => (
             <option key={c.value || "none"} value={c.value}>
@@ -351,7 +351,7 @@ export function PlanForm({
           placeholder={t.planForm.imageUrlPlaceholder}
           defaultValue={initialValues?.imageUrl ?? ""}
           onInput={markDirty}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
         />
         {initialValues?.imageUrl ? (
           <div className="mt-1 flex justify-start">
@@ -388,7 +388,7 @@ export function PlanForm({
                 onChange={(e) => setTaskSearchFilter(e.target.value)}
                 placeholder={t.plans.searchTasksPlaceholder}
                 aria-label={t.plans.filterTasksByName}
-                className="mb-2 w-full rounded-lg border border-blue-100 bg-white px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-2"
+                className="mb-2 w-full rounded-lg border border-blue-100 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-2"
               />
               <ul className="flex max-h-48 flex-col gap-1.5 overflow-y-auto rounded-lg border border-blue-100 bg-white p-2">
                 {userTasks.map((task) => {
@@ -436,7 +436,7 @@ export function PlanForm({
                 defaultValue={title}
                 placeholder={t.plans.newTaskTitlePlaceholder}
                 onInput={markDirty}
-                className="min-w-0 flex-1 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+                className="min-w-0 flex-1 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
               />
               <button
                 type="button"

@@ -38,7 +38,7 @@ export function TaskContentEditor({
     editorProps: {
       attributes: {
         class:
-          "min-h-[80px] w-full resize-y rounded-b-xl border border-t-0 border-blue-100 bg-white px-3 py-2 text-sm outline-none ring-blue-200/70 focus:ring-4 prose prose-sm max-w-none [&_a]:text-blue-600 [&_a]:underline",
+          "min-h-[80px] w-full resize-y rounded-b-xl border border-t-0 border-blue-100 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 focus:ring-4 prose prose-sm max-w-none [&_a]:text-blue-600 [&_a]:underline",
       },
     },
   });
