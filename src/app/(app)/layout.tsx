@@ -26,7 +26,7 @@ export default async function AppLayout({
     <TranslationsProvider locale={locale}>
       <div className="min-h-screen bg-transparent text-zinc-950">
         <header className="relative z-50 border-b border-blue-100 bg-white/85 backdrop-blur">
-          <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-2 py-2 sm:px-6 sm:py-3">
+          <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-2 pt-4 pb-2 sm:px-6 sm:py-3">
             <div className="relative z-10 flex min-w-0 flex-1 items-center gap-1 overflow-visible sm:gap-6">
               <Plan2026Logo
                 className="shrink-0 self-center mt-2 sm:-mt-2.5"
