@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.12.0
+
+### Minor Changes
+
+- d85ce04: TECH-1001 Data handling optimizations: cache revalidation on task delete, shared format/task service layer, plan create/update transactions and createMany, task API parity (planId/urgency, GET includes), pagination for tasks/plans/plan-detail tasks, Prisma dev logging, blob cleanup on attachment/task delete, GET /api/plans.
+
 ## 0.11.1
 
 ### Patch Changes
