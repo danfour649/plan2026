@@ -14,13 +14,13 @@ import { PLAN_STATUS_VALUES } from "@/lib/validations/plan";
 type PlanFormAction = (formData: FormData) => Promise<PlanActionResult>;
 
 const PRIORITY_OPTIONS = [
-  { value: 7, label: "7 - Highest", className: "bg-red-100 text-red-700" },
+  { value: 7, label: "7 - Highest", shortLabel: "7", className: "bg-red-100 text-red-700" },
   { value: 6, label: "6", className: "bg-orange-100 text-orange-700" },
   { value: 5, label: "5", className: "bg-amber-100 text-amber-700" },
   { value: 4, label: "4", className: "bg-emerald-100 text-emerald-700" },
   { value: 3, label: "3", className: "bg-cyan-100 text-cyan-700" },
   { value: 2, label: "2", className: "bg-sky-100 text-sky-700" },
-  { value: 1, label: "1 - Lowest", className: "bg-blue-100 text-blue-700" },
+  { value: 1, label: "1 - Lowest", shortLabel: "1", className: "bg-blue-100 text-blue-700" },
 ];
 
 const COLOR_OPTIONS = [
@@ -155,7 +155,7 @@ export function PlanForm({
 
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-blue-950">{t.planForm.priorityLabel}</label>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 pl-2">
           {PRIORITY_OPTIONS.map((option) => (
             <label key={option.value} className="inline-flex cursor-pointer items-center gap-2">
               <input
@@ -169,7 +169,14 @@ export function PlanForm({
               <span
                 className={`rounded-full px-3 py-1.5 text-sm font-medium transition hover:opacity-90 peer-checked:ring-2 peer-checked:ring-blue-400 peer-checked:ring-offset-2 ${option.className}`}
               >
-                {option.label}
+                {"shortLabel" in option && option.shortLabel ? (
+                  <>
+                    <span className="sm:hidden">{option.shortLabel}</span>
+                    <span className="hidden sm:inline">{option.label}</span>
+                  </>
+                ) : (
+                  option.label
+                )}
               </span>
             </label>
           ))}

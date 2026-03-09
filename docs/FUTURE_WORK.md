@@ -21,6 +21,7 @@ Outstanding tasks that are too large for a single small PR are documented in **s
 | [TECH-0047-prebuilt-plan-templates.md](./TECH-0047-prebuilt-plan-templates.md) | Choose a prebuilt plan from a template. |
 | [TECH-0048-share-to-social-external-plans.md](./TECH-0048-share-to-social-external-plans.md) | Public view link, unauthenticated status-only update, secure endpoint. |
 | [BULK-PLAN-2026-03-REMAINING.md](./BULK-PLAN-2026-03-REMAINING.md) | Index of remaining bulk plan tasks and links to analysis docs above. |
+| [TECH-DEBT-AND-OPTIMIZATIONS.md](./TECH-DEBT-AND-OPTIMIZATIONS.md) | Tech debt and optimizations (data handling, cache, scale, API parity, rate limiting). |
 
 ---
 

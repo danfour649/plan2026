@@ -1,5 +1,6 @@
 "use client";
 
+import { UserPlus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -43,15 +44,22 @@ export function InviteByLinkButton({ planId, planName }: { planId: string; planN
         type="button"
         onClick={handleCreate}
         disabled={loading}
-        className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 disabled:opacity-70"
+        className="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 disabled:opacity-70 sm:justify-start"
+        aria-label={t.common.inviteByLink}
       >
         {loading ? (
-          t.toasts.creating
+          <span className="sm:hidden" aria-hidden>
+            <span className="inline-block size-5 animate-pulse rounded-full bg-blue-300" />
+          </span>
         ) : (
-          <>
-            <span className="sm:hidden">{t.common.invite}</span>
-            <span className="hidden sm:inline">{t.common.inviteByLink}</span>
-          </>
+          <span className="sm:hidden" aria-hidden>
+            <UserPlus className="size-5" />
+          </span>
+        )}
+        {loading ? (
+          <span className="hidden sm:inline">{t.toasts.creating}</span>
+        ) : (
+          <span className="hidden sm:inline">{t.common.inviteByLink}</span>
         )}
       </button>
       {inviteUrl ? (

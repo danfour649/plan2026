@@ -1,3 +1,4 @@
+import { Printer } from "lucide-react";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
@@ -168,10 +169,13 @@ export default async function PlanDetailPage({
         <ExportPlanButton plan={planForExport} />
         <Link
           href={`/plans/${plan.id}/print`}
-          className="inline-flex shrink-0 items-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
+          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 sm:justify-start"
           aria-label={t.plans.printChecklistAria}
         >
-          {t.plans.printChecklist}
+          <span className="sm:hidden" aria-hidden>
+            <Printer className="size-5" />
+          </span>
+          <span className="hidden sm:inline">{t.plans.printChecklist}</span>
         </Link>
         {isOwner ? (
           <>

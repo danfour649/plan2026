@@ -1,5 +1,6 @@
 "use client";
 
+import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { useTranslations } from "@/components/TranslationsProvider";
@@ -30,9 +31,12 @@ export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonP
       <button
         type="button"
         onClick={() => setShowConfirm(true)}
-        className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100"
+        className="inline-flex shrink-0 items-center justify-center rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100 sm:justify-start sm:px-4"
+        aria-label={t.plans.deletePlan}
       >
-        <span className="sm:hidden">{t.plans.deletePlanShort}</span>
+        <span className="sm:hidden" aria-hidden>
+          <Trash2 className="size-5" />
+        </span>
         <span className="hidden sm:inline">{t.plans.deletePlan}</span>
       </button>
 
