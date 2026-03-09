@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { PlanFlag } from "@/components/PlanFlag";
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { PlanActionResult } from "@/lib/actions/plans";
 import { clearEditPlanFormDirty, getEditPlanFormDirty } from "@/lib/editPlanDirty";
@@ -30,17 +31,10 @@ const COLOR_OPTIONS = [
   { value: "amber", labelKey: "amber" as const },
   { value: "red", labelKey: "red" as const },
   { value: "violet", labelKey: "violet" as const },
+  { value: "black", labelKey: "black" as const },
+  { value: "pink", labelKey: "pink" as const },
+  { value: "silver", labelKey: "silver" as const },
 ];
-
-/** Flag emoji per plan color (for display as "flag" in UI; DB field remains "color"). */
-const FLAG_EMOJI: Record<string, string> = {
-  "": "",
-  blue: "🔵",
-  green: "🟢",
-  amber: "🟡",
-  red: "🔴",
-  violet: "🟣",
-};
 
 function toDateInputValue(d: Date | string | null | undefined): string {
   if (!d) return "";
@@ -337,7 +331,14 @@ export function PlanForm({
         >
           {COLOR_OPTIONS.map((c) => (
             <option key={c.value || "none"} value={c.value}>
-              {FLAG_EMOJI[c.value] ? `${FLAG_EMOJI[c.value]} ${t.form[c.labelKey]}` : t.form[c.labelKey]}
+              {c.value ? (
+                <>
+                  <PlanFlag color={c.value} size={14} className="inline-block align-middle" />
+                  <span className="ml-1.5">{t.form[c.labelKey]}</span>
+                </>
+              ) : (
+                t.form[c.labelKey]
+              )}
             </option>
           ))}
         </select>

@@ -6,8 +6,8 @@ import { ExportPlansButton } from "@/components/ExportPlansButton";
 import { RefreshPlansButton } from "@/components/RefreshPlansButton";
 import { ShowArchivedPlansToggle } from "@/components/ShowArchivedPlansToggle";
 import { PlanStatusSelect } from "@/components/PlanStatusSelect";
+import { hasPlanFlag, PlanFlag } from "@/components/PlanFlag";
 import {
-  getFlagEmoji,
   getPriorityOvalClasses,
   getStatusPillClasses,
 } from "@/lib/format";
@@ -171,9 +171,9 @@ export default async function PlansPage({
                         {plan.percentCompleted}%
                       </span>
                     </span>
-                    {getFlagEmoji(plan.color) ? (
-                      <span className="shrink-0 text-base leading-none" aria-hidden>
-                        {getFlagEmoji(plan.color)}
+                    {plan.color && hasPlanFlag(plan.color) ? (
+                      <span className="shrink-0 text-base leading-none">
+                        <PlanFlag color={plan.color} size={18} />
                       </span>
                     ) : null}
                   </div>

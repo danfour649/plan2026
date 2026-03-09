@@ -70,9 +70,7 @@ export function getStatusPillClasses(status: string): string {
   }
 }
 
-/** Flag emoji for plan color (same mapping as PlanForm). */
+/** Legacy: flag display now uses PlanFlag component. Kept for any remaining refs. */
 export function getFlagEmoji(color: string | null | undefined): string {
-  if (!color) return "";
-  const map: Record<string, string> = { blue: "🔵", green: "🟢", amber: "🟡", red: "🔴", violet: "🟣" };
-  return map[color] ?? "";
+  return ""; // Use <PlanFlag color={...} /> instead
 }

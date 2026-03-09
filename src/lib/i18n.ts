@@ -258,6 +258,9 @@ const messages = {
       amber: "Amber",
       red: "Red",
       violet: "Violet",
+      black: "Black",
+      pink: "Pink",
+      silver: "Silver",
     },
     calendar: {
       reconnectGoogleCalendar: "Reconnect Google Calendar",
@@ -570,6 +573,9 @@ const messages = {
       amber: "Ambre",
       red: "Rouge",
       violet: "Violet",
+      black: "Noir",
+      pink: "Rose",
+      silver: "Argent",
     },
     calendar: {
       reconnectGoogleCalendar: "Reconnecter Google Agenda",
@@ -882,6 +888,9 @@ const messages = {
       amber: "Amber",
       red: "Red",
       violet: "Violet",
+      black: "Black",
+      pink: "Pink",
+      silver: "Silver",
     },
     calendar: {
       reconnectGoogleCalendar: "Connect Google Calendar again",
