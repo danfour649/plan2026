@@ -1,6 +1,6 @@
 # TECH-0026: Get permanent website
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** On hold — not ready yet (need to determine domain name and provider). Do not implement until directed.
 
 **Goal:** Switch from the default Vercel deployment URL (e.g. `plan2026-pi.vercel.app`) to a permanent custom domain.
 

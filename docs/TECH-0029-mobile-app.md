@@ -1,6 +1,6 @@
 # TECH-0029: Mobile app (Android and iOS)
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** On hold — scope too large for now. Do not implement until directed.
 
 **Goal:** Create Android and iOS apps for Plan 2026 that use the existing web app (same site, not a full native rewrite).
 

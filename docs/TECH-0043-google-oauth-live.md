@@ -1,6 +1,6 @@
 # TECH-0043: Google OAuth live (production)
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** On hold — not ready yet; need to add privacy disclosures and complete Google's checklist before going past testing mode. Do not implement until directed.
 
 **Goal:** Enable and verify Google OAuth in a production (live) environment so users can sign in with Google on the real deployment (e.g. permanent domain or production Vercel URL).
 

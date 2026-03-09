@@ -1,4 +1,4 @@
-# Tech Debt and Optimizations Report
+# TECH-1001: Tech Debt and Optimizations Report
 
 This document captures potential tech debt and optimizations for the plan2026 app, with emphasis on **data handling** and issues that may surface as features are added or data volume grows. It is intended as a living reference for prioritization and refactors.
 

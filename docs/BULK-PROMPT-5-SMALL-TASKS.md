@@ -2,13 +2,14 @@
 
 Use this prompt with a **new agent** to implement the following five tasks in **bulk task → PR pipeline** mode (see AGENTS.md). One branch and one PR per task; add a changeset per implemented task; push and open the PR for each before moving to the next.
 
-**Next 5 (easiest):** Help pages, onboarding/login, permanent website (config), prebuilt plan templates, Google OAuth production config.
+**Next 5 (active only):** Help pages, onboarding/login, prebuilt plan templates, supply list, Facebook login.  
+**On hold (do not implement):** TECH-0026 (permanent website), TECH-0029 (mobile app), TECH-0031 (AI advice), TECH-0043 (Google OAuth live) — see [BULK-PLAN-2026-03-REMAINING.md](./BULK-PLAN-2026-03-REMAINING.md).
 
 ---
 
 ## Copy-paste prompt for the agent
 
-**Task: Bulk implement 5 tasks from the plan 2026 remaining list. Follow AGENTS.md “Bulk task → PR pipeline” and “Translations (i18n)” (all user-facing text in en, fr, pidgin).**
+**Task: Bulk implement 5 tasks from the plan 2026 remaining list. Follow AGENTS.md “Bulk task → PR pipeline” and “Translations (i18n)” (all user-facing text in en, fr, pidgin). Do not implement tasks marked on hold in the docs.**
 
 Implement the following five tasks. For each task:
 
@@ -24,9 +25,9 @@ Implement the following five tasks. For each task:
 |----|--------|--------------|
 | TECH-0042 | Help pages | [TECH-0042-help-pages.md](./TECH-0042-help-pages.md) |
 | TECH-0045 | Onboarding / login screen | [TECH-0045-onboarding-login-screen.md](./TECH-0045-onboarding-login-screen.md) |
-| TECH-0026 | Get permanent website | [TECH-0026-permanent-website.md](./TECH-0026-permanent-website.md) |
 | TECH-0047 | Start with a prebuilt plan | [TECH-0047-prebuilt-plan-templates.md](./TECH-0047-prebuilt-plan-templates.md) |
-| TECH-0043 | Google OAuth live | [TECH-0043-google-oauth-live.md](./TECH-0043-google-oauth-live.md) |
+| — | Add supply list | [TECH-0030-supply-list.md](./TECH-0030-supply-list.md) |
+| TECH-0044 | Facebook login | [TECH-0044-facebook-login.md](./TECH-0044-facebook-login.md) |
 
 **Rules:**
 
@@ -35,4 +36,4 @@ Implement the following five tasks. For each task:
 - Do not create or update analysis docs for these five; the existing docs are the source of truth. When a task is implemented, you can leave the doc in place for reference or note “Implemented” at the top.
 - After all 5 PRs are open, tell the user they can test and merge in order using the “Testing bulk-task PRs one at a time” steps in AGENTS.md if they want.
 
-Start with TECH-0042, then 0045, 0026, 0047, 0043.
+Start with TECH-0042, then 0045, 0047, then supply list (no ID), then TECH-0044.
