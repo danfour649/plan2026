@@ -13,8 +13,6 @@ import {
   type SupplyActionResult,
 } from "@/lib/actions/supplies";
 
-const ACQUIRED_STATUS_VALUES = ["needed", "ordered", "pending", "purchased"] as const;
-
 function getStatusLabel(
   t: ReturnType<typeof useTranslations>,
   status: string,
