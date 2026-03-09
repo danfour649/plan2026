@@ -182,7 +182,6 @@ export default async function PlanDetailPage({
       <div className="grid min-w-0 gap-6 lg:grid-cols-2 lg:gap-8">
         {isOwner ? (
           <EditPlanFormWrapper
-            planId={plan.id}
             action={updatePlan}
             initialValues={initialValues}
             userTasks={userTasks}

@@ -9,7 +9,6 @@ import type { PlanActionResult } from "@/lib/actions/plans";
 import type { PlanFormInitialValues } from "@/components/PlanForm";
 
 type EditPlanFormWrapperProps = {
-  planId: string;
   action: (formData: FormData) => Promise<PlanActionResult>;
   initialValues: PlanFormInitialValues;
   userTasks: { id: string; title: string }[];
@@ -23,7 +22,6 @@ type EditPlanFormWrapperProps = {
 };
 
 export function EditPlanFormWrapper({
-  planId,
   action,
   initialValues,
   userTasks,
