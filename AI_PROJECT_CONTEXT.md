@@ -37,7 +37,7 @@ src/
       tasks/page.tsx                    # Unified tasks page for remaining and optional completed items; shows plan link when task has planId
       tasks/loading.tsx                 # Tasks page skeleton
       plans/page.tsx                    # Plans list (ordered by priority); refresh, show completed/abandoned toggle; per-row Edit and status dropdown; links to /plans/new and /plans/[id]
-      plans/new/page.tsx                # Full-page create plan form
+      plans/new/page.tsx                # Full-page create plan form; optional "Start from template" (see src/data/planTemplates.ts)
       plans/[id]/page.tsx               # Full-page plan detail and edit form; delete plan; tasks-in-plan list with edit-task modal
       help/page.tsx                     # Help: how to use tasks and plans, recent updates, link to changelog
       about/page.tsx                    # About: app name, version (from package.json), contributors
@@ -285,7 +285,7 @@ Error conventions across task APIs:
 | Task HTML sanitization | `src/lib/sanitize.ts` |
 | Unified tasks UI | `src/app/(app)/tasks/page.tsx` |
 | Plans list UI | `src/app/(app)/plans/page.tsx` |
-| Plan create UI | `src/app/(app)/plans/new/page.tsx` |
+| Plan create UI | `src/app/(app)/plans/new/page.tsx` (templates: `src/data/planTemplates.ts`) |
 | Plan detail/edit UI | `src/app/(app)/plans/[id]/page.tsx` |
 | Help UI | `src/app/(app)/help/page.tsx` |
 | About UI | `src/app/(app)/about/page.tsx` |

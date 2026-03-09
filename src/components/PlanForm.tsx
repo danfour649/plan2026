@@ -90,6 +90,8 @@ type PlanFormProps = {
   onRequestDiscardConfirm?: (open: boolean) => void;
   /** Callback when user edits any field (e.g. sets module-level dirty flag). */
   onDirtyChange?: () => void;
+  /** When creating a new plan, optional pre-fill from template (name, goal, new task titles). */
+  templateInitialValues?: { name: string; goal?: string; newTaskTitles: string[] };
 };
 
 export function PlanForm({
@@ -103,12 +105,17 @@ export function PlanForm({
   discardConfirmMessage,
   onRequestDiscardConfirm,
   onDirtyChange,
+  templateInitialValues,
 }: PlanFormProps) {
   const t = useTranslations();
   const router = useRouter();
   const markDirty = () => onDirtyChange?.();
   const [state, formAction] = useActionState(wrap(action), null as PlanActionResult | null);
-  const [newTaskTitles, setNewTaskTitles] = useState<string[]>([""]);
+  const [newTaskTitles, setNewTaskTitles] = useState<string[]>(
+    templateInitialValues?.newTaskTitles?.length
+      ? templateInitialValues.newTaskTitles
+      : [""],
+  );
   const [taskSearchFilter, setTaskSearchFilter] = useState("");
   const [percentCompleted, setPercentCompleted] = useState(initialValues?.percentCompleted ?? 0);
 
@@ -213,7 +220,7 @@ export function PlanForm({
           name="name"
           placeholder={t.plans.planNamePlaceholder}
           required
-          defaultValue={initialValues?.name ?? ""}
+          defaultValue={initialValues?.name ?? templateInitialValues?.name ?? ""}
           onInput={markDirty}
           className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />
@@ -236,7 +243,7 @@ export function PlanForm({
         <input
           name="goal"
           placeholder={t.planForm.goalPlaceholder}
-          defaultValue={initialValues?.goal ?? ""}
+          defaultValue={initialValues?.goal ?? templateInitialValues?.goal ?? ""}
           onInput={markDirty}
           className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
         />

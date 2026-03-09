@@ -1,6 +1,6 @@
 # TECH-0047: Start with a prebuilt plan (templates)
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** Implemented (static templates in src/data/planTemplates.ts; template picker on new plan page; i18n for all template names and task titles).
 
 **Goal:** Let users choose a prebuilt plan from a set of templates when creating a new plan, so they can start from a suggested structure (e.g. “Project launch”, “Trip planning”) instead of a blank plan.
 
