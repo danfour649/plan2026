@@ -1,6 +1,6 @@
 # TECH-1005: Data robustness and optimization
 
-**Status:** Not implemented — future work. Run a fresh analysis of the app’s data handling, then implement improvements for robustness and scalability.
+**Status:** Audit completed; findings and prioritized actions recorded below. API documentation in README updated. Further implementation (rate limiter, API pagination) deferred to follow-up work.
 
 **Goal:** After prior tech-debt work (pagination, task-service, revalidation, blob cleanup, etc.) is in place, run a new analysis of the app’s data layer and make it robust and scalable for production and growth.
 
@@ -24,6 +24,31 @@
 | **Permissions and shared data** | Plan/task access for owners vs shared users; any gaps before adding “shared user can edit.” |
 
 **Deliverable:** Update this doc (or an “Findings” subsection) with the audit results and a prioritized list of actions before implementing.
+
+---
+
+## 1b. Findings (audit)
+
+*Audit run: codebase as of current main.*
+
+| Area | Finding |
+|------|---------|
+| **Cache** | Only `revalidatePath()` is used (tasks, plans, supplies, share). No `revalidateTag()`. Paths revalidated are consistent per action. List is manageable today; tag-based invalidation is optional for future growth. |
+| **Data loading** | Tasks list page and plan-detail tasks use pagination (`skip`/`take`). **GET /api/tasks** returns **all** tasks for the user (no pagination); GET /api/plans has pagination (page, limit, showArchived). Risk: large task lists via API. |
+| **Mutations** | Plan create/update use `prisma.$transaction`; revalidation after commit. Task mutations use task-service; revalidation in actions. |
+| **API vs UI** | GET /api/tasks order: `completedAt desc`, `createdAt desc`; includes plan (id, name) and attachments. GET /api/plans: paginated, order `priority desc`, `createdAt desc`; filter by showArchived. README documents endpoints; ordering and response shape documented in this pass. |
+| **Rate limiting** | `src/lib/rate-limit.ts`: in-memory Map, 100 req/min per identifier. Used by GET/POST /api/tasks and GET /api/plans. Not shared across serverless instances; production should use distributed limiter (e.g. Upstash Redis). |
+| **Database** | Prisma singleton in `src/lib/prisma.ts`; dev logging for query/error. Production pooling not documented. Indexes: Task (userId, userId+completedAt, planId); Plan (userId, userId+priority). |
+| **Error handling** | Server actions return `{ success: false, error: string }`. API routes return 4xx/5xx with JSON `{ error }`. Zod at boundaries. Pattern is consistent. |
+| **Permissions** | Plan list/detail: owned or shared. Task mutations scoped by userId. Shared users can view but not edit. |
+| **Invites / blob** | `/api/plans/cleanup-invites` exists; README mentions cron. Blob: task and attachment delete call `del()`. |
+
+**Prioritized actions**
+
+1. **Done this pass:** Document API contract (ordering, response shape) in README.
+2. **High (production):** Replace in-memory rate limiter with distributed (e.g. Upstash Redis); document env.
+3. **Medium:** Add pagination to GET /api/tasks for scale.
+4. **Low:** Cache tags if routes/mutations grow; document connection pooling.
 
 ---
 

@@ -140,13 +140,15 @@ To enable "Continue with Facebook" on the login page:
 
 ## API
 
-- `GET /api/tasks` - list all tasks for the signed-in user (includes `plan` and `attachments`)
-- `POST /api/tasks` - create a task
-- `PATCH /api/tasks/:id` - mark a task complete or restore it
-- `DELETE /api/tasks/:id` - delete a task
-- `POST /api/tasks/:id/calendar` - create a Google Calendar event for a task
-- `GET /api/plans` - list plans for the signed-in user (owned + shared). Query: `page`, `limit`, `showArchived=1`
-- `POST /api/plans/cleanup-invites` - delete expired plan invites (e.g. for cron). Requires auth.
+All API routes require an authenticated session. Responses use JSON; errors return `{ error: "message" }` with an appropriate status code (401 Unauthorized, 400 Bad Request, 404 Not Found, 429 Too Many Requests). Rate limiting applies per user (in-memory; see TECH-1005 for production notes).
+
+- **`GET /api/tasks`** — List all tasks for the signed-in user. **No pagination** (returns full list). Order: `completedAt desc`, then `createdAt desc`. Response: `{ tasks }`. Each task includes `plan: { id, name }` and `attachments` when present.
+- **`POST /api/tasks`** — Create a task. Body: see below. Response: `{ task }`, 201.
+- **`PATCH /api/tasks/:id`** — Update completion. Body: `{ "completed": true | false }`. Sets `completedAt` to now or null.
+- **`DELETE /api/tasks/:id`** — Delete a task (owner only).
+- **`POST /api/tasks/:id/calendar`** — Create a Google Calendar event for the task.
+- **`GET /api/plans`** — List plans (owned + shared). **Paginated.** Query: `page` (default 1), `limit` (default 20, max 100), `showArchived=1` to include completed/abandoned. Order: `priority desc`, then `createdAt desc`. Response: `{ plans, total, page, limit, totalPages }`. Each plan includes `tasks: { id, completedAt }`.
+- **`POST /api/plans/cleanup-invites`** — Delete expired plan invites (e.g. for cron). Requires auth.
 
 ### `POST /api/tasks` body
 
