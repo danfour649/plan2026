@@ -1,6 +1,8 @@
-# TECH-1001: Tech Debt and Optimizations Report
+# Tech Debt and Optimizations Report
 
 This document captures potential tech debt and optimizations for the plan2026 app, with emphasis on **data handling** and issues that may surface as features are added or data volume grows. It is intended as a living reference for prioritization and refactors.
+
+**TECH-1001** implemented many of the items below: cache revalidation on task delete, shared format/task service layer, plan create/update transactions and createMany, task API parity (planId/urgency, GET includes), pagination for tasks/plans/plan-detail tasks, Prisma dev logging, blob cleanup on delete, GET /api/plans, and cleanup-invites endpoint.
 
 ---
 

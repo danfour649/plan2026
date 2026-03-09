@@ -345,6 +345,7 @@ export function EditTaskDialog({
             <div className="mt-6 border-t border-blue-100 pt-4">
               <form action={deleteFormAction} className="flex flex-col gap-3">
                 <input type="hidden" name="taskId" value={task.id} />
+                {task.planId ? <input type="hidden" name="planId" value={task.planId} /> : null}
                 {!showDeleteConfirm ? (
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-sm text-zinc-500">{t.tasks.removeTaskPermanently}</p>

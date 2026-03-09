@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { get } from "@vercel/blob";
+import { del, get } from "@vercel/blob";
 
 import { getCurrentUserId } from "@/auth";
 import { prisma } from "@/lib/prisma";
@@ -69,17 +69,21 @@ export async function DELETE(_req: Request, { params }: Params) {
     return NextResponse.json({ error: "Invalid task ID" }, { status: 400 });
   }
 
-  const deleted = await prisma.taskAttachment.deleteMany({
-    where: {
-      id: attachmentId,
-      taskId,
-      userId,
-    },
+  const attachment = await prisma.taskAttachment.findFirst({
+    where: { id: attachmentId, taskId, userId },
+    select: { url: true },
   });
-
-  if (deleted.count === 0) {
+  if (!attachment) {
     return NextResponse.json({ error: "Attachment not found" }, { status: 404 });
   }
+
+  if (process.env.BLOB_READ_WRITE_TOKEN && attachment.url) {
+    await del(attachment.url).catch(() => {});
+  }
+
+  await prisma.taskAttachment.deleteMany({
+    where: { id: attachmentId, taskId, userId },
+  });
 
   return NextResponse.json({ ok: true });
 }

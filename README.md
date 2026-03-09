@@ -128,11 +128,13 @@ Google sign-in forces a fresh Google consent step so revoked Calendar permission
 
 ## API
 
-- `GET /api/tasks` - list all tasks for the signed-in user
+- `GET /api/tasks` - list all tasks for the signed-in user (includes `plan` and `attachments`)
 - `POST /api/tasks` - create a task
 - `PATCH /api/tasks/:id` - mark a task complete or restore it
 - `DELETE /api/tasks/:id` - delete a task
 - `POST /api/tasks/:id/calendar` - create a Google Calendar event for a task
+- `GET /api/plans` - list plans for the signed-in user (owned + shared). Query: `page`, `limit`, `showArchived=1`
+- `POST /api/plans/cleanup-invites` - delete expired plan invites (e.g. for cron). Requires auth.
 
 ### `POST /api/tasks` body
 
@@ -140,7 +142,9 @@ Google sign-in forces a fresh Google consent step so revoked Calendar permission
 {
   "title": "Book flights",
   "content": "<p>Use the points portal first.</p>",
-  "dueAt": "2026-03-10T14:30"
+  "dueAt": "2026-03-10T14:30",
+  "urgency": 4,
+  "planId": "c..."
 }
 ```
 
@@ -149,7 +153,8 @@ Notes:
 - `title` is required
 - `content` is optional rich text HTML and is sanitized before storing/rendering
 - `dueAt` is optional; when present it is converted to a date
-- `urgency` is optional and defaults to `4`
+- `urgency` is optional and defaults to `4` (1–7)
+- `planId` is optional; when present the plan must exist and be owned by the user
 
 ### `PATCH /api/tasks/:id` body
 

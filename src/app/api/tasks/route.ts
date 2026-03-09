@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getCurrentUserId } from "@/auth";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { createTaskForUser } from "@/lib/task-service";
 import { prisma } from "@/lib/prisma";
 import { addTaskSchema } from "@/lib/validations/task";
 
@@ -21,6 +22,10 @@ export async function GET() {
   const tasks = await prisma.task.findMany({
     where: { userId },
     orderBy: [{ completedAt: "desc" }, { createdAt: "desc" }],
+    include: {
+      plan: { select: { id: true, name: true } },
+      attachments: { select: { id: true, url: true, filename: true, size: true } },
+    },
   });
 
   return NextResponse.json({ tasks });
@@ -40,12 +45,20 @@ export async function POST(req: Request) {
   const body = (await req.json().catch(() => null)) as unknown;
   const raw =
     body && typeof body === "object"
-      ? (body as { title?: unknown; content?: unknown; dueAt?: unknown })
+      ? (body as {
+          title?: unknown;
+          content?: unknown;
+          dueAt?: unknown;
+          urgency?: unknown;
+          planId?: unknown;
+        })
       : {};
   const parsed = addTaskSchema.safeParse({
     title: raw.title ?? "",
     content: raw.content ?? undefined,
     dueAt: raw.dueAt ?? undefined,
+    urgency: raw.urgency ?? 4,
+    planId: raw.planId ?? undefined,
   });
 
   if (!parsed.success) {
@@ -53,14 +66,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: msg }, { status: 400 });
   }
 
-  const task = await prisma.task.create({
-    data: {
-      userId,
-      title: parsed.data.title,
-      content: parsed.data.content ?? null,
-      dueAt: parsed.data.dueAt ?? null,
-    },
-  });
-  return NextResponse.json({ task }, { status: 201 });
+  const result = await createTaskForUser(userId, parsed.data);
+  if ("error" in result) {
+    if (result.error === "Plan not found") {
+      return NextResponse.json({ error: result.error }, { status: 404 });
+    }
+    return NextResponse.json({ error: result.error }, { status: 400 });
+  }
+  return NextResponse.json({ task: result.task }, { status: 201 });
 }
 

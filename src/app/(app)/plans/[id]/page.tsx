@@ -18,46 +18,44 @@ import { prisma } from "@/lib/prisma";
 import type { ExportedPlan, ExportedPlanTask } from "@/lib/export";
 import { deletePlan, updatePlan } from "@/lib/actions/plans";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
+import {
+  formatShortDate,
+  formatShortDateOnly,
+  formatShortDateTime,
+  getUrgencyPillClasses,
+} from "@/lib/format";
 
-function formatShortDate(d: Date): string {
-  return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-}
-function formatShortDateOnly(d: Date): string {
-  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-}
-function formatShortDateTime(d: Date): string {
-  return `${formatShortDate(d)} ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`;
+const PLAN_TASKS_PAGE_SIZE = 50;
+const MAX_PLAN_TASKS_PAGE_SIZE = 100;
+
+function parsePage(value: string | string[] | undefined): number {
+  const v = Array.isArray(value) ? value[0] : value;
+  const n = parseInt(String(v ?? "1"), 10);
+  return Number.isNaN(n) || n < 1 ? 1 : n;
 }
 
-function getUrgencyPillClasses(urgency: number) {
-  switch (urgency) {
-    case 7:
-      return "bg-red-100 text-red-700 ring-1 ring-red-200";
-    case 6:
-      return "bg-orange-100 text-orange-700 ring-1 ring-orange-200";
-    case 5:
-      return "bg-amber-100 text-amber-700 ring-1 ring-amber-200";
-    case 4:
-      return "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200";
-    case 3:
-      return "bg-cyan-100 text-cyan-700 ring-1 ring-cyan-200";
-    case 2:
-      return "bg-sky-100 text-sky-700 ring-1 ring-sky-200";
-    default:
-      return "bg-blue-100 text-blue-700 ring-1 ring-blue-200";
-  }
+function parseLimit(value: string | string[] | undefined, defaultSize: number): number {
+  const v = Array.isArray(value) ? value[0] : value;
+  const n = parseInt(String(v ?? defaultSize), 10);
+  if (Number.isNaN(n) || n < 1) return defaultSize;
+  return Math.min(n, MAX_PLAN_TASKS_PAGE_SIZE);
 }
 
 export default async function PlanDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams?: Promise<{ taskPage?: string | string[]; taskLimit?: string | string[] }>;
 }) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
   const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
   const t = getTranslations(locale);
   const { id } = await params;
+  const resolvedSearchParams = (await searchParams) ?? {};
+  const taskPage = parsePage(resolvedSearchParams.taskPage);
+  const taskLimit = parseLimit(resolvedSearchParams.taskLimit, PLAN_TASKS_PAGE_SIZE);
 
   const plan = await prisma.plan.findFirst({
     where: {
@@ -75,24 +73,55 @@ export default async function PlanDetailPage({
           { urgency: "desc" },
           { createdAt: "desc" },
         ],
-        select: {
-          id: true,
-          title: true,
-          content: true,
-          dueAt: true,
-          urgency: true,
-          completedAt: true,
-          createdAt: true,
-          updatedAt: true,
-          attachments: {
-            select: { id: true, url: true, filename: true, size: true },
-          },
-        },
+        select: { id: true },
       },
     },
   });
 
   if (!plan) notFound();
+
+  const taskOrderBy = [
+    { completedAt: "desc" as const },
+    { urgency: "desc" as const },
+    { createdAt: "desc" as const },
+  ];
+  const [planTasks, totalPlanTasks, exportTasks] = await Promise.all([
+    prisma.task.findMany({
+      where: { planId: id },
+      orderBy: taskOrderBy,
+      skip: (taskPage - 1) * taskLimit,
+      take: taskLimit,
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        dueAt: true,
+        urgency: true,
+        completedAt: true,
+        createdAt: true,
+        updatedAt: true,
+        attachments: {
+          select: { id: true, url: true, filename: true, size: true },
+        },
+      },
+    }),
+    prisma.task.count({ where: { planId: id } }),
+    prisma.task.findMany({
+      where: { planId: id },
+      orderBy: taskOrderBy,
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        dueAt: true,
+        urgency: true,
+        completedAt: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    }),
+  ]);
+  const totalTaskPages = Math.ceil(totalPlanTasks / taskLimit) || 1;
 
   const isOwner = plan.userId === userId;
 
@@ -143,7 +172,7 @@ export default async function PlanDetailPage({
     imageUrl: plan.imageUrl,
     createdAt: plan.createdAt.toISOString(),
     updatedAt: plan.updatedAt.toISOString(),
-    tasks: plan.tasks.map(
+    tasks: exportTasks.map(
       (taskItem): ExportedPlanTask => ({
         id: taskItem.id,
         title: taskItem.title,
@@ -240,9 +269,9 @@ export default async function PlanDetailPage({
               ) : null}
             </div>
           </div>
-          {plan.tasks.length > 0 ? (
+          {planTasks.length > 0 ? (
             <ul className="divide-y divide-blue-100">
-              {plan.tasks.map((task) => (
+              {planTasks.map((task) => (
                 <li
                   key={task.id}
                   className="flex flex-col gap-3 px-3 py-3 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
@@ -374,6 +403,31 @@ export default async function PlanDetailPage({
                   )}
                 </li>
               ))}
+              {totalTaskPages > 1 && (
+                <li className="flex flex-wrap items-center justify-between gap-2 border-t border-blue-100 px-3 py-3 sm:px-6">
+                  <span className="text-sm text-zinc-500">
+                    {t.common.pageOf.replace("{{current}}", String(taskPage)).replace("{{total}}", String(totalTaskPages))}
+                  </span>
+                  <div className="flex gap-2">
+                    {taskPage > 1 ? (
+                      <Link
+                        href={`/plans/${plan.id}?taskPage=${taskPage - 1}&taskLimit=${taskLimit}`}
+                        className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100"
+                      >
+                        {t.common.previousPage}
+                      </Link>
+                    ) : null}
+                    {taskPage < totalTaskPages ? (
+                      <Link
+                        href={`/plans/${plan.id}?taskPage=${taskPage + 1}&taskLimit=${taskLimit}`}
+                        className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100"
+                      >
+                        {t.common.nextPage}
+                      </Link>
+                    ) : null}
+                  </div>
+                </li>
+              )}
             </ul>
           ) : (
             <div className="px-3 py-6 text-center sm:px-6 sm:py-8">

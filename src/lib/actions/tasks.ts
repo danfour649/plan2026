@@ -1,8 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { del } from "@vercel/blob";
 
 import { getCurrentUserId } from "@/auth";
+import { createTaskForUser, updateTaskForUser } from "@/lib/task-service";
 import { prisma } from "@/lib/prisma";
 import { addTaskSchema, taskIdSchema, updateTaskSchema } from "@/lib/validations/task";
 
@@ -24,24 +26,9 @@ export async function addTask(formData: FormData): Promise<ActionResult> {
     return { success: false, error: msg };
   }
 
-  if (parsed.data.planId) {
-    const plan = await prisma.plan.findFirst({
-      where: { id: parsed.data.planId, userId },
-      select: { id: true },
-    });
-    if (!plan) return { success: false, error: "Plan not found" };
-  }
+  const result = await createTaskForUser(userId, parsed.data);
+  if ("error" in result) return { success: false, error: result.error };
 
-  await prisma.task.create({
-    data: {
-      userId,
-      title: parsed.data.title,
-      content: parsed.data.content ?? null,
-      dueAt: parsed.data.dueAt ?? null,
-      urgency: parsed.data.urgency,
-      planId: parsed.data.planId ?? null,
-    },
-  });
   revalidatePath("/tasks");
   revalidatePath("/plans");
   if (parsed.data.planId) revalidatePath(`/plans/${parsed.data.planId}`);
@@ -65,31 +52,19 @@ export async function updateTask(formData: FormData): Promise<ActionResult> {
     return { success: false, error: msg };
   }
 
-  if (parsed.data.planId) {
-    const plan = await prisma.plan.findFirst({
-      where: { id: parsed.data.planId, userId },
-      select: { id: true },
-    });
-    if (!plan) return { success: false, error: "Plan not found" };
-  }
-
-  const result = await prisma.task.updateMany({
-    where: { id: parsed.data.taskId, userId },
-    data: {
-      title: parsed.data.title,
-      content: parsed.data.content ?? null,
-      dueAt: parsed.data.dueAt ?? null,
-      urgency: parsed.data.urgency,
-      planId: parsed.data.planId ?? null,
-    },
+  const result = await updateTaskForUser(userId, parsed.data.taskId, {
+    title: parsed.data.title,
+    content: parsed.data.content,
+    dueAt: parsed.data.dueAt,
+    urgency: parsed.data.urgency,
+    planId: parsed.data.planId,
   });
-
-  if (result.count === 0) {
-    return { success: false, error: "Operation failed" };
-  }
+  if ("error" in result) return { success: false, error: result.error };
+  if (result.count === 0) return { success: false, error: "Operation failed" };
 
   revalidatePath("/tasks");
   revalidatePath("/plans");
+  if (parsed.data.planId) revalidatePath(`/plans/${parsed.data.planId}`);
   return { success: true };
 }
 
@@ -136,10 +111,24 @@ export async function deleteTask(formData: FormData): Promise<ActionResult> {
   const parsed = taskIdSchema.safeParse({ taskId: formData.get("taskId") ?? "" });
   if (!parsed.success) return { success: false, error: "Invalid task" };
 
+  const task = await prisma.task.findFirst({
+    where: { id: parsed.data.taskId, userId },
+    select: { attachments: { select: { url: true } } },
+  });
+  if (!task) return { success: false, error: "Operation failed" };
+
+  if (process.env.BLOB_READ_WRITE_TOKEN && task.attachments.length > 0) {
+    const urls = task.attachments.map((a) => a.url).filter(Boolean);
+    if (urls.length > 0) await del(urls).catch(() => {});
+  }
+
   const result = await prisma.task.deleteMany({
     where: { id: parsed.data.taskId, userId },
   });
   if (result.count === 0) return { success: false, error: "Operation failed" };
   revalidatePath("/tasks");
+  revalidatePath("/plans");
+  const planId = formData.get("planId");
+  if (typeof planId === "string" && planId.trim()) revalidatePath(`/plans/${planId.trim()}`);
   return { success: true };
 }
