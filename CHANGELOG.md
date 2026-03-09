@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.10.3
+
+### Patch Changes
+
+- a9ed5a9: On the plan detail page, the tasks section header (with "Add task") is now sticky on mobile so it stays in view when scrolling the task list.
+
 ## 0.10.2
 
 ### Patch Changes
