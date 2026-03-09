@@ -24,15 +24,23 @@ export default async function LoginPage({
   );
 
   return (
-    <main className="min-h-screen bg-transparent px-6 py-16 text-zinc-950">
-      <div className="mx-auto w-full max-w-md rounded-2xl border border-blue-100 bg-white/90 p-8 shadow-sm shadow-blue-100/60 backdrop-blur">
+    <main className="min-h-screen bg-transparent px-4 py-12 text-zinc-950 sm:px-6 sm:py-16">
+      <div className="mx-auto w-full max-w-md rounded-2xl border border-blue-100 bg-white/90 p-6 shadow-sm shadow-blue-100/60 backdrop-blur sm:p-8">
         <Plan2026Logo
-          className="mb-8"
-          iconClassName="h-20 w-24"
+          className="mb-6 sm:mb-8"
+          iconClassName="h-16 w-20 sm:h-20 sm:w-24"
           ariaLabel={t.common.goToPlans}
         />
-        <h1 className="text-2xl font-semibold tracking-tight text-blue-950">{t.login.title}</h1>
-        <p className="mt-2 text-sm text-zinc-600">{t.login.description}</p>
+        <h1 className="text-xl font-semibold tracking-tight text-blue-950 sm:text-2xl">
+          {t.login.headline}
+        </h1>
+        <p className="mt-1.5 text-sm text-zinc-600">{t.login.description}</p>
+
+        <ul className="mt-5 list-inside list-disc space-y-1.5 text-sm text-zinc-700" aria-label={t.login.headline}>
+          <li>{t.login.benefit1}</li>
+          <li>{t.login.benefit2}</li>
+          <li>{t.login.benefit3}</li>
+        </ul>
 
         {!hasGoogleCredentials ? (
           <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
