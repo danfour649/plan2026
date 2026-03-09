@@ -3,6 +3,8 @@ import FacebookProvider from "next-auth/providers/facebook";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { getServerSession } from "next-auth/next";
+import { unstable_cache } from "next/cache";
+import { cookies } from "next/headers";
 import { cache } from "react";
 
 import { GOOGLE_AUTHORIZATION_PARAMS } from "@/lib/google-oauth";
@@ -109,13 +111,50 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
+const NEXTAUTH_SESSION_COOKIE = "next-auth.session-token";
+const NEXTAUTH_SESSION_COOKIE_SECURE = "__Secure-next-auth.session-token";
+
 /**
- * Request-scoped cache so layout and child pages (e.g. /plans) that both call
- * getServerAuthSession() / getCurrentUserId() in the same RSC tree only run
- * the Session + User lookup once. Does not change auth semantics; each new
- * request still runs the lookup (cache is per-request).
+ * Look up session by token using only Prisma (no headers/cookies).
+ * Used inside unstable_cache so the cache callback does not access dynamic data.
  */
-const getServerAuthSessionCached = cache(() => getServerSession(authOptions));
+async function getSessionByToken(sessionToken: string) {
+  const session = await prisma.session.findUnique({
+    where: { sessionToken },
+    include: { user: true },
+  });
+  if (!session || session.expires < new Date()) return null;
+  return {
+    user: {
+      id: session.user.id,
+      name: session.user.name,
+      email: session.user.email,
+      image: session.user.image,
+    },
+    expires: session.expires.toISOString(),
+  };
+}
+
+/**
+ * Session is cached in two ways:
+ * 1. React cache() deduplicates within a single request (layout + page).
+ * 2. unstable_cache (Next.js Data Cache) keyed by session cookie reuses the
+ *    Session + User result across navigations so tab switches don't hit the DB.
+ * Cookie is read outside the cache; only the token string is passed into the cache.
+ */
+const getServerAuthSessionCached = cache(async () => {
+  const cookieStore = await cookies();
+  const sessionToken =
+    cookieStore.get(NEXTAUTH_SESSION_COOKIE)?.value ??
+    cookieStore.get(NEXTAUTH_SESSION_COOKIE_SECURE)?.value;
+  if (!sessionToken) return getServerSession(authOptions);
+  const getCachedSession = unstable_cache(
+    (token: string) => getSessionByToken(token),
+    ["auth-session", sessionToken],
+    { tags: [`auth-session-${sessionToken}`] },
+  );
+  return getCachedSession(sessionToken);
+});
 
 export function getServerAuthSession() {
   return getServerAuthSessionCached();

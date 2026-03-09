@@ -16,7 +16,11 @@ import { ShareByPublicLinkButton } from "@/components/ShareByPublicLinkButton";
 import { SharePlanButton } from "@/components/SharePlanButton";
 import { TaskContent } from "@/components/TaskContent";
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
-import { prisma } from "@/lib/prisma";
+import {
+  getCachedPlanDetail,
+  getCachedPlansForDropdown,
+  getCachedUserTasksForDropdown,
+} from "@/lib/data-cache";
 import type { ExportedPlan, ExportedPlanTask } from "@/lib/export";
 import { deletePlan, updatePlan } from "@/lib/actions/plans";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
@@ -63,88 +67,17 @@ export default async function PlanDetailPage({
   const editRaw = Array.isArray(resolvedSearchParams.edit) ? resolvedSearchParams.edit[0] : resolvedSearchParams.edit;
   const editItemId = editRaw && /^[a-z0-9]+$/i.test(editRaw) ? editRaw : undefined;
 
-  const plan = await prisma.plan.findFirst({
-    where: {
-      id,
-      OR: [
-        { userId },
-        { shares: { some: { sharedWithUserId: userId } } },
-      ],
-    },
-    include: {
-      tasks: {
-        orderBy: [
-          // PostgreSQL: DESC => NULLS FIRST, so incomplete (null) first, completed at bottom
-          { completedAt: "desc" },
-          { urgency: "desc" },
-          { createdAt: "desc" },
-        ],
-        select: { id: true },
-      },
-      supplyItems: {
-        orderBy: [{ order: "asc" }, { createdAt: "asc" }],
-      },
-    },
-  });
+  const [planDetail, plans, userTasks] = await Promise.all([
+    getCachedPlanDetail(id, userId, taskPage, taskLimit),
+    getCachedPlansForDropdown(userId),
+    getCachedUserTasksForDropdown(userId),
+  ]);
 
+  const { plan, planTasks, totalPlanTasks, exportTasks } = planDetail;
   if (!plan) notFound();
 
-  const taskOrderBy = [
-    { completedAt: "desc" as const },
-    { urgency: "desc" as const },
-    { createdAt: "desc" as const },
-  ];
-  const [planTasks, totalPlanTasks, exportTasks] = await Promise.all([
-    prisma.task.findMany({
-      where: { planId: id },
-      orderBy: taskOrderBy,
-      skip: (taskPage - 1) * taskLimit,
-      take: taskLimit,
-      select: {
-        id: true,
-        title: true,
-        content: true,
-        dueAt: true,
-        urgency: true,
-        completedAt: true,
-        createdAt: true,
-        updatedAt: true,
-        attachments: {
-          select: { id: true, url: true, filename: true, size: true },
-        },
-      },
-    }),
-    prisma.task.count({ where: { planId: id } }),
-    prisma.task.findMany({
-      where: { planId: id },
-      orderBy: taskOrderBy,
-      select: {
-        id: true,
-        title: true,
-        content: true,
-        dueAt: true,
-        urgency: true,
-        completedAt: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    }),
-  ]);
   const totalTaskPages = Math.ceil(totalPlanTasks / taskLimit) || 1;
-
   const isOwner = plan.userId === userId;
-
-  const plans = await prisma.plan.findMany({
-    where: { userId },
-    orderBy: [{ priority: "desc" }, { name: "asc" }],
-    select: { id: true, name: true },
-  });
-
-  const userTasks = await prisma.task.findMany({
-    where: { userId },
-    orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
-    select: { id: true, title: true },
-  });
 
   const supplyItemsForClient = plan.supplyItems.map((item) => ({
     id: item.id,
@@ -172,7 +105,7 @@ export default async function PlanDetailPage({
     notes: plan.notes ?? undefined,
     color: plan.color ?? undefined,
     imageUrl: plan.imageUrl ?? undefined,
-    taskIds: plan.tasks.map((t) => t.id),
+    taskIds: exportTasks.map((t) => t.id),
   };
 
   const planForExport: ExportedPlan = {

@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { getCurrentUserId } from "@/auth";
 import { EditSupplyItemDialog } from "@/components/EditSupplyItemDialog";
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
-import { prisma } from "@/lib/prisma";
+import { getCachedSuppliesPage } from "@/lib/data-cache";
 
 export const metadata: Metadata = {
   title: "Supplies",
@@ -31,21 +31,7 @@ export default async function SuppliesPage() {
   const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
   const t = getTranslations(locale);
 
-  const plansWithSupplies = await prisma.plan.findMany({
-    where: {
-      OR: [
-        { userId },
-        { shares: { some: { sharedWithUserId: userId } } },
-      ],
-      supplyItems: { some: {} },
-    },
-    orderBy: [{ priority: "desc" }, { name: "asc" }],
-    include: {
-      supplyItems: {
-        orderBy: [{ order: "asc" }, { createdAt: "asc" }],
-      },
-    },
-  });
+  const { plansWithSupplies } = await getCachedSuppliesPage(userId);
 
   const plansWithOwner = plansWithSupplies.map((p) => ({
     ...p,

@@ -6,18 +6,16 @@ import { ExportPlansButton } from "@/components/ExportPlansButton";
 import { RefreshPlansButton } from "@/components/RefreshPlansButton";
 import { ShowArchivedPlansToggle } from "@/components/ShowArchivedPlansToggle";
 import { PlanStatusSelect } from "@/components/PlanStatusSelect";
-import type { Prisma } from "@prisma/client";
 import {
   getFlagEmoji,
   getPriorityOvalClasses,
   getStatusPillClasses,
 } from "@/lib/format";
 import { formatTasksCount, getLocaleFromCookie, getTranslations } from "@/lib/i18n";
-import { prisma } from "@/lib/prisma";
+import { getCachedPlansPage } from "@/lib/data-cache";
 import type { ExportedPlan } from "@/lib/export";
 import { updatePlanStatus } from "@/lib/actions/plans";
 
-const ARCHIVED_STATUSES = ["completed", "abandoned"] as const;
 const DEFAULT_PLANS_PAGE_SIZE = 20;
 const MAX_PLANS_PAGE_SIZE = 100;
 
@@ -54,26 +52,12 @@ export default async function PlansPage({
   const page = parsePage(resolvedSearchParams.page);
   const limit = parseLimit(resolvedSearchParams.limit, DEFAULT_PLANS_PAGE_SIZE);
 
-  const baseWhere: Prisma.PlanWhereInput = {
-    OR: [
-      { userId },
-      { shares: { some: { sharedWithUserId: userId } } },
-    ],
-  };
-  const where: Prisma.PlanWhereInput = showArchived
-    ? baseWhere
-    : { ...baseWhere, status: { notIn: [...ARCHIVED_STATUSES] } };
-
-  const [plans, totalPlans] = await Promise.all([
-    prisma.plan.findMany({
-      where,
-      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
-      skip: (page - 1) * limit,
-      take: limit,
-      include: { tasks: { select: { id: true, completedAt: true } } },
-    }),
-    prisma.plan.count({ where }),
-  ]);
+  const { plans, totalPlans } = await getCachedPlansPage(
+    userId,
+    showArchived,
+    page,
+    limit,
+  );
   const totalPages = Math.ceil(totalPlans / limit) || 1;
 
   const plansForExport: ExportedPlan[] = plans.map((p) => ({
