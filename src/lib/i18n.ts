@@ -240,6 +240,7 @@ const messages = {
       description: "Use your Google account to access your tasks dashboard.",
       envRequired: "Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in your .env to enable Google sign-in.",
       continueWithGoogle: "Continue with Google",
+      continueWithFacebook: "Continue with Facebook",
     },
     invite: {
       invalidTitle: "Invalid or expired invite",
@@ -475,6 +476,7 @@ const messages = {
       description: "Utilisez Google pour accéder à vos tâches.",
       envRequired: "Configurez Google Auth dans votre .env.",
       continueWithGoogle: "Continuer avec Google",
+      continueWithFacebook: "Continuer avec Facebook",
     },
     invite: {
       invalidTitle: "Invitation invalide",
@@ -710,6 +712,7 @@ const messages = {
       description: "Use your Google account enter your dashboard.",
       envRequired: "You need to set up Google Auth for inside .env.",
       continueWithGoogle: "Enter with Google",
+      continueWithFacebook: "Enter with Facebook",
     },
     invite: {
       invalidTitle: "Invite link don die",

@@ -264,7 +264,7 @@ Error conventions across task APIs:
 - **Form/UI mutations:** the tasks UI primarily uses shared server actions from `src/lib/actions/tasks.ts`
 - **API/UI parity:** create, update, complete, restore, and delete logic exists across UI actions and API routes; keep them behaviorally aligned
 - **Sanitization:** any user-provided task HTML must go through `sanitizeTaskContent()`
-- **Env vars:** important ones are `DATABASE_URL`, `AUTH_SECRET`, `NEXTAUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+- **Env vars:** important ones are `DATABASE_URL`, `AUTH_SECRET`, `NEXTAUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`; optional `AUTH_FACEBOOK_ID`, `AUTH_FACEBOOK_SECRET` for Facebook login
 - **Calendar prerequisites:** Google Calendar API must be enabled and the user must sign in with the calendar scope
 
 ---

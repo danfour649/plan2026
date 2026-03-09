@@ -51,6 +51,8 @@ Set these in `.env` for local development:
 - `GOOGLE_CLIENT_SECRET` - Google OAuth client secret
 - `NEXTAUTH_URL` - usually `http://localhost:3000` locally
 - `BLOB_READ_WRITE_TOKEN` - (optional) Vercel Blob token for task file attachments; create a Blob store in the Vercel project and pull env with `vercel env pull`
+- `AUTH_FACEBOOK_ID` - (optional) Facebook app client ID for Facebook login
+- `AUTH_FACEBOOK_SECRET` - (optional) Facebook app client secret; when set with `AUTH_FACEBOOK_ID`, the login page shows "Continue with Facebook"
 
 ## Local development
 
@@ -125,6 +127,15 @@ The app requests these Google scopes during sign-in:
 - `https://www.googleapis.com/auth/calendar.events`
 
 Google sign-in forces a fresh Google consent step so revoked Calendar permissions can be granted again on reconnect.
+
+## Facebook login (optional)
+
+To enable "Continue with Facebook" on the login page:
+
+1. Create an app at [developers.facebook.com](https://developers.facebook.com/) and add the **Facebook Login** product.
+2. In Facebook Login settings, add a **Valid OAuth Redirect URI**: `https://<your-domain>/api/auth/callback/facebook` (e.g. `http://localhost:3000/api/auth/callback/facebook` for local dev).
+3. Set `AUTH_FACEBOOK_ID` and `AUTH_FACEBOOK_SECRET` in your environment (from the app’s Settings → Basic).
+4. Request only the permissions you need (e.g. `email`, `public_profile`). App Review may be required for certain permissions.
 
 ## API
 
