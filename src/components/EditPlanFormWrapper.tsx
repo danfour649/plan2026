@@ -83,7 +83,7 @@ export function EditPlanFormWrapper({
         {children}
       </div>
 
-      <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 px-3 py-4 shadow-sm shadow-blue-100/40 backdrop-blur sm:px-6 sm:py-6">
+      <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 px-2 py-4 shadow-sm shadow-blue-100/40 backdrop-blur sm:px-4 sm:py-6">
         <PlanForm
           action={action}
           initialValues={initialValues}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -35,9 +36,13 @@ export function SharePlanButton({ planId }: { planId: string }) {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
+        className="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 sm:justify-start"
+        aria-label={t.sharePlan.title}
       >
-        {t.toasts.share}
+        <span className="sm:hidden" aria-hidden>
+          <Send className="size-5" />
+        </span>
+        <span className="hidden sm:inline">{t.toasts.share}</span>
       </button>
       {isOpen && (
         <div
