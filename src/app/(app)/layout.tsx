@@ -56,10 +56,29 @@ export default async function AppLayout({
                 >
                   {t.nav.tasks}
                 </AppNavLink>
+                <AppNavLink
+                  href="/help"
+                  accent="blue"
+                  className="shrink-0 gap-0 px-1.5 py-1 text-[11px] sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
+                >
+                  {t.nav.help}
+                </AppNavLink>
               </nav>
             </div>
 
             <div className="relative z-0 flex shrink-0 items-center justify-end gap-1 pl-2 sm:gap-3 sm:pl-0">
+              <AppNavLink
+                href="/about"
+                accent="blue"
+                ariaLabel={t.nav.about}
+                className="shrink-0 p-1 sm:px-2.5 sm:py-2"
+              >
+                <span className="hidden sm:inline">{t.nav.about}</span>
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 sm:hidden" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4M12 8h.01" />
+                </svg>
+              </AppNavLink>
               <AppNavLink
                 href="/settings"
                 accent="blue"
