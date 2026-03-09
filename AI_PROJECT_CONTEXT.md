@@ -38,7 +38,7 @@ src/
       tasks/loading.tsx                 # Tasks page skeleton
       plans/page.tsx                    # Plans list (ordered by priority); refresh, show completed/abandoned toggle; per-row Edit and status dropdown; links to /plans/new and /plans/[id]
       plans/new/page.tsx                # Full-page create plan form
-      plans/[id]/page.tsx               # Full-page plan detail and edit form; delete plan; tasks-in-plan list with edit-task modal
+      plans/[id]/page.tsx               # Full-page plan detail and edit form; delete plan; tasks-in-plan list; List tab for supply items
       settings/page.tsx                 # Calendar connection settings
     login/
       page.tsx                          # Login page; redirects signed-in users to /tasks
