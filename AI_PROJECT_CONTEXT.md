@@ -29,16 +29,18 @@
 
 ```text
 src/
-  proxy.ts                              # Cookie-based guard for /tasks, /settings, and /plans
+  proxy.ts                              # Cookie-based guard for /tasks, /settings, /plans, /help, /about
   auth.ts                               # NextAuth config, Google scopes, auth helpers
   app/
     (app)/
-      layout.tsx                        # Authenticated shell; tasks nav, plans nav, settings gear, email, SignOutButton
+      layout.tsx                        # Authenticated shell; tasks nav, plans nav, help, about, settings gear, email, SignOutButton
       tasks/page.tsx                    # Unified tasks page for remaining and optional completed items; shows plan link when task has planId
       tasks/loading.tsx                 # Tasks page skeleton
       plans/page.tsx                    # Plans list (ordered by priority); refresh, show completed/abandoned toggle; per-row Edit and status dropdown; links to /plans/new and /plans/[id]
       plans/new/page.tsx                # Full-page create plan form
       plans/[id]/page.tsx               # Full-page plan detail and edit form; delete plan; tasks-in-plan list with edit-task modal
+      help/page.tsx                     # Help: how to use tasks and plans, recent updates, link to changelog
+      about/page.tsx                    # About: app name, version (from package.json), contributors
       settings/page.tsx                 # Calendar connection settings
     login/
       page.tsx                          # Login page; redirects signed-in users to /tasks
@@ -87,7 +89,7 @@ DEPLOY.md
 AI_PROJECT_CONTEXT.md
 ```
 
-**Route protection:** `src/proxy.ts` checks only for the presence of a NextAuth session cookie to reduce redirect flicker on `/tasks`, `/settings`, and `/plans`. Full session validation (including rejection of invalid or expired cookies) happens in the app layout via `getServerAuthSession()`; all API and server actions use `getCurrentUserId()` or equivalent.
+**Route protection:** `src/proxy.ts` checks only for the presence of a NextAuth session cookie to reduce redirect flicker on `/tasks`, `/settings`, `/plans`, `/help`, and `/about`. Full session validation (including rejection of invalid or expired cookies) happens in the app layout via `getServerAuthSession()`; all API and server actions use `getCurrentUserId()` or equivalent.
 
 **CSRF:** Forms and API endpoints expect same-origin requests. NextAuth session cookies use SameSite (Lax by default). CSRF protection relies on this same-origin + SameSite behavior; state-changing requests should come from the app origin. If you add endpoints callable from other origins, protect them (e.g. custom header or token).
 
@@ -257,8 +259,8 @@ Error conventions across task APIs:
 ## 6. Conventions and Constraints
 
 - **Canonical user identity:** prefer `getCurrentUserId()` for task/settings server actions and pages; `getServerAuthSession()` is still used in the authenticated app layout
-- **Protected app routes:** `/tasks`, `/settings`, `/plans`
-- **Canonical task UI route:** `/tasks`; **Plans UI routes:** `/plans`, `/plans/new`, `/plans/[id]`
+- **Protected app routes:** `/tasks`, `/settings`, `/plans`, `/help`, `/about`
+- **Canonical task UI route:** `/tasks`; **Plans UI routes:** `/plans`, `/plans/new`, `/plans/[id]`; **Help:** `/help`; **About:** `/about`
 - **Prisma runtime:** task APIs explicitly use `runtime = "nodejs"`
 - **Database provider:** Prisma datasource is `postgresql`; there is no SQLite path anymore
 - **Form/UI mutations:** the tasks UI primarily uses shared server actions from `src/lib/actions/tasks.ts`
@@ -285,6 +287,8 @@ Error conventions across task APIs:
 | Plans list UI | `src/app/(app)/plans/page.tsx` |
 | Plan create UI | `src/app/(app)/plans/new/page.tsx` |
 | Plan detail/edit UI | `src/app/(app)/plans/[id]/page.tsx` |
+| Help UI | `src/app/(app)/help/page.tsx` |
+| About UI | `src/app/(app)/about/page.tsx` |
 | Settings UI | `src/app/(app)/settings/page.tsx` |
 | Plan form (full-page) | `src/components/PlanForm.tsx` |
 | Plan actions | `src/lib/actions/plans.ts` |
