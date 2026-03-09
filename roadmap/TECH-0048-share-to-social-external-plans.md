@@ -1,6 +1,6 @@
 # TECH-0048: Share to social media / external plans
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** Implemented (public share link, read-only view, token-based task status update).
 
 **Goal:** Allow sharing a plan or task via a link that can be posted on social media or sent externally. The link should open a **public view** page where the recipient (even if not signed in) can see the plan/task in read-only form and, in a limited way, update task status (e.g. mark done). The endpoint for unauthenticated status updates must be secured (e.g. token-based). Optionally allow the recipient to add their email or sign up. Only plans/tasks that the owner has explicitly made “shareable” or “public” should be accessible.
 

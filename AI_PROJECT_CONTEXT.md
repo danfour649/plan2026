@@ -29,9 +29,10 @@
 
 ```text
 src/
-  proxy.ts                              # Cookie-based guard for /tasks, /settings, /plans, /help, /about
+  proxy.ts                              # Cookie-based guard for /tasks, /settings, /plans, /help, /about (not /login, /invite, /share)
   auth.ts                               # NextAuth config, Google scopes, auth helpers
   app/
+    share/[token]/page.tsx              # Public share page: resolve token → plan + tasks; read-only view; token-based "Mark done" / "Restore" (no login). Invalid/expired show same message.
     (app)/
       layout.tsx                        # Authenticated shell; tasks nav, plans nav, help, about, settings gear, email, SignOutButton
       tasks/page.tsx                    # Unified tasks page for remaining and optional completed items; shows plan link when task has planId
@@ -59,6 +60,8 @@ src/
     EditTaskDialog.tsx                  # Modal wrapper for task editing/deletion
     TaskForm.tsx                        # Shared form used by create/edit dialogs
     AddToCalendarButton.tsx             # Calls calendar route, opens created event link
+    ShareByPublicLinkButton.tsx         # Plan detail: create public share link, show copyable URL
+    SharePageTaskRow.tsx                # Public share page: Mark done / Restore via token (client)
     DisconnectGoogleCalendarButton.tsx  # Revokes stored calendar access
     RefreshTasksButton.tsx              # Manual refresh for /tasks
     RefreshPlansButton.tsx              # Manual refresh for /plans
@@ -73,6 +76,8 @@ src/
     TaskContentEditor.tsx               # Tiptap-based editor; stores HTML in hidden input
   lib/
     actions/tasks.ts                    # Shared task server actions
+    actions/plans.ts                    # Plan CRUD, createPlanInvite, createPlanShareLink
+    actions/share.ts                    # updateTaskStatusByShareToken (token-based, no auth)
     actions/settings.ts                 # Google Calendar disconnect action
     export.ts                           # JSON export types and helpers for plans/tasks (debugging, AI ingestion)
     prisma.ts                           # Prisma singleton
@@ -128,6 +133,11 @@ All task queries and mutations are scoped by the authenticated `userId`.
 
 - `id`, `taskId`, `userId`, `url` (blob URL), `filename`, `size`, `contentType`, `createdAt`
 - Files are uploaded via POST to `/api/tasks/[id]/attachments` and stored in Vercel Blob when `BLOB_READ_WRITE_TOKEN` is set.
+
+### PlanShareLink (public share)
+
+- `id`, `planId`, `token` (unique, long random), `expiresAt?`, `allowStatusUpdate` (default true), `createdAt`
+- Only plans with an explicit share link are reachable at `/share/[token]`; token is stored in DB and validated server-side. Invalid or expired tokens show the same user-facing message (no enumeration). Status updates use `updateTaskStatusByShareToken` in `src/lib/actions/share.ts` (no auth; token is the auth).
 
 ---
 
@@ -259,7 +269,7 @@ Error conventions across task APIs:
 ## 6. Conventions and Constraints
 
 - **Canonical user identity:** prefer `getCurrentUserId()` for task/settings server actions and pages; `getServerAuthSession()` is still used in the authenticated app layout
-- **Protected app routes:** `/tasks`, `/settings`, `/plans`, `/help`, `/about`
+- **Protected app routes:** `/tasks`, `/settings`, `/plans`, `/help`, `/about`. **Public routes:** `/login`, `/invite/[token]`, `/share/[token]` (no auth required).
 - **Canonical task UI route:** `/tasks`; **Plans UI routes:** `/plans`, `/plans/new`, `/plans/[id]`; **Help:** `/help`; **About:** `/about`
 - **Prisma runtime:** task APIs explicitly use `runtime = "nodejs"`
 - **Database provider:** Prisma datasource is `postgresql`; there is no SQLite path anymore

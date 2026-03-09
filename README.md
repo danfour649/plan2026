@@ -19,6 +19,7 @@
   - Add existing tasks or create new tasks when editing a plan; on the plan detail page you can edit any task in the plan via an edit-task modal
   - Export plans (or a single plan from its detail page) to JSON for debugging or AI ingestion
   - Plan fields: goal, actual start/end dates, notes, color
+  - **Public share links:** from the plan detail page, owners can create a shareable link; anyone with the link can view the plan and its tasks in read-only form and, when allowed, mark tasks done or restore them (no sign-in required). Only explicitly shared plans are exposed.
 - Settings page to disconnect Google Calendar access
 - Server actions for UI mutations and JSON API routes for programmatic access
 
