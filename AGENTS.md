@@ -15,6 +15,7 @@
   2. **Authenticate:** Run `gh auth login` (or set `GH_TOKEN` for CI/automation).
   3. **Push:** `git push -u origin <branch>`.
   4. **Create PR (required):** Right after the first push for a new branch, create the PR in the same task. Use a **Title Case** PR title (e.g. `TECH-014 Export plans task to json`). Run `gh pr create --title "TECH-014 Export plans task to json" --base main --fill` (or add `--body "..."`; non-interactive `gh` needs `--fill` or `--body`). If you only committed and pushed without creating the PR, run `gh pr create` before finishing—**never leave a pushed branch without a PR** unless the user asks not to. The script `npm run pr` uses `--fill` (title from commit); if you use it, run `gh pr edit --title "TECH-014 Export plans task to json"` afterward to set the proper PR title.
+  5. **After merging a PR:** Right after merging (e.g. when the user asks to push and merge the active PR), run `git checkout main` and `git pull` so the working copy is on `main` with the latest changes. Use `;` in PowerShell instead of `&&` (e.g. `git checkout main; git pull`).
 
 ## Type checking
 
