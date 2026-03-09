@@ -9,6 +9,8 @@ Use this prompt with a **new agent** to implement the following five tasks in **
 
 ## Copy-paste prompt for the agent
 
+**Before implementing,** check [BULK-PLAN-2026-03-REMAINING.md](./BULK-PLAN-2026-03-REMAINING.md) — do not implement any task listed under **Blocked / on hold**.
+
 **Task: Bulk implement 5 tasks from the plan 2026 remaining list. Follow AGENTS.md “Bulk task → PR pipeline” and “Translations (i18n)” (all user-facing text in en, fr, pidgin). Do not implement tasks marked on hold in the docs.**
 
 Implement the following five tasks. For each task:
