@@ -206,7 +206,7 @@ export default async function PlanDetailPage({
         ) : null}
 
         <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
-          <div className="border-b border-blue-100 px-3 py-3 sm:px-6 sm:py-4">
+          <div className="sticky top-0 z-10 border-b border-blue-100 bg-white/90 px-3 py-3 backdrop-blur max-sm:sticky sm:static sm:bg-transparent sm:backdrop-blur-none sm:px-6 sm:py-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h2 className="text-xl font-bold tracking-tight text-blue-950">{t.plans.tasksInThisPlan}</h2>
