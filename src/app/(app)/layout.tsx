@@ -8,7 +8,7 @@ import { CheckboxIcon, CurrencyIcon, LightbulbIcon } from "@/components/NavIcons
 import { Plan2026Logo } from "@/components/Plan2026Logo";
 import { TranslationsProvider } from "@/components/TranslationsProvider";
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
-import { prisma } from "@/lib/prisma";
+import { getCachedNavCounts } from "@/lib/data-cache";
 
 export default async function AppLayout({
   children,
@@ -19,25 +19,8 @@ export default async function AppLayout({
   if (!session?.user) redirect("/login");
   const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
   const t = getTranslations(locale);
-  const remainingTaskCount = await prisma.task.count({
-    where: { userId: session.user.id, completedAt: null },
-  });
-  const activePlanCount = await prisma.plan.count({
-    where: {
-      userId: session.user.id,
-      status: { notIn: ["completed", "abandoned"] },
-    },
-  });
-  const suppliesCount = await prisma.supplyItem.count({
-    where: {
-      plan: {
-        OR: [
-          { userId: session.user.id },
-          { shares: { some: { sharedWithUserId: session.user.id } } },
-        ],
-      },
-    },
-  });
+  const { remainingTaskCount, activePlanCount, suppliesCount } =
+    await getCachedNavCounts(session.user.id);
 
   return (
     <TranslationsProvider locale={locale}>

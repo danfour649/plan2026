@@ -1,9 +1,15 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { del } from "@vercel/blob";
 
 import { getCurrentUserId } from "@/auth";
+import {
+  getNavCountsCacheTag,
+  getPlanDetailCacheTag,
+  getPlansCacheTag,
+  getTasksCacheTag,
+} from "@/lib/data-cache";
 import { createTaskForUser, updateTaskForUser } from "@/lib/task-service";
 import { prisma } from "@/lib/prisma";
 import { addTaskSchema, taskIdSchema, updateTaskSchema } from "@/lib/validations/task";
@@ -29,6 +35,12 @@ export async function addTask(formData: FormData): Promise<ActionResult> {
   const result = await createTaskForUser(userId, parsed.data);
   if ("error" in result) return { success: false, error: result.error };
 
+  revalidateTag(getTasksCacheTag(userId), "max");
+  revalidateTag(getNavCountsCacheTag(userId), "max");
+  if (parsed.data.planId) {
+    revalidateTag(getPlansCacheTag(userId), "max");
+    revalidateTag(getPlanDetailCacheTag(parsed.data.planId), "max");
+  }
   revalidatePath("/tasks");
   revalidatePath("/plans");
   if (parsed.data.planId) revalidatePath(`/plans/${parsed.data.planId}`);
@@ -62,6 +74,12 @@ export async function updateTask(formData: FormData): Promise<ActionResult> {
   if ("error" in result) return { success: false, error: result.error };
   if (result.count === 0) return { success: false, error: "Operation failed" };
 
+  revalidateTag(getTasksCacheTag(userId), "max");
+  // Nav counts (incomplete task count, etc.) don't change when only editing a task
+  if (parsed.data.planId) {
+    revalidateTag(getPlansCacheTag(userId), "max");
+    revalidateTag(getPlanDetailCacheTag(parsed.data.planId), "max");
+  }
   revalidatePath("/tasks");
   revalidatePath("/plans");
   if (parsed.data.planId) revalidatePath(`/plans/${parsed.data.planId}`);
@@ -80,9 +98,15 @@ export async function completeTask(formData: FormData): Promise<ActionResult> {
     data: { completedAt: new Date() },
   });
   if (result.count === 0) return { success: false, error: "Operation failed" };
-  revalidatePath("/tasks");
+  revalidateTag(getTasksCacheTag(userId), "max");
+  revalidateTag(getNavCountsCacheTag(userId), "max");
   const planId = formData.get("planId");
-  if (typeof planId === "string" && planId.trim()) revalidatePath(`/plans/${planId.trim()}`);
+  if (typeof planId === "string" && planId.trim()) {
+    revalidateTag(getPlansCacheTag(userId), "max");
+    revalidateTag(getPlanDetailCacheTag(planId.trim()), "max");
+    revalidatePath(`/plans/${planId.trim()}`);
+  }
+  revalidatePath("/tasks");
   return { success: true };
 }
 
@@ -98,9 +122,15 @@ export async function restoreTask(formData: FormData): Promise<ActionResult> {
     data: { completedAt: null },
   });
   if (result.count === 0) return { success: false, error: "Operation failed" };
-  revalidatePath("/tasks");
+  revalidateTag(getTasksCacheTag(userId), "max");
+  revalidateTag(getNavCountsCacheTag(userId), "max");
   const planId = formData.get("planId");
-  if (typeof planId === "string" && planId.trim()) revalidatePath(`/plans/${planId.trim()}`);
+  if (typeof planId === "string" && planId.trim()) {
+    revalidateTag(getPlansCacheTag(userId), "max");
+    revalidateTag(getPlanDetailCacheTag(planId.trim()), "max");
+    revalidatePath(`/plans/${planId.trim()}`);
+  }
+  revalidatePath("/tasks");
   return { success: true };
 }
 
@@ -126,9 +156,15 @@ export async function deleteTask(formData: FormData): Promise<ActionResult> {
     where: { id: parsed.data.taskId, userId },
   });
   if (result.count === 0) return { success: false, error: "Operation failed" };
+  revalidateTag(getTasksCacheTag(userId), "max");
+  revalidateTag(getNavCountsCacheTag(userId), "max");
+  const planId = formData.get("planId");
+  if (typeof planId === "string" && planId.trim()) {
+    revalidateTag(getPlansCacheTag(userId), "max");
+    revalidateTag(getPlanDetailCacheTag(planId.trim()), "max");
+    revalidatePath(`/plans/${planId.trim()}`);
+  }
   revalidatePath("/tasks");
   revalidatePath("/plans");
-  const planId = formData.get("planId");
-  if (typeof planId === "string" && planId.trim()) revalidatePath(`/plans/${planId.trim()}`);
   return { success: true };
 }

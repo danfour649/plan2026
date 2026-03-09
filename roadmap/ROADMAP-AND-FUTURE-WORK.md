@@ -25,7 +25,6 @@ Ready to implement. Each has a **dedicated analysis doc** in this folder for imp
 |----|--------|--------------|
 | — | Allow mark as done in plan edit page | Already available via TaskActionButton on plan detail. |
 | — | Add calendar tab | [TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md) |
-| TECH-0048 | Share to social / external plans | [TECH-0048-share-to-social-external-plans.md](./TECH-0048-share-to-social-external-plans.md) |
 | TECH-1005 | Data robustness and optimization | [TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md) |
 
 When implementing: use branch `tech/<ID>-<kebab-description>`, add a changeset, and open a PR per task (see AGENTS.md).
@@ -70,7 +69,7 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 **Update this section when closing a session** so the next run knows where to continue.
 
 - **Last completed:** The five tasks TECH-0042, TECH-0045, TECH-0047, TECH-0030, TECH-0044 have been implemented and merged.
-- **Next:** Remaining active items: **Schedule/Calendar tab** ([TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md)) and **Share to social / external plans** ([TECH-0048-share-to-social-external-plans.md](./TECH-0048-share-to-social-external-plans.md)).
+- **Next:** Remaining active items: **Schedule/Calendar tab** ([TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md)) and **Data robustness and optimization** ([TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md)).
 
 ---
 
@@ -83,7 +82,6 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 | [TECH-0031-ai-advice-on-plans.md](./TECH-0031-ai-advice-on-plans.md) | AI advice bot that reviews a plan and tasks and suggests next steps. | On hold — cost/misuse risk |
 | [TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md) | Schedule/Calendar tab and page showing tasks and plans on a calendar. | Active |
 | [TECH-0043-google-oauth-live.md](./TECH-0043-google-oauth-live.md) | Production Google OAuth (config/deploy). | On hold — privacy/checklist |
-| [TECH-0048-share-to-social-external-plans.md](./TECH-0048-share-to-social-external-plans.md) | Public view link, unauthenticated status-only update, secure endpoint. | Active |
 | [TECH-DEBT-AND-OPTIMIZATIONS.md](./TECH-DEBT-AND-OPTIMIZATIONS.md) (TECH-1001) | Tech debt and optimizations (stale; many items implemented). | Superseded by TECH-1005 for new analysis |
 | [TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md) | Fresh analysis of data handling for robustness and scalability; audit then implement. | Active (future work) |
 

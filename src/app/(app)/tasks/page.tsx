@@ -19,7 +19,7 @@ import {
   getUrgencyPillClasses,
 } from "@/lib/format";
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
-import { prisma } from "@/lib/prisma";
+import { getCachedTasksPage } from "@/lib/data-cache";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
 
 function CompletedCheckIcon() {
@@ -77,46 +77,17 @@ export default async function TasksPage({
   const limit = parseLimit(resolvedSearchParams.limit, DEFAULT_TASKS_PAGE_SIZE);
   const completedPage = parsePage(resolvedSearchParams.completedPage);
 
-  const remainingWhere = { userId, completedAt: null };
-  const [remainingTasks, totalRemaining] = await Promise.all([
-    prisma.task.findMany({
-      where: remainingWhere,
-      orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
-      skip: (page - 1) * limit,
-      take: limit,
-      include: {
-        plan: { select: { id: true, name: true } },
-        attachments: { select: { id: true, url: true, filename: true, size: true } },
-      },
-    }),
-    prisma.task.count({ where: remainingWhere }),
-  ]);
+  const {
+    remainingTasks,
+    totalRemaining,
+    completedTasks,
+    totalCompleted,
+    plans,
+  } = await getCachedTasksPage(userId, showCompleted, page, limit, completedPage);
 
-  const completedWhere = { userId, completedAt: { not: null } };
-  const [completedTasks, totalCompleted] = showCompleted
-    ? await Promise.all([
-        prisma.task.findMany({
-          where: completedWhere,
-          orderBy: [{ urgency: "desc" }, { completedAt: "desc" }],
-          skip: (completedPage - 1) * limit,
-          take: limit,
-          include: {
-            plan: { select: { id: true, name: true } },
-            attachments: { select: { id: true, url: true, filename: true, size: true } },
-          },
-        }),
-        prisma.task.count({ where: completedWhere }),
-      ])
-    : [[], 0];
   const hasVisibleTasks = remainingTasks.length > 0 || completedTasks.length > 0;
   const totalRemainingPages = Math.ceil(totalRemaining / limit) || 1;
   const totalCompletedPages = Math.ceil(totalCompleted / limit) || 1;
-
-  const plans = await prisma.plan.findMany({
-    where: { userId },
-    orderBy: [{ priority: "desc" }, { name: "asc" }],
-    select: { id: true, name: true },
-  });
 
   const allTasksForExport: ExportedTask[] = [
     ...remainingTasks.map((task) => ({
