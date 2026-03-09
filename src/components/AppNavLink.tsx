@@ -43,7 +43,7 @@ export function AppNavLink({
       <span>{children}</span>
       {badge != null && (
         <span
-          className={`inline-flex shrink-0 rounded-full px-1 py-0.5 text-[10px] font-medium leading-tight sm:px-2 sm:text-xs ${
+          className={`inline-flex shrink-0 rounded-full -ml-1 pl-1 pr-2 py-0.5 text-sm font-bold leading-tight sm:ml-0 sm:pl-1.5 sm:pr-2.5 sm:text-base ${
             isActive
               ? accent === "red"
                 ? "bg-white/80 text-red-700"

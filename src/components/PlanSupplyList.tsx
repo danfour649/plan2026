@@ -81,7 +81,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
               type="text"
               required
               placeholder={t.supplyList.labelPlaceholder}
-              className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+              className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
             />
           </div>
           <div className="w-full min-w-0">
@@ -93,7 +93,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
               name="description"
               type="text"
               placeholder={t.supplyList.descriptionPlaceholder}
-              className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+              className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
             />
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-end sm:gap-2">
@@ -108,7 +108,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                 step="0.01"
                 min="0"
                 placeholder={t.supplyList.pricePlaceholder}
-                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
               />
             </div>
             <div className="w-full min-w-0 sm:w-20">
@@ -123,7 +123,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                 max="999999"
                 defaultValue={1}
                 placeholder={t.supplyList.quantityPlaceholder}
-                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
               />
             </div>
             <div className="w-full sm:w-32">
@@ -133,7 +133,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
               <select
                 id="supply-status-new"
                 name="acquiredStatus"
-                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
               >
                 <option value="needed">{t.supplyList.statusNeeded}</option>
                 <option value="ordered">{t.supplyList.statusOrdered}</option>
@@ -150,7 +150,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                 name="link"
                 type="url"
                 placeholder={t.supplyList.linkPlaceholder}
-                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition placeholder:text-zinc-400 focus:border-blue-300 focus:ring-4"
+                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
               />
             </div>
             <button

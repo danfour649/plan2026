@@ -323,6 +323,6 @@ Error conventions across task APIs:
 - **Calendar token lifecycle:** refresh handling currently updates the access token and expiry, but broader account/token edge cases are still dependent on Google provider behavior
 - **HTML storage:** task content is stored as sanitized HTML, so any future editor/schema changes should preserve sanitizer compatibility
 - **Task API ordering vs UI ordering:** the API currently returns tasks by completion/creation timestamps, while the page UI groups and sorts remaining/completed items differently for display
-- **Deferred work (documented for later):** Implementation notes for custom domain (TECH-0026) and mobile app (TECH-0029) are in `docs/TECH-0026-permanent-website.md` and `docs/TECH-0029-mobile-app.md`; these are not implemented yet.
+- **Deferred work (documented for later):** Implementation notes for custom domain (TECH-0026) and mobile app (TECH-0029) are in `roadmap/TECH-0026-permanent-website.md` and `roadmap/TECH-0029-mobile-app.md`; these are not implemented yet.
 
 End of document.

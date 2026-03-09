@@ -89,7 +89,7 @@ export function NewPlanSection({
               id="plan-template-select"
               value={selectedTemplateId}
               onChange={(e) => setSelectedTemplateId(e.target.value)}
-              className="rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+              className="rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
               aria-label={templateSelectLabel}
             >
               {templates.map((tpl) => (
