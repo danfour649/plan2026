@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import Link from "next/link";
 
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
 
@@ -28,27 +27,6 @@ export default async function HelpPage() {
           <div>
             <h2 className="text-sm font-semibold text-blue-950">{t.help.howToPlansTitle}</h2>
             <p className="mt-2 text-sm text-zinc-700">{t.help.howToPlans}</p>
-          </div>
-
-          <div className="border-t border-blue-100 pt-6">
-            <h2 className="text-sm font-semibold text-blue-950">{t.help.versionHistoryTitle}</h2>
-            <p className="mt-2 text-sm text-zinc-600">{t.help.versionHistoryIntro}</p>
-            <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-zinc-700">
-              <li>Data handling optimizations, task/plan APIs, pagination</li>
-              <li>Print checklist from plan</li>
-              <li>Discard-changes confirmation, Flag (color) in UI</li>
-              <li>Mobile improvements, progress bar, Pidgin &quot;Work&quot;</li>
-            </ul>
-            <p className="mt-3">
-              <Link
-                href="https://github.com/danfour649/plan2026/blob/main/CHANGELOG.md"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-medium text-blue-600 underline hover:text-blue-800"
-              >
-                {t.help.viewFullChangelog}
-              </Link>
-            </p>
           </div>
         </div>
       </section>

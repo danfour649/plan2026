@@ -15,7 +15,7 @@ export type Messages = typeof messages.en;
 
 const messages = {
   en: {
-    nav: { plans: "Plans", tasks: "Tasks", settings: "Settings", help: "Help", about: "About" },
+    nav: { plans: "Plans", tasks: "Tasks", settings: "Settings", help: "Help", about: "About", menu: "Menu" },
     settings: {
       title: "Settings",
       language: "Language",
@@ -264,11 +264,12 @@ const messages = {
       appName: "Plan 2026",
       versionLabel: "Version",
       contributors: "Contributors",
-      contributorsIntro: "Plan 2026 is built by the team and open to contributions.",
+      contributorsIntro: "Built by Daniel Fitzgerald.",
+      recentUpdatesTitle: "Recent updates",
     },
   },
   fr: {
-    nav: { plans: "Plans", tasks: "Tâches", settings: "Paramètres", help: "Aide", about: "À propos" },
+    nav: { plans: "Plans", tasks: "Tâches", settings: "Paramètres", help: "Aide", about: "À propos", menu: "Menu" },
     settings: {
       title: "Paramètres",
       language: "Langue",
@@ -517,11 +518,12 @@ const messages = {
       appName: "Plan 2026",
       versionLabel: "Version",
       contributors: "Contributeurs",
-      contributorsIntro: "Plan 2026 est développé par l'équipe et ouvert aux contributions.",
+      contributorsIntro: "Développé par Daniel Fitzgerald.",
+      recentUpdatesTitle: "Mises à jour récentes",
     },
   },
   pidgin: {
-    nav: { plans: "Plans", tasks: "Work", settings: "Settings", help: "Help", about: "About" },
+    nav: { plans: "Plans", tasks: "Work", settings: "Settings", help: "Help", about: "About", menu: "Menu" },
     settings: {
       title: "How e go be",
       language: "Language",
@@ -770,7 +772,8 @@ const messages = {
       appName: "Plan 2026",
       versionLabel: "Version",
       contributors: "Contributors",
-      contributorsIntro: "Plan 2026 na our team build am and e open for contributions.",
+      contributorsIntro: "Daniel Fitzgerald build am.",
+      recentUpdatesTitle: "Recent updates",
     },
   },
 } satisfies Record<Locale, Record<string, unknown>>;
