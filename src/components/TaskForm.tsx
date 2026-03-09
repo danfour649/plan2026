@@ -24,6 +24,10 @@ type TaskFormProps = {
   };
   /** When provided, show a plan selector (optional association). */
   plans?: { id: string; name: string }[];
+  /** When set, form gets this id so a submit button with form= can be placed elsewhere. */
+  formId?: string;
+  /** When true, do not render the submit button (caller renders it with form=formId). */
+  hideSubmit?: boolean;
 };
 
 const URGENCY_OPTIONS = [
@@ -69,6 +73,8 @@ export function TaskForm({
   successMessage,
   initialValues,
   plans,
+  formId,
+  hideSubmit,
 }: TaskFormProps) {
   const t = useTranslations();
   const [state, formAction] = useActionState(wrap(action), null as ActionResult | null);
@@ -91,7 +97,7 @@ export function TaskForm({
   }, [onSuccess, state, successMessage]);
 
   return (
-    <form action={formAction} className="flex w-full flex-col gap-3">
+    <form id={formId} action={formAction} className="flex w-full flex-col gap-3">
       {initialValues?.taskId ? <input type="hidden" name="taskId" value={initialValues.taskId} /> : null}
       <div className="flex w-full flex-col gap-2">
         <input
@@ -178,12 +184,14 @@ export function TaskForm({
           defaultValue={initialValues?.content ?? ""}
         />
       </div>
-      <button
-        type="submit"
-        className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:w-auto"
-      >
-        {submitLabel}
-      </button>
+      {!hideSubmit ? (
+        <button
+          type="submit"
+          className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:w-auto"
+        >
+          {submitLabel}
+        </button>
+      ) : null}
     </form>
   );
 }

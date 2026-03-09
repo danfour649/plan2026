@@ -229,6 +229,8 @@ export function EditTaskDialog({
                 planId: task.planId ?? undefined,
               }}
               plans={plans}
+              formId={`edit-task-form-${task.id}`}
+              hideSubmit
             />
 
             <div className="mt-4 border-t border-blue-100 pt-4">
@@ -380,6 +382,16 @@ export function EditTaskDialog({
                   </div>
                 )}
               </form>
+            </div>
+
+            <div className="mt-6 border-t border-blue-100 pt-4">
+              <button
+                type="submit"
+                form={`edit-task-form-${task.id}`}
+                className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:w-auto"
+              >
+                {t.common.saveChanges}
+              </button>
             </div>
           </div>
         </div>,
