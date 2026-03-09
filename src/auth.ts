@@ -3,6 +3,7 @@ import FacebookProvider from "next-auth/providers/facebook";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { getServerSession } from "next-auth/next";
+import { cache } from "react";
 
 import { GOOGLE_AUTHORIZATION_PARAMS } from "@/lib/google-oauth";
 import { prisma } from "@/lib/prisma";
@@ -108,8 +109,16 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
+/**
+ * Request-scoped cache so layout and child pages (e.g. /plans) that both call
+ * getServerAuthSession() / getCurrentUserId() in the same RSC tree only run
+ * the Session + User lookup once. Does not change auth semantics; each new
+ * request still runs the lookup (cache is per-request).
+ */
+const getServerAuthSessionCached = cache(() => getServerSession(authOptions));
+
 export function getServerAuthSession() {
-  return getServerSession(authOptions);
+  return getServerAuthSessionCached();
 }
 
 export async function getCurrentUserId() {

@@ -34,7 +34,7 @@
 | Area | Finding |
 |------|---------|
 | **Cache** | Only `revalidatePath()` is used (tasks, plans, supplies, share). No `revalidateTag()`. Paths revalidated are consistent per action. List is manageable today; tag-based invalidation is optional for future growth. |
-| **Data loading** | Tasks list page and plan-detail tasks use pagination (`skip`/`take`). **GET /api/tasks** returns **all** tasks for the user (no pagination); GET /api/plans has pagination (page, limit, showArchived). Risk: large task lists via API. |
+| **Data loading** | Tasks list page and plan-detail tasks use pagination (`skip`/`take`). **GET /api/tasks** returns **all** tasks for the user (no pagination); GET /api/plans has pagination (page, limit, showArchived). Risk: large task lists via API. App layout nav badge counts (task, plan, supply) run in parallel via `Promise.all`. Session fetch is deduplicated per request with React `cache()` so layout + page only run Session/User lookup once. |
 | **Mutations** | Plan create/update use `prisma.$transaction`; revalidation after commit. Task mutations use task-service; revalidation in actions. |
 | **API vs UI** | GET /api/tasks order: `completedAt desc`, `createdAt desc`; includes plan (id, name) and attachments. GET /api/plans: paginated, order `priority desc`, `createdAt desc`; filter by showArchived. README documents endpoints; ordering and response shape documented in this pass. |
 | **Rate limiting** | `src/lib/rate-limit.ts`: in-memory Map, 100 req/min per identifier. Used by GET/POST /api/tasks and GET /api/plans. Not shared across serverless instances; production should use distributed limiter (e.g. Upstash Redis). |

@@ -19,25 +19,28 @@ export default async function AppLayout({
   if (!session?.user) redirect("/login");
   const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
   const t = getTranslations(locale);
-  const remainingTaskCount = await prisma.task.count({
-    where: { userId: session.user.id, completedAt: null },
-  });
-  const activePlanCount = await prisma.plan.count({
-    where: {
-      userId: session.user.id,
-      status: { notIn: ["completed", "abandoned"] },
-    },
-  });
-  const suppliesCount = await prisma.supplyItem.count({
-    where: {
-      plan: {
-        OR: [
-          { userId: session.user.id },
-          { shares: { some: { sharedWithUserId: session.user.id } } },
-        ],
+  const userId = session.user.id;
+  const [remainingTaskCount, activePlanCount, suppliesCount] = await Promise.all([
+    prisma.task.count({
+      where: { userId, completedAt: null },
+    }),
+    prisma.plan.count({
+      where: {
+        userId,
+        status: { notIn: ["completed", "abandoned"] },
       },
-    },
-  });
+    }),
+    prisma.supplyItem.count({
+      where: {
+        plan: {
+          OR: [
+            { userId },
+            { shares: { some: { sharedWithUserId: userId } } },
+          ],
+        },
+      },
+    }),
+  ]);
 
   return (
     <TranslationsProvider locale={locale}>
