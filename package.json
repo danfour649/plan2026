@@ -1,6 +1,6 @@
 {
   "name": "plan2026",
-  "version": "0.10.2",
+  "version": "0.10.5",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",

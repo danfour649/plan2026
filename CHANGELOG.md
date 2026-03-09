@@ -1,5 +1,23 @@
 # plan2026
 
+## 0.10.5
+
+### Patch Changes
+
+- 9dce14b: On mobile, task rows now show shorter dates (e.g. "Mar 8") and plan names truncate; status button (Mark done / Restore) is explicitly ordered first before Edit on both plan detail and tasks page.
+
+## 0.10.4
+
+### Patch Changes
+
+- 84ee00c: Plans list now shows task completion as a segment bar (green for completed, grey for incomplete), with "X of Y" text and an accessible aria-label.
+
+## 0.10.3
+
+### Patch Changes
+
+- a9ed5a9: On the plan detail page, the tasks section header (with "Add task") is now sticky on mobile so it stays in view when scrolling the task list.
+
 ## 0.10.2
 
 ### Patch Changes

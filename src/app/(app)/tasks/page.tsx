@@ -38,6 +38,9 @@ function getUrgencyPillClasses(urgency: number) {
 function formatShortDate(d: Date): string {
   return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
+function formatShortDateOnly(d: Date): string {
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
 function formatShortDateTime(d: Date): string {
   return `${formatShortDate(d)} ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`;
 }
@@ -202,17 +205,19 @@ export default async function TasksPage({
                     </div>
                     <TaskContent content={task.content} />
                     <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
-                      <span>{t.tasks.added} {formatShortDate(task.createdAt)}</span>
+                      <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
                       {task.dueAt && (
                         <span className="sm:before:content-['·'] sm:before:mr-1">
-                          {t.tasks.due} {formatShortDateTime(task.dueAt)}
+                          {t.tasks.due}{" "}
+                          <span className="max-sm:hidden sm:inline">{formatShortDateTime(task.dueAt)}</span>
+                          <span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.dueAt)}</span>
                         </span>
                       )}
                       {task.plan && (
-                        <span className="sm:before:content-['·'] sm:before:mr-1">
+                        <span className="min-w-0 max-sm:block sm:before:content-['·'] sm:before:mr-1">
                           <Link
                             href={`/plans/${task.plan.id}`}
-                            className="text-blue-600 hover:underline"
+                            className="max-w-[12rem] truncate text-blue-600 hover:underline max-sm:inline-block sm:max-w-none sm:truncate"
                           >
                             {t.tasks.planLabel} {task.plan.name}
                           </Link>
@@ -223,8 +228,8 @@ export default async function TasksPage({
                 </EditTaskDialog>
                 <div className="flex min-w-0 flex-shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <TaskActionButton action={completeTask} taskId={task.id} label={t.tasks.markDone} successMessage={t.tasks.markedDone} />
-                    <EditTaskDialog
+                    <span className="order-1"><TaskActionButton action={completeTask} taskId={task.id} label={t.tasks.markDone} successMessage={t.tasks.markedDone} /></span>
+                    <span className="order-2"><EditTaskDialog
                     action={updateTask}
                     deleteAction={deleteTask}
                     plans={plans}
@@ -245,7 +250,7 @@ export default async function TasksPage({
                         size: a.size,
                       })),
                     }}
-                  />
+                  /></span>
                     <AddToCalendarButton
                       taskId={task.id}
                       initiallyLinked={Boolean(task.googleCalendarEventId)}
@@ -298,12 +303,12 @@ export default async function TasksPage({
                       </div>
                       <TaskContent content={task.content} />
                       <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
-                        <span>{t.tasks.completed} {task.completedAt ? formatShortDate(task.completedAt) : "—"}</span>
+                        <span>{t.tasks.completed} {task.completedAt ? (<><span className="max-sm:hidden sm:inline">{formatShortDate(task.completedAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.completedAt)}</span></>) : "—"}</span>
                         {task.plan && (
-                          <span className="sm:before:content-['·'] sm:before:mr-1">
+                          <span className="min-w-0 max-sm:block sm:before:content-['·'] sm:before:mr-1">
                             <Link
                               href={`/plans/${task.plan.id}`}
-                              className="text-blue-600 hover:underline"
+                              className="max-w-[12rem] truncate text-blue-600 hover:underline max-sm:inline-block sm:max-w-none sm:truncate"
                             >
                               {t.tasks.planLabel} {task.plan.name}
                             </Link>
@@ -315,8 +320,8 @@ export default async function TasksPage({
                 </EditTaskDialog>
                 <div className="flex min-w-0 flex-shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <TaskActionButton action={restoreTask} taskId={task.id} label={t.tasks.restore} successMessage={t.tasks.taskRestored} />
-                    <EditTaskDialog
+                    <span className="order-1"><TaskActionButton action={restoreTask} taskId={task.id} label={t.tasks.restore} successMessage={t.tasks.taskRestored} /></span>
+                    <span className="order-2"><EditTaskDialog
                       action={updateTask}
                       deleteAction={deleteTask}
                       plans={plans}
@@ -338,7 +343,7 @@ export default async function TasksPage({
                           size: a.size,
                         })),
                       }}
-                    />
+                    /></span>
                     <AddToCalendarButton
                       taskId={task.id}
                       initiallyLinked={Boolean(task.googleCalendarEventId)}

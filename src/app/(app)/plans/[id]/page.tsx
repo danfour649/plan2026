@@ -5,11 +5,11 @@ import { notFound } from "next/navigation";
 import { getCurrentUserId } from "@/auth";
 import { AddTaskDialog } from "@/components/AddTaskDialog";
 import { DeletePlanButton } from "@/components/DeletePlanButton";
+import { EditPlanFormWrapper } from "@/components/EditPlanFormWrapper";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportPlanButton } from "@/components/ExportPlanButton";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { InviteByLinkButton } from "@/components/InviteByLinkButton";
-import { PlanForm } from "@/components/PlanForm";
 import { SharePlanButton } from "@/components/SharePlanButton";
 import { TaskContent } from "@/components/TaskContent";
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
@@ -20,6 +20,9 @@ import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/li
 
 function formatShortDate(d: Date): string {
   return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+function formatShortDateOnly(d: Date): string {
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 function formatShortDateTime(d: Date): string {
   return `${formatShortDate(d)} ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`;
@@ -153,67 +156,74 @@ export default async function PlanDetailPage({
     ),
   };
 
+  const titleRow = (
+    <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="min-w-0">
+        <h1 className="truncate text-2xl font-bold tracking-tight text-blue-950">{plan.name}</h1>
+        <p className="mt-1 text-sm text-zinc-500">
+          {isOwner ? t.plans.editPlanDescription : t.plans.viewingSharedPlan}
+        </p>
+      </div>
+      <div className="flex min-w-0 flex-nowrap items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+        <ExportPlanButton plan={planForExport} />
+        <Link
+          href={`/plans/${plan.id}/print`}
+          className="inline-flex shrink-0 items-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
+          aria-label={t.plans.printChecklistAria}
+        >
+          {t.plans.printChecklist}
+        </Link>
+        {isOwner ? (
+          <>
+            <SharePlanButton planId={plan.id} />
+            <InviteByLinkButton planId={plan.id} planName={plan.name} />
+            <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
+          </>
+        ) : null}
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-w-0 overflow-x-hidden space-y-8">
-      <div className="flex min-w-0 flex-col gap-3">
-        <Link
-          href="/plans"
-          className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-blue-700 transition hover:text-blue-800"
-        >
-          <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden="true">
-            <path
-              d="M12.5 15L7.5 10l5-5"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          {t.common.backToPlans}
-        </Link>
-        <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <h1 className="truncate text-2xl font-bold tracking-tight text-blue-950">{plan.name}</h1>
-            <p className="mt-1 text-sm text-zinc-500">
-              {isOwner ? t.plans.editPlanDescription : t.plans.viewingSharedPlan}
-            </p>
-          </div>
-          <div className="flex min-w-0 flex-nowrap items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
-            <ExportPlanButton plan={planForExport} />
-            <Link
-              href={`/plans/${plan.id}/print`}
-              className="inline-flex shrink-0 items-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
-              aria-label={t.plans.printChecklistAria}
-            >
-              {t.plans.printChecklist}
-            </Link>
-            {isOwner ? (
-              <>
-                <SharePlanButton planId={plan.id} />
-                <InviteByLinkButton planId={plan.id} planName={plan.name} />
-                <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
-              </>
-            ) : null}
-          </div>
-        </div>
-      </div>
-
       <div className="grid min-w-0 gap-6 lg:grid-cols-2 lg:gap-8">
         {isOwner ? (
-          <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 px-3 py-4 shadow-sm shadow-blue-100/40 backdrop-blur sm:px-6 sm:py-6">
-            <PlanForm
-              action={updatePlan}
-              initialValues={initialValues}
-              userTasks={userTasks}
-              isEdit={true}
-              submitLabel={t.common.savePlan}
-              singleColumn={true}
-            />
-          </section>
-        ) : null}
+          <EditPlanFormWrapper
+            action={updatePlan}
+            initialValues={initialValues}
+            userTasks={userTasks}
+            submitLabel={t.common.savePlan}
+            singleColumn={true}
+            backLabel={t.common.backToPlans}
+            confirmMessage={t.plans.discardEditPlanConfirm}
+            discardLeaveLabel={t.plansPage.discardLeave}
+            discardStayLabel={t.plansPage.discardStay}
+          >
+            {titleRow}
+          </EditPlanFormWrapper>
+        ) : (
+          <div className="flex min-w-0 flex-col gap-3">
+            <Link
+              href="/plans"
+              className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-blue-700 transition hover:text-blue-800"
+            >
+              <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden="true">
+                <path
+                  d="M12.5 15L7.5 10l5-5"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {t.common.backToPlans}
+            </Link>
+            {titleRow}
+          </div>
+        )}
 
         <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
-          <div className="border-b border-blue-100 px-3 py-3 sm:px-6 sm:py-4">
+          <div className="sticky top-0 z-10 border-b border-blue-100 bg-white/90 px-3 py-3 backdrop-blur max-sm:sticky sm:static sm:bg-transparent sm:backdrop-blur-none sm:px-6 sm:py-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h2 className="text-xl font-bold tracking-tight text-blue-950">{t.plans.tasksInThisPlan}</h2>
@@ -276,26 +286,31 @@ export default async function PlanDetailPage({
                           <TaskContent content={task.content} />
                           <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
                             {task.completedAt ? (
-                              <span>{t.tasks.completed} {formatShortDate(new Date(task.completedAt))}</span>
+                              <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
                             ) : (
-                              <span>{t.tasks.added} {formatShortDate(task.createdAt)}</span>
+                              <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
                             )}
                             {task.dueAt && (
                               <span className="sm:before:content-['·'] sm:before:mr-1">
-                                {t.tasks.due} {formatShortDateTime(new Date(task.dueAt))}
+                                {t.tasks.due}{" "}
+                                <span className="max-sm:hidden sm:inline">{formatShortDateTime(new Date(task.dueAt))}</span>
+                                <span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.dueAt))}</span>
                               </span>
                             )}
                           </div>
                         </div>
                       </EditTaskDialog>
                       <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
-                        <TaskActionButton
-                          action={task.completedAt ? restoreTask : completeTask}
-                          taskId={task.id}
-                          planId={plan.id}
-                          label={task.completedAt ? t.tasks.restore : t.tasks.markDone}
-                          successMessage={task.completedAt ? t.tasks.taskRestored : t.tasks.markedDone}
-                        />
+                        <span className="order-1">
+                          <TaskActionButton
+                            action={task.completedAt ? restoreTask : completeTask}
+                            taskId={task.id}
+                            planId={plan.id}
+                            label={task.completedAt ? t.tasks.restore : t.tasks.markDone}
+                            successMessage={task.completedAt ? t.tasks.taskRestored : t.tasks.markedDone}
+                          />
+                        </span>
+                        <span className="order-2">
                         <EditTaskDialog
                           action={updateTask}
                           deleteAction={deleteTask}
@@ -322,6 +337,7 @@ export default async function PlanDetailPage({
                             })),
                           }}
                         />
+                        </span>
                       </div>
                     </>
                   ) : (
@@ -338,13 +354,15 @@ export default async function PlanDetailPage({
                       <TaskContent content={task.content} />
                       <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
                         {task.completedAt ? (
-                          <span>{t.tasks.completed} {formatShortDate(new Date(task.completedAt))}</span>
+                          <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
                         ) : (
-                          <span>{t.tasks.added} {formatShortDate(task.createdAt)}</span>
+                          <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
                         )}
                         {task.dueAt && (
                           <span className="sm:before:content-['·'] sm:before:mr-1">
-                            {t.tasks.due} {formatShortDateTime(new Date(task.dueAt))}
+                            {t.tasks.due}{" "}
+                            <span className="max-sm:hidden sm:inline">{formatShortDateTime(new Date(task.dueAt))}</span>
+                            <span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.dueAt))}</span>
                           </span>
                         )}
                       </div>
