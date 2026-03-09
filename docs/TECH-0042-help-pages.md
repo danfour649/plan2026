@@ -1,6 +1,6 @@
 # TECH-0042: Help pages
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** Implemented (Help and About routes, nav, i18n).
 
 **Goal:** Add a help section that explains how to use the app (tasks and plans), includes app version history based on the changelog, and an “About” section with app version and contributor information.
 

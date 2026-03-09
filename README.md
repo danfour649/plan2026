@@ -107,7 +107,7 @@ If you see **"Port 3000 is in use"** or **"Unable to acquire lock at .next/dev/l
 - **Free the port:** Run `npm run dev:kill` to kill the process on port 3000, then run `npm run dev` again.
 - **Manual kill (Windows):** `netstat -ano | findstr :3000`, then `taskkill /PID <pid> /F`. Or use Task Manager → Details → end the `node.exe` process (or "End process tree" on the npm parent).
 
-The root route redirects to `/tasks`. The app shell includes **Tasks** and **Plans** nav links; **Plans** lists your plans and links to **Add plan** (`/plans/new`) and to each plan’s detail/edit page (`/plans/[id]`).
+The root route redirects to `/tasks`. The app shell includes **Tasks**, **Plans**, **Help**, and **About** nav links; **Plans** lists your plans and links to **Add plan** (`/plans/new`) and to each plan’s detail/edit page (`/plans/[id]`). **Help** (`/help`) shows how to use tasks and plans plus recent updates; **About** (`/about`) shows app version and contributor info.
 
 ## Google OAuth setup
 

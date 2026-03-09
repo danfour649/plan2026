@@ -7,10 +7,13 @@ import { CancelNewPlanLink } from "@/components/CancelNewPlanLink";
 import { PlanForm } from "@/components/PlanForm";
 import { clearNewPlanFormDirty, setNewPlanFormDirty } from "@/lib/newPlanDirty";
 import type { PlanActionResult } from "@/lib/actions/plans";
+import type { PlanTemplateResolved } from "@/data/planTemplates";
 
 type NewPlanSectionProps = {
   action: (formData: FormData) => Promise<PlanActionResult>;
   userTasks: { id: string; title: string }[];
+  templates: PlanTemplateResolved[];
+  templateSelectLabel: string;
   cancelLabel: string;
   confirmMessage: string;
   discardLeaveLabel: string;
@@ -23,6 +26,8 @@ type NewPlanSectionProps = {
 export function NewPlanSection({
   action,
   userTasks,
+  templates,
+  templateSelectLabel,
   cancelLabel,
   confirmMessage,
   discardLeaveLabel,
@@ -33,6 +38,20 @@ export function NewPlanSection({
 }: NewPlanSectionProps) {
   const router = useRouter();
   const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>(templates[0]?.id ?? "empty");
+
+  const selectedTemplate = templates.find((t) => t.id === selectedTemplateId);
+  const templateInitialValues =
+    selectedTemplate && selectedTemplate.id !== "empty"
+      ? {
+          name: selectedTemplate.name,
+          goal: selectedTemplate.goal ?? "",
+          newTaskTitles:
+            selectedTemplate.tasks.length > 0
+              ? selectedTemplate.tasks.map((t) => t.title)
+              : [""],
+        }
+      : undefined;
 
   useEffect(() => {
     return () => clearNewPlanFormDirty();
@@ -61,9 +80,30 @@ export function NewPlanSection({
           <h1 className="text-2xl font-bold tracking-tight text-blue-950">{newPlanTitle}</h1>
           <p className="mt-1 text-sm text-zinc-500">{newPlanDescription}</p>
         </div>
+        {templates.length > 1 ? (
+          <div className="flex flex-wrap items-center gap-2">
+            <label htmlFor="plan-template-select" className="text-sm font-medium text-zinc-700">
+              {templateSelectLabel}
+            </label>
+            <select
+              id="plan-template-select"
+              value={selectedTemplateId}
+              onChange={(e) => setSelectedTemplateId(e.target.value)}
+              className="rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+              aria-label={templateSelectLabel}
+            >
+              {templates.map((tpl) => (
+                <option key={tpl.id} value={tpl.id}>
+                  {tpl.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : null}
       </div>
       <section className="rounded-2xl border border-blue-100 bg-white/90 px-6 py-6 shadow-sm shadow-blue-100/40 backdrop-blur">
         <PlanForm
+          key={selectedTemplateId}
           formId="new-plan-form"
           action={action}
           userTasks={userTasks}
@@ -72,6 +112,7 @@ export function NewPlanSection({
           discardConfirmMessage={confirmMessage}
           onDirtyChange={setNewPlanFormDirty}
           onRequestDiscardConfirm={setShowDiscardConfirm}
+          templateInitialValues={templateInitialValues}
         />
       </section>
 

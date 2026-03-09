@@ -1,6 +1,6 @@
 # TECH-0030: Supply list (“List” tab)
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** Implemented (SupplyItem model, migration, server actions, List tab on plan detail; optional reorder can be added later).
 
 **Goal:** Allow users to create a list of necessary supplies for a plan or a task — like a shopping list. A new tab “List” would show items that can have optional price, description, and link (e.g. Amazon).
 

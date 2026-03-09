@@ -23,6 +23,7 @@ model User {
   plans               Plan[]
   taskAttachments     TaskAttachment[]
   plansSharedWithMe   PlanShare[]
+  supplyItems         SupplyItem[]
 }
 
 model Account {
@@ -127,9 +128,30 @@ model Plan {
   tasks  Task[]
   shares PlanShare[]
   invites PlanInvite[]
+  supplyItems SupplyItem[]
 
   @@index([userId])
   @@index([userId, priority])
+}
+
+model SupplyItem {
+  id             String   @id @default(cuid())
+  planId         String
+  userId         String
+  label          String
+  price          Decimal? @db.Decimal(10, 2)
+  description    String?
+  link           String?
+  quantity       Int      @default(1)
+  acquiredStatus String   @default("needed") // needed | ordered | pending | purchased
+  order          Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@index([userId])
 }
 
 model PlanShare {

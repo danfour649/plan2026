@@ -9,6 +9,7 @@ import { DeletePlanButton } from "@/components/DeletePlanButton";
 import { EditPlanFormWrapper } from "@/components/EditPlanFormWrapper";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportPlanButton } from "@/components/ExportPlanButton";
+import { PlanSupplyList } from "@/components/PlanSupplyList";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { InviteByLinkButton } from "@/components/InviteByLinkButton";
 import { SharePlanButton } from "@/components/SharePlanButton";
@@ -46,7 +47,7 @@ export default async function PlanDetailPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams?: Promise<{ taskPage?: string | string[]; taskLimit?: string | string[] }>;
+  searchParams?: Promise<{ taskPage?: string | string[]; taskLimit?: string | string[]; tab?: string | string[]; edit?: string | string[] }>;
 }) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
@@ -56,6 +57,10 @@ export default async function PlanDetailPage({
   const resolvedSearchParams = (await searchParams) ?? {};
   const taskPage = parsePage(resolvedSearchParams.taskPage);
   const taskLimit = parseLimit(resolvedSearchParams.taskLimit, PLAN_TASKS_PAGE_SIZE);
+  const tabRaw = Array.isArray(resolvedSearchParams.tab) ? resolvedSearchParams.tab[0] : resolvedSearchParams.tab;
+  const tab = tabRaw === "list" ? "list" : "tasks";
+  const editRaw = Array.isArray(resolvedSearchParams.edit) ? resolvedSearchParams.edit[0] : resolvedSearchParams.edit;
+  const editItemId = editRaw && /^[a-z0-9]+$/i.test(editRaw) ? editRaw : undefined;
 
   const plan = await prisma.plan.findFirst({
     where: {
@@ -74,6 +79,9 @@ export default async function PlanDetailPage({
           { createdAt: "desc" },
         ],
         select: { id: true },
+      },
+      supplyItems: {
+        orderBy: [{ order: "asc" }, { createdAt: "asc" }],
       },
     },
   });
@@ -136,6 +144,17 @@ export default async function PlanDetailPage({
     orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
     select: { id: true, title: true },
   });
+
+  const supplyItemsForClient = plan.supplyItems.map((item) => ({
+    id: item.id,
+    label: item.label,
+    price: item.price != null ? Number(item.price) : null,
+    description: item.description ?? null,
+    link: item.link ?? null,
+    quantity: item.quantity ?? 1,
+    acquiredStatus: item.acquiredStatus ?? "needed",
+    order: item.order,
+  }));
 
   const initialValues = {
     planId: plan.id,
@@ -258,18 +277,52 @@ export default async function PlanDetailPage({
         <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
           <div className="sticky top-0 z-10 border-b border-blue-100 bg-white/90 px-3 py-3 backdrop-blur max-sm:sticky sm:static sm:bg-transparent sm:backdrop-blur-none sm:px-6 sm:py-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div>
-                <h2 className="text-xl font-bold tracking-tight text-blue-950">{t.plans.tasksInThisPlan}</h2>
-                <p className="mt-1 text-sm text-zinc-500">
-                  {isOwner ? t.plans.editTaskBelowDescription : t.plans.tasksInSharedPlan}
-                </p>
+              <div className="flex flex-wrap items-center gap-2">
+                <nav className="flex gap-1" aria-label={t.plans.tasksInThisPlan}>
+                  <Link
+                    href={`/plans/${plan.id}${taskPage > 1 || taskLimit !== PLAN_TASKS_PAGE_SIZE ? `?taskPage=${taskPage}&taskLimit=${taskLimit}` : ""}`}
+                    className={`rounded-xl px-3 py-1.5 text-sm font-medium transition ${
+                      tab === "tasks"
+                        ? "bg-blue-100 text-blue-800"
+                        : "text-zinc-600 hover:bg-blue-50 hover:text-blue-700"
+                    }`}
+                  >
+                    {t.nav.tasks}
+                  </Link>
+                  <Link
+                    href={`/plans/${plan.id}?tab=list`}
+                    className={`rounded-xl px-3 py-1.5 text-sm font-medium transition ${
+                      tab === "list"
+                        ? "bg-blue-100 text-blue-800"
+                        : "text-zinc-600 hover:bg-blue-50 hover:text-blue-700"
+                    }`}
+                  >
+                    {t.supplyList.tabLabel}
+                  </Link>
+                </nav>
               </div>
-              {isOwner ? (
+              {tab === "tasks" && isOwner ? (
                 <AddTaskDialog action={addTask} plans={plans} defaultPlanId={plan.id} />
               ) : null}
             </div>
+            {tab === "tasks" ? (
+              <>
+                <div className="mt-2">
+                  <h2 className="text-lg font-bold tracking-tight text-blue-950">{t.plans.tasksInThisPlan}</h2>
+                  <p className="mt-1 text-sm text-zinc-500">
+                    {isOwner ? t.plans.editTaskBelowDescription : t.plans.tasksInSharedPlan}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <h2 className="mt-2 text-lg font-bold tracking-tight text-blue-950">{t.supplyList.title}</h2>
+            )}
           </div>
-          {planTasks.length > 0 ? (
+          {tab === "list" ? (
+            <div className="px-3 py-4 sm:px-6 sm:py-6">
+              <PlanSupplyList planId={plan.id} items={supplyItemsForClient} isOwner={isOwner} initialEditingItemId={editItemId} />
+            </div>
+          ) : planTasks.length > 0 ? (
             <ul className="divide-y divide-blue-100">
               {planTasks.map((task) => (
                 <li

@@ -1,5 +1,23 @@
 # plan2026
 
+## 0.15.0
+
+### Minor Changes
+
+- 77717b5: Add prebuilt plan templates on new plan page: "Start from" dropdown with Empty, Project launch, and Trip planning. Selecting a template pre-fills plan name, goal, and default task titles. Template names and task titles translated (en, fr, pidgin).
+
+## 0.14.0
+
+### Minor Changes
+
+- 7410c56: Improve login screen: add value-proposition headline ("Plans and tasks, shared"), three benefit bullets (plans and tasks in one place, share with others, works in your language), and responsive layout. All copy in i18n (en, fr, pidgin).
+
+## 0.13.0
+
+### Minor Changes
+
+- bc8373d: Add Help and About pages: in-app /help (how to use tasks and plans, recent updates, link to changelog) and /about (app version from package.json, contributors). Nav includes Help and About links; all copy translated (en, fr, pidgin).
+
 ## 0.12.0
 
 ### Minor Changes
