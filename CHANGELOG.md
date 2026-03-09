@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.14.0
+
+### Minor Changes
+
+- 7410c56: Improve login screen: add value-proposition headline ("Plans and tasks, shared"), three benefit bullets (plans and tasks in one place, share with others, works in your language), and responsive layout. All copy in i18n (en, fr, pidgin).
+
 ## 0.13.0
 
 ### Minor Changes
