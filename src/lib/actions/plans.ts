@@ -56,44 +56,47 @@ export async function createPlan(formData: FormData): Promise<PlanActionResult> 
 
   const { taskIds, newTaskTitles, ...planData } = parsed.data;
 
-  const plan = await prisma.plan.create({
-    data: {
-      userId,
-      name: planData.name,
-      description: planData.description ?? null,
-      goal: planData.goal ?? null,
-      startAt: planData.startAt,
-      endAt: planData.endAt,
-      actualStartAt: planData.actualStartAt ?? null,
-      actualEndAt: planData.actualEndAt ?? null,
-      status: "draft",
-      priority: planData.priority,
-      percentCompleted: planData.percentCompleted,
-      notes: planData.notes ?? null,
-      color: planData.color ?? null,
-      imageUrl: planData.imageUrl ?? null,
-    },
-  });
-
-  const allTaskIds = [...taskIds];
-  for (const title of newTaskTitles) {
-    const t = await prisma.task.create({
+  const plan = await prisma.$transaction(async (tx) => {
+    const created = await tx.plan.create({
       data: {
         userId,
-        title: title.slice(0, TASK_TITLE_MAX_LENGTH),
-        urgency: 4,
-        planId: plan.id,
+        name: planData.name,
+        description: planData.description ?? null,
+        goal: planData.goal ?? null,
+        startAt: planData.startAt,
+        endAt: planData.endAt,
+        actualStartAt: planData.actualStartAt ?? null,
+        actualEndAt: planData.actualEndAt ?? null,
+        status: "draft",
+        priority: planData.priority,
+        percentCompleted: planData.percentCompleted,
+        notes: planData.notes ?? null,
+        color: planData.color ?? null,
+        imageUrl: planData.imageUrl ?? null,
       },
     });
-    allTaskIds.push(t.id);
-  }
 
-  if (allTaskIds.length > 0) {
-    await prisma.task.updateMany({
-      where: { id: { in: allTaskIds }, userId },
-      data: { planId: plan.id },
-    });
-  }
+    if (newTaskTitles.length > 0) {
+      await tx.task.createMany({
+        data: newTaskTitles.map((title) => ({
+          userId,
+          title: title.slice(0, TASK_TITLE_MAX_LENGTH),
+          urgency: 4,
+          planId: created.id,
+        })),
+      });
+    }
+
+    const allTaskIds = [...taskIds];
+    if (allTaskIds.length > 0) {
+      await tx.task.updateMany({
+        where: { id: { in: allTaskIds }, userId },
+        data: { planId: created.id },
+      });
+    }
+
+    return created;
+  });
 
   revalidatePath("/plans");
   revalidatePath("/tasks");
@@ -112,51 +115,57 @@ export async function updatePlan(formData: FormData): Promise<PlanActionResult> 
 
   const { planId, taskIds, newTaskTitles, ...planData } = parsed.data;
 
-  const result = await prisma.plan.updateMany({
-    where: { id: planId, userId },
-    data: {
-      name: planData.name,
-      description: planData.description ?? null,
-      goal: planData.goal ?? null,
-      startAt: planData.startAt,
-      endAt: planData.endAt,
-      actualStartAt: planData.actualStartAt ?? null,
-      actualEndAt: planData.actualEndAt ?? null,
-      status: planData.status,
-      priority: planData.priority,
-      percentCompleted: planData.percentCompleted,
-      notes: planData.notes ?? null,
-      color: planData.color ?? null,
-      imageUrl: planData.imageUrl ?? null,
-    },
+  const result = await prisma.$transaction(async (tx) => {
+    const updateResult = await tx.plan.updateMany({
+      where: { id: planId, userId },
+      data: {
+        name: planData.name,
+        description: planData.description ?? null,
+        goal: planData.goal ?? null,
+        startAt: planData.startAt,
+        endAt: planData.endAt,
+        actualStartAt: planData.actualStartAt ?? null,
+        actualEndAt: planData.actualEndAt ?? null,
+        status: planData.status,
+        priority: planData.priority,
+        percentCompleted: planData.percentCompleted,
+        notes: planData.notes ?? null,
+        color: planData.color ?? null,
+        imageUrl: planData.imageUrl ?? null,
+      },
+    });
+
+    if (updateResult.count === 0) return { count: 0 as const };
+
+    const desiredIds = new Set<string>(taskIds);
+
+    await tx.task.updateMany({
+      where: { userId, planId },
+      data: { planId: null },
+    });
+
+    if (desiredIds.size > 0) {
+      await tx.task.updateMany({
+        where: { id: { in: [...desiredIds] as string[] }, userId },
+        data: { planId },
+      });
+    }
+
+    if (newTaskTitles.length > 0) {
+      await tx.task.createMany({
+        data: newTaskTitles.map((title) => ({
+          userId,
+          title: title.slice(0, TASK_TITLE_MAX_LENGTH),
+          urgency: 4,
+          planId,
+        })),
+      });
+    }
+
+    return { count: updateResult.count };
   });
 
   if (result.count === 0) return { success: false, error: "Plan not found" };
-
-  const desiredIds = new Set<string>(taskIds);
-
-  await prisma.task.updateMany({
-    where: { userId, planId },
-    data: { planId: null },
-  });
-
-  if (desiredIds.size > 0) {
-    await prisma.task.updateMany({
-      where: { id: { in: [...desiredIds] as string[] }, userId },
-      data: { planId },
-    });
-  }
-
-  for (const title of newTaskTitles) {
-    await prisma.task.create({
-      data: {
-        userId,
-        title: title.slice(0, TASK_TITLE_MAX_LENGTH),
-        urgency: 4,
-        planId,
-      },
-    });
-  }
 
   revalidatePath("/plans");
   revalidatePath(`/plans/${planId}`);

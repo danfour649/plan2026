@@ -6,59 +6,42 @@ import { ExportPlansButton } from "@/components/ExportPlansButton";
 import { RefreshPlansButton } from "@/components/RefreshPlansButton";
 import { ShowArchivedPlansToggle } from "@/components/ShowArchivedPlansToggle";
 import { PlanStatusSelect } from "@/components/PlanStatusSelect";
+import type { Prisma } from "@prisma/client";
+import {
+  getFlagEmoji,
+  getPriorityOvalClasses,
+  getStatusPillClasses,
+} from "@/lib/format";
 import { formatTasksCount, getLocaleFromCookie, getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 import type { ExportedPlan } from "@/lib/export";
 import { updatePlanStatus } from "@/lib/actions/plans";
 
-/** Colored oval (ring + light fill) around the plan name by priority. */
-function getPriorityOvalClasses(priority: number) {
-  switch (priority) {
-    case 7:
-      return "rounded-full px-3 py-1 ring-1 ring-red-200 bg-red-50/80 text-red-900";
-    case 6:
-      return "rounded-full px-3 py-1 ring-1 ring-orange-200 bg-orange-50/80 text-orange-900";
-    case 5:
-      return "rounded-full px-3 py-1 ring-1 ring-amber-200 bg-amber-50/80 text-amber-900";
-    case 4:
-      return "rounded-full px-3 py-1 ring-1 ring-emerald-200 bg-emerald-50/80 text-emerald-900";
-    case 3:
-      return "rounded-full px-3 py-1 ring-1 ring-cyan-200 bg-cyan-50/80 text-cyan-900";
-    case 2:
-      return "rounded-full px-3 py-1 ring-1 ring-sky-200 bg-sky-50/80 text-sky-900";
-    default:
-      return "rounded-full px-3 py-1 ring-1 ring-blue-200 bg-blue-50/80 text-blue-900";
-  }
-}
-
-function getStatusPillClasses(status: string) {
-  switch (status) {
-    case "completed":
-      return "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200";
-    case "abandoned":
-      return "bg-zinc-100 text-zinc-600 ring-1 ring-zinc-200";
-    case "started":
-      return "bg-blue-100 text-blue-700 ring-1 ring-blue-200";
-    case "on_hold":
-      return "bg-violet-100 text-violet-700 ring-1 ring-violet-200";
-    default:
-      return "bg-amber-50 text-amber-700 ring-1 ring-amber-200";
-  }
-}
-
 const ARCHIVED_STATUSES = ["completed", "abandoned"] as const;
+const DEFAULT_PLANS_PAGE_SIZE = 20;
+const MAX_PLANS_PAGE_SIZE = 100;
 
-/** Flag emoji for plan color (same mapping as PlanForm). */
-function getFlagEmoji(color: string | null | undefined): string {
-  if (!color) return "";
-  const map: Record<string, string> = { blue: "🔵", green: "🟢", amber: "🟡", red: "🔴", violet: "🟣" };
-  return map[color] ?? "";
+function parsePage(value: string | string[] | undefined): number {
+  const v = Array.isArray(value) ? value[0] : value;
+  const n = parseInt(String(v ?? "1"), 10);
+  return Number.isNaN(n) || n < 1 ? 1 : n;
+}
+
+function parseLimit(value: string | string[] | undefined, defaultSize: number): number {
+  const v = Array.isArray(value) ? value[0] : value;
+  const n = parseInt(String(v ?? defaultSize), 10);
+  if (Number.isNaN(n) || n < 1) return defaultSize;
+  return Math.min(n, MAX_PLANS_PAGE_SIZE);
 }
 
 export default async function PlansPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ showArchived?: string | string[] }>;
+  searchParams?: Promise<{
+    showArchived?: string | string[];
+    page?: string | string[];
+    limit?: string | string[];
+  }>;
 }) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
@@ -68,21 +51,30 @@ export default async function PlansPage({
   const showArchived = Array.isArray(resolvedSearchParams.showArchived)
     ? resolvedSearchParams.showArchived[0] === "1"
     : resolvedSearchParams.showArchived === "1";
+  const page = parsePage(resolvedSearchParams.page);
+  const limit = parseLimit(resolvedSearchParams.limit, DEFAULT_PLANS_PAGE_SIZE);
 
-  const allPlans = await prisma.plan.findMany({
-    where: {
-      OR: [
-        { userId },
-        { shares: { some: { sharedWithUserId: userId } } },
-      ],
-    },
-    orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
-    include: { tasks: { select: { id: true, completedAt: true } } },
-  });
+  const baseWhere: Prisma.PlanWhereInput = {
+    OR: [
+      { userId },
+      { shares: { some: { sharedWithUserId: userId } } },
+    ],
+  };
+  const where: Prisma.PlanWhereInput = showArchived
+    ? baseWhere
+    : { ...baseWhere, status: { notIn: [...ARCHIVED_STATUSES] } };
 
-  const plans = showArchived
-    ? allPlans
-    : allPlans.filter((p) => !ARCHIVED_STATUSES.includes(p.status as (typeof ARCHIVED_STATUSES)[number]));
+  const [plans, totalPlans] = await Promise.all([
+    prisma.plan.findMany({
+      where,
+      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
+      skip: (page - 1) * limit,
+      take: limit,
+      include: { tasks: { select: { id: true, completedAt: true } } },
+    }),
+    prisma.plan.count({ where }),
+  ]);
+  const totalPages = Math.ceil(totalPlans / limit) || 1;
 
   const plansForExport: ExportedPlan[] = plans.map((p) => ({
     id: p.id,
@@ -306,6 +298,31 @@ export default async function PlansPage({
                 )}
               </li>
             ))}
+            {totalPages > 1 && (
+              <li className="flex flex-wrap items-center justify-between gap-2 border-t border-blue-100 px-6 py-3">
+                <span className="text-sm text-zinc-500">
+                  {t.common.pageOf.replace("{{current}}", String(page)).replace("{{total}}", String(totalPages))}
+                </span>
+                <div className="flex gap-2">
+                  {page > 1 ? (
+                    <Link
+                      href={`/plans?page=${page - 1}&limit=${limit}${showArchived ? "&showArchived=1" : ""}`}
+                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100"
+                    >
+                      {t.common.previousPage}
+                    </Link>
+                  ) : null}
+                  {page < totalPages ? (
+                    <Link
+                      href={`/plans?page=${page + 1}&limit=${limit}${showArchived ? "&showArchived=1" : ""}`}
+                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100"
+                    >
+                      {t.common.nextPage}
+                    </Link>
+                  ) : null}
+                </div>
+              </li>
+            )}
           </ul>
         )}
       </section>
