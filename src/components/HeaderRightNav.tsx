@@ -129,33 +129,33 @@ export function HeaderRightNav({ userEmail }: { userEmail: string | null | undef
       {/* Desktop: Help, About, Settings, email, Sign out */}
       <div className="hidden items-center gap-1 md:flex md:gap-3">
         {navLinks}
-        <span className="hidden text-sm text-zinc-600 lg:inline">{userEmail ?? ""}</span>
+        <span className="hidden text-sm text-zinc-600 dark:text-zinc-400 lg:inline">{userEmail ?? ""}</span>
         <SignOutButton />
       </div>
 
       {/* Mobile: hamburger + dropdown */}
       <div className="relative flex items-center gap-2 md:hidden" ref={menuRef}>
-        <span className="hidden text-xs text-zinc-600 sm:inline">{userEmail ?? ""}</span>
+        <span className="hidden text-xs text-zinc-600 dark:text-zinc-400 sm:inline">{userEmail ?? ""}</span>
         <button
           type="button"
           onClick={() => setMenuOpen((o) => !o)}
           aria-expanded={menuOpen}
           aria-haspopup="true"
           aria-label={t.nav.menu ?? "Menu"}
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-100 bg-blue-50/80 p-2.5 text-blue-700 transition hover:bg-blue-100"
+          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-100 bg-blue-50/80 p-2.5 text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
         >
           <MenuIcon className="h-5 w-5" />
         </button>
         {menuOpen && (
           <div
-            className="absolute right-0 top-full z-50 mt-1 min-w-[12rem] rounded-xl border border-blue-100 bg-white py-2 shadow-lg shadow-blue-950/10"
+            className="absolute right-0 top-full z-50 mt-1 min-w-[12rem] rounded-xl border border-blue-100 bg-white py-2 shadow-lg shadow-blue-950/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950/50"
             role="menu"
           >
             <Link
               href="/help"
               role="menuitem"
               onClick={() => setMenuOpen(false)}
-              className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === "/help" ? "bg-blue-100 font-medium text-blue-800" : "text-zinc-700 hover:bg-blue-50"}`}
+              className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === "/help" ? "bg-blue-100 font-medium text-blue-800 dark:bg-blue-900/50 dark:text-blue-200" : "text-zinc-700 hover:bg-blue-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`}
             >
               <HelpIcon className="h-5 w-5 shrink-0" />
               {t.nav.help}
@@ -164,7 +164,7 @@ export function HeaderRightNav({ userEmail }: { userEmail: string | null | undef
               href="/about"
               role="menuitem"
               onClick={() => setMenuOpen(false)}
-              className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === "/about" ? "bg-blue-100 font-medium text-blue-800" : "text-zinc-700 hover:bg-blue-50"}`}
+              className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === "/about" ? "bg-blue-100 font-medium text-blue-800 dark:bg-blue-900/50 dark:text-blue-200" : "text-zinc-700 hover:bg-blue-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`}
             >
               <AboutIcon className="h-5 w-5 shrink-0" />
               {t.nav.about}
@@ -173,17 +173,17 @@ export function HeaderRightNav({ userEmail }: { userEmail: string | null | undef
               href="/settings"
               role="menuitem"
               onClick={() => setMenuOpen(false)}
-              className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === "/settings" ? "bg-blue-100 font-medium text-blue-800" : "text-zinc-700 hover:bg-blue-50"}`}
+              className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === "/settings" ? "bg-blue-100 font-medium text-blue-800 dark:bg-blue-900/50 dark:text-blue-200" : "text-zinc-700 hover:bg-blue-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`}
             >
               <SettingsIcon className="h-5 w-5 shrink-0" />
               {t.nav.settings}
             </Link>
-            <div className="border-t border-blue-100 pt-2 mt-2">
+            <div className="mt-2 border-t border-blue-100 pt-2 dark:border-zinc-700">
               <div className="px-2 pb-1">
                 <SignOutButton
                   alwaysShowLabel
                   iconClassName="h-5 w-5 shrink-0"
-                  className="flex w-full items-center justify-start gap-3 rounded-lg px-3 py-2.5 text-sm text-red-700 transition hover:bg-red-50"
+                  className="flex w-full items-center justify-start gap-3 rounded-lg px-3 py-2.5 text-sm text-red-700 transition hover:bg-red-50 dark:text-red-300 dark:hover:bg-zinc-800"
                 />
               </div>
             </div>

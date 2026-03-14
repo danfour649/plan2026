@@ -27,6 +27,11 @@ const messages = {
       calendarDisconnected:
         "Google Calendar access has been disconnected. Reconnect with Google to grant Calendar permissions again.",
       pageDescription: "Manage your account, language, and Google Calendar connection.",
+      theme: "Theme",
+      themeLight: "Light",
+      themeDark: "Dark",
+      themeSystem: "System",
+      themeDescription: "Choose light or dark appearance. System follows your device setting.",
     },
     tasksPage: {
       title: "Tasks",
@@ -339,6 +344,11 @@ const messages = {
       calendarDisconnected:
         "L'accès à Google Agenda a été déconnecté. Reconnectez-vous avec Google pour accorder à nouveau les autorisations.",
       pageDescription: "Gérez votre compte, la langue et la connexion Google Agenda.",
+      theme: "Thème",
+      themeLight: "Clair",
+      themeDark: "Sombre",
+      themeSystem: "Système",
+      themeDescription: "Choisissez l'apparence claire ou sombre. Système suit le réglage de l'appareil.",
     },
     tasksPage: {
       title: "Tâches",
@@ -651,6 +661,11 @@ const messages = {
       calendarDisconnected:
         "Google Calendar don cut. Connect am again make you fit get permission.",
       pageDescription: "Arrange your account, language, and Google Calendar connection.",
+      theme: "How e look",
+      themeLight: "Light",
+      themeDark: "Dark",
+      themeSystem: "System",
+      themeDescription: "Pick light or dark. System follow your phone or computer setting.",
     },
     tasksPage: {
       title: "Work",
