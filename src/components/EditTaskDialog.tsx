@@ -348,8 +348,7 @@ export function EditTaskDialog({
                 <input type="hidden" name="taskId" value={task.id} />
                 {task.planId ? <input type="hidden" name="planId" value={task.planId} /> : null}
                 {!showDeleteConfirm ? (
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm text-zinc-500">{t.tasks.removeTaskPermanently}</p>
+                  <div className="flex items-center justify-end gap-3">
                     <button
                       type="button"
                       onClick={() => setShowDeleteConfirm(true)}
