@@ -1,6 +1,6 @@
 # TECH-0055: Dark mode
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** Implemented.
 
 **Goal:** Add a dark mode in settings so users can spare their eyes when the app is used in the dark.
 

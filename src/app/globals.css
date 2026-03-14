@@ -1,10 +1,25 @@
 @import "tailwindcss";
 
+/* Class-based dark mode for user preference (cookie); .dark and .theme-light override system preference */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
   --accent-blue: #2563eb;
   --accent-red: #dc2626;
+}
+
+/* User chose light: force light vars even when system prefers dark */
+.theme-light {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* User chose dark: force dark vars */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 @theme inline {
@@ -15,7 +30,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.theme-light) {
     --background: #0a0a0a;
     --foreground: #ededed;
   }

@@ -85,7 +85,7 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 | [TECH-0043-google-oauth-live.md](./TECH-0043-google-oauth-live.md) | Production Google OAuth (config/deploy). | On hold — privacy/checklist |
 | [TECH-DEBT-AND-OPTIMIZATIONS.md](./TECH-DEBT-AND-OPTIMIZATIONS.md) (TECH-1001) | Tech debt and optimizations (stale; many items implemented). | Superseded by TECH-1005 for new analysis |
 | [TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md) | Fresh analysis of data handling for robustness and scalability; audit then implement. | Active (future work) |
-| [TECH-0055-dark-mode.md](./TECH-0055-dark-mode.md) | Dark mode in settings (theme toggle, persistence, Tailwind dark:). | Deferred — bulk run |
+| [TECH-0055-dark-mode.md](./TECH-0055-dark-mode.md) | Dark mode in settings (theme toggle, persistence, Tailwind dark:). | Implemented |
 | [TECH-0056-facebook-email-password-login.md](./TECH-0056-facebook-email-password-login.md) | Facebook login and email/password sign-up (analysis). | Deferred — bulk run |
 
 ---
