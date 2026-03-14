@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.20.0
+
+### Minor Changes
+
+- cb1776c: Add dark mode: theme setting (Light / Dark / System) in Settings, persisted via cookie. App shell, settings, and login use dark-aware styles so users can spare their eyes in low light.
+
 ## 0.19.0
 
 ### Minor Changes
