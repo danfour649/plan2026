@@ -69,7 +69,7 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 **Update this section when closing a session** so the next run knows where to continue.
 
 - **Last completed:** The five tasks TECH-0042, TECH-0045, TECH-0047, TECH-0030, TECH-0044 have been implemented and merged.
-- **Bulk run (this session):** Implemented TECH-0048 (task complete toast), TECH-0049 (remove delete-task text), TECH-0050 (save button bottom), TECH-0051 (header margin mobile), TECH-0052 (urgency label), TECH-0053 (task form dark text + name→description), TECH-0054 (plan flags + black/pink/silver). Deferred with analysis docs: TECH-0055 (dark mode), TECH-0056 (Facebook/email-password login).
+- **Bulk run (this session):** Implemented TECH-0048 (task complete toast), TECH-0049 (remove delete-task text), TECH-0050 (save button bottom), TECH-0051 (header margin mobile), TECH-0052 (urgency label), TECH-0053 (task form dark text + name→description), TECH-0054 (plan flags + black/pink/silver). Deferred with analysis docs: TECH-0056 (Facebook/email-password login).
 - **Next:** Push branches, open PRs; then remaining active items: **Schedule/Calendar tab** ([TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md)) and **Data robustness and optimization** ([TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md)).
 
 ---
@@ -85,7 +85,6 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 | [TECH-0043-google-oauth-live.md](./TECH-0043-google-oauth-live.md) | Production Google OAuth (config/deploy). | On hold — privacy/checklist |
 | [TECH-DEBT-AND-OPTIMIZATIONS.md](./TECH-DEBT-AND-OPTIMIZATIONS.md) (TECH-1001) | Tech debt and optimizations (stale; many items implemented). | Superseded by TECH-1005 for new analysis |
 | [TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md) | Fresh analysis of data handling for robustness and scalability; audit then implement. | Active (future work) |
-| [TECH-0055-dark-mode.md](./TECH-0055-dark-mode.md) | Dark mode in settings (theme toggle, persistence, Tailwind dark:). | Implemented |
 | [TECH-0056-facebook-email-password-login.md](./TECH-0056-facebook-email-password-login.md) | Facebook login and email/password sign-up (analysis). | Deferred — bulk run |
 
 ---
