@@ -133,14 +133,15 @@ export function EditTaskDialog({
     if (!doneRestoreState || !doneRestoreAction) return;
 
     if (doneRestoreState.success) {
-      toast.success(isCompleted ? t.tasks.taskRestored : t.tasks.markedDone);
+      // Show message for the action we just ran (complete vs restore), not the resulting state
+      toast.success(doneRestoreAction === completeAction ? t.tasks.markedDone : t.tasks.taskRestored);
       queueMicrotask(() => {
         if (isMountedRef.current) setIsOpen(false);
       });
     } else if (doneRestoreState.error) {
       toast.error(doneRestoreState.error);
     }
-  }, [doneRestoreState, doneRestoreAction, isCompleted, t.tasks.markedDone, t.tasks.taskRestored]);
+  }, [doneRestoreState, doneRestoreAction, completeAction, t.tasks.markedDone, t.tasks.taskRestored]);
 
   return (
     <>
