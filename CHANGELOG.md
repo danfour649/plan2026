@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.20.2
+
+### Patch Changes
+
+- 36c1c9e: Fix toast when marking a task as done inside a plan: show "Marked done" / "Task completed" instead of "Task restored".
+
 ## 0.20.1
 
 ### Patch Changes
