@@ -133,14 +133,15 @@ export function EditTaskDialog({
     if (!doneRestoreState || !doneRestoreAction) return;
 
     if (doneRestoreState.success) {
-      toast.success(isCompleted ? t.tasks.taskRestored : t.tasks.markedDone);
+      // Show message for the action we just ran (complete vs restore), not the resulting state
+      toast.success(doneRestoreAction === completeAction ? t.tasks.markedDone : t.tasks.taskRestored);
       queueMicrotask(() => {
         if (isMountedRef.current) setIsOpen(false);
       });
     } else if (doneRestoreState.error) {
       toast.error(doneRestoreState.error);
     }
-  }, [doneRestoreState, doneRestoreAction, isCompleted, t.tasks.markedDone, t.tasks.taskRestored]);
+  }, [doneRestoreState, doneRestoreAction, completeAction, t.tasks.markedDone, t.tasks.taskRestored]);
 
   return (
     <>
@@ -349,8 +350,7 @@ export function EditTaskDialog({
                 <input type="hidden" name="taskId" value={task.id} />
                 {task.planId ? <input type="hidden" name="planId" value={task.planId} /> : null}
                 {!showDeleteConfirm ? (
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm text-zinc-500">{t.tasks.removeTaskPermanently}</p>
+                  <div className="flex items-center justify-end gap-3">
                     <button
                       type="button"
                       onClick={() => setShowDeleteConfirm(true)}

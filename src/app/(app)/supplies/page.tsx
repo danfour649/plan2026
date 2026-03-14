@@ -41,28 +41,28 @@ export default async function SuppliesPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-blue-950">{t.supplyList.pageTitle}</h1>
-        <p className="mt-1 text-sm text-zinc-500">{t.supplyList.pageDescription}</p>
+        <h1 className="text-2xl font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.supplyList.pageTitle}</h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{t.supplyList.pageDescription}</p>
       </div>
 
       {plansWithSupplies.length === 0 ? (
-        <section className="rounded-2xl border border-blue-100 bg-white/90 px-6 py-8 shadow-sm shadow-blue-100/40 backdrop-blur">
-          <p className="text-sm text-zinc-500">{t.supplyList.pageNoItems}</p>
+        <section className="rounded-2xl border border-blue-100 bg-white/90 px-6 py-8 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.supplyList.pageNoItems}</p>
           <p className="mt-2">
             <Link
               href="/plans"
-              className="text-sm font-medium text-blue-600 underline hover:text-blue-800"
+              className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
             >
               {t.common.goToPlans}
             </Link>
           </p>
         </section>
       ) : (
-        <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
-          <div className="border-b border-blue-100 px-6 py-4">
-            <h2 className="text-lg font-semibold text-blue-950">{t.supplyList.byPlan}</h2>
+        <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+          <div className="border-b border-blue-100 px-6 py-4 dark:border-zinc-700">
+            <h2 className="text-lg font-semibold text-blue-950 dark:text-zinc-100">{t.supplyList.byPlan}</h2>
           </div>
-          <ul className="divide-y divide-blue-100">
+          <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
             {plansWithOwner.map((plan) => {
               const planTotal = plan.supplyItems.reduce(
                 (sum, item) => sum + Number(item.price ?? 0) * (item.quantity ?? 1),
@@ -73,12 +73,12 @@ export default async function SuppliesPage() {
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
                     <Link
                       href={`/plans/${plan.id}?tab=list`}
-                      className="font-medium text-blue-700 hover:text-blue-900 hover:underline"
+                      className="font-medium text-blue-700 hover:text-blue-900 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
                     >
                       {plan.name}
                     </Link>
                     {planTotal > 0 ? (
-                      <span className="text-sm font-medium text-zinc-700">
+                      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                         {t.supplyList.totalLabel}: {planTotal.toFixed(2)}
                       </span>
                     ) : null}
@@ -90,20 +90,20 @@ export default async function SuppliesPage() {
                       const qty = item.quantity ?? 1;
                       return (
                         <li key={item.id} className="flex flex-wrap items-center gap-2 text-sm">
-                          <span className="text-zinc-800">{item.label}</span>
+                          <span className="text-zinc-800 dark:text-zinc-200">{item.label}</span>
                           {qty > 1 ? (
-                            <span className="text-zinc-500">× {qty}</span>
+                            <span className="text-zinc-500 dark:text-zinc-400">× {qty}</span>
                           ) : null}
                           {item.price != null && (
-                            <span className="text-zinc-500">
+                            <span className="text-zinc-500 dark:text-zinc-400">
                               {Number(item.price).toFixed(2)}
                             </span>
                           )}
-                          <span className="inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+                          <span className="inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
                             {statusLabel}
                           </span>
                           {item.description ? (
-                            <span className="w-full text-zinc-500">{item.description}</span>
+                            <span className="w-full text-zinc-500 dark:text-zinc-400">{item.description}</span>
                           ) : null}
                           {plan.isOwner ? (
                             <EditSupplyItemDialog

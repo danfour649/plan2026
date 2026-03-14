@@ -24,8 +24,8 @@ export default async function AppLayout({
 
   return (
     <TranslationsProvider locale={locale}>
-      <div className="min-h-screen bg-transparent text-zinc-950">
-        <header className="relative z-50 border-b border-blue-100 bg-white/85 backdrop-blur">
+      <div className="min-h-screen bg-transparent text-zinc-950 dark:text-zinc-100">
+        <header className="relative z-50 border-b border-blue-100 bg-white/85 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90">
           <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-2 py-2 sm:px-6 sm:py-3">
             <div className="relative z-10 flex min-w-0 flex-1 items-center gap-1 overflow-visible sm:gap-6">
               <Plan2026Logo
@@ -33,7 +33,7 @@ export default async function AppLayout({
                 iconClassName="h-10 w-12 sm:h-16 sm:w-24"
                 ariaLabel={t.common.goToPlans}
               />
-              <nav className="flex min-w-0 shrink items-center gap-0 text-sm text-zinc-700 sm:gap-4">
+                <nav className="flex min-w-0 shrink items-center gap-0 text-sm text-zinc-700 dark:text-zinc-300 sm:gap-4">
                 <AppNavLink
                   href="/plans"
                   accent="blue"
@@ -77,7 +77,7 @@ export default async function AppLayout({
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10">{children}</main>
+        <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10 dark:text-zinc-200">{children}</main>
       </div>
     </TranslationsProvider>
   );
