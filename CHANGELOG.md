@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.20.3
+
+### Patch Changes
+
+- 8337bec: Remove "Remove this task permanently." text from edit-task delete section; delete button is sufficient.
+
 ## 0.20.2
 
 ### Patch Changes
