@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 
 import { getCurrentUserId } from "@/auth";
 import { DEFAULT_LOCALE, getLocaleFromCookie, LOCALE_COOKIE, LOCALES, type Locale } from "@/lib/i18n";
-import { THEME_COOKIE, getThemeFromCookie, THEMES, type Theme } from "@/lib/theme";
+import { THEME_COOKIE, THEMES, type Theme } from "@/lib/theme";
 import type { ActionResult } from "@/lib/actions/tasks";
 import { prisma } from "@/lib/prisma";
 

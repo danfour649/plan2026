@@ -58,11 +58,11 @@ export default async function SuppliesPage() {
           </p>
         </section>
       ) : (
-        <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
-          <div className="border-b border-blue-100 px-6 py-4">
-            <h2 className="text-lg font-semibold text-blue-950">{t.supplyList.byPlan}</h2>
+        <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+          <div className="border-b border-blue-100 px-6 py-4 dark:border-zinc-700">
+            <h2 className="text-lg font-semibold text-blue-950 dark:text-zinc-100">{t.supplyList.byPlan}</h2>
           </div>
-          <ul className="divide-y divide-blue-100">
+          <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
             {plansWithOwner.map((plan) => {
               const planTotal = plan.supplyItems.reduce(
                 (sum, item) => sum + Number(item.price ?? 0) * (item.quantity ?? 1),
