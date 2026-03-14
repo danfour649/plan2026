@@ -25,13 +25,13 @@ export function AppNavLink({
 
   const activeClassName =
     accent === "red"
-      ? "bg-red-100 text-red-700 ring-1 ring-red-200"
-      : "bg-blue-100 text-blue-700 ring-1 ring-blue-200";
+      ? "bg-red-100 text-red-700 ring-1 ring-red-200 dark:bg-red-900/40 dark:text-red-200 dark:ring-red-700"
+      : "bg-blue-100 text-blue-700 ring-1 ring-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:ring-blue-600";
 
   const inactiveClassName =
     accent === "red"
-      ? "text-zinc-700 hover:bg-red-50 hover:text-red-600"
-      : "text-zinc-700 hover:bg-blue-50 hover:text-blue-700";
+      ? "text-zinc-700 hover:bg-red-50 hover:text-red-600 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:hover:text-red-200"
+      : "text-zinc-700 hover:bg-blue-50 hover:text-blue-700 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:hover:text-blue-200";
 
   return (
     <Link
@@ -46,9 +46,9 @@ export function AppNavLink({
           className={`inline-flex shrink-0 rounded-full -ml-1 pl-1 pr-2 py-0.5 text-sm font-bold leading-tight sm:ml-0 sm:pl-1.5 sm:pr-2.5 sm:text-base ${
             isActive
               ? accent === "red"
-                ? "bg-white/80 text-red-700"
-                : "bg-white/80 text-blue-700"
-              : "bg-zinc-100 text-zinc-600 transition group-hover:bg-white group-hover:text-zinc-900"
+                ? "bg-white/80 text-red-700 dark:bg-zinc-700/80 dark:text-red-200"
+                : "bg-white/80 text-blue-700 dark:bg-zinc-700/80 dark:text-blue-200"
+              : "bg-zinc-100 text-zinc-600 transition group-hover:bg-white group-hover:text-zinc-900 dark:bg-zinc-700 dark:text-zinc-300 dark:group-hover:bg-zinc-600 dark:group-hover:text-zinc-100"
           }`}
         >
           {badge}

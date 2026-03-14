@@ -24,7 +24,7 @@ import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/li
 
 function CompletedCheckIcon() {
   return (
-    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300">
       <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden="true">
         <path
           d="M5 10.5L8.25 13.75L15 7"
@@ -122,15 +122,15 @@ export default async function TasksPage({
 
   return (
     <div className="space-y-8">
-      <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
-        <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-blue-100 px-6 py-4 sm:gap-4">
+      <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+        <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-blue-100 px-6 py-4 dark:border-zinc-700 sm:gap-4">
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <h2 className="text-2xl font-bold tracking-tight text-blue-950">{t.tasksPage.title}</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.tasksPage.title}</h2>
             <div className="flex shrink-0 items-center gap-1">
               <RefreshTasksButton />
               <ExportTasksButton
                 tasks={allTasksForExport}
-                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-0 text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-0 text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
               />
             </div>
           </div>
@@ -142,18 +142,18 @@ export default async function TasksPage({
 
         {!hasVisibleTasks ? (
           <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-            <p className="text-4xl font-light text-blue-300" aria-hidden>
+            <p className="text-4xl font-light text-blue-300 dark:text-blue-500" aria-hidden>
               ✓
             </p>
-            <p className="mt-3 text-base font-medium text-blue-900">{t.tasksPage.allClear}</p>
-            <p className="mt-1 text-sm text-zinc-500">{t.tasksPage.noTasks}</p>
+            <p className="mt-3 text-base font-medium text-blue-900 dark:text-zinc-100">{t.tasksPage.allClear}</p>
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{t.tasksPage.noTasks}</p>
           </div>
         ) : (
-          <ul className="divide-y divide-blue-100">
+          <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
             {remainingTasks.map((task) => (
               <li
                 key={task.id}
-                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
               >
                 <EditTaskDialog
                   action={updateTask}
@@ -190,7 +190,7 @@ export default async function TasksPage({
                       </div>
                     </div>
                     <TaskContent content={task.content} />
-                    <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
+                    <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
                       <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
                       {task.dueAt && (
                         <span className="sm:before:content-['·'] sm:before:mr-1">
@@ -203,7 +203,7 @@ export default async function TasksPage({
                         <span className="min-w-0 max-sm:block sm:before:content-['·'] sm:before:mr-1">
                           <Link
                             href={`/plans/${task.plan.id}`}
-                            className="max-w-[12rem] truncate text-blue-600 hover:underline max-sm:inline-block sm:max-w-none sm:truncate"
+                            className="max-w-[12rem] truncate text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300 max-sm:inline-block sm:max-w-none sm:truncate"
                           >
                             {t.tasks.planLabel} {task.plan.name}
                           </Link>
@@ -248,7 +248,7 @@ export default async function TasksPage({
             {completedTasks.map((task) => (
               <li
                 key={task.id}
-                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-emerald-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-emerald-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
               >
                 <EditTaskDialog
                   action={updateTask}
@@ -288,13 +288,13 @@ export default async function TasksPage({
                         </div>
                       </div>
                       <TaskContent content={task.content} />
-                      <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
+                      <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
                         <span>{t.tasks.completed} {task.completedAt ? (<><span className="max-sm:hidden sm:inline">{formatShortDate(task.completedAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.completedAt)}</span></>) : "—"}</span>
                         {task.plan && (
                           <span className="min-w-0 max-sm:block sm:before:content-['·'] sm:before:mr-1">
                             <Link
                               href={`/plans/${task.plan.id}`}
-                              className="max-w-[12rem] truncate text-blue-600 hover:underline max-sm:inline-block sm:max-w-none sm:truncate"
+                              className="max-w-[12rem] truncate text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300 max-sm:inline-block sm:max-w-none sm:truncate"
                             >
                               {t.tasks.planLabel} {task.plan.name}
                             </Link>
@@ -339,15 +339,15 @@ export default async function TasksPage({
               </li>
             ))}
             {totalRemainingPages > 1 && (
-              <li className="flex flex-wrap items-center justify-between gap-2 border-t border-blue-100 px-6 py-3">
-                <span className="text-sm text-zinc-500">
+              <li className="flex flex-wrap items-center justify-between gap-2 border-t border-blue-100 px-6 py-3 dark:border-zinc-700">
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">
                   {t.common.pageOf.replace("{{current}}", String(page)).replace("{{total}}", String(totalRemainingPages))}
                 </span>
                 <div className="flex gap-2">
                   {page > 1 ? (
                     <Link
                       href={`/tasks?page=${page - 1}&limit=${limit}${showCompleted ? "&showCompleted=1" : ""}${showCompleted && completedPage > 1 ? `&completedPage=${completedPage}` : ""}`}
-                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100"
+                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                     >
                       {t.common.previousPage}
                     </Link>
@@ -355,7 +355,7 @@ export default async function TasksPage({
                   {page < totalRemainingPages ? (
                     <Link
                       href={`/tasks?page=${page + 1}&limit=${limit}${showCompleted ? "&showCompleted=1" : ""}${showCompleted ? `&completedPage=${completedPage}` : ""}`}
-                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100"
+                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                     >
                       {t.common.nextPage}
                     </Link>
@@ -364,15 +364,15 @@ export default async function TasksPage({
               </li>
             )}
             {showCompleted && totalCompletedPages > 1 && (
-              <li className="flex flex-wrap items-center justify-between gap-2 border-t border-blue-100 px-6 py-3">
-                <span className="text-sm text-zinc-500">
+              <li className="flex flex-wrap items-center justify-between gap-2 border-t border-blue-100 px-6 py-3 dark:border-zinc-700">
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">
                   {t.common.pageOf.replace("{{current}}", String(completedPage)).replace("{{total}}", String(totalCompletedPages))} ({t.tasks.completed})
                 </span>
                 <div className="flex gap-2">
                   {completedPage > 1 ? (
                     <Link
                       href={`/tasks?page=${page}&limit=${limit}&showCompleted=1&completedPage=${completedPage - 1}`}
-                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100"
+                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                     >
                       {t.common.previousPage}
                     </Link>
@@ -380,7 +380,7 @@ export default async function TasksPage({
                   {completedPage < totalCompletedPages ? (
                     <Link
                       href={`/tasks?page=${page}&limit=${limit}&showCompleted=1&completedPage=${completedPage + 1}`}
-                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100"
+                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                     >
                       {t.common.nextPage}
                     </Link>

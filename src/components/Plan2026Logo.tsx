@@ -20,7 +20,7 @@ export function Plan2026Logo({
     <Link
       href={href}
       aria-label={ariaLabel}
-      className={`inline-flex items-center justify-center rounded-2xl outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-blue-300 ${className ?? ""}`}
+      className={`inline-flex items-center justify-center rounded-2xl outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-blue-300 dark:focus-visible:ring-blue-500 ${className ?? ""}`}
     >
       <span
         className={`relative flex h-16 w-24 shrink-0 overflow-hidden rounded-lg ${iconClassName ?? ""}`}
