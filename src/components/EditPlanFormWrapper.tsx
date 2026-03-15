@@ -1,6 +1,7 @@
 "use client";
 
 import { Save, X } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -120,14 +121,14 @@ export function EditPlanFormWrapper({
               <span className="hidden sm:inline">{cancelLabel}</span>
             </button>
           ) : (
-            <a
+            <Link
               href="/plans"
               aria-label={cancelLabel}
               className="flex min-h-[2.75rem] min-w-[2.75rem] shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 sm:min-w-0 sm:px-4 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
             >
               <span className="sm:hidden" aria-hidden><X className="size-5" /></span>
               <span className="hidden sm:inline">{cancelLabel}</span>
-            </a>
+            </Link>
           )}
           <button
             type="submit"
