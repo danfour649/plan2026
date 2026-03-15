@@ -39,6 +39,13 @@ const messages = {
       allClear: "All clear!",
       noTasks: "You're all caught up. Add a new task when you're ready.",
     },
+    actionsPage: {
+      title: "Actions",
+      emptyTitle: "No urgent or upcoming tasks",
+      emptyDescription: "No tasks with high urgency or due in the next three days. Add a task or view your plans.",
+      viewPlans: "View plans",
+      addTask: "Add task",
+    },
     plansPage: {
       title: "Plans",
       addPlan: "Add plan",
@@ -56,6 +63,7 @@ const messages = {
     },
     common: {
       goToPlans: "Go to plans",
+      goToActions: "Go to actions",
       backToPlans: "Back to plans",
       backToPlan: "Back to plan",
       addTask: "Add task",
@@ -110,6 +118,7 @@ const messages = {
       deleteTask: "Delete task",
       deleteTaskConfirm: "Are you sure you want to delete this task? This cannot be undone.",
       planLabel: "Plan:",
+      overdue: "Overdue",
       added: "Added",
       due: "Due",
       completed: "Completed",
@@ -359,6 +368,13 @@ const messages = {
       allClear: "Tout est clair !",
       noTasks: "Vous êtes à jour. Ajoutez une nouvelle tâche quand vous serez prêt.",
     },
+    actionsPage: {
+      title: "Actions",
+      emptyTitle: "Aucune tâche urgente ou à venir",
+      emptyDescription: "Aucune tâche très urgente ou due dans les trois prochains jours. Ajoutez une tâche ou consultez vos plans.",
+      viewPlans: "Voir les plans",
+      addTask: "Ajouter une tâche",
+    },
     plansPage: {
       title: "Plans",
       addPlan: "Ajouter un plan",
@@ -376,6 +392,7 @@ const messages = {
     },
     common: {
       goToPlans: "Aller aux plans",
+      goToActions: "Aller aux actions",
       backToPlans: "Retour aux plans",
       backToPlan: "Retour au plan",
       addTask: "Ajouter une tâche",
@@ -430,6 +447,7 @@ const messages = {
       deleteTask: "Supprimer la tâche",
       deleteTaskConfirm: "Voulez-vous vraiment supprimer cette tâche ? Cette action est irréversible.",
       planLabel: "Plan :",
+      overdue: "En retard",
       added: "Ajouté",
       due: "Échéance",
       completed: "Terminé",
@@ -679,6 +697,13 @@ const messages = {
       allClear: "Everywhere good!",
       noTasks: "You don finish everything. Put new work when you ready.",
     },
+    actionsPage: {
+      title: "Actions",
+      emptyTitle: "No urgent or upcoming work",
+      emptyDescription: "No work with high urgency or wey go finish for di next three days. Put work or go see your plans.",
+      viewPlans: "See plans",
+      addTask: "Put work",
+    },
     plansPage: {
       title: "Plans",
       addPlan: "Put plan",
@@ -696,6 +721,7 @@ const messages = {
     },
     common: {
       goToPlans: "Go plans",
+      goToActions: "Go to actions",
       backToPlans: "Carry me go back",
       backToPlan: "Go back to di plan",
       addTask: "Put work",
@@ -750,6 +776,7 @@ const messages = {
       deleteTask: "Delete work",
       deleteTaskConfirm: "You sure say you wan delete am? You no go fit bring am back o.",
       planLabel: "Plan:",
+      overdue: "Don pass time",
       added: "Don put",
       due: "Deadline",
       completed: "Don finish",
