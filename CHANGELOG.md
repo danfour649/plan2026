@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.22.1
+
+### Patch Changes
+
+- c886944: TECH-0060 Fix edit button on supplies list
+
 ## 0.22.0
 
 ### Minor Changes
