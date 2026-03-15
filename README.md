@@ -88,6 +88,7 @@ The project uses [Vitest](https://vitest.dev/) for unit and integration tests. R
 - `npm test` – run tests once
 - `npm run test:watch` – run tests in watch mode
 - `npm run test:coverage` – run tests with coverage report
+- `npm run bulk:next -- <PR_NUMBER>` – merge that PR, update main, check out the next open PR’s branch and merge main into it; prints what to test (see AGENTS.md “Testing bulk-task PRs”).
 
 Tests live next to source files (e.g. `src/lib/export.test.ts`). Good candidates for unit tests:
 
