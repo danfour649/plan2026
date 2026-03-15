@@ -19,6 +19,7 @@ export function proxy(request: NextRequest) {
   // Protect app routes: require session cookie so we redirect before layout runs
   if (
     pathname.startsWith("/tasks") ||
+    pathname.startsWith("/actions") ||
     pathname.startsWith("/settings") ||
     pathname.startsWith("/plans") ||
     pathname.startsWith("/help") ||
@@ -37,5 +38,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/tasks/:path*", "/settings/:path*", "/plans/:path*", "/help/:path*", "/about/:path*", "/supplies/:path*"],
+  matcher: ["/tasks/:path*", "/actions/:path*", "/settings/:path*", "/plans/:path*", "/help/:path*", "/about/:path*", "/supplies/:path*"],
 };

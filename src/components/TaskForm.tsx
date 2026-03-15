@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useActionState, useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 
+import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { useTranslations } from "@/components/TranslationsProvider";
 
 const TaskContentEditor = dynamic(
@@ -33,6 +34,10 @@ type TaskFormProps = {
   formId?: string;
   /** When true, do not render the submit button (caller renders it with form=formId). */
   hideSubmit?: boolean;
+  /** Called when the form is submitted (allows parent to disable external submit button until done). */
+  onSubmit?: () => void;
+  /** Called when the form action state changes (success or error) so parent can re-enable button. */
+  onStateChange?: (state: ActionResult | null) => void;
 };
 
 const URGENCY_OPTIONS = [
@@ -80,6 +85,8 @@ export function TaskForm({
   plans,
   formId,
   hideSubmit,
+  onSubmit,
+  onStateChange,
 }: TaskFormProps) {
   const t = useTranslations();
   const [state, formAction] = useActionState(wrap(action), null as ActionResult | null);
@@ -93,16 +100,22 @@ export function TaskForm({
   useEffect(() => {
     if (!state) return;
 
+    onStateChange?.(state);
     if (state.success) {
       toast.success(successMessage);
       onSuccess?.();
     } else if (state.error) {
       toast.error(state.error);
     }
-  }, [onSuccess, state, successMessage]);
+  }, [onSuccess, onStateChange, state, successMessage]);
 
   return (
-    <form id={formId} action={formAction} className="flex w-full flex-col gap-3">
+    <form
+      id={formId}
+      action={formAction}
+      onSubmit={() => onSubmit?.()}
+      className="flex w-full flex-col gap-3"
+    >
       {initialValues?.taskId ? <input type="hidden" name="taskId" value={initialValues.taskId} /> : null}
       <div className="flex w-full flex-col gap-2">
         <input
@@ -190,12 +203,12 @@ export function TaskForm({
         />
       </div>
       {!hideSubmit ? (
-        <button
-          type="submit"
-          className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600 sm:w-auto"
+        <FormSubmitButton
+          className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600 sm:w-auto"
+          pendingChildren={t.common.saving}
         >
           {submitLabel}
-        </button>
+        </FormSubmitButton>
       ) : null}
     </form>
   );

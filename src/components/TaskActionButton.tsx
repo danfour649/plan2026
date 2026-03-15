@@ -3,6 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
+import { FormSubmitButton } from "@/components/FormSubmitButton";
 import type { ActionResult } from "@/lib/actions/tasks";
 
 type TaskAction = (formData: FormData) => Promise<ActionResult>;
@@ -45,16 +46,15 @@ export function TaskActionButton({
     <form action={formAction}>
       <input type="hidden" name="taskId" value={taskId} />
       {planId ? <input type="hidden" name="planId" value={planId} /> : null}
-      <button
-        type="submit"
+      <FormSubmitButton
         className={
           variant === "muted"
-            ? "rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 transition hover:bg-red-100"
-            : "rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
+            ? "rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-70"
+            : "rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-70"
         }
       >
         {label}
-      </button>
+      </FormSubmitButton>
     </form>
   );
 }

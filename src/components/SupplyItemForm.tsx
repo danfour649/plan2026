@@ -4,6 +4,7 @@ import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { SupplyActionResult } from "@/lib/actions/supplies";
 
@@ -129,12 +130,11 @@ export function SupplyItemForm({
             className={inputClass}
           />
         </div>
-        <button
-          type="submit"
-          className="shrink-0 rounded-xl border border-blue-200 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 dark:border-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600"
+        <FormSubmitButton
+          className="shrink-0 rounded-xl border border-blue-200 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 dark:border-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600"
         >
           {submitLabel}
-        </button>
+        </FormSubmitButton>
         {showCancel && onCancel ? (
           <button
             type="button"

@@ -1,5 +1,27 @@
 # plan2026
 
+## 0.23.2
+
+### Patch Changes
+
+- 742f203: Show trash icon for delete buttons on mobile: task delete, plan delete (already present), supply item delete. Desktop still shows text label.
+
+## 0.23.1
+
+### Patch Changes
+
+- ad1a529: Enforce 4.2 MB maximum file size for task attachments. Client shows a translated message when file exceeds limit; API rejects oversized uploads.
+
+## 0.23.0
+
+### Minor Changes
+
+- d9989f6: New Actions page at `/actions` showing urgent and upcoming tasks (urgency 6+ or due within three days). Logo now links to Actions instead of Plans. Overdue tasks show an alarm icon; list supports edit, mark done, and add to calendar.
+
+### Patch Changes
+
+- c1bce7a: Reduce navbar icon size and highlight area on mobile; pull nav icons closer to the logo and to each other. Desktop unchanged.
+
 ## 0.22.1
 
 ### Patch Changes

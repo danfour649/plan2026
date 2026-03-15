@@ -5,6 +5,7 @@
 ## Features
 
 - Google sign-in with NextAuth v4 and Prisma-backed database sessions
+- **Actions** – The app logo links to `/actions`, a page showing urgent and upcoming tasks (urgency 6+ or due within the next three days). Overdue tasks show an alarm icon; you can edit, mark done, or add to calendar from the list.
 - **Tasks** – A single `/tasks` page for day-to-day work:
   - Optional completed-task visibility with a `showCompleted=1` toggle
   - Add and edit tasks in dialogs (title, rich text notes, due date, urgency 1–7)
