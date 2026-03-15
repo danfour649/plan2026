@@ -3,6 +3,7 @@
 import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { useTranslations } from "@/components/TranslationsProvider";
 
 type DeletePlanAction = (formData: FormData) => Promise<void>;
@@ -72,12 +73,11 @@ export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonP
               </button>
               <form action={action} className="inline">
                 <input type="hidden" name="planId" value={planId} />
-                <button
-                  type="submit"
-                  className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 dark:border-red-700 dark:bg-red-600 dark:hover:bg-red-700"
+                <FormSubmitButton
+                  className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70 dark:border-red-700 dark:bg-red-600 dark:hover:bg-red-700"
                 >
                   {t.plans.deletePlan}
-                </button>
+                </FormSubmitButton>
               </form>
             </div>
           </div>

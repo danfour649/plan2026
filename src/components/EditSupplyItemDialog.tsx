@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
 
+import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { SupplyItemForm, type SupplyItemFormValues } from "@/components/SupplyItemForm";
 import { useTranslations } from "@/components/TranslationsProvider";
 import { deleteSupplyItem, updateSupplyItem, type SupplyActionResult } from "@/lib/actions/supplies";
@@ -215,12 +216,11 @@ export function EditSupplyItemDialog({
                         >
                           {t.common.cancel}
                         </button>
-                        <button
-                          type="submit"
-                          className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 dark:border-red-700 dark:bg-red-600 dark:hover:bg-red-700"
+                        <FormSubmitButton
+                          className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70 dark:border-red-700 dark:bg-red-600 dark:hover:bg-red-700"
                         >
                           {t.common.delete}
-                        </button>
+                        </FormSubmitButton>
                       </div>
                     </div>
                   )}

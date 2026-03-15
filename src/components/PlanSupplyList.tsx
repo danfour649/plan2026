@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { SupplyItemForm } from "@/components/SupplyItemForm";
 import { useTranslations } from "@/components/TranslationsProvider";
 import {
@@ -153,12 +154,11 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                 className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
               />
             </div>
-            <button
-              type="submit"
-              className="w-full rounded-xl border border-blue-200 bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 dark:border-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600 sm:w-auto sm:shrink-0"
+            <FormSubmitButton
+              className="w-full rounded-xl border border-blue-200 bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 dark:border-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600 sm:w-auto sm:shrink-0"
             >
               {t.supplyList.addItem}
-            </button>
+            </FormSubmitButton>
           </div>
         </form>
       ) : null}
