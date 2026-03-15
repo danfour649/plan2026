@@ -19,7 +19,7 @@
 
 ## Type checking
 
-- **New and changed code must pass TypeScript.** Run `npm run typecheck` before finishing a task. The pre-push hook runs `lint` then `typecheck` then `build:next` (Next.js build only, no `prisma generate`) so you can push while the dev server is running without a Prisma engine lock on Windows; CI runs the full `build`.
+- **New and changed code must pass TypeScript.** Run `npm run typecheck` before finishing a task. The pre-push hook runs `lint` then `typecheck` only (no Next.js build) so pushes stay fast; CI runs the full `build` and will catch build failures.
 - **Why type errors get missed:** Lint is ESLint only and does not run the TypeScript compiler. Type errors are only reported when `tsc` or the Next.js build runs. If you only run `npm run lint` or if `npm run build` fails before the compile step, TypeScript never runs and type errors go unreported.
 - After adding or changing code, run `npm run typecheck` (or `npm run prepush`) and fix any type errors before considering the task done.
 
@@ -74,7 +74,8 @@
   3. **Analysis docs for deferred tasks:** For any task that is **documented for later** (not implemented in the bulk run), create a **dedicated analysis doc** in `roadmap/` in the same format as existing ones (e.g. `roadmap/TECH-0026-permanent-website.md`). Each doc must include: **Status** (e.g. “Not implemented — implementation notes for future work”), **Goal** (one sentence), **Why deferred** (one line: e.g. “Deferred in bulk run due to run scope” or “Scope too large for one PR”; include **Estimated effort** when obvious — e.g. “Estimated effort: small (layout only)” or “Estimated effort: large (schema + API)” so future runs can triage), **What is needed** (numbered sections with options/tables where useful), and a **Summary checklist**. Use the filename pattern `roadmap/TECH-<ID>-<kebab-description>.md`. Add the new doc to `roadmap/ROADMAP-AND-FUTURE-WORK.md` (Section 2 Active items and Section 5 Index) and link the task row to the analysis doc. This ensures every deferred task has a single place for implementation notes and makes it clear why it was deferred and whether it is a quick win.
   4. **Changesets:** For each implemented task, add a changeset in `.changeset/` with enough detail that the resulting CHANGELOG entry captures the full gist of the change. Use a short kebab-case filename and the standard changeset format.
   5. **Speed vs. checks:** The user may ask to **skip local build and typecheck** to get PRs out faster; in that case do not run `npm run typecheck` or `npm run build` before pushing. Rely on CI or the user to report build failures.
-  6. **PR title:** Use the pattern `<ID> <Title Case description>` (e.g. `TECH-0041 Bulk task PR pipeline in AGENTS.md`) when creating PRs via `gh pr create --title "..." --base main --fill`.
+  6. **Bulk-run quality gate:** Before considering a bulk-task implementation done (and before pushing or opening the PR), run **`npm run lint`** and **`npm run typecheck`** (or `npm run prepush`) and fix any failures—unless the user explicitly asked to skip checks for speed. Optionally run **`npm run build:next`** to catch Next.js build failures before push; CI runs the full build in any case. If the user has asked to skip checks, omit this step.
+  7. **PR title:** Use the pattern `<ID> <Title Case description>` (e.g. `TECH-0041 Bulk task PR pipeline in AGENTS.md`) when creating PRs via `gh pr create --title "..." --base main --fill`.
 - **Sort order and nulls:** When implementing “incomplete first, completed last” (or any sort by a nullable column), check the DB’s null ordering. In PostgreSQL, `ASC` implies `NULLS LAST` and `DESC` implies `NULLS FIRST`; so for “incomplete (null) first, completed last” use `orderBy: [{ completedAt: "desc" }]`, not `asc`.
 
 ### Testing bulk-task PRs one at a time
@@ -84,5 +85,5 @@
   2. **Merge latest main** into the branch (`git pull origin main` or `git merge main`). Resolve any merge conflicts, then push the branch.
   3. **Remind the user** what the task was and what to verify in the browser (or in docs); they run the app locally and confirm.
   4. When the user confirms and asks to **merge**: merge the branch into `main`, push `main`, then **delete the branch** locally and on the remote (`git branch -d <branch>`, `git push origin --delete <branch>`).
-  5. **Move to the next PR**: checkout the next branch, merge latest main, fix conflicts if any, push; repeat from step 3.
+  5. **Move to the next PR**: checkout the next branch, merge latest main, fix conflicts if any, push; repeat from step 3. You can use **`npm run bulk:next -- <PR_NUMBER>`** to automate this: it merges the given PR, updates `main`, checks out the next open PR’s branch, merges `main` into it, pushes, and prints what to test. If there are merge conflicts, the script exits and you must resolve them manually, then push.
 - Use `--no-verify` on push when the user has asked to skip hooks (e.g. for speed during bulk testing).

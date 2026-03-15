@@ -88,6 +88,7 @@ The project uses [Vitest](https://vitest.dev/) for unit and integration tests. R
 - `npm test` – run tests once
 - `npm run test:watch` – run tests in watch mode
 - `npm run test:coverage` – run tests with coverage report
+- `npm run bulk:next -- <PR_NUMBER>` – merge that PR, update main, check out the next open PR’s branch and merge main into it; prints what to test (see AGENTS.md “Testing bulk-task PRs”).
 
 Tests live next to source files (e.g. `src/lib/export.test.ts`). Good candidates for unit tests:
 
@@ -98,7 +99,7 @@ For React components, add `@vitest-environment jsdom` at the top of the test fil
 
 ### Before you push
 
-A **pre-push** Git hook (via [Husky](https://typicode.github.io/husky/)) runs `npm run prepush`, which runs **lint**, **typecheck**, and **next build** (without `prisma generate`). That way you can push while the dev server is running without hitting a Prisma engine lock on Windows; full `npm run build` (with Prisma generate) runs in CI. To run the same checks manually: `npm run prepush`. For a full build including Prisma: `npm run build`.
+A **pre-push** Git hook (via [Husky](https://typicode.github.io/husky/)) runs `npm run prepush`, which runs **lint** and **typecheck** only so pushes stay fast. Full **`npm run build`** (Prisma generate + Next.js build) runs in CI and will catch build failures. To run the same checks manually: `npm run prepush`. For a full build: `npm run build`.
 
 ### Port 3000 already in use
 
