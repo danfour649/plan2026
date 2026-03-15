@@ -7,7 +7,7 @@ import { isValidTaskId } from "@/lib/validations/task";
 
 type Params = { params: Promise<{ id: string }> };
 
-const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4 MB (Vercel serverless body limit is 4.5 MB)
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
 export async function POST(req: Request, { params }: Params) {
   const userId = await getCurrentUserId();
