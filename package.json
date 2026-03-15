@@ -23,7 +23,8 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "postinstall": "prisma generate",
     "pr": "gh pr create --fill --base main",
-    "bulk:next": "node scripts/bulk-merge-and-next.mjs"
+    "bulk:next": "node scripts/bulk-merge-and-next.mjs",
+    "branch:report": "node scripts/branch-report.mjs"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.7",
