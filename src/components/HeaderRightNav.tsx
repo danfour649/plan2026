@@ -107,15 +107,16 @@ export function HeaderRightNav() {
 
   const navLinks = (
     <>
-      <AppNavLink href="/help" accent="blue" className="shrink-0 px-2 py-1.5 text-sm">
+      <AppNavLink href="/help" accent="blue" prefetch={false} className="shrink-0 px-2 py-1.5 text-sm">
         {t.nav.help}
       </AppNavLink>
-      <AppNavLink href="/about" accent="blue" className="shrink-0 px-2 py-1.5 text-sm">
+      <AppNavLink href="/about" accent="blue" prefetch={false} className="shrink-0 px-2 py-1.5 text-sm">
         {t.nav.about}
       </AppNavLink>
       <AppNavLink
         href="/settings"
         accent="blue"
+        prefetch={false}
         ariaLabel={t.nav.settings}
         className="shrink-0 p-1.5 sm:px-2.5 sm:py-2"
       >
@@ -151,6 +152,7 @@ export function HeaderRightNav() {
           >
             <Link
               href="/help"
+              prefetch={false}
               role="menuitem"
               onClick={() => setMenuOpen(false)}
               className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === "/help" ? "bg-blue-100 font-medium text-blue-800 dark:bg-blue-900/50 dark:text-blue-200" : "text-zinc-700 hover:bg-blue-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`}
@@ -160,6 +162,7 @@ export function HeaderRightNav() {
             </Link>
             <Link
               href="/about"
+              prefetch={false}
               role="menuitem"
               onClick={() => setMenuOpen(false)}
               className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === "/about" ? "bg-blue-100 font-medium text-blue-800 dark:bg-blue-900/50 dark:text-blue-200" : "text-zinc-700 hover:bg-blue-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`}
@@ -169,6 +172,7 @@ export function HeaderRightNav() {
             </Link>
             <Link
               href="/settings"
+              prefetch={false}
               role="menuitem"
               onClick={() => setMenuOpen(false)}
               className={`flex items-center gap-3 px-4 py-2.5 text-sm ${pathname === "/settings" ? "bg-blue-100 font-medium text-blue-800 dark:bg-blue-900/50 dark:text-blue-200" : "text-zinc-700 hover:bg-blue-50 dark:text-zinc-300 dark:hover:bg-zinc-800"}`}
