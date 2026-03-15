@@ -10,6 +10,8 @@ type AppNavLinkProps = {
   badge?: React.ReactNode;
   ariaLabel?: string;
   className?: string;
+  /** Set false for secondary nav (e.g. Help, About, Settings) to reduce prefetch requests. Default true. */
+  prefetch?: boolean;
 };
 
 export function AppNavLink({
@@ -19,6 +21,7 @@ export function AppNavLink({
   badge,
   ariaLabel,
   className,
+  prefetch = true,
 }: AppNavLinkProps) {
   const pathname = usePathname();
   const isActive = pathname === href;
@@ -36,6 +39,7 @@ export function AppNavLink({
   return (
     <Link
       href={href}
+      prefetch={prefetch}
       aria-current={isActive ? "page" : undefined}
       aria-label={ariaLabel}
       className={`group inline-flex items-center gap-0 rounded-full px-3 py-1.5 transition sm:gap-2 ${isActive ? activeClassName : inactiveClassName} ${className ?? ""}`}
