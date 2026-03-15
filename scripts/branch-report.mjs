@@ -213,7 +213,7 @@ function main() {
       }
       for (const branch of toDeleteRemote) {
         try {
-          run(`git push origin --delete "${branch}"`, { cwd });
+          run(`git push --no-verify origin --delete "${branch}"`, { cwd });
           console.log(`Deleted remote branch: origin/${branch}`);
         } catch (e) {
           console.warn(`Could not delete remote branch ${branch}: ${e.message}`);
