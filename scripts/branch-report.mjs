@@ -3,8 +3,11 @@
  * Report local and remote branches: counts, merged vs unmerged, and for each
  * local branch why it appears unmerged (squash-merged PR vs closed PR vs no PR).
  *
- * Usage: node scripts/branch-report.mjs
- *    or: npm run branch:report
+ * Usage: node scripts/branch-report.mjs [-d]
+ *    or: npm run branch:report [-- -d]
+ *
+ * Options:
+ *   -d, --delete   Delete all branches merged into main (local and remote).
  *
  * Requires: git, gh (GitHub CLI). Run from repo root.
  */
@@ -111,7 +114,14 @@ function getPrByBranch(cwd) {
   }
 }
 
+function parseArgs() {
+  const args = process.argv.slice(2);
+  const deleteMerged = args.some((a) => a === "-d" || a === "--delete");
+  return { deleteMerged };
+}
+
 function main() {
+  const { deleteMerged } = parseArgs();
   const root = repoRoot();
   const cwd = root;
 
@@ -182,9 +192,40 @@ function main() {
     console.log("");
   }
 
-  console.log("---");
-  console.log("Delete merged local:  git branch --merged main (then branch -d each, excluding main).");
-  console.log("Delete merged remote: git branch -r --merged main (then git push origin --delete <name> for each, excluding main).");
+  if (deleteMerged) {
+    const currentBranch = runQuiet("git branch --show-current", { cwd });
+    if (currentBranch && mergedLocal.has(currentBranch)) {
+      console.log(`Checking out main (current branch ${currentBranch} will be deleted).\n`);
+      run("git checkout main", { cwd });
+    }
+    const toDeleteLocal = [...mergedLocal].sort();
+    const toDeleteRemote = [...mergedRemote].sort();
+    if (toDeleteLocal.length === 0 && toDeleteRemote.length === 0) {
+      console.log("No merged branches to delete.");
+    } else {
+      for (const branch of toDeleteLocal) {
+        try {
+          run(`git branch -d "${branch}"`, { cwd });
+          console.log(`Deleted local branch: ${branch}`);
+        } catch (e) {
+          console.warn(`Could not delete local branch ${branch}: ${e.message}`);
+        }
+      }
+      for (const branch of toDeleteRemote) {
+        try {
+          run(`git push origin --delete "${branch}"`, { cwd });
+          console.log(`Deleted remote branch: origin/${branch}`);
+        } catch (e) {
+          console.warn(`Could not delete remote branch ${branch}: ${e.message}`);
+        }
+      }
+    }
+  } else {
+    console.log("---");
+    console.log("Delete merged local:  git branch --merged main (then branch -d each, excluding main).");
+    console.log("Delete merged remote: git branch -r --merged main (then git push origin --delete <name> for each, excluding main).");
+    console.log("Or run with -d to delete all merged branches (local and remote).");
+  }
 }
 
 main();
