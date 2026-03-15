@@ -54,15 +54,15 @@ export default async function SettingsPage() {
             <LanguageSelect currentLocale={locale} />
           </div>
 
-          <div className="flex flex-col gap-4 rounded-2xl border border-blue-100 bg-blue-50/40 p-5 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex flex-col gap-4 rounded-2xl border border-blue-100 bg-blue-50/40 p-5 dark:border-zinc-700 dark:bg-zinc-800/50 sm:flex-row sm:items-start sm:justify-between">
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-3">
-                <h2 className="text-sm font-semibold text-blue-950">{t.settings.googleCalendar}</h2>
+                <h2 className="text-sm font-semibold text-blue-950 dark:text-zinc-100">{t.settings.googleCalendar}</h2>
                 <span
                   className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
                     isCalendarConnected
-                      ? "bg-emerald-100 text-emerald-700"
-                      : "bg-zinc-100 text-zinc-600"
+                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-200"
+                      : "bg-zinc-100 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300"
                   }`}
                 >
                   {isCalendarConnected ? t.settings.connected : t.settings.disconnected}

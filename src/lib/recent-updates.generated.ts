@@ -3,6 +3,12 @@
 
 export const RECENT_UPDATES: { version: string; entries: string[] }[] = [
   {
+    "version": "0.22.1",
+    "entries": [
+      "TECH-0060 Fix edit button on supplies list"
+    ]
+  },
+  {
     "version": "0.22.0",
     "entries": [
       "TECH-0058: bundle analysis, lazy-load editor, remove unused deps and dead code. Add `npm run analyze` (Next.js bundle analyzer), lazy-load TaskContentEditor in TaskForm, remove unused devDependencies and unused `formatPlanStatus`; update roadmap docs."
