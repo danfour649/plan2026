@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.21.0
+
+### Minor Changes
+
+- 3df0359: Plans list and plan form: show plan color as a small flag icon (rectangular flag on pole) instead of circles. Add black, pink, and silver as flag color options. All new strings translated (en, fr, pidgin).
+
 ## 0.20.6
 
 ### Patch Changes
