@@ -67,7 +67,7 @@ export function EditPlanFormWrapper({
             }
             router.push("/plans");
           }}
-          className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-blue-700 transition hover:text-blue-800"
+          className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-blue-700 transition hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-200"
         >
           <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden="true">
             <path
@@ -83,7 +83,7 @@ export function EditPlanFormWrapper({
         {children}
       </div>
 
-      <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 px-2 py-4 shadow-sm shadow-blue-100/40 backdrop-blur sm:px-4 sm:py-6">
+      <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 px-2 py-4 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40 sm:px-4 sm:py-6">
         <PlanForm
           action={action}
           initialValues={initialValues}

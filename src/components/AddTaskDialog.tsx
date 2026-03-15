@@ -54,7 +54,7 @@ export function AddTaskDialog({
             role="presentation"
           >
             <div
-              className="w-full max-w-2xl max-h-[calc(100dvh-2rem)] flex flex-col rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950/50 sm:my-auto"
+              className="w-full max-w-2xl flex flex-col rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950/50 sm:my-auto"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
@@ -83,7 +83,7 @@ export function AddTaskDialog({
                 </button>
               </div>
 
-              <div className="min-h-0 flex-1 overflow-y-auto">
+              <div className="overflow-visible">
                 <AddTaskForm action={action} onSuccess={() => setIsOpen(false)} plans={plans} defaultPlanId={defaultPlanId} />
               </div>
             </div>
