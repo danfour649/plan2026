@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.21.1
+
+### Patch Changes
+
+- 37db87f: TECH-6003 branch report
+
 ## 0.21.0
 
 ### Minor Changes
