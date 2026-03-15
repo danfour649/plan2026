@@ -31,7 +31,7 @@ export default async function AppLayout({
               <Plan2026Logo
                 href="/actions"
                 className="shrink-0 self-center mt-2 sm:-mt-2.5"
-                iconClassName="h-8 w-10 sm:h-16 sm:w-24"
+                iconClassName="h-10 w-12 sm:h-16 sm:w-24"
                 ariaLabel={t.common.goToActions}
               />
                 <nav className="flex min-w-0 shrink items-center gap-0.5 text-sm text-zinc-700 dark:text-zinc-300 sm:gap-4">
@@ -80,7 +80,7 @@ export default async function AppLayout({
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-8 sm:py-10 dark:text-zinc-200">{children}</main>
+        <main className="mx-auto w-full max-w-6xl px-4 pt-4 pb-8 sm:px-8 sm:py-10 dark:text-zinc-200">{children}</main>
       </div>
     </TranslationsProvider>
   );
