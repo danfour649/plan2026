@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.23.1
+
+### Patch Changes
+
+- ad1a529: Enforce 4.2 MB maximum file size for task attachments. Client shows a translated message when file exceeds limit; API rejects oversized uploads.
+
 ## 0.23.0
 
 ### Minor Changes
