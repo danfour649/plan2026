@@ -30,7 +30,7 @@ export default async function AppLayout({
             <div className="relative z-10 flex min-w-0 flex-1 items-center gap-1 overflow-visible sm:gap-6">
               <Plan2026Logo
                 className="shrink-0 self-center mt-2 sm:-mt-2.5"
-                iconClassName="h-10 w-12 sm:h-16 sm:w-24"
+                iconClassName="h-8 w-10 sm:h-16 sm:w-24"
                 ariaLabel={t.common.goToPlans}
               />
                 <nav className="flex min-w-0 shrink items-center gap-0 text-sm text-zinc-700 dark:text-zinc-300 sm:gap-4">
