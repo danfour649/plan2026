@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.23.5
+
+### Patch Changes
+
+- 5e0ff6a: Use a smaller app logo on mobile (narrow viewports); desktop size unchanged.
+
 ## 0.23.4
 
 ### Patch Changes
