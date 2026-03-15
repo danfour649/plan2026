@@ -83,7 +83,7 @@ function AboutIcon({ className }: { className?: string }) {
   );
 }
 
-export function HeaderRightNav({ userEmail }: { userEmail: string | null | undefined }) {
+export function HeaderRightNav() {
   const t = useTranslations();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -126,16 +126,14 @@ export function HeaderRightNav({ userEmail }: { userEmail: string | null | undef
 
   return (
     <div className="relative z-0 flex shrink-0 items-center justify-end gap-1 pl-2 sm:gap-3 sm:pl-0">
-      {/* Desktop: Help, About, Settings, email, Sign out */}
+      {/* Desktop: Help, About, Settings, Sign out */}
       <div className="hidden items-center gap-1 md:flex md:gap-3">
         {navLinks}
-        <span className="hidden text-sm text-zinc-600 dark:text-zinc-400 lg:inline">{userEmail ?? ""}</span>
         <SignOutButton />
       </div>
 
       {/* Mobile: hamburger + dropdown */}
       <div className="relative flex items-center gap-2 md:hidden" ref={menuRef}>
-        <span className="hidden text-xs text-zinc-600 dark:text-zinc-400 sm:inline">{userEmail ?? ""}</span>
         <button
           type="button"
           onClick={() => setMenuOpen((o) => !o)}
