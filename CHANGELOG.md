@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.22.0
+
+### Minor Changes
+
+- 7cd7aef: TECH-0058: bundle analysis, lazy-load editor, remove unused deps and dead code. Add `npm run analyze` (Next.js bundle analyzer), lazy-load TaskContentEditor in TaskForm, remove unused devDependencies and unused `formatPlanStatus`; update roadmap docs.
+
 ## 0.21.2
 
 ### Patch Changes
