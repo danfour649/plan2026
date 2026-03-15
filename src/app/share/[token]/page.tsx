@@ -24,6 +24,7 @@ export default async function SharePage({
         include: {
           tasks: {
             orderBy: [
+              { status: "asc" as const },
               { completedAt: "desc" as const },
               { urgency: "desc" as const },
               { createdAt: "desc" as const },
@@ -31,6 +32,7 @@ export default async function SharePage({
             select: {
               id: true,
               title: true,
+              status: true,
               completedAt: true,
             },
           },

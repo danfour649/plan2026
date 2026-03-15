@@ -10,6 +10,10 @@ export const TASK_CONTENT_MAX_LENGTH = 20_000;
 export const TASK_URGENCY_MIN = 1;
 export const TASK_URGENCY_MAX = 7;
 
+/** Task status for create/update (completed is set only via "Mark done"). */
+export const TASK_STATUS_ACTIVE_OR_ON_HOLD = ["active", "on_hold"] as const;
+export type TaskStatusActiveOrOnHold = (typeof TASK_STATUS_ACTIVE_OR_ON_HOLD)[number];
+
 export const addTaskSchema = z.object({
   title: z
     .string()
@@ -43,6 +47,10 @@ export const addTaskSchema = z.object({
     .optional()
     .transform((s) => (s == null || (typeof s === "string" && s.trim() === "") ? undefined : s.trim()))
     .refine((v) => v === undefined || (v.length === 25 && /^c[a-z0-9]{24}$/.test(v)), "Invalid plan"),
+  status: z
+    .enum(TASK_STATUS_ACTIVE_OR_ON_HOLD)
+    .optional()
+    .default("active"),
 });
 
 /** CUID format used by Prisma @default(cuid()) - 25 chars, 'c' prefix, base36. */

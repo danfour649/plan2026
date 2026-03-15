@@ -80,6 +80,8 @@ export default async function ActionsPage() {
                       content: task.content,
                       dueAt: task.dueAt?.toISOString() ?? null,
                       urgency: task.urgency,
+                      status: task.status,
+                      completedAt: task.completedAt?.toISOString() ?? null,
                       planId: task.plan?.id ?? null,
                       planName: task.plan?.name ?? null,
                       createdAt: task.createdAt.toISOString(),
@@ -104,11 +106,16 @@ export default async function ActionsPage() {
                           </span>
                         )}
                         <div
-                          className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
+                          className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
                             task.urgency,
                           )}`}
                         >
                           <span className="truncate">{task.title}</span>
+                          {task.status === "on_hold" ? (
+                            <span className="shrink-0 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+                              {t.tasks.onHold}
+                            </span>
+                          ) : null}
                         </div>
                       </div>
                       <TaskContent content={task.content} />

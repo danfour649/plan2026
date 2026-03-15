@@ -40,7 +40,10 @@ export async function PATCH(req: Request, { params }: Params) {
 
   const task = await prisma.task.updateMany({
     where: { id, userId },
-    data: { completedAt: completed ? new Date() : null },
+    data: {
+      status: completed ? "completed" : "active",
+      completedAt: completed ? new Date() : null,
+    },
   });
 
   if (task.count === 0) {

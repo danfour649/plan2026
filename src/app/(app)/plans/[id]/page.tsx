@@ -132,6 +132,7 @@ export default async function PlanDetailPage({
         content: taskItem.content,
         dueAt: taskItem.dueAt?.toISOString() ?? null,
         urgency: taskItem.urgency,
+        status: taskItem.status,
         completedAt: taskItem.completedAt?.toISOString() ?? null,
         createdAt: taskItem.createdAt.toISOString(),
         updatedAt: taskItem.updatedAt.toISOString(),
@@ -282,6 +283,7 @@ export default async function PlanDetailPage({
                           content: task.content,
                           dueAt: task.dueAt?.toISOString() ?? null,
                           urgency: task.urgency,
+                          status: task.status,
                           completedAt: task.completedAt?.toISOString() ?? null,
                           planId: plan.id,
                           planName: plan.name,
@@ -297,17 +299,22 @@ export default async function PlanDetailPage({
                       >
                         <div className="min-w-0 flex-1">
                           <div
-                            className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
+                            className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
                               task.urgency,
                             )}`}
                           >
-                            <span className={task.completedAt ? "truncate line-through" : "truncate"}>
+                            <span className={task.status === "completed" ? "truncate line-through" : "truncate"}>
                               {task.title}
                             </span>
+                            {task.status === "on_hold" ? (
+                              <span className="shrink-0 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+                                {t.tasks.onHold}
+                              </span>
+                            ) : null}
                           </div>
                           <TaskContent content={task.content} />
                           <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
-                            {task.completedAt ? (
+                            {task.status === "completed" && task.completedAt ? (
                               <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
                             ) : (
                               <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
@@ -325,11 +332,11 @@ export default async function PlanDetailPage({
                       <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
                         <span className="order-1">
                           <TaskActionButton
-                            action={task.completedAt ? restoreTask : completeTask}
+                            action={task.status === "completed" ? restoreTask : completeTask}
                             taskId={task.id}
                             planId={plan.id}
-                            label={task.completedAt ? t.tasks.restore : t.tasks.markDone}
-                            successMessage={task.completedAt ? t.tasks.taskRestored : t.tasks.markedDone}
+                            label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
+                            successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
                           />
                         </span>
                         <span className="order-2">
@@ -346,6 +353,7 @@ export default async function PlanDetailPage({
                             content: task.content,
                             dueAt: task.dueAt?.toISOString() ?? null,
                             urgency: task.urgency,
+                            status: task.status,
                             completedAt: task.completedAt?.toISOString() ?? null,
                             planId: plan.id,
                             planName: plan.name,
@@ -365,17 +373,22 @@ export default async function PlanDetailPage({
                   ) : (
                     <div className="min-w-0 flex-1">
                       <div
-                        className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
+                        className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
                           task.urgency,
                         )}`}
                       >
-                        <span className={task.completedAt ? "truncate line-through" : "truncate"}>
+                        <span className={task.status === "completed" ? "truncate line-through" : "truncate"}>
                           {task.title}
                         </span>
+                        {task.status === "on_hold" ? (
+                          <span className="shrink-0 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+                            {t.tasks.onHold}
+                          </span>
+                        ) : null}
                       </div>
                       <TaskContent content={task.content} />
                       <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
-                        {task.completedAt ? (
+                        {task.status === "completed" && task.completedAt ? (
                           <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
                         ) : (
                           <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>

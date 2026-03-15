@@ -77,13 +77,8 @@ export default async function TasksPage({
   const limit = parseLimit(resolvedSearchParams.limit, DEFAULT_TASKS_PAGE_SIZE);
   const completedPage = parsePage(resolvedSearchParams.completedPage);
 
-  const {
-    remainingTasks,
-    totalRemaining,
-    completedTasks,
-    totalCompleted,
-    plans,
-  } = await getCachedTasksPage(userId, showCompleted, page, limit, completedPage);
+  const { remainingTasks, totalRemaining, completedTasks, totalCompleted, plans } =
+    await getCachedTasksPage(userId, showCompleted, page, limit, completedPage);
 
   const hasVisibleTasks = remainingTasks.length > 0 || completedTasks.length > 0;
   const totalRemainingPages = Math.ceil(totalRemaining / limit) || 1;
@@ -96,6 +91,7 @@ export default async function TasksPage({
       content: task.content,
       dueAt: task.dueAt?.toISOString() ?? null,
       urgency: task.urgency,
+      status: task.status,
       completedAt: null as string | null,
       planId: task.plan?.id ?? null,
       planName: task.plan?.name ?? null,
@@ -110,6 +106,7 @@ export default async function TasksPage({
       content: task.content,
       dueAt: task.dueAt?.toISOString() ?? null,
       urgency: task.urgency,
+      status: task.status,
       completedAt: task.completedAt?.toISOString() ?? null,
       planId: task.plan?.id ?? null,
       planName: task.plan?.name ?? null,
@@ -167,6 +164,8 @@ export default async function TasksPage({
                     content: task.content,
                     dueAt: task.dueAt?.toISOString() ?? null,
                     urgency: task.urgency,
+                    status: task.status,
+                    completedAt: task.completedAt?.toISOString() ?? null,
                     planId: task.plan?.id ?? null,
                     planName: task.plan?.name ?? null,
                     createdAt: task.createdAt.toISOString(),
@@ -182,11 +181,16 @@ export default async function TasksPage({
                   <div className="min-w-0 flex-1 overflow-visible">
                     <div className="pt-0.5 pl-0.5">
                       <div
-                        className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
+                        className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
                           task.urgency,
                         )}`}
                       >
                         <span className="truncate">{task.title}</span>
+                        {task.status === "on_hold" ? (
+                          <span className="shrink-0 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+                            {t.tasks.onHold}
+                          </span>
+                        ) : null}
                       </div>
                     </div>
                     <TaskContent content={task.content} />
@@ -199,16 +203,16 @@ export default async function TasksPage({
                           <span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.dueAt)}</span>
                         </span>
                       )}
-                      {task.plan && (
-                        <span className="min-w-0 max-sm:block sm:before:content-['·'] sm:before:mr-1">
-                          <Link
-                            href={`/plans/${task.plan.id}`}
-                            className="max-w-[12rem] truncate text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300 max-sm:inline-block sm:max-w-none sm:truncate"
-                          >
-                            {t.tasks.planLabel} {task.plan.name}
-                          </Link>
-                        </span>
-                      )}
+                        {task.plan && (
+                          <span className="min-w-0 max-sm:block sm:before:content-['·'] sm:before:mr-1">
+                            <Link
+                              href={`/plans/${task.plan.id}`}
+                              className="max-w-[12rem] truncate text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300 max-sm:inline-block sm:max-w-none sm:truncate"
+                            >
+                              {t.tasks.planLabel} {task.plan.name}
+                            </Link>
+                          </span>
+                        )}
                     </div>
                   </div>
                 </EditTaskDialog>
@@ -225,6 +229,8 @@ export default async function TasksPage({
                       content: task.content,
                       dueAt: task.dueAt?.toISOString() ?? null,
                       urgency: task.urgency,
+                      status: task.status,
+                      completedAt: task.completedAt?.toISOString() ?? null,
                       planId: task.plan?.id ?? null,
                       planName: task.plan?.name ?? null,
                       createdAt: task.createdAt.toISOString(),
@@ -262,19 +268,20 @@ export default async function TasksPage({
                     content: task.content,
                     dueAt: task.dueAt?.toISOString() ?? null,
                     urgency: task.urgency,
+                    status: task.status,
                     completedAt: task.completedAt?.toISOString() ?? null,
-                    planId: task.plan?.id ?? null,
-                    planName: task.plan?.name ?? null,
-                    createdAt: task.createdAt.toISOString(),
-                    updatedAt: task.updatedAt.toISOString(),
-                    attachments: task.attachments.map((a) => ({
-                      id: a.id,
-                      url: a.url,
-                      filename: a.filename,
-                      size: a.size,
-                    })),
-                  }}
-                >
+                      planId: task.plan?.id ?? null,
+                      planName: task.plan?.name ?? null,
+                      createdAt: task.createdAt.toISOString(),
+                      updatedAt: task.updatedAt.toISOString(),
+                      attachments: task.attachments.map((a) => ({
+                        id: a.id,
+                        url: a.url,
+                        filename: a.filename,
+                        size: a.size,
+                      })),
+                    }}
+                  >
                   <div className="flex min-w-0 flex-1 items-start gap-3 overflow-visible">
                     <CompletedCheckIcon />
                     <div className="min-w-0 flex-1 overflow-visible">
@@ -317,6 +324,7 @@ export default async function TasksPage({
                         content: task.content,
                         dueAt: task.dueAt?.toISOString() ?? null,
                         urgency: task.urgency,
+                        status: task.status,
                         completedAt: task.completedAt?.toISOString() ?? null,
                         planId: task.plan?.id ?? null,
                         planName: task.plan?.name ?? null,

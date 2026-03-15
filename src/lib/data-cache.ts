@@ -13,6 +13,7 @@
 
 import { unstable_cache } from "next/cache";
 import type { Prisma } from "@prisma/client";
+import { TaskStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 const ARCHIVED_STATUSES = ["completed", "abandoned"] as const;
@@ -57,7 +58,7 @@ export function getPlanDetailCacheTag(planId: string): string {
 // Shared remaining-task count so layout (nav badge) and tasks page (pagination) don't run it twice
 async function fetchRemainingTaskCount(userId: string): Promise<number> {
   return prisma.task.count({
-    where: { userId, completedAt: null },
+    where: { userId, status: { not: TaskStatus.completed } },
   });
 }
 
@@ -141,14 +142,14 @@ async function fetchPlansPage(
       orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
       skip: (page - 1) * limit,
       take: limit,
-      include: { tasks: { select: { id: true, completedAt: true } } },
+      include: { tasks: { select: { id: true, status: true } } },
     }),
     prisma.plan.count({ where }),
   ]);
   return { plans, totalPlans };
 }
 
-function rehydratePlan<T extends { startAt: unknown; endAt: unknown; actualStartAt?: unknown; actualEndAt?: unknown; createdAt: unknown; updatedAt: unknown; tasks?: Array<{ id: unknown; completedAt: unknown }> }>(
+function rehydratePlan<T extends { startAt: unknown; endAt: unknown; actualStartAt?: unknown; actualEndAt?: unknown; createdAt: unknown; updatedAt: unknown; tasks?: Array<{ id: unknown; status: unknown }> }>(
   p: T,
 ): T {
   return {
@@ -159,10 +160,7 @@ function rehydratePlan<T extends { startAt: unknown; endAt: unknown; actualStart
     actualEndAt: p.actualEndAt != null ? toDate(p.actualEndAt) : null,
     createdAt: toDate(p.createdAt),
     updatedAt: toDate(p.updatedAt),
-    tasks: p.tasks?.map((t) => ({
-      ...t,
-      completedAt: t.completedAt != null ? toDate(t.completedAt) : null,
-    })),
+    tasks: p.tasks?.map((t) => ({ ...t })),
   } as T;
 }
 
@@ -186,6 +184,25 @@ const taskInclude = {
   attachments: { select: { id: true, url: true, filename: true, size: true } },
 } as const;
 
+/** Task shape returned by getCachedTasksPage (includes status, plan, attachments). */
+export type CachedTasksPageTask = {
+  id: string;
+  userId: string;
+  title: string;
+  content: string | null;
+  dueAt: Date | null;
+  urgency: number;
+  googleCalendarEventId: string | null;
+  googleCalendarEventUrl: string | null;
+  status: import("@prisma/client").TaskStatus;
+  completedAt: Date | null;
+  planId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  plan: { id: string; name: string } | null;
+  attachments: { id: string; url: string; filename: string; size: number }[];
+};
+
 async function fetchTasksPage(
   userId: string,
   showCompleted: boolean,
@@ -193,11 +210,11 @@ async function fetchTasksPage(
   limit: number,
   completedPage: number,
 ) {
-  const remainingWhere = { userId, completedAt: null };
+  const remainingWhere = { userId, status: { not: TaskStatus.completed } };
   const [remainingTasks, totalRemaining] = await Promise.all([
     prisma.task.findMany({
       where: remainingWhere,
-      orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
+      orderBy: [{ status: "asc" }, { urgency: "desc" }, { createdAt: "desc" }],
       skip: (page - 1) * limit,
       take: limit,
       include: taskInclude,
@@ -205,7 +222,7 @@ async function fetchTasksPage(
     getCachedRemainingTaskCount(userId),
   ]);
 
-  const completedWhere = { userId, completedAt: { not: null } };
+  const completedWhere = { userId, status: TaskStatus.completed };
   const [completedTasks, totalCompleted] = showCompleted
     ? await Promise.all([
         prisma.task.findMany({
@@ -234,7 +251,7 @@ async function fetchTasksPage(
   };
 }
 
-function rehydrateTask<T extends { dueAt?: unknown; completedAt?: unknown; createdAt: unknown; updatedAt: unknown }>(
+function rehydrateTask<T extends { dueAt?: unknown; completedAt?: unknown; status?: unknown; createdAt: unknown; updatedAt: unknown }>(
   t: T,
 ): T {
   return {
@@ -252,7 +269,13 @@ export async function getCachedTasksPage(
   page: number,
   limit: number,
   completedPage: number,
-) {
+): Promise<{
+  remainingTasks: CachedTasksPageTask[];
+  totalRemaining: number;
+  completedTasks: CachedTasksPageTask[];
+  totalCompleted: number;
+  plans: { id: string; name: string }[];
+}> {
   const result = await unstable_cache(
     () => fetchTasksPage(userId, showCompleted, page, limit, completedPage),
     [
@@ -266,9 +289,9 @@ export async function getCachedTasksPage(
     { tags: [getTasksCacheTag(userId), getPlansCacheTag(userId)] },
   )();
   return {
-    remainingTasks: result.remainingTasks.map(rehydrateTask),
+    remainingTasks: result.remainingTasks.map(rehydrateTask) as CachedTasksPageTask[],
     totalRemaining: result.totalRemaining,
-    completedTasks: result.completedTasks.map(rehydrateTask),
+    completedTasks: result.completedTasks.map(rehydrateTask) as CachedTasksPageTask[],
     totalCompleted: result.totalCompleted,
     plans: result.plans,
   };
@@ -290,16 +313,18 @@ async function fetchActionsPage(userId: string) {
   const tasks = await prisma.task.findMany({
     where: {
       userId,
-      completedAt: null,
+      status: { not: TaskStatus.completed },
       OR: [
         { urgency: { gte: ACTIONS_URGENCY_MIN } },
         { dueAt: { lt: endOfThreeDays } },
       ],
     },
+    orderBy: [{ status: "asc" }, { urgency: "desc" }, { createdAt: "desc" }],
     include: taskInclude,
   });
   const now = new Date();
   const sorted = [...tasks].sort((a, b) => {
+    if (a.status !== b.status) return a.status === "active" ? -1 : 1;
     const aDue = a.dueAt != null ? toDate(a.dueAt) : null;
     const bDue = b.dueAt != null ? toDate(b.dueAt) : null;
     const aOverdue = aDue !== null && aDue < now;
@@ -334,6 +359,7 @@ export async function getCachedActionsPage(userId: string) {
 
 // Plan detail page: plan + supplyItems + tasks (paginated + export) + dropdowns
 const PLAN_TASKS_ORDER = [
+  { status: "asc" as const },
   { completedAt: "desc" as const },
   { urgency: "desc" as const },
   { createdAt: "desc" as const },
@@ -345,6 +371,7 @@ const planDetailTaskSelect = {
   content: true,
   dueAt: true,
   urgency: true,
+  status: true,
   completedAt: true,
   createdAt: true,
   updatedAt: true,
@@ -456,8 +483,8 @@ export async function getCachedPlansForDropdown(userId: string) {
 
 async function fetchUserTasksForDropdown(userId: string) {
   return prisma.task.findMany({
-    where: { userId },
-    orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
+    where: { userId, status: { not: TaskStatus.completed } },
+    orderBy: [{ status: "asc" }, { urgency: "desc" }, { createdAt: "desc" }],
     select: { id: true, title: true },
   });
 }

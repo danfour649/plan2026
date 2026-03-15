@@ -1,6 +1,6 @@
 # TECH-0067: Put tasks on hold
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** Implemented (option 2B: enum `status`).
 
 **Goal:** Ability to set a task’s status to “on hold”. These tasks should be sorted to the bottom of all lists.
 

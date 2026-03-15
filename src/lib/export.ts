@@ -13,7 +13,7 @@ type Serialized<T> = {
 
 /** Task fields we export, with dates as strings. planName and calendar fields optional (dialog export may omit them). */
 export type ExportedTask = Serialized<
-  Pick<Task, "id" | "title" | "content" | "dueAt" | "urgency" | "completedAt" | "planId" | "createdAt" | "updatedAt">
+  Pick<Task, "id" | "title" | "content" | "dueAt" | "urgency" | "status" | "completedAt" | "planId" | "createdAt" | "updatedAt">
 > & {
   planName?: string | null;
   googleCalendarEventId?: string | null;
@@ -22,7 +22,7 @@ export type ExportedTask = Serialized<
 
 /** Subset of Task for plan-in-plan export (no planId / calendar fields). */
 export type ExportedPlanTask = Serialized<
-  Pick<Task, "id" | "title" | "content" | "dueAt" | "urgency" | "completedAt" | "createdAt" | "updatedAt">
+  Pick<Task, "id" | "title" | "content" | "dueAt" | "urgency" | "status" | "completedAt" | "createdAt" | "updatedAt">
 >;
 
 /** Plan fields we export, with dates as strings. tasks or taskSummaries added depending on context. */
@@ -48,8 +48,8 @@ export type ExportedPlan = Serialized<
   >
 > & {
   tasks?: ExportedPlanTask[];
-  /** When plan is from list view, only id and completedAt per task. */
-  taskSummaries?: { id: string; completedAt: string | null }[];
+  /** When plan is from list view, only id and status per task. */
+  taskSummaries?: { id: string; status: string }[];
 };
 
 export type ExportType = "tasks" | "plans" | "task" | "plan";

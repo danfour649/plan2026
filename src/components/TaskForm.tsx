@@ -27,6 +27,7 @@ type TaskFormProps = {
     dueAt?: string | null;
     urgency?: number;
     planId?: string | null;
+    status?: "active" | "on_hold";
   };
   /** When provided, show a plan selector (optional association). */
   plans?: { id: string; name: string }[];
@@ -95,6 +96,7 @@ export function TaskForm({
     [initialValues?.dueAt],
   );
   const defaultUrgency = initialValues?.urgency ?? 4;
+  const defaultStatus = initialValues?.status ?? "active";
   const dueAtInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -154,6 +156,35 @@ export function TaskForm({
                 </span>
               </label>
             ))}
+          </div>
+        </div>
+        <div className="flex w-full flex-col gap-1.5">
+          <label className="text-xs whitespace-nowrap text-blue-700 dark:text-blue-300">{t.tasks.statusLabel}</label>
+          <div className="flex flex-wrap gap-2">
+            <label className="inline-flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="status"
+                value="active"
+                defaultChecked={defaultStatus === "active"}
+                className="peer sr-only"
+              />
+              <span className="rounded-full border border-blue-200 bg-white px-3 py-1.5 text-sm font-medium transition hover:opacity-90 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:ring-2 peer-checked:ring-blue-400 peer-checked:ring-offset-2 dark:border-zinc-600 dark:bg-zinc-800 dark:peer-checked:border-blue-500 dark:peer-checked:bg-blue-950/40 dark:peer-checked:ring-blue-500/30">
+                {t.tasks.statusActive}
+              </span>
+            </label>
+            <label className="inline-flex cursor-pointer items-center gap-2">
+              <input
+                type="radio"
+                name="status"
+                value="on_hold"
+                defaultChecked={defaultStatus === "on_hold"}
+                className="peer sr-only"
+              />
+              <span className="rounded-full border border-amber-200 bg-amber-50/80 px-3 py-1.5 text-sm font-medium text-amber-800 transition hover:opacity-90 peer-checked:border-amber-500 peer-checked:bg-amber-100 peer-checked:ring-2 peer-checked:ring-amber-400 peer-checked:ring-offset-2 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200 dark:peer-checked:border-amber-500 dark:peer-checked:bg-amber-900/40 dark:peer-checked:ring-amber-500/30">
+                {t.tasks.onHold}
+              </span>
+            </label>
           </div>
         </div>
         {plans && plans.length > 0 ? (

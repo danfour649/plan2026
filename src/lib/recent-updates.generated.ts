@@ -3,6 +3,49 @@
 
 export const RECENT_UPDATES: { version: string; entries: string[] }[] = [
   {
+    "version": "0.23.6",
+    "entries": [
+      "TECH-6005 cleanup, optimize misc"
+    ]
+  },
+  {
+    "version": "0.23.5",
+    "entries": [
+      "Use a smaller app logo on mobile (narrow viewports); desktop size unchanged."
+    ]
+  },
+  {
+    "version": "0.23.4",
+    "entries": [
+      "Fix Cancel on edit plan in mobile: use Link so navigation works when not dirty; when dirty, prevent default and show discard confirm. Place Cancel at bottom left of the form and Save at bottom right; ensure 44px touch target for Cancel."
+    ]
+  },
+  {
+    "version": "0.23.3",
+    "entries": [
+      "Disable save and delete buttons while the form action is in progress to prevent duplicate tasks or records when there is a delay (e.g. on mobile). Uses useFormStatus for in-form buttons and onSubmit/onStateChange for the edit-task external Save button."
+    ]
+  },
+  {
+    "version": "0.23.2",
+    "entries": [
+      "Show trash icon for delete buttons on mobile: task delete, plan delete (already present), supply item delete. Desktop still shows text label."
+    ]
+  },
+  {
+    "version": "0.23.1",
+    "entries": [
+      "Enforce 4.2 MB maximum file size for task attachments. Client shows a translated message when file exceeds limit; API rejects oversized uploads."
+    ]
+  },
+  {
+    "version": "0.23.0",
+    "entries": [
+      "New Actions page at `/actions` showing urgent and upcoming tasks (urgency 6+ or due within three days). Logo now links to Actions instead of Plans. Overdue tasks show an alarm icon; list supports edit, mark done, and add to calendar.",
+      "Reduce navbar icon size and highlight area on mobile; pull nav icons closer to the logo and to each other. Desktop unchanged."
+    ]
+  },
+  {
     "version": "0.22.1",
     "entries": [
       "TECH-0060 Fix edit button on supplies list"
