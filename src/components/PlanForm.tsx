@@ -1,6 +1,8 @@
 "use client";
 
 import { Minus, Plus, Save, X } from "lucide-react";
+
+import { FormSubmitButton } from "@/components/FormSubmitButton";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
@@ -545,14 +547,13 @@ export function PlanForm({
           <span className="hidden sm:inline">{t.planForm.addAnotherTask}</span>
         </button>
         <div className="flex min-w-0 flex-wrap items-center gap-2">
-        <button
-          type="submit"
+        <FormSubmitButton
           aria-label={submitLabel}
-          className="flex min-h-[2.75rem] min-w-0 items-center justify-center gap-2 rounded-xl bg-blue-600 p-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:px-4 sm:py-2 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600"
+          className="flex min-h-[2.75rem] min-w-0 items-center justify-center gap-2 rounded-xl bg-blue-600 p-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 sm:px-4 sm:py-2 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600"
         >
           <span className="sm:hidden" aria-hidden><Save className="size-5" /></span>
           <span className="hidden sm:inline">{submitLabel}</span>
-        </button>
+        </FormSubmitButton>
         {!isEdit && discardConfirmMessage ? (
           <button
             type="button"

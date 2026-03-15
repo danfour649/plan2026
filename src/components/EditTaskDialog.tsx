@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { toast } from "sonner";
 
 import { ExportTaskButton } from "@/components/ExportTaskButton";
+import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { TaskForm } from "@/components/TaskForm";
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { ActionResult } from "@/lib/actions/tasks";
@@ -76,6 +77,7 @@ export function EditTaskDialog({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [attachments, setAttachments] = useState(task.attachments ?? []);
   const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const isCompleted = Boolean(task.completedAt);
 
   useEffect(() => {
@@ -233,6 +235,8 @@ export function EditTaskDialog({
               plans={plans}
               formId={`edit-task-form-${task.id}`}
               hideSubmit
+              onSubmit={() => setSaving(true)}
+              onStateChange={() => setSaving(false)}
             />
 
             <div className="mt-4 border-t border-blue-100 pt-4 dark:border-zinc-700">
@@ -337,12 +341,11 @@ export function EditTaskDialog({
                   <form action={doneRestoreFormAction} className="flex items-center gap-3">
                     <input type="hidden" name="taskId" value={task.id} />
                     {planId ? <input type="hidden" name="planId" value={planId} /> : null}
-                    <button
-                      type="submit"
-                      className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-blue-200 dark:hover:bg-zinc-700"
+                    <FormSubmitButton
+                      className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-70 dark:border-zinc-600 dark:bg-zinc-800 dark:text-blue-200 dark:hover:bg-zinc-700"
                     >
                       {isCompleted ? t.tasks.restore : t.tasks.markDone}
-                    </button>
+                    </FormSubmitButton>
                   </form>
                 ) : null}
                 <form action={deleteFormAction} className="flex items-center gap-3">
@@ -372,12 +375,11 @@ export function EditTaskDialog({
                       >
                         {t.common.cancel}
                       </button>
-                      <button
-                        type="submit"
-                        className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 dark:border-red-700 dark:bg-red-600 dark:hover:bg-red-700"
+                      <FormSubmitButton
+                        className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70 dark:border-red-700 dark:bg-red-600 dark:hover:bg-red-700"
                       >
                         {t.tasks.deleteTask}
-                      </button>
+                      </FormSubmitButton>
                     </>
                   )}
                 </form>
@@ -388,9 +390,11 @@ export function EditTaskDialog({
               <button
                 type="submit"
                 form={`edit-task-form-${task.id}`}
-                className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600 sm:w-auto"
+                disabled={saving}
+                aria-busy={saving}
+                className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600 sm:w-auto"
               >
-                {t.common.saveChanges}
+                {saving ? t.common.saving : t.common.saveChanges}
               </button>
             </div>
           </div>
