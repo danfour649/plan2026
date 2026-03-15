@@ -19,7 +19,7 @@ import {
   getUrgencyPillClasses,
 } from "@/lib/format";
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
-import { getCachedTasksPage } from "@/lib/data-cache";
+import { getCachedTasksPage, type CachedTasksPageTask } from "@/lib/data-cache";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
 
 function CompletedCheckIcon() {
@@ -147,7 +147,7 @@ export default async function TasksPage({
           </div>
         ) : (
           <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
-            {remainingTasks.map((task) => (
+            {remainingTasks.map((task: CachedTasksPageTask) => (
               <li
                 key={task.id}
                 className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
