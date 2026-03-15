@@ -58,7 +58,7 @@ export async function GET(req: Request) {
       orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
       skip: (page - 1) * limit,
       take: limit,
-      include: { tasks: { select: { id: true, completedAt: true } } },
+      include: { tasks: { select: { id: true, status: true, completedAt: true } } },
     }),
     prisma.plan.count({ where }),
   ]);

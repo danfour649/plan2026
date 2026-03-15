@@ -30,6 +30,7 @@ type EditTaskDialogProps = {
     content: string | null;
     dueAt: string | null;
     urgency: number;
+    status?: "active" | "on_hold" | "completed";
     completedAt?: string | null;
     planId?: string | null;
     planName?: string | null;
@@ -78,7 +79,7 @@ export function EditTaskDialog({
   const [attachments, setAttachments] = useState(task.attachments ?? []);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const isCompleted = Boolean(task.completedAt);
+  const isCompleted = task.status === "completed" || Boolean(task.completedAt);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -194,13 +195,18 @@ export function EditTaskDialog({
               aria-labelledby={`edit-task-dialog-title-${task.id}`}
             >
             <div className="mb-1 flex items-start justify-between gap-4">
-              <div>
+              <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
                 <h2
                   id={`edit-task-dialog-title-${task.id}`}
                   className="text-xl font-semibold tracking-tight text-blue-950 dark:text-zinc-100"
                 >
                   {t.tasks.editTask}
                 </h2>
+                {task.status === "on_hold" ? (
+                  <span className="shrink-0 rounded-full border border-amber-200 bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+                    {t.tasks.onHold}
+                  </span>
+                ) : null}
               </div>
               <button
                 type="button"
@@ -231,6 +237,7 @@ export function EditTaskDialog({
                 dueAt: task.dueAt,
                 urgency: task.urgency,
                 planId: task.planId ?? undefined,
+                status: task.status === "completed" ? "active" : task.status ?? "active",
               }}
               plans={plans}
               formId={`edit-task-form-${task.id}`}
@@ -330,6 +337,7 @@ export function EditTaskDialog({
                     content: task.content,
                     dueAt: task.dueAt,
                     urgency: task.urgency,
+                    status: task.status ?? "active",
                     completedAt: task.completedAt ?? null,
                     planId: task.planId ?? null,
                     planName: task.planName ?? null,

@@ -26,6 +26,7 @@ export async function addTask(formData: FormData): Promise<ActionResult> {
     dueAt: formData.get("dueAt") ?? undefined,
     urgency: formData.get("urgency") ?? 4,
     planId: formData.get("planId") ?? undefined,
+    status: formData.get("status") ?? undefined,
   });
   if (!parsed.success) {
     const msg = parsed.error.flatten().formErrors[0] ?? "Invalid input";
@@ -69,6 +70,7 @@ export async function updateTask(formData: FormData): Promise<ActionResult> {
     dueAt: formData.get("dueAt") ?? undefined,
     urgency: formData.get("urgency") ?? 4,
     planId: formData.get("planId") ?? undefined,
+    status: formData.get("status") ?? undefined,
   });
   if (!parsed.success) {
     const msg = parsed.error.flatten().formErrors[0] ?? "Invalid input";
@@ -81,6 +83,7 @@ export async function updateTask(formData: FormData): Promise<ActionResult> {
     dueAt: parsed.data.dueAt,
     urgency: parsed.data.urgency,
     planId: parsed.data.planId,
+    status: parsed.data.status,
   });
   if ("error" in result) return { success: false, error: result.error };
   if (result.count === 0) return { success: false, error: "Operation failed" };
@@ -106,7 +109,7 @@ export async function completeTask(formData: FormData): Promise<ActionResult> {
 
   const result = await prisma.task.updateMany({
     where: { id: parsed.data.taskId, userId },
-    data: { completedAt: new Date() },
+    data: { status: "completed", completedAt: new Date() },
   });
   if (result.count === 0) return { success: false, error: "Operation failed" };
   revalidateTag(getTasksCacheTag(userId), "max");
@@ -130,7 +133,7 @@ export async function restoreTask(formData: FormData): Promise<ActionResult> {
 
   const result = await prisma.task.updateMany({
     where: { id: parsed.data.taskId, userId },
-    data: { completedAt: null },
+    data: { status: "active", completedAt: null },
   });
   if (result.count === 0) return { success: false, error: "Operation failed" };
   revalidateTag(getTasksCacheTag(userId), "max");

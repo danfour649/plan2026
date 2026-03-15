@@ -9,7 +9,7 @@ export type UpdateStatusByShareResult =
   | { success: false; error: string };
 
 /**
- * Update a task's completedAt via a public share token. No auth required; token is the auth.
+ * Update a task's status/completedAt via a public share token. No auth required; token is the auth.
  * Only allowed when the share link has allowStatusUpdate and the task belongs to the plan.
  */
 export async function updateTaskStatusByShareToken(
@@ -40,7 +40,10 @@ export async function updateTaskStatusByShareToken(
 
   await prisma.task.update({
     where: { id: task.id },
-    data: { completedAt },
+    data: {
+      status: completedAt ? "completed" : "active",
+      completedAt,
+    },
   });
 
   revalidatePath(`/share/${token}`);

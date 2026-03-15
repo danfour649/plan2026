@@ -80,7 +80,7 @@ export default async function PlansPage({
     updatedAt: p.updatedAt.toISOString(),
     taskSummaries: p.tasks.map((t) => ({
       id: t.id,
-      completedAt: t.completedAt?.toISOString() ?? null,
+      status: t.status,
     })),
   }));
 
@@ -102,6 +102,7 @@ export default async function PlansPage({
             <ShowArchivedPlansToggle showArchived={showArchived} />
             <Link
               href="/plans/new"
+              prefetch={false}
               className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 sm:h-auto sm:w-fit sm:px-4 sm:py-2"
               aria-label={t.plans.addPlanAria}
             >
@@ -120,6 +121,7 @@ export default async function PlansPage({
             <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{t.plansPage.createPlan}</p>
             <Link
               href="/plans/new"
+              prefetch={false}
               className="mt-4 inline-flex rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
             >
               {t.plansPage.addPlan}
@@ -134,6 +136,7 @@ export default async function PlansPage({
               >
                 <Link
                   href={`/plans/${plan.id}`}
+                  prefetch={false}
                   className="flex min-w-0 flex-1 flex-col gap-2"
                 >
                   {/* Row 1 (sm): name + status + % + flag on one line; name above image when image present */}
@@ -203,7 +206,7 @@ export default async function PlansPage({
                           t.plans.tasksCountOne,
                           t.plans.tasksCountMany,
                           plan.tasks.length,
-                          plan.tasks.filter((task) => task.completedAt != null).length,
+                          plan.tasks.filter((task) => task.status === "completed").length,
                         )}
                       </p>
                       {plan.tasks.length > 0 ? (
@@ -211,12 +214,12 @@ export default async function PlansPage({
                           className="mt-1.5 flex max-w-full flex-wrap items-center gap-0.5"
                           role="img"
                           aria-label={t.plans.tasksCountAria
-                            .replace("{{completed}}", String(plan.tasks.filter((t) => t.completedAt != null).length))
+                            .replace("{{completed}}", String(plan.tasks.filter((t) => t.status === "completed").length))
                             .replace("{{total}}", String(plan.tasks.length))}
                         >
                           {(() => {
                             const total = plan.tasks.length;
-                            const completed = plan.tasks.filter((t) => t.completedAt != null).length;
+                            const completed = plan.tasks.filter((t) => t.status === "completed").length;
                             const maxSegments = 100;
                             if (total <= maxSegments) {
                               return (
@@ -268,6 +271,7 @@ export default async function PlansPage({
                     </div>
                     <Link
                       href={`/plans/${plan.id}`}
+                      prefetch={false}
                       className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
                     >
                       {t.plansPage.edit}
@@ -276,6 +280,7 @@ export default async function PlansPage({
                 ) : (
                   <Link
                     href={`/plans/${plan.id}`}
+                    prefetch={false}
                     className="shrink-0 self-end rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 sm:self-auto"
                   >
                     {t.plansPage.view}

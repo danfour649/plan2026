@@ -51,6 +51,7 @@ export default async function PlanPrintPage({
           content: true,
           dueAt: true,
           urgency: true,
+          status: true,
           completedAt: true,
           createdAt: true,
         },
@@ -61,7 +62,7 @@ export default async function PlanPrintPage({
   if (!plan) notFound();
 
   const unfinishedTasks = plan.tasks
-    .filter((task) => task.completedAt == null)
+    .filter((task) => task.status !== "completed")
     .sort((a, b) => {
       if (a.urgency !== b.urgency) return b.urgency - a.urgency;
       if (a.dueAt == null && b.dueAt == null) return 0;
@@ -71,7 +72,7 @@ export default async function PlanPrintPage({
     });
 
   const completedTasks = plan.tasks
-    .filter((task) => task.completedAt != null)
+    .filter((task) => task.status === "completed" && task.completedAt != null)
     .sort((a, b) => {
       const aAt = a.completedAt!.getTime();
       const bAt = b.completedAt!.getTime();

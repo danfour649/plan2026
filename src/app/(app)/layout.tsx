@@ -41,6 +41,7 @@ export default async function AppLayout({
                       accent="blue"
                       badge={activePlanCount}
                       ariaLabel={t.nav.plans}
+                      prefetch={false}
                       className="-mx-1 shrink-0 gap-0 rounded-full px-0.5 py-0.5 text-[11px] sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
                     >
                       <span className="inline-flex mt-0.5 sm:mt-0 sm:hidden">
@@ -53,6 +54,7 @@ export default async function AppLayout({
                       accent="blue"
                       badge={remainingTaskCount}
                       ariaLabel={t.nav.tasks}
+                      prefetch={false}
                       className="-mx-1 shrink-0 gap-0 rounded-full px-0.5 py-0.5 text-[11px] sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
                     >
                       <span className="inline-flex mt-0.5 sm:mt-0 sm:hidden">
@@ -65,6 +67,7 @@ export default async function AppLayout({
                       accent="blue"
                       badge={suppliesCount > 0 ? suppliesCount : undefined}
                       ariaLabel={t.nav.supplies}
+                      prefetch={false}
                       className="-mx-1 shrink-0 gap-0 rounded-full px-0.5 py-0.5 text-[11px] sm:ml-0 sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
                     >
                       <span className="inline-flex mt-0.5 sm:mt-0 sm:hidden">

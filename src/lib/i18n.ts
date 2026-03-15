@@ -127,6 +127,9 @@ const messages = {
       taskUpdated: "Task updated",
       taskNamePlaceholder: "Task name",
       taskDescriptionPlaceholder: "Add a description, notes, or links (optional)…",
+      statusLabel: "Status",
+      statusActive: "Active",
+      onHold: "On hold",
     },
     plans: {
       noPlansToExport: "No plans to export",
@@ -457,6 +460,9 @@ const messages = {
       taskUpdated: "Tâche mise à jour",
       taskNamePlaceholder: "Nom de la tâche",
       taskDescriptionPlaceholder: "Ajoutez une description, des notes ou des liens (facultatif)…",
+      statusLabel: "Statut",
+      statusActive: "Actif",
+      onHold: "En pause",
     },
     plans: {
       noPlansToExport: "Aucun plan à exporter",
@@ -787,6 +793,9 @@ const messages = {
       taskUpdated: "Work don change",
       taskNamePlaceholder: "Wetin be di work name?",
       taskDescriptionPlaceholder: "Put small gist or link join (optional)…",
+      statusLabel: "Status",
+      statusActive: "E dey work",
+      onHold: "E dey hold",
     },
     plans: {
       noPlansToExport: "No plans to carry out",

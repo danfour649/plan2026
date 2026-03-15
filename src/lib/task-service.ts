@@ -34,6 +34,7 @@ export async function createTaskForUser(
       dueAt: data.dueAt ?? null,
       urgency: data.urgency,
       planId: data.planId ?? null,
+      status: data.status ?? "active",
     },
   });
   return { task };
@@ -56,6 +57,12 @@ export async function updateTaskForUser(
     if (!plan) return { error: "Plan not found" };
   }
 
+  const status = data.status ?? "active";
+  const current = await prisma.task.findFirst({
+    where: { id: taskId, userId },
+    select: { status: true },
+  });
+  const isCompleted = current?.status === "completed";
   const result = await prisma.task.updateMany({
     where: { id: taskId, userId },
     data: {
@@ -64,6 +71,9 @@ export async function updateTaskForUser(
       dueAt: data.dueAt ?? null,
       urgency: data.urgency,
       planId: data.planId ?? null,
+      ...(isCompleted
+        ? {}
+        : { status, completedAt: null }),
     },
   });
   return { count: result.count };

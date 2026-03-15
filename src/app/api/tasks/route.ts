@@ -21,7 +21,7 @@ export async function GET() {
 
   const tasks = await prisma.task.findMany({
     where: { userId },
-    orderBy: [{ completedAt: "desc" }, { createdAt: "desc" }],
+    orderBy: [{ status: "asc" }, { completedAt: "desc" }, { createdAt: "desc" }],
     include: {
       plan: { select: { id: true, name: true } },
       attachments: { select: { id: true, url: true, filename: true, size: true } },
@@ -51,6 +51,7 @@ export async function POST(req: Request) {
           dueAt?: unknown;
           urgency?: unknown;
           planId?: unknown;
+          status?: unknown;
         })
       : {};
   const parsed = addTaskSchema.safeParse({
@@ -59,6 +60,7 @@ export async function POST(req: Request) {
     dueAt: raw.dueAt ?? undefined,
     urgency: raw.urgency ?? 4,
     planId: raw.planId ?? undefined,
+    status: raw.status ?? undefined,
   });
 
   if (!parsed.success) {
