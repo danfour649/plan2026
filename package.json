@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --webpack",
     "dev:kill": "npx kill-port 3000",
-    "build": "prisma generate && next build",
+    "build": "node scripts/sync-about-changelog.mjs && prisma generate && next build",
     "build:next": "next build",
     "analyze": "cross-env ANALYZE=true next build --webpack",
     "start": "next start",
@@ -19,10 +19,11 @@
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:status": "changeset status --verbose",
+    "sync:about": "node scripts/sync-about-changelog.mjs",
     "prisma:generate": "prisma generate",
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate && node scripts/sync-about-changelog.mjs",
     "pr": "gh pr create --fill --base main",
     "bulk:next": "node scripts/bulk-merge-and-next.mjs",
     "branch:report": "node scripts/branch-report.mjs"
