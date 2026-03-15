@@ -70,7 +70,3 @@ export function getStatusPillClasses(status: string): string {
   }
 }
 
-/** Legacy: flag display now uses PlanFlag component. Kept for any remaining refs. */
-export function getFlagEmoji(color: string | null | undefined): string {
-  return ""; // Use <PlanFlag color={...} /> instead
-}

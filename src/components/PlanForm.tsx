@@ -50,6 +50,100 @@ function wrap(fn: PlanFormAction): (prev: PlanActionResult | null, formData: For
   return (_prev, formData) => fn(formData);
 }
 
+type ColorOption = (typeof COLOR_OPTIONS)[number];
+
+function PlanColorDropdown({
+  initialColor,
+  options,
+  label,
+  getOptionLabel,
+  onDirty,
+}: {
+  initialColor: string;
+  options: ColorOption[];
+  label: string;
+  getOptionLabel: (labelKey: string) => string;
+  onDirty: () => void;
+}) {
+  const [selectedColor, setSelectedColor] = useState(initialColor);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function onPointerDown(e: PointerEvent) {
+      if (ref.current?.contains(e.target as Node)) return;
+      setOpen(false);
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [open]);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-sm font-medium text-blue-950 dark:text-blue-100">{label}</label>
+      <input type="hidden" name="color" value={selectedColor} />
+      <div className="relative max-w-xs" ref={ref}>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          aria-label={label}
+          className="flex min-w-0 w-full items-center gap-2 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-left text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800/95 dark:text-zinc-100 dark:ring-zinc-500/50 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+        >
+          {selectedColor ? (
+            <>
+              <PlanFlag color={selectedColor} size={14} className="shrink-0" />
+              <span className="truncate">{getOptionLabel(options.find((o) => o.value === selectedColor)?.labelKey ?? selectedColor)}</span>
+            </>
+          ) : (
+            <span className="text-zinc-500 dark:text-zinc-400">{getOptionLabel("none")}</span>
+          )}
+          <span className="ml-auto shrink-0 text-zinc-400 dark:text-zinc-500" aria-hidden>{open ? "▲" : "▼"}</span>
+        </button>
+        {open ? (
+          <ul
+            role="listbox"
+            className="absolute z-10 mt-1 max-h-56 w-full min-w-[8rem] overflow-auto rounded-xl border border-blue-100 bg-white py-1 shadow-lg dark:border-zinc-600 dark:bg-zinc-800"
+          >
+            {options.map((c) => (
+              <li
+                key={c.value || "none"}
+                role="option"
+                aria-selected={selectedColor === c.value}
+                onClick={() => {
+                  setSelectedColor(c.value);
+                  onDirty();
+                  setOpen(false);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setSelectedColor(c.value);
+                    onDirty();
+                    setOpen(false);
+                  }
+                }}
+                className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-zinc-900 hover:bg-blue-50 dark:text-zinc-100 dark:hover:bg-zinc-700"
+              >
+                {c.value ? (
+                  <>
+                    <PlanFlag color={c.value} size={14} className="shrink-0" />
+                    <span>{getOptionLabel(c.labelKey)}</span>
+                  </>
+                ) : (
+                  <span className="text-zinc-500 dark:text-zinc-400">{getOptionLabel(c.labelKey)}</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 export type PlanFormInitialValues = {
   planId: string;
   name: string;
@@ -112,13 +206,6 @@ export function PlanForm({
   );
   const [taskSearchFilter, setTaskSearchFilter] = useState("");
   const [percentCompleted, setPercentCompleted] = useState(initialValues?.percentCompleted ?? 0);
-  const [selectedColor, setSelectedColor] = useState(initialValues?.color ?? "");
-  const [colorDropdownOpen, setColorDropdownOpen] = useState(false);
-  const colorDropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setSelectedColor(initialValues?.color ?? "");
-  }, [initialValues?.color]);
 
   useEffect(() => {
     if (state && !state.success && state.error) {
@@ -131,16 +218,6 @@ export function PlanForm({
     const id = setTimeout(() => setPercentCompleted(next), 0);
     return () => clearTimeout(id);
   }, [initialValues?.percentCompleted]);
-
-  useEffect(() => {
-    if (!colorDropdownOpen) return;
-    function onPointerDown(e: PointerEvent) {
-      if (colorDropdownRef.current?.contains(e.target as Node)) return;
-      setColorDropdownOpen(false);
-    }
-    document.addEventListener("pointerdown", onPointerDown);
-    return () => document.removeEventListener("pointerdown", onPointerDown);
-  }, [colorDropdownOpen]);
 
   const addNewTaskRow = () => setNewTaskTitles((prev) => [...prev, ""]);
   const removeNewTaskRow = (index: number) =>
@@ -338,67 +415,14 @@ export function PlanForm({
         />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950 dark:text-blue-100">{t.planForm.flagOptional}</label>
-        <input type="hidden" name="color" value={selectedColor} />
-        <div className="relative max-w-xs" ref={colorDropdownRef}>
-          <button
-            type="button"
-            onClick={() => setColorDropdownOpen((o) => !o)}
-            aria-haspopup="listbox"
-            aria-expanded={colorDropdownOpen}
-            aria-label={t.planForm.flagOptional}
-            className="flex min-w-0 w-full items-center gap-2 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-left text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800/95 dark:text-zinc-100 dark:ring-zinc-500/50 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
-          >
-            {selectedColor ? (
-              <>
-                <PlanFlag color={selectedColor} size={14} className="shrink-0" />
-                <span className="truncate">{t.form[COLOR_OPTIONS.find((o) => o.value === selectedColor)?.labelKey ?? selectedColor]}</span>
-              </>
-            ) : (
-              <span className="text-zinc-500 dark:text-zinc-400">{t.form.none}</span>
-            )}
-            <span className="ml-auto shrink-0 text-zinc-400 dark:text-zinc-500" aria-hidden>{colorDropdownOpen ? "▲" : "▼"}</span>
-          </button>
-          {colorDropdownOpen ? (
-            <ul
-              role="listbox"
-              className="absolute z-10 mt-1 max-h-56 w-full min-w-[8rem] overflow-auto rounded-xl border border-blue-100 bg-white py-1 shadow-lg dark:border-zinc-600 dark:bg-zinc-800"
-            >
-              {COLOR_OPTIONS.map((c) => (
-                <li
-                  key={c.value || "none"}
-                  role="option"
-                  aria-selected={selectedColor === c.value}
-                  onClick={() => {
-                    setSelectedColor(c.value);
-                    markDirty();
-                    setColorDropdownOpen(false);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setSelectedColor(c.value);
-                      markDirty();
-                      setColorDropdownOpen(false);
-                    }
-                  }}
-                  className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-zinc-900 hover:bg-blue-50 dark:text-zinc-100 dark:hover:bg-zinc-700"
-                >
-                  {c.value ? (
-                    <>
-                      <PlanFlag color={c.value} size={14} className="shrink-0" />
-                      <span>{t.form[c.labelKey]}</span>
-                    </>
-                  ) : (
-                    <span className="text-zinc-500 dark:text-zinc-400">{t.form[c.labelKey]}</span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
-      </div>
+      <PlanColorDropdown
+        key={`color-${initialValues?.planId ?? "new"}-${initialValues?.color ?? ""}`}
+        initialColor={initialValues?.color ?? ""}
+        options={COLOR_OPTIONS}
+        label={t.planForm.flagOptional}
+        getOptionLabel={(labelKey) => t.form[labelKey as keyof typeof t.form]}
+        onDirty={markDirty}
+      />
 
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-blue-950">{t.planForm.imageUrlOptional}</label>
