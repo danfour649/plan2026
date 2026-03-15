@@ -142,8 +142,8 @@ export default async function PlanDetailPage({
   const titleRow = (
     <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0">
-        <h1 className="truncate text-2xl font-bold tracking-tight text-blue-950">{plan.name}</h1>
-        <p className="mt-1 text-sm text-zinc-500">
+        <h1 className="truncate text-2xl font-bold tracking-tight text-blue-950 dark:text-zinc-100">{plan.name}</h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           {isOwner ? t.plans.editPlanDescription : t.plans.viewingSharedPlan}
         </p>
       </div>
@@ -151,7 +151,7 @@ export default async function PlanDetailPage({
         <ExportPlanButton plan={planForExport} />
         <Link
           href={`/plans/${plan.id}/print`}
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 sm:justify-start"
+          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600 sm:justify-start"
           aria-label={t.plans.printChecklistAria}
         >
           <span className="sm:hidden" aria-hidden>
@@ -192,7 +192,7 @@ export default async function PlanDetailPage({
           <div className="flex min-w-0 flex-col gap-3">
             <Link
               href="/plans"
-              className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-blue-700 transition hover:text-blue-800"
+              className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-blue-700 transition hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-200"
             >
               <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden="true">
                 <path
@@ -209,8 +209,8 @@ export default async function PlanDetailPage({
           </div>
         )}
 
-        <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur">
-          <div className="sticky top-0 z-10 border-b border-blue-100 bg-white/90 px-3 py-3 backdrop-blur max-sm:sticky sm:static sm:bg-transparent sm:backdrop-blur-none sm:px-6 sm:py-4">
+        <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+          <div className="sticky top-0 z-10 border-b border-blue-100 bg-white/90 px-3 py-3 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 max-sm:sticky sm:static sm:bg-transparent sm:backdrop-blur-none sm:dark:bg-transparent sm:px-6 sm:py-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex flex-wrap items-center gap-2">
                 <nav className="flex gap-1" aria-label={t.plans.tasksInThisPlan}>
@@ -218,8 +218,8 @@ export default async function PlanDetailPage({
                     href={`/plans/${plan.id}${taskPage > 1 || taskLimit !== PLAN_TASKS_PAGE_SIZE ? `?taskPage=${taskPage}&taskLimit=${taskLimit}` : ""}`}
                     className={`rounded-xl px-3 py-1.5 text-sm font-medium transition ${
                       tab === "tasks"
-                        ? "bg-blue-100 text-blue-800"
-                        : "text-zinc-600 hover:bg-blue-50 hover:text-blue-700"
+                        ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200"
+                        : "text-zinc-600 hover:bg-blue-50 hover:text-blue-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-200"
                     }`}
                   >
                     {t.nav.tasks}
@@ -228,8 +228,8 @@ export default async function PlanDetailPage({
                     href={`/plans/${plan.id}?tab=list`}
                     className={`rounded-xl px-3 py-1.5 text-sm font-medium transition ${
                       tab === "list"
-                        ? "bg-blue-100 text-blue-800"
-                        : "text-zinc-600 hover:bg-blue-50 hover:text-blue-700"
+                        ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200"
+                        : "text-zinc-600 hover:bg-blue-50 hover:text-blue-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-200"
                     }`}
                   >
                     {t.supplyList.tabLabel}
@@ -243,14 +243,14 @@ export default async function PlanDetailPage({
             {tab === "tasks" ? (
               <>
                 <div className="mt-2">
-                  <h2 className="text-lg font-bold tracking-tight text-blue-950">{t.plans.tasksInThisPlan}</h2>
-                  <p className="mt-1 text-sm text-zinc-500">
+                  <h2 className="text-lg font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.plans.tasksInThisPlan}</h2>
+                  <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                     {isOwner ? t.plans.editTaskBelowDescription : t.plans.tasksInSharedPlan}
                   </p>
                 </div>
               </>
             ) : (
-              <h2 className="mt-2 text-lg font-bold tracking-tight text-blue-950">{t.supplyList.title}</h2>
+              <h2 className="mt-2 text-lg font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.supplyList.title}</h2>
             )}
           </div>
           {tab === "list" ? (
@@ -258,11 +258,11 @@ export default async function PlanDetailPage({
               <PlanSupplyList planId={plan.id} items={supplyItemsForClient} isOwner={isOwner} initialEditingItemId={editItemId} />
             </div>
           ) : planTasks.length > 0 ? (
-            <ul className="divide-y divide-blue-100">
+            <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
               {planTasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex flex-col gap-3 px-3 py-3 transition hover:bg-blue-50/40 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
+                  className="flex flex-col gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
                 >
                   {isOwner ? (
                     <>
@@ -305,7 +305,7 @@ export default async function PlanDetailPage({
                             </span>
                           </div>
                           <TaskContent content={task.content} />
-                          <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
+                          <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
                             {task.completedAt ? (
                               <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
                             ) : (
@@ -373,7 +373,7 @@ export default async function PlanDetailPage({
                         </span>
                       </div>
                       <TaskContent content={task.content} />
-                      <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
+                      <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
                         {task.completedAt ? (
                           <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
                         ) : (
@@ -392,15 +392,15 @@ export default async function PlanDetailPage({
                 </li>
               ))}
               {totalTaskPages > 1 && (
-                <li className="flex flex-wrap items-center justify-between gap-2 border-t border-blue-100 px-3 py-3 sm:px-6">
-                  <span className="text-sm text-zinc-500">
+                <li className="flex flex-wrap items-center justify-between gap-2 border-t border-blue-100 px-3 py-3 dark:border-zinc-700 sm:px-6">
+                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
                     {t.common.pageOf.replace("{{current}}", String(taskPage)).replace("{{total}}", String(totalTaskPages))}
                   </span>
                   <div className="flex gap-2">
                     {taskPage > 1 ? (
                       <Link
                         href={`/plans/${plan.id}?taskPage=${taskPage - 1}&taskLimit=${taskLimit}`}
-                        className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100"
+                        className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
                       >
                         {t.common.previousPage}
                       </Link>
@@ -408,7 +408,7 @@ export default async function PlanDetailPage({
                     {taskPage < totalTaskPages ? (
                       <Link
                         href={`/plans/${plan.id}?taskPage=${taskPage + 1}&taskLimit=${taskLimit}`}
-                        className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100"
+                        className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
                       >
                         {t.common.nextPage}
                       </Link>
@@ -419,8 +419,8 @@ export default async function PlanDetailPage({
             </ul>
           ) : (
             <div className="px-3 py-6 text-center sm:px-6 sm:py-8">
-              <p className="text-sm text-zinc-500">{t.plans.noTasksInPlan}</p>
-              <p className="mt-1 text-xs text-zinc-400">
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.plans.noTasksInPlan}</p>
+              <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
                 {isOwner ? t.plans.addOrLinkTasksDescription : t.plans.planOwnerAddTasks}
               </p>
             </div>

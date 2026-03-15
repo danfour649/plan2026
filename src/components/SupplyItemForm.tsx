@@ -28,7 +28,7 @@ type SupplyItemFormProps = {
 };
 
 const inputClass =
-  "w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 placeholder:text-zinc-500";
+  "w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 placeholder:text-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30";
 
 export function SupplyItemForm({
   idPrefix,
@@ -131,7 +131,7 @@ export function SupplyItemForm({
         </div>
         <button
           type="submit"
-          className="shrink-0 rounded-xl border border-blue-200 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+          className="shrink-0 rounded-xl border border-blue-200 bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 dark:border-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600"
         >
           {submitLabel}
         </button>
@@ -139,7 +139,7 @@ export function SupplyItemForm({
           <button
             type="button"
             onClick={onCancel}
-            className="shrink-0 rounded-xl border border-zinc-200 bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-200"
+            className="shrink-0 rounded-xl border border-zinc-200 bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-200 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
           >
             {cancelLabel ?? t.common.cancel}
           </button>
