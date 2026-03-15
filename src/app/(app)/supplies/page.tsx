@@ -89,37 +89,41 @@ export default async function SuppliesPage() {
                       const statusLabel = t.supplyList[statusKey];
                       const qty = item.quantity ?? 1;
                       return (
-                        <li key={item.id} className="flex flex-wrap items-center gap-2 text-sm">
-                          <span className="text-zinc-800 dark:text-zinc-200">{item.label}</span>
-                          {qty > 1 ? (
-                            <span className="text-zinc-500 dark:text-zinc-400">× {qty}</span>
-                          ) : null}
-                          {item.price != null && (
-                            <span className="text-zinc-500 dark:text-zinc-400">
-                              {Number(item.price).toFixed(2)}
-                            </span>
-                          )}
-                          <span className="inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
-                            {statusLabel}
-                          </span>
+                        <li key={item.id} className="flex flex-col gap-1 text-sm">
+                          <div className="flex min-w-0 flex-row flex-wrap items-center justify-between gap-2">
+                            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+                              <span className="text-zinc-800 dark:text-zinc-200">{item.label}</span>
+                              {qty > 1 ? (
+                                <span className="text-zinc-500 dark:text-zinc-400">× {qty}</span>
+                              ) : null}
+                              {item.price != null && (
+                                <span className="text-zinc-500 dark:text-zinc-400">
+                                  {Number(item.price).toFixed(2)}
+                                </span>
+                              )}
+                              <span className="inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
+                                {statusLabel}
+                              </span>
+                            </div>
+                            {plan.isOwner ? (
+                              <EditSupplyItemDialog
+                                item={{
+                                  id: item.id,
+                                  planId: plan.id,
+                                  planName: plan.name,
+                                  label: item.label,
+                                  description: item.description ?? null,
+                                  price: item.price != null ? Number(item.price) : null,
+                                  quantity: item.quantity ?? 1,
+                                  acquiredStatus: item.acquiredStatus ?? "needed",
+                                  link: item.link ?? null,
+                                }}
+                                showButton
+                              />
+                            ) : null}
+                          </div>
                           {item.description ? (
-                            <span className="w-full text-zinc-500 dark:text-zinc-400">{item.description}</span>
-                          ) : null}
-                          {plan.isOwner ? (
-                            <EditSupplyItemDialog
-                              item={{
-                                id: item.id,
-                                planId: plan.id,
-                                planName: plan.name,
-                                label: item.label,
-                                description: item.description ?? null,
-                                price: item.price != null ? Number(item.price) : null,
-                                quantity: item.quantity ?? 1,
-                                acquiredStatus: item.acquiredStatus ?? "needed",
-                                link: item.link ?? null,
-                              }}
-                              showButton
-                            />
+                            <span className="pl-3 text-zinc-500 dark:text-zinc-400">{item.description}</span>
                           ) : null}
                         </li>
                       );

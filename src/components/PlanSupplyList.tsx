@@ -175,48 +175,47 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                 onSuccess={() => setEditingId(null)}
               />
             ) : (
-              <li
-                key={item.id}
-                className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
-              >
-                <div className="min-w-0 flex-1">
-                  <span className="font-medium text-blue-950 dark:text-zinc-100">{item.label}</span>
-                  {item.quantity > 1 ? (
-                    <span className="ml-2 text-sm text-zinc-500 dark:text-zinc-400">× {item.quantity}</span>
-                  ) : null}
-                  {item.price != null && !Number.isNaN(item.price) ? (
-                    <span className="ml-2 text-sm text-zinc-600 dark:text-zinc-300">
-                      {typeof item.price === "number" ? item.price.toFixed(2) : String(item.price)}
+              <li key={item.id} className="flex flex-col gap-2 py-3">
+                <div className="flex min-w-0 flex-row items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <span className="font-medium text-blue-950 dark:text-zinc-100">{item.label}</span>
+                    {item.quantity > 1 ? (
+                      <span className="ml-2 text-sm text-zinc-500 dark:text-zinc-400">× {item.quantity}</span>
+                    ) : null}
+                    {item.price != null && !Number.isNaN(item.price) ? (
+                      <span className="ml-2 text-sm text-zinc-600 dark:text-zinc-300">
+                        {typeof item.price === "number" ? item.price.toFixed(2) : String(item.price)}
+                      </span>
+                    ) : null}
+                    <span className="ml-2 inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
+                      {getStatusLabel(t, item.acquiredStatus)}
                     </span>
-                  ) : null}
-                  <span className="ml-2 inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
-                    {getStatusLabel(t, item.acquiredStatus)}
-                  </span>
-                  {item.description ? (
-                    <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">{item.description}</p>
-                  ) : null}
-                  {item.link ? (
-                    <a
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-1 inline-block truncate text-sm text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                    >
-                      {item.link}
-                    </a>
+                  </div>
+                  {isOwner ? (
+                    <div className="flex shrink-0 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setEditingId(item.id)}
+                        className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
+                      >
+                        {t.common.edit}
+                      </button>
+                      <DeleteSupplyItemButton planId={planId} itemId={item.id} />
+                    </div>
                   ) : null}
                 </div>
-                {isOwner ? (
-                  <div className="flex shrink-0 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setEditingId(item.id)}
-                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
-                    >
-                      {t.common.edit}
-                    </button>
-                    <DeleteSupplyItemButton planId={planId} itemId={item.id} />
-                  </div>
+                {item.description ? (
+                  <p className="pl-3 text-sm text-zinc-500 dark:text-zinc-400">{item.description}</p>
+                ) : null}
+                {item.link ? (
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block truncate text-sm text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                  >
+                    {item.link}
+                  </a>
                 ) : null}
               </li>
             ),
