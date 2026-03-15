@@ -27,6 +27,9 @@ Ready to implement. Each has a **dedicated analysis doc** in this folder for imp
 | — | Add calendar tab | [TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md) |
 | TECH-1005 | Data robustness and optimization | [TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md) |
 | TECH-0058 | Optimize app code before future work | [TECH-0058-optimize-app-before-future-work.md](./TECH-0058-optimize-app-before-future-work.md) |
+| TECH-0062 | Expand help section and task/plan wizard | [TECH-0062-expand-help-section-task-plan-wizard.md](./TECH-0062-expand-help-section-task-plan-wizard.md) |
+| TECH-0064 | New urgent and upcoming tasks page | [TECH-0064-new-urgent-upcoming-tasks-page.md](./TECH-0064-new-urgent-upcoming-tasks-page.md) |
+| TECH-0067 | Put tasks on hold | [TECH-0067-put-tasks-on-hold.md](./TECH-0067-put-tasks-on-hold.md) |
 
 When implementing: use branch `tech/<ID>-<kebab-description>`, add a changeset, and open a PR per task (see AGENTS.md).
 
@@ -71,7 +74,8 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 
 - **Last completed:** The five tasks TECH-0042, TECH-0045, TECH-0047, TECH-0030, TECH-0044 have been implemented and merged.
 - **Bulk run (this session):** Implemented TECH-0048 (task complete toast), TECH-0049 (remove delete-task text), TECH-0050 (save button bottom), TECH-0051 (header margin mobile), TECH-0052 (urgency label), TECH-0053 (task form dark text + name→description), TECH-0054 (plan flags + black/pink/silver). Deferred with analysis docs: TECH-0056 (Facebook/email-password login).
-- **Next:** Push branches, open PRs; then remaining active items: **Schedule/Calendar tab** ([TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md)) and **Data robustness and optimization** ([TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md)).
+- **Bulk run (latest):** From plan export JSON: implemented TECH-0059 (5 MB file upload limit), TECH-0060 (delete icon in mobile), TECH-0061 (prevent duplicate on save delay), TECH-0063 (cancel edit plan mobile + bottom left), TECH-0065 (mobile logo smaller), TECH-0066 (mobile navbar highlight smaller). Deferred with analysis docs: TECH-0062 (expand help + wizard), TECH-0064 (urgent/upcoming tasks page), TECH-0067 (put tasks on hold).
+- **Next:** Push branches, open PRs for TECH-0059, 0060, 0061, 0063, 0065, 0066; then remaining active items: **Schedule/Calendar** ([TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md)), **Data robustness** ([TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md)), **Help + wizard** (TECH-0062), **Urgent/upcoming page** (TECH-0064), **Tasks on hold** (TECH-0067).
 
 ---
 
@@ -88,6 +92,9 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 | [TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md) | Fresh analysis of data handling for robustness and scalability; audit then implement. | Active (future work) |
 | [TECH-0058-optimize-app-before-future-work.md](./TECH-0058-optimize-app-before-future-work.md) | Plan and apply optimizations before expanding the app (bundle, code quality, TECH-1005 alignment). | Partially implemented (bundle analysis, lazy load, dead code, unused deps) |
 | [TECH-0056-facebook-email-password-login.md](./TECH-0056-facebook-email-password-login.md) | Facebook login and email/password sign-up (analysis). | Deferred — bulk run |
+| [TECH-0062-expand-help-section-task-plan-wizard.md](./TECH-0062-expand-help-section-task-plan-wizard.md) | Expand help content and add 3-step task/plan wizard. | Active (deferred bulk run) |
+| [TECH-0064-new-urgent-upcoming-tasks-page.md](./TECH-0064-new-urgent-upcoming-tasks-page.md) | New page for urgent/upcoming tasks; logo links here. | Active (deferred bulk run) |
+| [TECH-0067-put-tasks-on-hold.md](./TECH-0067-put-tasks-on-hold.md) | Task status “on hold”; sort to bottom of lists. | Active (deferred bulk run) |
 
 ---
 
