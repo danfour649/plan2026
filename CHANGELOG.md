@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.20.5
+
+### Patch Changes
+
+- 3d66f43: Add top padding above the logo in the app header on mobile (e.g. Pixel 8) so the navbar has visible margin.
+
 ## 0.20.4
 
 ### Patch Changes
