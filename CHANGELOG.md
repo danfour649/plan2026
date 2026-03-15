@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.20.6
+
+### Patch Changes
+
+- 36ce6dc: Plan form: label the 1–7 scale "Urgency" (matching tasks) in all locales. Urgency bubbles already use short labels on mobile for one-line layout.
+
 ## 0.20.5
 
 ### Patch Changes
