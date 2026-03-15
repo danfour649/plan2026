@@ -274,6 +274,64 @@ export async function getCachedTasksPage(
   };
 }
 
+// Actions page: urgent (urgency >= 6) or due within 3 days, incomplete only; sort overdue first, then due date, then urgency
+const ACTIONS_URGENCY_MIN = 6;
+
+function getActionsDateRange(): { startOfToday: Date; endOfThreeDays: Date } {
+  const now = new Date();
+  const startOfToday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0));
+  const endOfThreeDays = new Date(startOfToday);
+  endOfThreeDays.setUTCDate(endOfThreeDays.getUTCDate() + 4); // exclusive end of day 3
+  return { startOfToday, endOfThreeDays };
+}
+
+async function fetchActionsPage(userId: string) {
+  const { endOfThreeDays } = getActionsDateRange();
+  const tasks = await prisma.task.findMany({
+    where: {
+      userId,
+      completedAt: null,
+      OR: [
+        { urgency: { gte: ACTIONS_URGENCY_MIN } },
+        { dueAt: { lt: endOfThreeDays } },
+      ],
+    },
+    include: taskInclude,
+  });
+  const now = new Date();
+  const sorted = [...tasks].sort((a, b) => {
+    const aDue = a.dueAt != null ? toDate(a.dueAt) : null;
+    const bDue = b.dueAt != null ? toDate(b.dueAt) : null;
+    const aOverdue = aDue !== null && aDue < now;
+    const bOverdue = bDue !== null && bDue < now;
+    if (aOverdue !== bOverdue) return aOverdue ? -1 : 1;
+    if (aDue && bDue) return aDue.getTime() - bDue.getTime();
+    if (aDue) return -1;
+    if (bDue) return 1;
+    return b.urgency - a.urgency;
+  });
+  const plans = await prisma.plan.findMany({
+    where: { userId },
+    orderBy: [{ priority: "desc" }, { name: "asc" }],
+    select: { id: true, name: true },
+  });
+  return { tasks: sorted, plans };
+}
+
+export async function getCachedActionsPage(userId: string) {
+  const { startOfToday } = getActionsDateRange();
+  const dateKey = startOfToday.toISOString().slice(0, 10);
+  const result = await unstable_cache(
+    () => fetchActionsPage(userId),
+    ["actions-page", userId, dateKey],
+    { tags: [getTasksCacheTag(userId), getPlansCacheTag(userId)] },
+  )();
+  return {
+    tasks: result.tasks.map(rehydrateTask),
+    plans: result.plans,
+  };
+}
+
 // Plan detail page: plan + supplyItems + tasks (paginated + export) + dropdowns
 const PLAN_TASKS_ORDER = [
   { completedAt: "desc" as const },

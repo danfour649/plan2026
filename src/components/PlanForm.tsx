@@ -1,6 +1,8 @@
 "use client";
 
 import { Minus, Plus, Save, X } from "lucide-react";
+
+import { FormSubmitButton } from "@/components/FormSubmitButton";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
@@ -9,7 +11,6 @@ import { toast } from "sonner";
 import { PlanFlag } from "@/components/PlanFlag";
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { PlanActionResult } from "@/lib/actions/plans";
-import { clearEditPlanFormDirty, getEditPlanFormDirty } from "@/lib/editPlanDirty";
 import { clearNewPlanFormDirty, getNewPlanFormDirty } from "@/lib/newPlanDirty";
 import { PLAN_STATUS_VALUES } from "@/lib/validations/plan";
 
@@ -179,6 +180,12 @@ type PlanFormProps = {
   onRequestDiscardConfirm?: (open: boolean) => void;
   /** Callback when user edits any field (e.g. sets module-level dirty flag). */
   onDirtyChange?: () => void;
+  /** When in edit mode, parent can pass current dirty state so Cancel shows dialog only when dirty. */
+  editFormDirty?: boolean;
+  /** When true (edit mode), form id is set and footer (Cancel/Save) is not rendered; parent renders it outside. */
+  renderEditFooterOutside?: boolean;
+  /** Form id when renderEditFooterOutside is true (for submit button form attribute). */
+  editFormId?: string;
   /** When creating a new plan, optional pre-fill from template (name, goal, new task titles). */
   templateInitialValues?: { name: string; goal?: string; newTaskTitles: string[] };
 };
@@ -194,6 +201,9 @@ export function PlanForm({
   discardConfirmMessage,
   onRequestDiscardConfirm,
   onDirtyChange,
+  editFormDirty = false,
+  renderEditFooterOutside = false,
+  editFormId,
   templateInitialValues,
 }: PlanFormProps) {
   const t = useTranslations();
@@ -239,9 +249,11 @@ export function PlanForm({
           return toDateInputValue(d);
         })();
 
+  const formElementId = renderEditFooterOutside ? editFormId ?? formId : formId;
+
   return (
     <form
-      id={formId}
+      id={formElementId}
       action={formAction}
       className="flex min-w-0 max-w-full flex-col gap-4 overflow-x-hidden sm:gap-6"
     >
@@ -544,60 +556,69 @@ export function PlanForm({
           <span className="sm:hidden" aria-hidden><Plus className="size-5" /></span>
           <span className="hidden sm:inline">{t.planForm.addAnotherTask}</span>
         </button>
-        <div className="flex min-w-0 flex-wrap items-center gap-2">
-        <button
-          type="submit"
-          aria-label={submitLabel}
-          className="flex min-h-[2.75rem] min-w-0 items-center justify-center gap-2 rounded-xl bg-blue-600 p-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:px-4 sm:py-2 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600"
-        >
-          <span className="sm:hidden" aria-hidden><Save className="size-5" /></span>
-          <span className="hidden sm:inline">{submitLabel}</span>
-        </button>
-        {!isEdit && discardConfirmMessage ? (
-          <button
-            type="button"
-            onClick={() => {
-              if (getNewPlanFormDirty()) {
-                onRequestDiscardConfirm?.(true);
-                return;
-              }
-              clearNewPlanFormDirty();
-              router.push("/plans");
-            }}
-            aria-label={t.common.cancel}
-            className="flex min-h-[2.75rem] min-w-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 sm:px-4 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
-          >
-            <span className="sm:hidden" aria-hidden><X className="size-5" /></span>
-            <span className="hidden sm:inline">{t.common.cancel}</span>
-          </button>
-        ) : isEdit && onRequestDiscardConfirm && discardConfirmMessage ? (
-          <button
-            type="button"
-            onClick={() => {
-              if (getEditPlanFormDirty()) {
-                onRequestDiscardConfirm(true);
-                return;
-              }
-              clearEditPlanFormDirty();
-              router.push(initialValues?.planId ? `/plans/${initialValues.planId}` : "/plans");
-            }}
-            aria-label={t.common.cancel}
-            className="flex min-h-[2.75rem] min-w-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 sm:px-4 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
-          >
-            <span className="sm:hidden" aria-hidden><X className="size-5" /></span>
-            <span className="hidden sm:inline">{t.common.cancel}</span>
-          </button>
-        ) : (
-          <Link
-            href={isEdit && initialValues?.planId ? `/plans/${initialValues.planId}` : "/plans"}
-            aria-label={t.common.cancel}
-            className="flex min-h-[2.75rem] min-w-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 sm:px-4 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
-          >
-            <span className="sm:hidden" aria-hidden><X className="size-5" /></span>
-            <span className="hidden sm:inline">{t.common.cancel}</span>
-          </Link>
-        )}
-        </div>
+        {!renderEditFooterOutside ? (
+          <div className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-2 sm:flex-initial sm:flex-row sm:justify-start">
+            {!isEdit && discardConfirmMessage ? (
+              <button
+                type="button"
+                onClick={() => {
+                  if (getNewPlanFormDirty()) {
+                    onRequestDiscardConfirm?.(true);
+                    return;
+                  }
+                  clearNewPlanFormDirty();
+                  router.push("/plans");
+                }}
+                aria-label={t.common.cancel}
+                className="flex min-h-[2.75rem] min-w-[2.75rem] shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 sm:min-w-0 sm:px-4 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
+              >
+                <span className="sm:hidden" aria-hidden><X className="size-5" /></span>
+                <span className="hidden sm:inline">{t.common.cancel}</span>
+              </button>
+            ) : isEdit && onRequestDiscardConfirm && discardConfirmMessage ? (
+              editFormDirty ? (
+                <button
+                  type="button"
+                  aria-label={t.common.cancel}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onRequestDiscardConfirm(true);
+                  }}
+                  className="flex min-h-[2.75rem] min-w-[2.75rem] shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 sm:min-w-0 sm:px-4 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
+                >
+                  <span className="sm:hidden" aria-hidden><X className="size-5" /></span>
+                  <span className="hidden sm:inline">{t.common.cancel}</span>
+                </button>
+              ) : (
+                <a
+                  href={initialValues?.planId ? `/plans/${initialValues.planId}` : "/plans"}
+                  aria-label={t.common.cancel}
+                  className="flex min-h-[2.75rem] min-w-[2.75rem] shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 sm:min-w-0 sm:px-4 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
+                >
+                  <span className="sm:hidden" aria-hidden><X className="size-5" /></span>
+                  <span className="hidden sm:inline">{t.common.cancel}</span>
+                </a>
+              )
+            ) : (
+              <Link
+                href={isEdit && initialValues?.planId ? `/plans/${initialValues.planId}` : "/plans"}
+                aria-label={t.common.cancel}
+                className="flex min-h-[2.75rem] min-w-[2.75rem] shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 sm:min-w-0 sm:px-4 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
+              >
+                <span className="sm:hidden" aria-hidden><X className="size-5" /></span>
+                <span className="hidden sm:inline">{t.common.cancel}</span>
+              </Link>
+            )}
+            <FormSubmitButton
+              aria-label={submitLabel}
+              className="flex min-h-[2.75rem] min-w-0 items-center justify-center gap-2 rounded-xl bg-blue-600 p-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 sm:px-4 sm:py-2 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600"
+            >
+              <span className="sm:hidden" aria-hidden><Save className="size-5" /></span>
+              <span className="hidden sm:inline">{submitLabel}</span>
+            </FormSubmitButton>
+          </div>
+        ) : null}
       </div>
     </form>
   );

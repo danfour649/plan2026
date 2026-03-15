@@ -180,6 +180,7 @@ export default async function PlanDetailPage({
             initialValues={initialValues}
             userTasks={userTasks}
             submitLabel={t.common.savePlan}
+            cancelLabel={t.common.cancel}
             singleColumn={true}
             backLabel={t.common.backToPlans}
             confirmMessage={t.plans.discardEditPlanConfirm}
