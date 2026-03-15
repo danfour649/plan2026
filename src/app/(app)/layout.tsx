@@ -33,17 +33,17 @@ export default async function AppLayout({
                 iconClassName="h-10 w-12 sm:h-16 sm:w-24"
                 ariaLabel={t.common.goToPlans}
               />
-                <nav className="flex min-w-0 shrink items-center gap-0 text-sm text-zinc-700 dark:text-zinc-300 sm:gap-4">
-                  <div className="flex min-w-0 shrink items-center gap-0 sm:gap-2 md:gap-3">
+                <nav className="flex min-w-0 shrink items-center gap-0.5 text-sm text-zinc-700 dark:text-zinc-300 sm:gap-4">
+                  <div className="flex min-w-0 shrink items-center gap-0.5 sm:gap-2 md:gap-3">
                     <AppNavLink
                       href="/plans"
                       accent="blue"
                       badge={activePlanCount}
                       ariaLabel={t.nav.plans}
-                      className="-mx-1.5 shrink-0 gap-0 px-0.5 py-1 text-[11px] sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
+                      className="-mx-0.5 shrink-0 gap-0 rounded-lg px-1 py-0.5 text-[11px] sm:mx-0 sm:rounded-full sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
                     >
-                      <span className="inline-flex mt-1 sm:mt-0 sm:hidden">
-                        <LightbulbIcon className="h-11 w-11" />
+                      <span className="inline-flex mt-0.5 sm:mt-0 sm:hidden">
+                        <LightbulbIcon className="h-8 w-8" />
                       </span>
                       <span className="hidden sm:inline">{t.nav.plans}</span>
                     </AppNavLink>
@@ -52,10 +52,10 @@ export default async function AppLayout({
                       accent="blue"
                       badge={remainingTaskCount}
                       ariaLabel={t.nav.tasks}
-                      className="-mx-1.5 shrink-0 gap-0 px-0.5 py-1 text-[11px] sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
+                      className="-mx-0.5 shrink-0 gap-0 rounded-lg px-1 py-0.5 text-[11px] sm:mx-0 sm:rounded-full sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
                     >
-                      <span className="inline-flex mt-1 sm:mt-0 sm:hidden">
-                        <CheckboxIcon className="h-11 w-11" />
+                      <span className="inline-flex mt-0.5 sm:mt-0 sm:hidden">
+                        <CheckboxIcon className="h-8 w-8" />
                       </span>
                       <span className="hidden sm:inline">{t.nav.tasks}</span>
                     </AppNavLink>
@@ -64,10 +64,10 @@ export default async function AppLayout({
                       accent="blue"
                       badge={suppliesCount > 0 ? suppliesCount : undefined}
                       ariaLabel={t.nav.supplies}
-                      className="-ml-2 -mx-1.5 shrink-0 gap-0 px-0.5 py-1 text-[11px] sm:ml-0 sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
+                      className="-mx-0.5 shrink-0 gap-0 rounded-lg px-1 py-0.5 text-[11px] sm:ml-0 sm:mx-0 sm:rounded-full sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
                     >
-                      <span className="inline-flex mt-1 sm:mt-0 sm:hidden">
-                        <CurrencyIcon className="h-11 w-11" />
+                      <span className="inline-flex mt-0.5 sm:mt-0 sm:hidden">
+                        <CurrencyIcon className="h-8 w-8" />
                       </span>
                       <span className="hidden sm:inline">{t.nav.supplies}</span>
                     </AppNavLink>
