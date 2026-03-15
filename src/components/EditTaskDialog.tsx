@@ -1,5 +1,6 @@
 "use client";
 
+import { Trash2 } from "lucide-react";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
@@ -281,6 +282,12 @@ export function EditTaskDialog({
                   onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
+                    const maxSize = 4.2 * 1024 * 1024; // 4.2 MB
+                    if (file.size > maxSize) {
+                      toast.error(t.tasks.fileTooLarge);
+                      e.target.value = "";
+                      return;
+                    }
                     setUploading(true);
                     try {
                       const fd = new FormData();
@@ -348,9 +355,13 @@ export function EditTaskDialog({
                     <button
                       type="button"
                       onClick={() => setShowDeleteConfirm(true)}
-                      className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200 dark:hover:bg-red-900/50"
+                      className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200 dark:hover:bg-red-900/50 sm:px-4"
+                      aria-label={t.tasks.deleteTask}
                     >
-                      {t.tasks.deleteTask}
+                      <span className="sm:hidden" aria-hidden>
+                        <Trash2 className="size-5" />
+                      </span>
+                      <span className="hidden sm:inline">{t.tasks.deleteTask}</span>
                     </button>
                   ) : (
                     <>

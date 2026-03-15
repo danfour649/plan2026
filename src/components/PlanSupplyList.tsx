@@ -1,5 +1,6 @@
 "use client";
 
+import { Trash2 } from "lucide-react";
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -279,9 +280,13 @@ function DeleteSupplyItemButton({ planId, itemId }: { planId: string; itemId: st
     <button
       type="button"
       onClick={handleDelete}
-      className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm text-amber-800 hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
+      className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm text-amber-800 hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50 sm:px-3"
+      aria-label={t.supplyList.deleteItem}
     >
-      {t.common.delete}
+      <span className="sm:hidden" aria-hidden>
+        <Trash2 className="size-5" />
+      </span>
+      <span className="hidden sm:inline">{t.common.delete}</span>
     </button>
   );
 }
