@@ -1,5 +1,6 @@
 "use client";
 
+import { Minus, Plus, Save, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
@@ -249,7 +250,7 @@ export function PlanForm({
       ) : null}
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">{t.planForm.priorityLabel}</label>
+        <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.priorityLabel}</label>
         <div className="flex flex-wrap gap-2 pl-2">
           {PRIORITY_OPTIONS.map((option) => (
             <label key={option.value} className="inline-flex cursor-pointer items-center gap-2">
@@ -279,7 +280,7 @@ export function PlanForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">{t.planForm.percentCompletedLabel}</label>
+        <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.percentCompletedLabel}</label>
         <div className="flex flex-wrap items-center gap-3">
           <input
             name="percentCompleted"
@@ -291,108 +292,108 @@ export function PlanForm({
               setPercentCompleted(Number(e.target.value));
               markDirty();
             }}
-            className="h-2.5 w-full min-w-0 flex-1 rounded-full bg-blue-100 accent-blue-600 sm:max-w-[12rem]"
+            className="h-2.5 w-full min-w-0 flex-1 rounded-full bg-blue-100 accent-blue-600 dark:bg-zinc-700 dark:accent-blue-500 sm:max-w-[12rem]"
             aria-valuenow={percentCompleted}
             aria-valuemin={0}
             aria-valuemax={100}
           />
-          <span className="shrink-0 w-10 text-right text-sm font-medium text-blue-950" aria-hidden="true">
+          <span className="shrink-0 w-10 text-right text-sm font-medium text-blue-950 dark:text-zinc-100" aria-hidden="true">
             {percentCompleted}%
           </span>
         </div>
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">{t.common.nameRequired}</label>
+        <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.common.nameRequired}</label>
         <input
           name="name"
           placeholder={t.plans.planNamePlaceholder}
           required
           defaultValue={initialValues?.name ?? templateInitialValues?.name ?? ""}
           onInput={markDirty}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
         />
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">{t.common.descriptionOptional}</label>
+        <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.common.descriptionOptional}</label>
         <textarea
           name="description"
           placeholder={t.plans.describePlanPlaceholder}
           rows={3}
           defaultValue={initialValues?.description ?? ""}
           onInput={markDirty}
-          className="min-h-[4.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+          className="min-h-[4.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
         />
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">{t.planForm.goalOptional}</label>
+        <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.goalOptional}</label>
         <input
           name="goal"
           placeholder={t.planForm.goalPlaceholder}
           defaultValue={initialValues?.goal ?? templateInitialValues?.goal ?? ""}
           onInput={markDirty}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
         />
       </div>
 
       <div className={singleColumn ? "flex flex-col gap-4" : "grid min-w-0 gap-4 sm:grid-cols-2"}>
         <div className="flex min-w-0 flex-col gap-2">
-          <label className="text-sm font-medium text-blue-950">{t.planForm.startDateRequired}</label>
+          <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.startDateRequired}</label>
           <input
             name="startAt"
             type="date"
             required
             defaultValue={defaultStart}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
           />
         </div>
         <div className="flex min-w-0 flex-col gap-2">
-          <label className="text-sm font-medium text-blue-950">{t.planForm.endDateRequired}</label>
+          <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.endDateRequired}</label>
           <input
             name="endAt"
             type="date"
             required
             defaultValue={defaultEnd}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
           />
         </div>
       </div>
 
       <div className={singleColumn ? "flex flex-col gap-4" : "grid min-w-0 gap-4 sm:grid-cols-2"}>
         <div className="flex min-w-0 flex-col gap-2">
-          <label className="text-sm font-medium text-blue-950">{t.planForm.actualStartOptional}</label>
+          <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.actualStartOptional}</label>
           <input
             name="actualStartAt"
             type="date"
             defaultValue={toDateInputValue(initialValues?.actualStartAt)}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
           />
         </div>
         <div className="flex min-w-0 flex-col gap-2">
-          <label className="text-sm font-medium text-blue-950">{t.planForm.actualEndOptional}</label>
+          <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.actualEndOptional}</label>
           <input
             name="actualEndAt"
             type="date"
             defaultValue={toDateInputValue(initialValues?.actualEndAt)}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
           />
         </div>
       </div>
 
       {isEdit && (
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-blue-950">{t.planForm.status}</label>
+          <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.status}</label>
           <select
             name="status"
             defaultValue={defaultStatus}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
           >
             {PLAN_STATUS_VALUES.map((s) => (
               <option key={s} value={s}>
@@ -404,14 +405,14 @@ export function PlanForm({
       )}
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">{t.planForm.notesOptional}</label>
+        <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.notesOptional}</label>
         <textarea
           name="notes"
           placeholder={t.plans.internalNotesPlaceholder}
           rows={2}
           defaultValue={initialValues?.notes ?? ""}
           onInput={markDirty}
-          className="min-h-[3.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+          className="min-h-[3.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
         />
       </div>
 
@@ -425,19 +426,19 @@ export function PlanForm({
       />
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-blue-950">{t.planForm.imageUrlOptional}</label>
+        <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.imageUrlOptional}</label>
         <input
           name="imageUrl"
           type="url"
           placeholder={t.planForm.imageUrlPlaceholder}
           defaultValue={initialValues?.imageUrl ?? ""}
           onInput={markDirty}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
         />
         {initialValues?.imageUrl ? (
           <div className="mt-1 flex justify-start">
             <div
-              className="h-40 w-40 max-w-full rounded-lg border border-blue-100 bg-zinc-50 bg-contain bg-center bg-no-repeat"
+              className="h-40 w-40 max-w-full rounded-lg border border-blue-100 bg-zinc-50 bg-contain bg-center bg-no-repeat dark:border-zinc-600 dark:bg-zinc-800"
               style={{ backgroundImage: `url(${initialValues.imageUrl})` }}
               role="img"
               aria-label=""
@@ -447,31 +448,31 @@ export function PlanForm({
       </div>
 
       <div className="flex min-w-0 flex-col gap-3">
-        <label className="text-sm font-medium text-blue-950">{t.planForm.tasksInPlanLabel}</label>
-        <p className="text-xs text-zinc-500">{t.planForm.selectTasksDescription}</p>
+        <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.tasksInPlanLabel}</label>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400">{t.planForm.selectTasksDescription}</p>
         {userTasks.length > 0 ? (
-          <details className="group rounded-xl border border-blue-100 bg-blue-50/30">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-sm font-medium text-blue-950 transition hover:bg-blue-100/50 [&::-webkit-details-marker]:hidden">
+          <details className="group rounded-xl border border-blue-100 bg-blue-50/30 dark:border-zinc-600 dark:bg-zinc-800/50">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-sm font-medium text-blue-950 transition hover:bg-blue-100/50 dark:text-zinc-100 dark:hover:bg-zinc-700/50 [&::-webkit-details-marker]:hidden">
               <span>
                 {t.planForm.selectTasksSummary}
-                <span className="ml-1.5 text-zinc-500 font-normal">
+                <span className="ml-1.5 text-zinc-500 font-normal dark:text-zinc-400">
                   ({t.planForm.selectedCount.replace("{{count}}", String(initialValues?.taskIds?.length ?? 0))})
                 </span>
               </span>
-              <span className="shrink-0 text-zinc-400 transition group-open:rotate-180" aria-hidden>
+              <span className="shrink-0 text-zinc-400 transition group-open:rotate-180 dark:text-zinc-500" aria-hidden>
                 ▼
               </span>
             </summary>
-            <div className="border-t border-blue-100 px-3 pb-3 pt-2">
+            <div className="border-t border-blue-100 px-3 pb-3 pt-2 dark:border-zinc-600">
               <input
                 type="search"
                 value={taskSearchFilter}
                 onChange={(e) => setTaskSearchFilter(e.target.value)}
                 placeholder={t.plans.searchTasksPlaceholder}
                 aria-label={t.plans.filterTasksByName}
-                className="mb-2 w-full rounded-lg border border-blue-100 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-2"
+                className="mb-2 w-full rounded-lg border border-blue-100 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-2 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
               />
-              <ul className="flex max-h-48 flex-col gap-1.5 overflow-y-auto rounded-lg border border-blue-100 bg-white p-2">
+              <ul className="flex max-h-48 flex-col gap-1.5 overflow-y-auto rounded-lg border border-blue-100 bg-white p-2 dark:border-zinc-600 dark:bg-zinc-800">
                 {userTasks.map((task) => {
                   const matches =
                     taskSearchFilter.trim() === "" ||
@@ -487,10 +488,10 @@ export function PlanForm({
                         value={task.id}
                         defaultChecked={initialValues?.taskIds?.includes(task.id)}
                         onChange={markDirty}
-                        className="h-4 w-4 shrink-0 rounded border-blue-200"
+                        className="h-4 w-4 shrink-0 rounded border-blue-200 dark:border-zinc-500"
                         id={`plan-form-task-${task.id}`}
                       />
-                      <label htmlFor={`plan-form-task-${task.id}`} className="min-w-0 flex-1 cursor-pointer truncate text-sm text-blue-950">
+                      <label htmlFor={`plan-form-task-${task.id}`} className="min-w-0 flex-1 cursor-pointer truncate text-sm text-blue-950 dark:text-zinc-100">
                         {task.title}
                       </label>
                     </li>
@@ -500,50 +501,57 @@ export function PlanForm({
                   !userTasks.some((t) =>
                     t.title.toLowerCase().includes(taskSearchFilter.toLowerCase()),
                   ) ? (
-                  <li className="py-2 px-1.5 text-sm text-zinc-500">{t.planForm.noTasksMatchSearch}</li>
+                  <li className="py-2 px-1.5 text-sm text-zinc-500 dark:text-zinc-400">{t.planForm.noTasksMatchSearch}</li>
                 ) : null}
               </ul>
             </div>
           </details>
         ) : (
-          <p className="text-sm text-zinc-500">{t.planForm.noTasksYetDescription}</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.planForm.noTasksYetDescription}</p>
         )}
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium text-blue-950">{t.planForm.addNewTasksLabel}</span>
+          <span className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.addNewTasksLabel}</span>
           {newTaskTitles.map((title, index) => (
-            <div key={index} className="flex min-w-0 flex-col gap-2 sm:flex-row sm:gap-2">
+            <div key={index} className="flex min-w-0 flex-row gap-2">
               <input
                 name="newTaskTitle"
                 defaultValue={title}
                 placeholder={t.plans.newTaskTitlePlaceholder}
                 onInput={markDirty}
-                className="min-w-0 flex-1 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+                className="min-w-0 flex-1 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
               />
               <button
                 type="button"
                 onClick={() => removeNewTaskRow(index)}
-                className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
+                aria-label={t.common.remove}
+                className="flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm text-blue-700 transition hover:bg-blue-100 sm:px-3 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
               >
-                {t.common.remove}
+                <span className="sm:hidden" aria-hidden><Minus className="size-5" /></span>
+                <span className="hidden sm:inline">{t.common.remove}</span>
               </button>
             </div>
           ))}
-          <button
-            type="button"
-            onClick={addNewTaskRow}
-            className="self-start rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
-          >
-            {t.planForm.addAnotherTask}
-          </button>
         </div>
       </div>
 
-      <div className="flex min-w-0 flex-wrap items-center gap-2">
+      <div className="flex min-w-0 flex-row flex-wrap items-center justify-end gap-2 sm:flex-col sm:items-start sm:justify-start">
+        <button
+          type="button"
+          onClick={addNewTaskRow}
+          aria-label={t.planForm.addAnotherTask}
+          className="flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm text-blue-700 transition hover:bg-blue-100 sm:px-3 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
+        >
+          <span className="sm:hidden" aria-hidden><Plus className="size-5" /></span>
+          <span className="hidden sm:inline">{t.planForm.addAnotherTask}</span>
+        </button>
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
         <button
           type="submit"
-          className="min-h-[2.75rem] min-w-0 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700"
+          aria-label={submitLabel}
+          className="flex min-h-[2.75rem] min-w-0 items-center justify-center gap-2 rounded-xl bg-blue-600 p-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:px-4 sm:py-2 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600"
         >
-          {submitLabel}
+          <span className="sm:hidden" aria-hidden><Save className="size-5" /></span>
+          <span className="hidden sm:inline">{submitLabel}</span>
         </button>
         {!isEdit && discardConfirmMessage ? (
           <button
@@ -556,9 +564,11 @@ export function PlanForm({
               clearNewPlanFormDirty();
               router.push("/plans");
             }}
-            className="min-h-[2.75rem] rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+            aria-label={t.common.cancel}
+            className="flex min-h-[2.75rem] min-w-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 sm:px-4 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
           >
-            {t.common.cancel}
+            <span className="sm:hidden" aria-hidden><X className="size-5" /></span>
+            <span className="hidden sm:inline">{t.common.cancel}</span>
           </button>
         ) : isEdit && onRequestDiscardConfirm && discardConfirmMessage ? (
           <button
@@ -571,18 +581,23 @@ export function PlanForm({
               clearEditPlanFormDirty();
               router.push(initialValues?.planId ? `/plans/${initialValues.planId}` : "/plans");
             }}
-            className="min-h-[2.75rem] rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+            aria-label={t.common.cancel}
+            className="flex min-h-[2.75rem] min-w-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 sm:px-4 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
           >
-            {t.common.cancel}
+            <span className="sm:hidden" aria-hidden><X className="size-5" /></span>
+            <span className="hidden sm:inline">{t.common.cancel}</span>
           </button>
         ) : (
           <Link
             href={isEdit && initialValues?.planId ? `/plans/${initialValues.planId}` : "/plans"}
-            className="min-h-[2.75rem] rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+            aria-label={t.common.cancel}
+            className="flex min-h-[2.75rem] min-w-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 sm:px-4 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
           >
-            {t.common.cancel}
+            <span className="sm:hidden" aria-hidden><X className="size-5" /></span>
+            <span className="hidden sm:inline">{t.common.cancel}</span>
           </Link>
         )}
+        </div>
       </div>
     </form>
   );

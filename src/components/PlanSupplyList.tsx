@@ -70,7 +70,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
   return (
     <div className="flex flex-col gap-4">
       {isOwner ? (
-        <form action={createAction} className="flex flex-col gap-3 border-b border-blue-100 pb-4">
+        <form action={createAction} className="flex flex-col gap-3 border-b border-blue-100 pb-4 dark:border-zinc-700">
           <div className="w-full min-w-0 sm:flex-1 sm:min-w-[10rem]">
             <label htmlFor="supply-label-new" className="sr-only">
               {t.supplyList.labelPlaceholder}
@@ -81,7 +81,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
               type="text"
               required
               placeholder={t.supplyList.labelPlaceholder}
-              className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+              className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
             />
           </div>
           <div className="w-full min-w-0">
@@ -93,7 +93,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
               name="description"
               type="text"
               placeholder={t.supplyList.descriptionPlaceholder}
-              className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+              className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
             />
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-end sm:gap-2">
@@ -108,7 +108,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                 step="0.01"
                 min="0"
                 placeholder={t.supplyList.pricePlaceholder}
-                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
               />
             </div>
             <div className="w-full min-w-0 sm:w-20">
@@ -123,7 +123,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                 max="999999"
                 defaultValue={1}
                 placeholder={t.supplyList.quantityPlaceholder}
-                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
               />
             </div>
             <div className="w-full sm:w-32">
@@ -133,7 +133,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
               <select
                 id="supply-status-new"
                 name="acquiredStatus"
-                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4"
+                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
               >
                 <option value="needed">{t.supplyList.statusNeeded}</option>
                 <option value="ordered">{t.supplyList.statusOrdered}</option>
@@ -150,12 +150,12 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                 name="link"
                 type="url"
                 placeholder={t.supplyList.linkPlaceholder}
-                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4"
+                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
               />
             </div>
             <button
               type="submit"
-              className="w-full rounded-xl border border-blue-200 bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 sm:w-auto sm:shrink-0"
+              className="w-full rounded-xl border border-blue-200 bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 dark:border-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600 sm:w-auto sm:shrink-0"
             >
               {t.supplyList.addItem}
             </button>
@@ -164,7 +164,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
       ) : null}
 
       {initialItems.length > 0 ? (
-        <ul className="divide-y divide-blue-100">
+        <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
           {initialItems.map((item) =>
             editingId === item.id && isOwner ? (
               <SupplyItemEditRow
@@ -180,27 +180,27 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                 className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
               >
                 <div className="min-w-0 flex-1">
-                  <span className="font-medium text-blue-950">{item.label}</span>
+                  <span className="font-medium text-blue-950 dark:text-zinc-100">{item.label}</span>
                   {item.quantity > 1 ? (
-                    <span className="ml-2 text-sm text-zinc-500">× {item.quantity}</span>
+                    <span className="ml-2 text-sm text-zinc-500 dark:text-zinc-400">× {item.quantity}</span>
                   ) : null}
                   {item.price != null && !Number.isNaN(item.price) ? (
-                    <span className="ml-2 text-sm text-zinc-600">
+                    <span className="ml-2 text-sm text-zinc-600 dark:text-zinc-300">
                       {typeof item.price === "number" ? item.price.toFixed(2) : String(item.price)}
                     </span>
                   ) : null}
-                  <span className="ml-2 inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+                  <span className="ml-2 inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
                     {getStatusLabel(t, item.acquiredStatus)}
                   </span>
                   {item.description ? (
-                    <p className="mt-0.5 text-sm text-zinc-500">{item.description}</p>
+                    <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">{item.description}</p>
                   ) : null}
                   {item.link ? (
                     <a
                       href={item.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-1 inline-block truncate text-sm text-blue-600 underline hover:text-blue-800"
+                      className="mt-1 inline-block truncate text-sm text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                     >
                       {item.link}
                     </a>
@@ -211,7 +211,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                     <button
                       type="button"
                       onClick={() => setEditingId(item.id)}
-                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100"
+                      className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
                     >
                       {t.common.edit}
                     </button>
@@ -223,7 +223,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
           )}
         </ul>
       ) : (
-        <p className="py-4 text-sm text-zinc-500">{t.supplyList.noItems}</p>
+        <p className="py-4 text-sm text-zinc-500 dark:text-zinc-400">{t.supplyList.noItems}</p>
       )}
     </div>
   );
@@ -242,7 +242,7 @@ function SupplyItemEditRow({
 }) {
   const t = useTranslations();
   return (
-    <li className="border-b border-blue-100 py-3">
+    <li className="border-b border-blue-100 py-3 dark:border-zinc-700">
       <SupplyItemForm
         idPrefix={`supply-${item.id}`}
         initialValues={{
@@ -280,7 +280,7 @@ function DeleteSupplyItemButton({ planId, itemId }: { planId: string; itemId: st
     <button
       type="button"
       onClick={handleDelete}
-      className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm text-amber-800 hover:bg-amber-100"
+      className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm text-amber-800 hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
     >
       {t.common.delete}
     </button>

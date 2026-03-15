@@ -184,7 +184,7 @@ export function EditTaskDialog({
             role="presentation"
           >
             <div
-              className="w-full max-w-2xl shrink-0 rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10"
+              className="w-full max-w-2xl shrink-0 rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950/50"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
@@ -194,7 +194,7 @@ export function EditTaskDialog({
               <div>
                 <h2
                   id={`edit-task-dialog-title-${task.id}`}
-                  className="text-xl font-semibold tracking-tight text-blue-950"
+                  className="text-xl font-semibold tracking-tight text-blue-950 dark:text-zinc-100"
                 >
                   {t.tasks.editTask}
                 </h2>
@@ -202,7 +202,7 @@ export function EditTaskDialog({
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="rounded-full p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800"
+                className="rounded-full p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
                 aria-label={t.common.closeEditTaskDialog}
               >
                 <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5" aria-hidden="true">
@@ -234,8 +234,8 @@ export function EditTaskDialog({
               hideSubmit
             />
 
-            <div className="mt-4 border-t border-blue-100 pt-4">
-              <p className="mb-2 text-sm font-medium text-zinc-700">{t.common.attachments}</p>
+            <div className="mt-4 border-t border-blue-100 pt-4 dark:border-zinc-700">
+              <p className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">{t.common.attachments}</p>
               {attachments.length > 0 ? (
                 <ul className="mb-2 space-y-1">
                   {attachments.map((a) => (
@@ -244,11 +244,11 @@ export function EditTaskDialog({
                         href={`/api/tasks/${task.id}/attachments/${a.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="truncate text-blue-600 hover:underline"
+                        className="truncate text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
                       >
                         {a.filename}
                       </a>
-                      <span className="shrink-0 text-zinc-400">
+                      <span className="shrink-0 text-zinc-400 dark:text-zinc-500">
                         ({(a.size / 1024).toFixed(1)} KB)
                       </span>
                       <button
@@ -260,7 +260,7 @@ export function EditTaskDialog({
                           if (res.ok) setAttachments((prev) => prev.filter((x) => x.id !== a.id));
                           else toast.error(t.tasks.failedToRemoveAttachment);
                         }}
-                        className="shrink-0 rounded px-2 py-1 text-red-600 hover:bg-red-50"
+                        className="shrink-0 rounded px-2 py-1 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/30"
                         aria-label={`${t.common.remove} ${a.filename}`}
                       >
                         {t.common.remove}
@@ -269,7 +269,7 @@ export function EditTaskDialog({
                   ))}
                 </ul>
               ) : null}
-              <label className="flex cursor-pointer items-center gap-2 text-sm text-blue-600 hover:underline">
+              <label className="flex cursor-pointer items-center gap-2 text-sm text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
                 <input
                   type="file"
                   className="sr-only"
@@ -373,11 +373,11 @@ export function EditTaskDialog({
               </div>
             </div>
 
-            <div className="mt-6 border-t border-blue-100 pt-4">
+            <div className="mt-6 border-t border-blue-100 pt-4 dark:border-zinc-700">
               <button
                 type="submit"
                 form={`edit-task-form-${task.id}`}
-                className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 sm:w-auto"
+                className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600 sm:w-auto"
               >
                 {t.common.saveChanges}
               </button>
