@@ -6,7 +6,8 @@ import { ExportPlansButton } from "@/components/ExportPlansButton";
 import { RefreshPlansButton } from "@/components/RefreshPlansButton";
 import { ShowArchivedPlansToggle } from "@/components/ShowArchivedPlansToggle";
 import { PlanStatusSelect } from "@/components/PlanStatusSelect";
-import { hasPlanFlag, PlanFlag } from "@/components/PlanFlag";
+import { PlanFlag } from "@/components/PlanFlag";
+import { hasPlanFlag } from "@/lib/plan-flags";
 import {
   getPriorityOvalClasses,
   getStatusPillClasses,
