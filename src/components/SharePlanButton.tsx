@@ -51,16 +51,16 @@ export function SharePlanButton({ planId }: { planId: string }) {
           role="presentation"
         >
           <div
-            className="w-full max-w-sm shrink-0 rounded-2xl border border-blue-100 bg-white p-6 shadow-xl"
+            className="w-full max-w-sm shrink-0 rounded-2xl border border-blue-100 bg-white p-6 shadow-xl dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950/50"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="share-plan-title"
           >
-            <h2 id="share-plan-title" className="text-lg font-semibold text-blue-950">
+            <h2 id="share-plan-title" className="text-lg font-semibold text-blue-950 dark:text-zinc-100">
               {t.sharePlan.title}
             </h2>
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
               {t.sharePlan.description}
             </p>
             <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3">
@@ -69,7 +69,7 @@ export function SharePlanButton({ planId }: { planId: string }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t.common.emailPlaceholder}
-                className="rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-2"
+                className="rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-2 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
                 required
                 autoFocus
               />
@@ -77,14 +77,14 @@ export function SharePlanButton({ planId }: { planId: string }) {
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="flex-1 rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
+                  className="flex-1 rounded-xl border border-zinc-200 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
                 >
                   {t.common.cancel}
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex-1 rounded-xl bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                  className="flex-1 rounded-xl bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
                 >
                   {submitting ? t.toasts.sharing : t.toasts.share}
                 </button>

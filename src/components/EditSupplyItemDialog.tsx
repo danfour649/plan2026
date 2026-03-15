@@ -146,7 +146,7 @@ export function EditSupplyItemDialog({
             role="presentation"
           >
             <div
-              className="w-full max-w-2xl shrink-0 rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10"
+              className="w-full max-w-2xl shrink-0 rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950/50"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
@@ -156,18 +156,18 @@ export function EditSupplyItemDialog({
                 <div>
                   <h2
                     id={`edit-supply-item-dialog-title-${item.id}`}
-                    className="text-xl font-semibold tracking-tight text-blue-950"
+                    className="text-xl font-semibold tracking-tight text-blue-950 dark:text-zinc-100"
                   >
                     {t.supplyList.editItem}
                   </h2>
                   {item.planName ? (
-                    <p className="mt-0.5 text-sm text-zinc-500">{item.planName}</p>
+                    <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">{item.planName}</p>
                   ) : null}
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="rounded-full p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800"
+                  className="rounded-full p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
                   aria-label={t.supplyList.closeEditItemDialog}
                 >
                   <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5" aria-hidden="true">
@@ -191,33 +191,33 @@ export function EditSupplyItemDialog({
                 />
               </div>
 
-              <div className="mt-6 border-t border-blue-100 pt-4">
+              <div className="mt-6 border-t border-blue-100 pt-4 dark:border-zinc-700">
                 <form action={deleteFormAction} className="flex flex-col gap-3">
                   {!showDeleteConfirm ? (
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm text-zinc-500">{t.supplyList.deleteItemConfirm}</p>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.supplyList.deleteItemConfirm}</p>
                       <button
                         type="button"
                         onClick={() => setShowDeleteConfirm(true)}
-                        className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100"
+                        className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200 dark:hover:bg-red-900/50"
                       >
                         {t.common.delete}
                       </button>
                     </div>
                   ) : (
                     <div className="flex flex-col gap-3">
-                      <p className="text-sm text-zinc-600">{t.supplyList.deleteItemConfirm}</p>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400">{t.supplyList.deleteItemConfirm}</p>
                       <div className="flex flex-wrap gap-3">
                         <button
                           type="button"
                           onClick={() => setShowDeleteConfirm(false)}
-                          className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+                          className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                         >
                           {t.common.cancel}
                         </button>
                         <button
                           type="submit"
-                          className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                          className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 dark:border-red-700 dark:bg-red-600 dark:hover:bg-red-700"
                         >
                           {t.common.delete}
                         </button>

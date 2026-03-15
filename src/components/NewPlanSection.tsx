@@ -123,27 +123,27 @@ export function NewPlanSection({
           role="presentation"
         >
           <div
-            className="w-full max-w-md shrink-0 rounded-2xl border border-blue-100 bg-white px-6 py-5 shadow-2xl shadow-blue-950/10"
+            className="w-full max-w-md shrink-0 rounded-2xl border border-blue-100 bg-white px-6 py-5 shadow-2xl shadow-blue-950/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950/50"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="discard-confirm-title"
           >
-            <h2 id="discard-confirm-title" className="text-lg font-semibold tracking-tight text-blue-950">
+            <h2 id="discard-confirm-title" className="text-lg font-semibold tracking-tight text-blue-950 dark:text-zinc-100">
               {confirmMessage}
             </h2>
             <div className="mt-5 flex flex-wrap justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setShowDiscardConfirm(false)}
-                className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+                className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
               >
                 {discardStayLabel}
               </button>
               <button
                 type="button"
                 onClick={handleLeave}
-                className="rounded-xl border border-amber-200 bg-amber-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-amber-700"
+                className="rounded-xl border border-amber-200 bg-amber-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-amber-700 dark:border-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"
               >
                 {discardLeaveLabel}
               </button>
