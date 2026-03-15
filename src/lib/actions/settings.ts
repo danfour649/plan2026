@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 
 import { getCurrentUserId } from "@/auth";
 import { DEFAULT_LOCALE, getLocaleFromCookie, LOCALE_COOKIE, LOCALES, type Locale } from "@/lib/i18n";
+import { THEME_COOKIE, THEMES, type Theme } from "@/lib/theme";
 import type { ActionResult } from "@/lib/actions/tasks";
 import { prisma } from "@/lib/prisma";
 
@@ -83,6 +84,14 @@ export async function setLocale(formData: FormData): Promise<{ success: true } |
   const locale = typeof raw === "string" ? getLocaleFromCookie(raw) : DEFAULT_LOCALE;
   const value = LOCALES.includes(locale as Locale) ? locale : DEFAULT_LOCALE;
   (await cookies()).set(LOCALE_COOKIE, value, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+  revalidatePath("/", "layout");
+  return { success: true };
+}
+
+export async function setTheme(formData: FormData): Promise<{ success: true } | { success: false; error: string }> {
+  const raw = formData.get("theme");
+  const theme = typeof raw === "string" && THEMES.includes(raw as Theme) ? (raw as Theme) : "system";
+  (await cookies()).set(THEME_COOKIE, theme, { path: "/", maxAge: 60 * 60 * 24 * 365 });
   revalidatePath("/", "layout");
   return { success: true };
 }

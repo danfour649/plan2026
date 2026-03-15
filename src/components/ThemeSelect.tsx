@@ -4,37 +4,43 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 import { useTranslations } from "@/components/TranslationsProvider";
-import { LOCALE_LABELS, LOCALES, type Locale } from "@/lib/i18n";
-import { setLocale } from "@/lib/actions/settings";
+import { setTheme } from "@/lib/actions/settings";
+import { THEMES, type Theme } from "@/lib/theme";
 
-export function LanguageSelect({ currentLocale }: { currentLocale: Locale }) {
+export function ThemeSelect({ currentTheme }: { currentTheme: Theme }) {
   const t = useTranslations();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const value = e.target.value as Locale;
-    if (!LOCALES.includes(value)) return;
+    const value = e.target.value as Theme;
+    if (!THEMES.includes(value)) return;
     startTransition(async () => {
       const fd = new FormData();
-      fd.set("locale", value);
-      await setLocale(fd);
+      fd.set("theme", value);
+      await setTheme(fd);
       router.refresh();
     });
   }
 
+  const themeLabels: Record<Theme, string> = {
+    light: t.settings.themeLight,
+    dark: t.settings.themeDark,
+    system: t.settings.themeSystem,
+  };
+
   return (
     <select
-      name="locale"
-      value={currentLocale}
+      name="theme"
+      value={currentTheme}
       onChange={handleChange}
       disabled={isPending}
       className="w-full max-w-xs rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm disabled:opacity-70 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-      aria-label={t.settings.language}
+      aria-label={t.settings.theme}
     >
-      {LOCALES.map((loc) => (
-        <option key={loc} value={loc}>
-          {LOCALE_LABELS[loc]}
+      {THEMES.map((theme) => (
+        <option key={theme} value={theme}>
+          {themeLabels[theme]}
         </option>
       ))}
     </select>

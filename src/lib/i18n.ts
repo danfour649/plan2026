@@ -27,6 +27,11 @@ const messages = {
       calendarDisconnected:
         "Google Calendar access has been disconnected. Reconnect with Google to grant Calendar permissions again.",
       pageDescription: "Manage your account, language, and Google Calendar connection.",
+      theme: "Theme",
+      themeLight: "Light",
+      themeDark: "Dark",
+      themeSystem: "System",
+      themeDescription: "Choose light or dark appearance. System follows your device setting.",
     },
     tasksPage: {
       title: "Tasks",
@@ -101,7 +106,6 @@ const messages = {
       failedToRemoveAttachment: "Failed to remove attachment",
       reopenTaskDescription: "Reopen this task so it appears in your remaining list.",
       markTaskDoneDescription: "Mark this task as done.",
-      removeTaskPermanently: "Remove this task permanently.",
       deleteTask: "Delete task",
       deleteTaskConfirm: "Are you sure you want to delete this task? This cannot be undone.",
       planLabel: "Plan:",
@@ -339,6 +343,11 @@ const messages = {
       calendarDisconnected:
         "L'accès à Google Agenda a été déconnecté. Reconnectez-vous avec Google pour accorder à nouveau les autorisations.",
       pageDescription: "Gérez votre compte, la langue et la connexion Google Agenda.",
+      theme: "Thème",
+      themeLight: "Clair",
+      themeDark: "Sombre",
+      themeSystem: "Système",
+      themeDescription: "Choisissez l'apparence claire ou sombre. Système suit le réglage de l'appareil.",
     },
     tasksPage: {
       title: "Tâches",
@@ -413,7 +422,6 @@ const messages = {
       failedToRemoveAttachment: "Échec de la suppression",
       reopenTaskDescription: "Rouvrir cette tâche pour qu'elle réapparaisse dans la liste.",
       markTaskDoneDescription: "Marquer cette tâche comme terminée.",
-      removeTaskPermanently: "Supprimer définitivement cette tâche.",
       deleteTask: "Supprimer la tâche",
       deleteTaskConfirm: "Voulez-vous vraiment supprimer cette tâche ? Cette action est irréversible.",
       planLabel: "Plan :",
@@ -651,6 +659,11 @@ const messages = {
       calendarDisconnected:
         "Google Calendar don cut. Connect am again make you fit get permission.",
       pageDescription: "Arrange your account, language, and Google Calendar connection.",
+      theme: "How e look",
+      themeLight: "Light",
+      themeDark: "Dark",
+      themeSystem: "System",
+      themeDescription: "Pick light or dark. System follow your phone or computer setting.",
     },
     tasksPage: {
       title: "Work",
@@ -725,7 +738,6 @@ const messages = {
       failedToRemoveAttachment: "E no gree comot",
       reopenTaskDescription: "Open dis work again make e show for your list.",
       markTaskDoneDescription: "Mark dis work say you don finish am.",
-      removeTaskPermanently: "Comot dis work kpatakpata.",
       deleteTask: "Delete work",
       deleteTaskConfirm: "You sure say you wan delete am? You no go fit bring am back o.",
       planLabel: "Plan:",

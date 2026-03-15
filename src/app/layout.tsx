@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
+import { THEME_COOKIE, getThemeFromCookie } from "@/lib/theme";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -39,13 +41,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const theme = getThemeFromCookie((await cookies()).get(THEME_COOKIE)?.value);
+  const themeClass = theme === "dark" ? "dark" : theme === "light" ? "theme-light" : "";
   return (
-    <html lang="en">
+    <html lang="en" className={themeClass}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
