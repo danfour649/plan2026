@@ -3,24 +3,30 @@
  * Merge a bulk-task PR, update main, then check out the next open PR's branch,
  * merge main into it, push, and print what to test.
  *
- * Usage: npm run bulk:next -- <PR_NUMBER>
+ * Usage: npm run bulk:next [PR_NUMBER]
+ * With no argument: merge the PR for the current branch, then switch to the next open PR.
+ * With PR_NUMBER: merge that PR, then switch to the next open PR.
+ * Example: npm run bulk:next
  * Example: npm run bulk:next -- 58
  *
  * Requires: gh (GitHub CLI), git. Run from repo root.
  * On merge conflict after "merge main", the script exits; resolve and push manually.
  */
 
-const { execSync } = require("child_process");
-const fs = require("fs");
-const path = require("path");
+import { execSync } from "child_process";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function run(cmd, options = {}) {
   const opts = { encoding: "utf8", stdio: options.quiet ? "pipe" : "inherit", ...options };
   return execSync(cmd, opts);
 }
 
-function runQuiet(cmd) {
-  return run(cmd, { quiet: true }).trim();
+function runQuiet(cmd, options = {}) {
+  return run(cmd, { quiet: true, ...options }).trim();
 }
 
 function repoRoot() {
@@ -33,19 +39,27 @@ function repoRoot() {
 }
 
 function main() {
-  const prNum = process.argv[2];
-  if (!prNum || !/^\d+$/.test(prNum)) {
-    console.error("Usage: npm run bulk:next -- <PR_NUMBER>");
-    process.exit(1);
-  }
-
   const root = repoRoot();
   const execOpts = { cwd: root };
+
+  let prNum = process.argv[2];
+  if (!prNum || !/^\d+$/.test(prNum)) {
+    try {
+      prNum = runQuiet("gh pr view --json number -q .number", execOpts);
+    } catch {
+      console.error("No PR number given and current branch has no open PR. Usage: npm run bulk:next [PR_NUMBER]");
+      process.exit(1);
+    }
+    if (!prNum || !/^\d+$/.test(prNum)) {
+      console.error("No PR number given and current branch has no open PR. Usage: npm run bulk:next [PR_NUMBER]");
+      process.exit(1);
+    }
+  }
 
   console.log(`Merging PR #${prNum}...`);
   try {
     run(`gh pr merge ${prNum} --merge`, execOpts);
-  } catch (e) {
+  } catch {
     console.error("Failed to merge PR. Is it open and mergeable?");
     process.exit(1);
   }
@@ -68,7 +82,7 @@ function main() {
   console.log(`Checking out next PR branch: ${branch} (#${next.number})...`);
   try {
     run(`git checkout ${branch}`, execOpts);
-  } catch (e) {
+  } catch {
     console.error(`Failed to checkout ${branch}. Run 'git fetch origin' and try again.`);
     process.exit(1);
   }
@@ -76,7 +90,7 @@ function main() {
   console.log("Merging main into branch...");
   try {
     run("git merge main", execOpts);
-  } catch (e) {
+  } catch {
     console.error("Merge conflict. Resolve conflicts, then run: git add . ; git commit --no-edit ; git push");
     process.exit(1);
   }
@@ -85,7 +99,7 @@ function main() {
   console.log(useNoVerify ? "Pushing (--no-verify)..." : "Pushing...");
   try {
     run(`git push${useNoVerify ? " --no-verify" : ""}`, execOpts);
-  } catch (e) {
+  } catch {
     console.error("Push failed. Fix and push manually.");
     process.exit(1);
   }

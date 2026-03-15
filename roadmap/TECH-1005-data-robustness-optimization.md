@@ -1,6 +1,6 @@
 # TECH-1005: Data robustness and optimization
 
-**Status:** Audit completed; findings and prioritized actions recorded below. API documentation in README updated. Further implementation (rate limiter, API pagination) deferred to follow-up work.
+**Status:** Documentation only. Audit completed; findings and prioritized actions recorded below. README API section was updated to document the existing API contract. **No code changes were made**—rate limiter, API pagination, cache tags, and other code items below are not implemented and remain follow-up work.
 
 **Goal:** After prior tech-debt work (pagination, task-service, revalidation, blob cleanup, etc.) is in place, run a new analysis of the app’s data layer and make it robust and scalable for production and growth.
 
@@ -45,10 +45,10 @@
 
 **Prioritized actions**
 
-1. **Done this pass:** Document API contract (ordering, response shape) in README.
-2. **High (production):** Replace in-memory rate limiter with distributed (e.g. Upstash Redis); document env.
-3. **Medium:** Add pagination to GET /api/tasks for scale.
-4. **Low:** Cache tags if routes/mutations grow; document connection pooling.
+1. **Done this pass (docs only):** Document API contract (ordering, response shape) in README. No code changed.
+2. **High (production), not implemented:** Replace in-memory rate limiter with distributed (e.g. Upstash Redis); document env.
+3. **Medium, not implemented:** Add pagination to GET /api/tasks for scale.
+4. **Low, not implemented:** Cache tags if routes/mutations grow; document connection pooling.
 
 ---
 
