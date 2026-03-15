@@ -14,7 +14,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "prepare": "husky",
-    "prepush": "npm run lint && npm run typecheck && npm run build:next",
+    "prepush": "npm run lint && npm run typecheck",
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:status": "changeset status --verbose",
