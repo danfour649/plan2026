@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.23.4
+
+### Patch Changes
+
+- 11dd4b6: Fix Cancel on edit plan in mobile: use Link so navigation works when not dirty; when dirty, prevent default and show discard confirm. Place Cancel at bottom left of the form and Save at bottom right; ensure 44px touch target for Cancel.
+
 ## 0.23.3
 
 ### Patch Changes
