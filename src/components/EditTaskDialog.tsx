@@ -277,6 +277,12 @@ export function EditTaskDialog({
                   onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
+                    const maxSize = 4.2 * 1024 * 1024; // 4.2 MB
+                    if (file.size > maxSize) {
+                      toast.error(t.tasks.fileTooLarge);
+                      e.target.value = "";
+                      return;
+                    }
                     setUploading(true);
                     try {
                       const fd = new FormData();
