@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.23.2
+
+### Patch Changes
+
+- 742f203: Show trash icon for delete buttons on mobile: task delete, plan delete (already present), supply item delete. Desktop still shows text label.
+
 ## 0.23.1
 
 ### Patch Changes
