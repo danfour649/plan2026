@@ -310,78 +310,67 @@ export function EditTaskDialog({
               </label>
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-blue-100 pt-4">
-              <ExportTaskButton
-                task={{
-                  id: task.id,
-                  title: task.title,
-                  content: task.content,
-                  dueAt: task.dueAt,
-                  urgency: task.urgency,
-                  completedAt: task.completedAt ?? null,
-                  planId: task.planId ?? null,
-                  planName: task.planName ?? null,
-                  createdAt: task.createdAt ?? new Date().toISOString(),
-                  updatedAt: task.updatedAt ?? new Date().toISOString(),
-                }}
-              />
-            </div>
-
-            {completeAction && restoreAction ? (
-              <div className="mt-6 border-t border-blue-100 pt-4">
-                <form action={doneRestoreFormAction} className="flex flex-wrap items-center gap-3">
+            <div className="mt-6 border-t border-blue-100 pt-4 dark:border-zinc-700">
+              <div className="flex flex-wrap items-center gap-3">
+                <ExportTaskButton
+                  task={{
+                    id: task.id,
+                    title: task.title,
+                    content: task.content,
+                    dueAt: task.dueAt,
+                    urgency: task.urgency,
+                    completedAt: task.completedAt ?? null,
+                    planId: task.planId ?? null,
+                    planName: task.planName ?? null,
+                    createdAt: task.createdAt ?? new Date().toISOString(),
+                    updatedAt: task.updatedAt ?? new Date().toISOString(),
+                  }}
+                />
+                {completeAction && restoreAction ? (
+                  <form action={doneRestoreFormAction} className="flex items-center gap-3">
+                    <input type="hidden" name="taskId" value={task.id} />
+                    {planId ? <input type="hidden" name="planId" value={planId} /> : null}
+                    <button
+                      type="submit"
+                      className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-blue-200 dark:hover:bg-zinc-700"
+                    >
+                      {isCompleted ? t.tasks.restore : t.tasks.markDone}
+                    </button>
+                  </form>
+                ) : null}
+                <form action={deleteFormAction} className="flex items-center gap-3">
                   <input type="hidden" name="taskId" value={task.id} />
-                  {planId ? <input type="hidden" name="planId" value={planId} /> : null}
-                  <p className="text-sm text-zinc-500">
-                    {isCompleted ? t.tasks.reopenTaskDescription : t.tasks.markTaskDoneDescription}
-                  </p>
-                  <button
-                    type="submit"
-                    className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
-                  >
-                    {isCompleted ? t.tasks.restore : t.tasks.markDone}
-                  </button>
-                </form>
-              </div>
-            ) : null}
-
-            <div className="mt-6 border-t border-blue-100 pt-4">
-              <form action={deleteFormAction} className="flex flex-col gap-3">
-                <input type="hidden" name="taskId" value={task.id} />
-                {task.planId ? <input type="hidden" name="planId" value={task.planId} /> : null}
-                {!showDeleteConfirm ? (
-                  <div className="flex items-center justify-end gap-3">
+                  {task.planId ? <input type="hidden" name="planId" value={task.planId} /> : null}
+                  {!showDeleteConfirm ? (
                     <button
                       type="button"
                       onClick={() => setShowDeleteConfirm(true)}
-                      className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100"
+                      className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200 dark:hover:bg-red-900/50"
                     >
                       {t.tasks.deleteTask}
                     </button>
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-3">
-                    <p className="text-sm text-zinc-600">
-                      {t.tasks.deleteTaskConfirm}
-                    </p>
-                    <div className="flex flex-wrap gap-3">
+                  ) : (
+                    <>
+                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                        {t.tasks.deleteTaskConfirm}
+                      </p>
                       <button
                         type="button"
                         onClick={() => setShowDeleteConfirm(false)}
-                        className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+                        className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                       >
                         {t.common.cancel}
                       </button>
                       <button
                         type="submit"
-                        className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                        className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 dark:border-red-700 dark:bg-red-600 dark:hover:bg-red-700"
                       >
                         {t.tasks.deleteTask}
                       </button>
-                    </div>
-                  </div>
-                )}
-              </form>
+                    </>
+                  )}
+                </form>
+              </div>
             </div>
 
             <div className="mt-6 border-t border-blue-100 pt-4">
