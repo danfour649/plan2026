@@ -32,6 +32,17 @@ export async function addTask(formData: FormData): Promise<ActionResult> {
     return { success: false, error: msg };
   }
 
+  // Default description to task name when adding and description is empty
+  const content = parsed.data.content?.trim();
+  if (!content && parsed.data.title) {
+    const escaped = parsed.data.title
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+    parsed.data.content = `<p>${escaped}</p>`;
+  }
+
   const result = await createTaskForUser(userId, parsed.data);
   if ("error" in result) return { success: false, error: result.error };
 

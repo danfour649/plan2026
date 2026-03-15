@@ -1,5 +1,41 @@
 # plan2026
 
+## 0.20.5
+
+### Patch Changes
+
+- 3d66f43: Add top padding above the logo in the app header on mobile (e.g. Pixel 8) so the navbar has visible margin.
+
+## 0.20.4
+
+### Patch Changes
+
+- 56b7e03: Move save task button to the bottom of the edit task form in the dialog (below attachments, export, mark done, and delete).
+
+## 0.20.3
+
+### Patch Changes
+
+- 8337bec: Remove "Remove this task permanently." text from edit-task delete section; delete button is sufficient.
+
+## 0.20.2
+
+### Patch Changes
+
+- 36c1c9e: Fix toast when marking a task as done inside a plan: show "Marked done" / "Task completed" instead of "Task restored".
+
+## 0.20.1
+
+### Patch Changes
+
+- 85b6d11: Task form: use dark black text for task name and description fields. When adding a new task with a name but no description, default the description to the entered name (server-side).
+
+## 0.20.0
+
+### Minor Changes
+
+- cb1776c: Add dark mode: theme setting (Light / Dark / System) in Settings, persisted via cookie. App shell, settings, and login use dark-aware styles so users can spare their eyes in low light.
+
 ## 0.19.0
 
 ### Minor Changes

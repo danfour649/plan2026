@@ -1,10 +1,25 @@
 @import "tailwindcss";
 
+/* Class-based dark mode for user preference (cookie); .dark and .theme-light override system preference */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
   --accent-blue: #2563eb;
   --accent-red: #dc2626;
+}
+
+/* User chose light: force light vars even when system prefers dark */
+.theme-light {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* User chose dark: force dark vars */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 @theme inline {
@@ -15,7 +30,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.theme-light) {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
@@ -29,4 +44,11 @@ body {
     linear-gradient(180deg, #f8fbff 0%, #fff8f8 48%, var(--background) 100%);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.dark body {
+  background:
+    radial-gradient(circle at top left, rgb(37 99 235 / 0.08), transparent 30%),
+    radial-gradient(circle at top right, rgb(220 38 38 / 0.06), transparent 28%),
+    linear-gradient(180deg, #0f0f0f 0%, #0a0a0a 48%, var(--background) 100%);
 }
