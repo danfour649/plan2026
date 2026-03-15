@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.23.6
+
+### Patch Changes
+
+- 3073885: TECH-6005 cleanup, optimize misc
+
 ## 0.23.5
 
 ### Patch Changes
