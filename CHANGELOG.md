@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.20.4
+
+### Patch Changes
+
+- 56b7e03: Move save task button to the bottom of the edit task form in the dialog (below attachments, export, mark done, and delete).
+
 ## 0.20.3
 
 ### Patch Changes
