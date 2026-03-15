@@ -26,6 +26,7 @@ Ready to implement. Each has a **dedicated analysis doc** in this folder for imp
 | — | Allow mark as done in plan edit page | Already available via TaskActionButton on plan detail. |
 | — | Add calendar tab | [TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md) |
 | TECH-1005 | Data robustness and optimization | [TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md) |
+| TECH-0058 | Optimize app code before future work | [TECH-0058-optimize-app-before-future-work.md](./TECH-0058-optimize-app-before-future-work.md) |
 
 When implementing: use branch `tech/<ID>-<kebab-description>`, add a changeset, and open a PR per task (see AGENTS.md).
 
@@ -85,6 +86,7 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 | [TECH-0043-google-oauth-live.md](./TECH-0043-google-oauth-live.md) | Production Google OAuth (config/deploy). | On hold — privacy/checklist |
 | [TECH-DEBT-AND-OPTIMIZATIONS.md](./TECH-DEBT-AND-OPTIMIZATIONS.md) (TECH-1001) | Tech debt and optimizations (stale; many items implemented). | Superseded by TECH-1005 for new analysis |
 | [TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md) | Fresh analysis of data handling for robustness and scalability; audit then implement. | Active (future work) |
+| [TECH-0058-optimize-app-before-future-work.md](./TECH-0058-optimize-app-before-future-work.md) | Plan and apply optimizations before expanding the app (bundle, code quality, TECH-1005 alignment). | Partially implemented (bundle analysis, lazy load, dead code, unused deps) |
 | [TECH-0056-facebook-email-password-login.md](./TECH-0056-facebook-email-password-login.md) | Facebook login and email/password sign-up (analysis). | Deferred — bulk run |
 
 ---

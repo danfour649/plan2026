@@ -14,12 +14,6 @@ export const PLAN_PERCENT_MAX = 100;
 export const PLAN_STATUS_VALUES = ["draft", "started", "on_hold", "completed", "abandoned"] as const;
 export type PlanStatus = (typeof PLAN_STATUS_VALUES)[number];
 
-/** Human-readable label for plan status (e.g. "on_hold" → "On hold"). */
-export function formatPlanStatus(status: string): string {
-  if (status === "on_hold") return "On hold";
-  return status.charAt(0).toUpperCase() + status.slice(1);
-}
-
 const optionalDate = z
   .string()
   .optional()

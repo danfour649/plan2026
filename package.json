@@ -7,6 +7,7 @@
     "dev:kill": "npx kill-port 3000",
     "build": "prisma generate && next build",
     "build:next": "next build",
+    "analyze": "cross-env ANALYZE=true next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -47,13 +48,13 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",
+    "@next/bundle-analyzer": "^16.1.6",
     "@tailwindcss/postcss": "^4",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.0.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/sanitize-html": "^2.16.1",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "husky": "^9",
@@ -61,7 +62,6 @@
     "prisma": "^6.19.2",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vite-tsconfig-paths": "^5.1.0",
     "vitest": "^2.1.8"
   }
 }
