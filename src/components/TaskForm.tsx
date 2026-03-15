@@ -1,10 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useActionState, useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 
-import { TaskContentEditor } from "@/components/TaskContentEditor";
 import { useTranslations } from "@/components/TranslationsProvider";
+
+const TaskContentEditor = dynamic(
+  () => import("@/components/TaskContentEditor").then((m) => ({ default: m.TaskContentEditor })),
+  { ssr: false },
+);
 import type { ActionResult } from "@/lib/actions/tasks";
 
 type TaskFormAction = (formData: FormData) => Promise<ActionResult>;

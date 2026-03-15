@@ -1,6 +1,6 @@
 # TECH-0058: Optimize app code before future work
 
-**Status:** Not implemented — analysis for future work.
+**Status:** Partially implemented — items 2, 4, and 5 done (bundle analysis, dead code/unused deps, doc updates). Items 1 and 3 (TECH-1005 alignment, high-priority TECH-1005 work) remain for later.
 
 **Goal:** Plan and apply optimizations that make sense to do now, before the app expands with new features.
 
@@ -27,7 +27,7 @@
 When implementing (in a later run or when prioritised):
 
 1. [ ] Decide which items to do “now” vs as part of TECH-1005.
-2. [ ] Run bundle analysis and address obvious bloat (lazy load, remove unused deps).
+2. [x] Run bundle analysis and address obvious bloat (lazy load, remove unused deps). *Done: added `npm run analyze` with @next/bundle-analyzer; lazy-loaded TaskContentEditor in TaskForm; removed unused devDependencies (@testing-library/jest-dom, @testing-library/react, vite-tsconfig-paths).*
 3. [ ] Implement high-priority TECH-1005 items (e.g. distributed rate limiter, API pagination) if not already done.
-4. [ ] Clean dead code and unused exports; run typecheck and tests.
-5. [ ] Update this doc or ROADMAP with “Implemented” notes for completed items.
+4. [x] Clean dead code and unused exports; run typecheck and tests. *Done: removed unused `formatPlanStatus` from `src/lib/validations/plan.ts`; typecheck passes; no test files yet.*
+5. [x] Update this doc or ROADMAP with “Implemented” notes for completed items.
