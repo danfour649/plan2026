@@ -1,5 +1,15 @@
 # plan2026
 
+## 0.23.0
+
+### Minor Changes
+
+- d9989f6: New Actions page at `/actions` showing urgent and upcoming tasks (urgency 6+ or due within three days). Logo now links to Actions instead of Plans. Overdue tasks show an alarm icon; list supports edit, mark done, and add to calendar.
+
+### Patch Changes
+
+- c1bce7a: Reduce navbar icon size and highlight area on mobile; pull nav icons closer to the logo and to each other. Desktop unchanged.
+
 ## 0.22.1
 
 ### Patch Changes
