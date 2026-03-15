@@ -1,6 +1,6 @@
 # TECH-0064: New urgent and upcoming tasks page
 
-**Status:** Not implemented — implementation notes for future work.
+**Status:** Implemented. Route added at `/actions`; logo links to it.
 
 **Goal:** Clicking the logo should go to a new “actionable” page that shows tasks with urgency 6+ or due within the next three days. Overdue tasks get an alarm symbol. User can edit the task from this page and see relevant task info.
 

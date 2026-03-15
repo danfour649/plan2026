@@ -34,7 +34,8 @@ src/
   app/
     share/[token]/page.tsx              # Public share page: resolve token → plan + tasks; read-only view; token-based "Mark done" / "Restore" (no login). Invalid/expired show same message.
     (app)/
-      layout.tsx                        # Authenticated shell; tasks nav, plans nav, help, about, settings gear, email, SignOutButton
+      layout.tsx                        # Authenticated shell; logo links to /actions; tasks nav, plans nav, help, about, settings gear, email, SignOutButton
+      actions/page.tsx                  # Urgent and upcoming tasks (urgency 6+ or due in 3 days); overdue icon; edit, mark done, add to calendar
       tasks/page.tsx                    # Unified tasks page for remaining and optional completed items; shows plan link when task has planId
       tasks/loading.tsx                 # Tasks page skeleton
       plans/page.tsx                    # Plans list (ordered by priority); refresh, show completed/abandoned toggle; per-row Edit and status dropdown; links to /plans/new and /plans/[id]
@@ -94,7 +95,7 @@ DEPLOY.md
 AI_PROJECT_CONTEXT.md
 ```
 
-**Route protection:** `src/proxy.ts` checks only for the presence of a NextAuth session cookie to reduce redirect flicker on `/tasks`, `/settings`, `/plans`, `/help`, and `/about`. Full session validation (including rejection of invalid or expired cookies) happens in the app layout via `getServerAuthSession()`; all API and server actions use `getCurrentUserId()` or equivalent.
+**Route protection:** `src/proxy.ts` checks only for the presence of a NextAuth session cookie to reduce redirect flicker on `/tasks`, `/actions`, `/settings`, `/plans`, `/help`, `/about`, and `/supplies`. Full session validation (including rejection of invalid or expired cookies) happens in the app layout via `getServerAuthSession()`; all API and server actions use `getCurrentUserId()` or equivalent.
 
 **CSRF:** Forms and API endpoints expect same-origin requests. NextAuth session cookies use SameSite (Lax by default). CSRF protection relies on this same-origin + SameSite behavior; state-changing requests should come from the app origin. If you add endpoints callable from other origins, protect them (e.g. custom header or token).
 
