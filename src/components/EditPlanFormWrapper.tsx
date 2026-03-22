@@ -91,6 +91,7 @@ export function EditPlanFormWrapper({
 
       <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 px-2 py-4 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40 sm:px-4 sm:py-6">
         <PlanForm
+          key={`${initialValues.planId}:${initialValues.taskIds.join("\0")}`}
           action={action}
           initialValues={initialValues}
           linkableTasksScope="incomplete"

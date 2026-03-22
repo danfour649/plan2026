@@ -225,31 +225,36 @@ export function PlanForm({
     () => new Set(initialValues?.taskIds ?? []),
   );
 
-  const taskIdsKey = initialValues?.taskIds?.join("\0") ?? "";
-  useEffect(() => {
-    setLinkedTaskIds(new Set(initialValues?.taskIds ?? []));
-  }, [initialValues?.planId, taskIdsKey]);
-
-  const loadLinkableTasks = useCallback(() => {
-    setLinkableTasksLoading(true);
-    setLinkableTasksError(false);
-    fetch(`/api/plan-form-tasks?scope=${linkableTasksScope}`)
-      .then(async (res) => {
+  const fetchLinkableTasks = useCallback(
+    async (signal?: AbortSignal) => {
+      setLinkableTasksLoading(true);
+      setLinkableTasksError(false);
+      try {
+        const res = await fetch(`/api/plan-form-tasks?scope=${linkableTasksScope}`, { signal });
         if (!res.ok) throw new Error("fetch failed");
         const data = (await res.json()) as { tasks?: { id: string; title: string }[] };
         if (!Array.isArray(data.tasks)) throw new Error("bad payload");
+        if (signal?.aborted) return;
         setLinkableTasks(data.tasks);
-      })
-      .catch(() => {
+      } catch (e) {
+        if (signal?.aborted) return;
+        if (e instanceof DOMException && e.name === "AbortError") return;
         setLinkableTasksError(true);
         setLinkableTasks(null);
-      })
-      .finally(() => setLinkableTasksLoading(false));
-  }, [linkableTasksScope]);
+      } finally {
+        if (!signal?.aborted) setLinkableTasksLoading(false);
+      }
+    },
+    [linkableTasksScope],
+  );
 
   useEffect(() => {
-    loadLinkableTasks();
-  }, [loadLinkableTasks]);
+    const ac = new AbortController();
+    queueMicrotask(() => {
+      void fetchLinkableTasks(ac.signal);
+    });
+    return () => ac.abort();
+  }, [fetchLinkableTasks]);
 
   const toggleTaskLink = (taskId: string, checked: boolean) => {
     markDirty();
@@ -515,7 +520,7 @@ export function PlanForm({
             <p className="text-sm text-red-600 dark:text-red-400">{t.planForm.linkableTasksLoadError}</p>
             <button
               type="button"
-              onClick={loadLinkableTasks}
+              onClick={() => void fetchLinkableTasks()}
               className="w-fit rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
             >
               {t.planForm.retryLoadTasks}
