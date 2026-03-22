@@ -18,11 +18,7 @@ import { SharePlanButton } from "@/components/SharePlanButton";
 import { TaskContent } from "@/components/TaskContent";
 import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
-import {
-  getCachedPlanDetail,
-  getCachedPlansForDropdown,
-  getCachedUserTasksForDropdown,
-} from "@/lib/data-cache";
+import { getCachedPlanDetail, getCachedPlansForDropdown } from "@/lib/data-cache";
 import type { ExportedPlan, ExportedPlanTask } from "@/lib/export";
 import { deletePlan, updatePlan } from "@/lib/actions/plans";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
@@ -85,10 +81,9 @@ async function PlanDetailRoot({
   const editRaw = Array.isArray(resolvedSearchParams.edit) ? resolvedSearchParams.edit[0] : resolvedSearchParams.edit;
   const editItemId = editRaw && /^[a-z0-9]+$/i.test(editRaw) ? editRaw : undefined;
 
-  const [planDetail, plans, userTasks] = await Promise.all([
+  const [planDetail, plans] = await Promise.all([
     getCachedPlanDetail(id, userId, taskPage, taskLimit),
     getCachedPlansForDropdown(userId),
-    getCachedUserTasksForDropdown(userId),
   ]);
 
   const { plan, incompleteTasks, totalIncomplete, completedTasks, totalCompleted, exportTasks } = planDetail;
@@ -198,7 +193,6 @@ async function PlanDetailRoot({
           <EditPlanFormWrapper
             action={updatePlan}
             initialValues={initialValues}
-            userTasks={userTasks}
             submitLabel={t.common.savePlan}
             cancelLabel={t.common.cancel}
             singleColumn={true}

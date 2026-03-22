@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 
 import { getCurrentUserId } from "@/auth";
 
@@ -8,6 +9,7 @@ import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportTasksButton } from "@/components/ExportTasksButton";
 import { RefreshTasksButton } from "@/components/RefreshTasksButton";
 import { ShowCompletedToggle } from "@/components/ShowCompletedToggle";
+import { SyncTasksListFilterCookie } from "@/components/SyncListFilterPreferenceCookies";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { TaskContent } from "@/components/TaskContent";
 import type { ExportedTask } from "@/lib/export";
@@ -21,6 +23,19 @@ import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
 import { getCachedTasksPage } from "@/lib/data-cache";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
+import {
+  readTasksShowCompletedFromCookie,
+  TASKS_SHOW_COMPLETED_COOKIE,
+} from "@/lib/list-filter-preferences";
+
+function tasksShowCompletedFromSearchParams(
+  raw: string | string[] | undefined,
+): boolean | null {
+  if (raw === undefined) return null;
+  const v = Array.isArray(raw) ? raw[0] : raw;
+  if (v === undefined || v === "") return null;
+  return v === "1";
+}
 
 function CompletedCheckIcon() {
   return (
@@ -70,9 +85,12 @@ export default async function TasksPage({
   const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
   const resolvedSearchParams = (await searchParams) ?? {};
-  const showCompleted = Array.isArray(resolvedSearchParams.showCompleted)
-    ? resolvedSearchParams.showCompleted[0] === "1"
-    : resolvedSearchParams.showCompleted === "1";
+  const fromUrl = tasksShowCompletedFromSearchParams(resolvedSearchParams.showCompleted);
+  const cookieStore = await cookies();
+  const fromCookie = readTasksShowCompletedFromCookie(
+    cookieStore.get(TASKS_SHOW_COMPLETED_COOKIE)?.value,
+  );
+  const showCompleted = fromUrl !== null ? fromUrl : fromCookie;
   const page = parsePage(resolvedSearchParams.page);
   const limit = parseLimit(resolvedSearchParams.limit, DEFAULT_TASKS_PAGE_SIZE);
   const completedPage = parsePage(resolvedSearchParams.completedPage);
@@ -119,6 +137,7 @@ export default async function TasksPage({
 
   return (
     <div className="space-y-8">
+      <SyncTasksListFilterCookie showCompleted={showCompleted} />
       <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
         <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-blue-100 px-6 py-4 dark:border-zinc-700 sm:gap-4">
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">

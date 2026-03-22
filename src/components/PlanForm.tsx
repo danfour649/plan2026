@@ -5,7 +5,7 @@ import { Minus, Plus, Save, X } from "lucide-react";
 import { FormSubmitButton } from "@/components/FormSubmitButton";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
 
 import { PlanFlag } from "@/components/PlanFlag";
@@ -167,7 +167,8 @@ export type PlanFormInitialValues = {
 type PlanFormProps = {
   action: PlanFormAction;
   initialValues?: PlanFormInitialValues | null;
-  userTasks: { id: string; title: string }[];
+  /** Which tasks to offer for linking: loaded via `/api/plan-form-tasks` on the client. */
+  linkableTasksScope: "incomplete" | "all";
   isEdit?: boolean;
   submitLabel: string;
   /** When true, use single column for date fields (one per line) instead of side-by-side grids. */
@@ -193,7 +194,7 @@ type PlanFormProps = {
 export function PlanForm({
   action,
   initialValues,
-  userTasks,
+  linkableTasksScope,
   isEdit = false,
   submitLabel,
   singleColumn = false,
@@ -217,6 +218,48 @@ export function PlanForm({
   );
   const [taskSearchFilter, setTaskSearchFilter] = useState("");
   const [percentCompleted, setPercentCompleted] = useState(initialValues?.percentCompleted ?? 0);
+  const [linkableTasks, setLinkableTasks] = useState<{ id: string; title: string }[] | null>(null);
+  const [linkableTasksError, setLinkableTasksError] = useState(false);
+  const [linkableTasksLoading, setLinkableTasksLoading] = useState(true);
+  const [linkedTaskIds, setLinkedTaskIds] = useState<Set<string>>(
+    () => new Set(initialValues?.taskIds ?? []),
+  );
+
+  const taskIdsKey = initialValues?.taskIds?.join("\0") ?? "";
+  useEffect(() => {
+    setLinkedTaskIds(new Set(initialValues?.taskIds ?? []));
+  }, [initialValues?.planId, taskIdsKey]);
+
+  const loadLinkableTasks = useCallback(() => {
+    setLinkableTasksLoading(true);
+    setLinkableTasksError(false);
+    fetch(`/api/plan-form-tasks?scope=${linkableTasksScope}`)
+      .then(async (res) => {
+        if (!res.ok) throw new Error("fetch failed");
+        const data = (await res.json()) as { tasks?: { id: string; title: string }[] };
+        if (!Array.isArray(data.tasks)) throw new Error("bad payload");
+        setLinkableTasks(data.tasks);
+      })
+      .catch(() => {
+        setLinkableTasksError(true);
+        setLinkableTasks(null);
+      })
+      .finally(() => setLinkableTasksLoading(false));
+  }, [linkableTasksScope]);
+
+  useEffect(() => {
+    loadLinkableTasks();
+  }, [loadLinkableTasks]);
+
+  const toggleTaskLink = (taskId: string, checked: boolean) => {
+    markDirty();
+    setLinkedTaskIds((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(taskId);
+      else next.delete(taskId);
+      return next;
+    });
+  };
 
   useEffect(() => {
     if (state && !state.success && state.error) {
@@ -260,6 +303,9 @@ export function PlanForm({
       {isEdit && initialValues?.planId ? (
         <input type="hidden" name="planId" value={initialValues.planId} />
       ) : null}
+      {Array.from(linkedTaskIds).map((id) => (
+        <input type="hidden" name="taskIds" value={id} key={id} />
+      ))}
 
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.priorityLabel}</label>
@@ -462,13 +508,26 @@ export function PlanForm({
       <div className="flex min-w-0 flex-col gap-3">
         <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.tasksInPlanLabel}</label>
         <p className="text-xs text-zinc-500 dark:text-zinc-400">{t.planForm.selectTasksDescription}</p>
-        {userTasks.length > 0 ? (
+        {linkableTasksLoading ? (
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.planForm.loadingLinkableTasks}</p>
+        ) : linkableTasksError ? (
+          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+            <p className="text-sm text-red-600 dark:text-red-400">{t.planForm.linkableTasksLoadError}</p>
+            <button
+              type="button"
+              onClick={loadLinkableTasks}
+              className="w-fit rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+            >
+              {t.planForm.retryLoadTasks}
+            </button>
+          </div>
+        ) : linkableTasks && linkableTasks.length > 0 ? (
           <details className="group rounded-xl border border-blue-100 bg-blue-50/30 dark:border-zinc-600 dark:bg-zinc-800/50">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-sm font-medium text-blue-950 transition hover:bg-blue-100/50 dark:text-zinc-100 dark:hover:bg-zinc-700/50 [&::-webkit-details-marker]:hidden">
               <span>
                 {t.planForm.selectTasksSummary}
                 <span className="ml-1.5 text-zinc-500 font-normal dark:text-zinc-400">
-                  ({t.planForm.selectedCount.replace("{{count}}", String(initialValues?.taskIds?.length ?? 0))})
+                  ({t.planForm.selectedCount.replace("{{count}}", String(linkedTaskIds.size))})
                 </span>
               </span>
               <span className="shrink-0 text-zinc-400 transition group-open:rotate-180 dark:text-zinc-500" aria-hidden>
@@ -485,7 +544,7 @@ export function PlanForm({
                 className="mb-2 w-full rounded-lg border border-blue-100 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-2 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
               />
               <ul className="flex max-h-48 flex-col gap-1.5 overflow-y-auto rounded-lg border border-blue-100 bg-white p-2 dark:border-zinc-600 dark:bg-zinc-800">
-                {userTasks.map((task) => {
+                {linkableTasks.map((task) => {
                   const matches =
                     taskSearchFilter.trim() === "" ||
                     task.title.toLowerCase().includes(taskSearchFilter.toLowerCase());
@@ -496,10 +555,8 @@ export function PlanForm({
                     >
                       <input
                         type="checkbox"
-                        name="taskIds"
-                        value={task.id}
-                        defaultChecked={initialValues?.taskIds?.includes(task.id)}
-                        onChange={markDirty}
+                        checked={linkedTaskIds.has(task.id)}
+                        onChange={(e) => toggleTaskLink(task.id, e.target.checked)}
                         className="h-4 w-4 shrink-0 rounded border-blue-200 dark:border-zinc-500"
                         id={`plan-form-task-${task.id}`}
                       />
@@ -510,7 +567,7 @@ export function PlanForm({
                   );
                 })}
                 {taskSearchFilter.trim() !== "" &&
-                  !userTasks.some((t) =>
+                  !linkableTasks.some((t) =>
                     t.title.toLowerCase().includes(taskSearchFilter.toLowerCase()),
                   ) ? (
                   <li className="py-2 px-1.5 text-sm text-zinc-500 dark:text-zinc-400">{t.planForm.noTasksMatchSearch}</li>

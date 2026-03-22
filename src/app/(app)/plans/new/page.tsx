@@ -6,7 +6,6 @@ import {
 } from "@/data/planTemplates";
 import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
-import { prisma } from "@/lib/prisma";
 import { createPlan } from "@/lib/actions/plans";
 
 export default async function NewPlanPage() {
@@ -14,18 +13,11 @@ export default async function NewPlanPage() {
   if (!userId) return null;
   const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
-  const userTasks = await prisma.task.findMany({
-    where: { userId },
-    orderBy: [{ urgency: "desc" }, { createdAt: "desc" }],
-    select: { id: true, title: true },
-  });
-
   const templates = resolvePlanTemplates(PLAN_TEMPLATE_DEFINITIONS, t);
 
   return (
     <NewPlanSection
       action={createPlan}
-      userTasks={userTasks}
       templates={templates}
       templateSelectLabel={t.templates.startFrom}
       cancelLabel={t.plansPage.cancelNewPlan}

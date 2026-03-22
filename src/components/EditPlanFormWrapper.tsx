@@ -15,7 +15,6 @@ const EDIT_PLAN_FORM_ID = "edit-plan-form";
 type EditPlanFormWrapperProps = {
   action: (formData: FormData) => Promise<PlanActionResult>;
   initialValues: PlanFormInitialValues;
-  userTasks: { id: string; title: string }[];
   submitLabel: string;
   cancelLabel: string;
   singleColumn: boolean;
@@ -29,7 +28,6 @@ type EditPlanFormWrapperProps = {
 export function EditPlanFormWrapper({
   action,
   initialValues,
-  userTasks,
   submitLabel,
   cancelLabel,
   singleColumn,
@@ -95,7 +93,7 @@ export function EditPlanFormWrapper({
         <PlanForm
           action={action}
           initialValues={initialValues}
-          userTasks={userTasks}
+          linkableTasksScope="incomplete"
           isEdit={true}
           submitLabel={submitLabel}
           singleColumn={singleColumn}

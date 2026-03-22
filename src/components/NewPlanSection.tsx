@@ -11,7 +11,6 @@ import type { PlanTemplateResolved } from "@/data/planTemplates";
 
 type NewPlanSectionProps = {
   action: (formData: FormData) => Promise<PlanActionResult>;
-  userTasks: { id: string; title: string }[];
   templates: PlanTemplateResolved[];
   templateSelectLabel: string;
   cancelLabel: string;
@@ -25,7 +24,6 @@ type NewPlanSectionProps = {
 
 export function NewPlanSection({
   action,
-  userTasks,
   templates,
   templateSelectLabel,
   cancelLabel,
@@ -106,7 +104,7 @@ export function NewPlanSection({
           key={selectedTemplateId}
           formId="new-plan-form"
           action={action}
-          userTasks={userTasks}
+          linkableTasksScope="all"
           isEdit={false}
           submitLabel={createPlanLabel}
           discardConfirmMessage={confirmMessage}

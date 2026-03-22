@@ -59,25 +59,6 @@ export function getPlanDetailCacheTag(planId: string): string {
   return `plan-${planId}`;
 }
 
-// Shared remaining-task count so layout (nav badge) and tasks page (pagination) don't run it twice.
-// Wrapped in cache() so layout and tasks page only trigger one DB count per request.
-async function fetchRemainingTaskCount(userId: string): Promise<number> {
-  return prisma.task.count({
-    where: { userId, status: { not: TaskStatus.completed } },
-  });
-}
-
-async function getCachedRemainingTaskCountData(userId: string): Promise<number> {
-  "use cache";
-  cacheLife("max");
-  cacheTag(navCountsTag(userId));
-  return fetchRemainingTaskCount(userId);
-}
-
-export const getCachedRemainingTaskCount = cache((userId: string): Promise<number> => {
-  return getCachedRemainingTaskCountData(userId);
-});
-
 /** Single query for all three nav counts (remaining tasks, active plans, supplies). */
 async function fetchNavCounts(userId: string): Promise<NavCounts> {
   const row = await prisma.$queryRaw<
@@ -110,28 +91,35 @@ export const getCachedNavCounts = cache((userId: string): Promise<NavCounts> => 
   return getCachedNavCountsData(userId);
 });
 
-// Plans list: used by /plans page — single query for plans + completed task count + total count
-type PlanRow = {
-  id: string;
-  userId: string;
-  name: string;
-  description: string | null;
-  goal: string | null;
-  startAt: Date;
-  endAt: Date;
-  actualStartAt: Date | null;
-  actualEndAt: Date | null;
-  status: string;
-  priority: number;
-  percentCompleted: number;
-  notes: string | null;
-  color: string | null;
-  imageUrl: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  completed_task_count: number;
-  total_plans: number;
-};
+// Plans list: used by /plans page — Prisma loads plans + nested task rows (id, status, completedAt) in one findMany;
+// total count uses the same filter in parallel (same round-trip pattern as before, without SQL json_agg).
+const plansPageListSelect = {
+  id: true,
+  userId: true,
+  name: true,
+  description: true,
+  goal: true,
+  startAt: true,
+  endAt: true,
+  actualStartAt: true,
+  actualEndAt: true,
+  status: true,
+  priority: true,
+  percentCompleted: true,
+  notes: true,
+  color: true,
+  imageUrl: true,
+  createdAt: true,
+  updatedAt: true,
+  tasks: {
+    select: {
+      id: true,
+      status: true,
+      completedAt: true,
+    },
+    orderBy: { createdAt: "asc" as const },
+  },
+} satisfies Prisma.PlanSelect;
 
 async function fetchPlansPage(
   userId: string,
@@ -140,51 +128,31 @@ async function fetchPlansPage(
   limit: number,
 ) {
   const skip = (page - 1) * limit;
-  // Single query: plans + completed counts via one LEFT JOIN (no per-row scalar subqueries).
-  const rows = await prisma.$queryRaw<PlanRow[]>`
-    WITH completed AS (
-      SELECT t."planId", COUNT(*)::int AS cnt
-      FROM "Task" t
-      WHERE (t.status = 'completed' OR t."completedAt" IS NOT NULL)
-      GROUP BY t."planId"
-    )
-    SELECT
-      p.id, p."userId", p.name, p.description, p.goal, p."startAt", p."endAt",
-      p."actualStartAt", p."actualEndAt", p.status, p.priority, p."percentCompleted",
-      p.notes, p.color, p."imageUrl", p."createdAt", p."updatedAt",
-      COALESCE(c.cnt, 0) AS completed_task_count,
-      COUNT(*) OVER()::int AS total_plans
-    FROM "Plan" p
-    LEFT JOIN completed c ON c."planId" = p.id
-    WHERE (p."userId" = ${userId}
-       OR EXISTS (SELECT 1 FROM "PlanShare" ps WHERE ps."planId" = p.id AND ps."sharedWithUserId" = ${userId}))
-      AND (${showArchived} = true OR p.status NOT IN ('completed', 'abandoned'))
-    ORDER BY p.priority DESC, p."createdAt" DESC
-    LIMIT ${limit} OFFSET ${skip}
-  `;
+  const where: Prisma.PlanWhereInput = {
+    OR: [{ userId }, { shares: { some: { sharedWithUserId: userId } } }],
+    ...(!showArchived ? { status: { notIn: ["completed", "abandoned"] } } : {}),
+  };
 
-  const plans = rows.map((row) => ({
-    id: row.id,
-    userId: row.userId,
-    name: row.name,
-    description: row.description,
-    goal: row.goal,
-    startAt: row.startAt,
-    endAt: row.endAt,
-    actualStartAt: row.actualStartAt,
-    actualEndAt: row.actualEndAt,
-    status: row.status,
-    priority: row.priority,
-    percentCompleted: row.percentCompleted,
-    notes: row.notes,
-    color: row.color,
-    imageUrl: row.imageUrl,
-    createdAt: row.createdAt,
-    updatedAt: row.updatedAt,
-    tasks: [] as Array<{ id: string; status: string; completedAt: Date | null }>,
-    completedTaskCount: row.completed_task_count,
+  const [planRows, totalPlans] = await Promise.all([
+    prisma.plan.findMany({
+      where,
+      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
+      skip,
+      take: limit,
+      select: plansPageListSelect,
+    }),
+    prisma.plan.count({ where }),
+  ]);
+
+  const plans = planRows.map((p) => ({
+    ...p,
+    tasks: p.tasks.map((t) => ({
+      id: t.id,
+      status: t.status,
+      completedAt: t.completedAt,
+    })),
   }));
-  const totalPlans = rows[0]?.total_plans ?? 0;
+
   return { plans, totalPlans };
 }
 
@@ -276,7 +244,7 @@ async function fetchTasksPage(
     }),
     knownTotalRemaining !== undefined
       ? Promise.resolve(knownTotalRemaining)
-      : getCachedRemainingTaskCount(userId),
+      : getCachedNavCounts(userId).then((n) => n.remainingTaskCount),
   ]);
   const remainingTasks = remainingRows.map((t) => ({ ...t, attachments: [] as { id: string; url: string; filename: string; size: number }[] }));
 
@@ -641,25 +609,6 @@ async function getCachedPlansForDropdownData(
 
 export async function getCachedPlansForDropdown(userId: string) {
   return getCachedPlansForDropdownData(userId);
-}
-
-async function fetchUserTasksForDropdown(userId: string) {
-  return prisma.task.findMany({
-    where: { userId, status: { not: TaskStatus.completed } },
-    orderBy: [{ status: "asc" }, { urgency: "desc" }, { createdAt: "desc" }],
-    select: { id: true, title: true },
-  });
-}
-
-async function getCachedUserTasksForDropdownData(userId: string) {
-  "use cache";
-  cacheLife("max");
-  cacheTag(getTasksCacheTag(userId));
-  return fetchUserTasksForDropdown(userId);
-}
-
-export async function getCachedUserTasksForDropdown(userId: string) {
-  return getCachedUserTasksForDropdownData(userId);
 }
 
 // Supplies page
