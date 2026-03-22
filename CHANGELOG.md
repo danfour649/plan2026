@@ -1,5 +1,15 @@
 # plan2026
 
+## 0.24.0
+
+### Minor Changes
+
+- 281a2b9: Switch to pnpm, upgrade to Prisma ORM 7 with `prisma.config.ts` and the PostgreSQL driver adapter, and upgrade Zod to 4.
+
+### Patch Changes
+
+- 281a2b9: TECH-0068 Upgrade to pnpm, zod4, prisma7
+
 ## 0.23.6
 
 ### Patch Changes
