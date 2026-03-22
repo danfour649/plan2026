@@ -9,6 +9,7 @@ import { DeletePlanButton } from "@/components/DeletePlanButton";
 import { EditPlanFormWrapper } from "@/components/EditPlanFormWrapper";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportPlanButton } from "@/components/ExportPlanButton";
+import { PlanDetailTabSection } from "@/components/PlanDetailTabSection";
 import { PlanSupplyList } from "@/components/PlanSupplyList";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { InviteByLinkButton } from "@/components/InviteByLinkButton";
@@ -229,55 +230,35 @@ async function PlanDetailRoot({
           </div>
         )}
 
-        <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
-          <div className="sticky top-0 z-10 border-b border-blue-100 bg-white/90 px-3 py-3 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 max-sm:sticky sm:static sm:bg-transparent sm:backdrop-blur-none sm:dark:bg-transparent sm:px-6 sm:py-4">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <nav className="flex gap-1" aria-label={t.plans.tasksInThisPlan}>
-                  <Link
-                    href={`/plans/${plan.id}${taskPage > 1 || taskLimit !== PLAN_TASKS_PAGE_SIZE ? `?taskPage=${taskPage}&taskLimit=${taskLimit}` : ""}`}
-                    className={`rounded-xl px-3 py-1.5 text-sm font-medium transition ${
-                      tab === "tasks"
-                        ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200"
-                        : "text-zinc-600 hover:bg-blue-50 hover:text-blue-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-200"
-                    }`}
-                  >
-                    {t.nav.tasks}
-                  </Link>
-                  <Link
-                    href={`/plans/${plan.id}?tab=list`}
-                    className={`rounded-xl px-3 py-1.5 text-sm font-medium transition ${
-                      tab === "list"
-                        ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200"
-                        : "text-zinc-600 hover:bg-blue-50 hover:text-blue-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-200"
-                    }`}
-                  >
-                    {t.supplyList.tabLabel}
-                  </Link>
-                </nav>
-              </div>
-              {tab === "tasks" && isOwner ? (
-                <AddTaskDialog action={addTask} plans={plans} defaultPlanId={plan.id} />
-              ) : null}
+        <PlanDetailTabSection
+          planId={plan.id}
+          initialTab={tab}
+          taskPage={taskPage}
+          taskLimit={taskLimit}
+          defaultTaskLimit={PLAN_TASKS_PAGE_SIZE}
+          navAriaLabel={t.plans.tasksInThisPlan}
+          tasksTabLabel={t.nav.tasks}
+          suppliesTabLabel={t.supplyList.tabLabel}
+          isOwner={isOwner}
+          addTaskSlot={<AddTaskDialog action={addTask} plans={plans} defaultPlanId={plan.id} />}
+          tasksHeader={
+            <div className="mt-2">
+              <h2 className="text-lg font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.plans.tasksInThisPlan}</h2>
+              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                {isOwner ? t.plans.editTaskBelowDescription : t.plans.tasksInSharedPlan}
+              </p>
             </div>
-            {tab === "tasks" ? (
-              <>
-                <div className="mt-2">
-                  <h2 className="text-lg font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.plans.tasksInThisPlan}</h2>
-                  <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                    {isOwner ? t.plans.editTaskBelowDescription : t.plans.tasksInSharedPlan}
-                  </p>
-                </div>
-              </>
-            ) : (
-              <h2 className="mt-2 text-lg font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.supplyList.title}</h2>
-            )}
-          </div>
-          {tab === "list" ? (
+          }
+          suppliesHeader={
+            <h2 className="mt-2 text-lg font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.supplyList.title}</h2>
+          }
+          listPanel={
             <div className="px-3 py-4 sm:px-6 sm:py-6">
               <PlanSupplyList planId={plan.id} items={supplyItemsForClient} isOwner={isOwner} initialEditingItemId={editItemId} />
             </div>
-          ) : hasAnyTasks ? (
+          }
+          tasksPanel={
+            hasAnyTasks ? (
             <>
             <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
               {incompleteTasks.map((task) => (
@@ -614,8 +595,8 @@ async function PlanDetailRoot({
                 {isOwner ? t.plans.addOrLinkTasksDescription : t.plans.planOwnerAddTasks}
               </p>
             </div>
-          )}
-        </section>
+            )}
+        />
       </div>
     </div>
   );
