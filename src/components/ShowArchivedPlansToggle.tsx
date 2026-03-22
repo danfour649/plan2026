@@ -13,7 +13,7 @@ export function ShowArchivedPlansToggle({ showArchived }: ShowArchivedPlansToggl
   const router = useRouter();
 
   function handleToggle() {
-    router.push(showArchived ? "/plans" : "/plans?showArchived=1");
+    router.push(showArchived ? "/plans?showArchived=0" : "/plans?showArchived=1");
   }
 
   const activeOnly = !showArchived;

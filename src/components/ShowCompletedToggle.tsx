@@ -14,7 +14,7 @@ export function ShowCompletedToggle({ showCompleted }: ShowCompletedToggleProps)
   const activeOnly = !showCompleted;
 
   function handleToggle() {
-    router.push(showCompleted ? "/tasks" : "/tasks?showCompleted=1");
+    router.push(showCompleted ? "/tasks?showCompleted=0" : "/tasks?showCompleted=1");
   }
 
   return (

@@ -1,68 +1,63 @@
 /**
- * Static plan templates for "Start from template" on new plan page.
- * Names and task titles are i18n keys (templates.*); resolve with getTranslations(locale).
+ * Plan templates for "Start from template" on the new plan page.
+ * Each template lives in `plan-templates/*.json`; register imports in `plan-templates/index.ts`.
+ * Templates may use i18n keys (nameKey, titleKey) or literal strings (name, title, content).
  */
-export type PlanTemplateTask = {
-  titleKey: string;
+import {
+  isPlanTemplateId,
+  PLAN_TEMPLATE_DEFINITIONS as _PLAN_TEMPLATE_DEFINITIONS,
+  PLAN_TEMPLATE_IDS,
+  type PlanTemplateDefinition,
+  type PlanTemplateId,
+  type PlanTemplateIsoDate,
+  type PlanTemplateTask,
+} from "./plan-templates";
+
+export type {
+  PlanTemplateDefinition,
+  PlanTemplateId,
+  PlanTemplateIsoDate,
+  PlanTemplateTask,
+};
+export { isPlanTemplateId, PLAN_TEMPLATE_IDS };
+
+export const PLAN_TEMPLATE_DEFINITIONS = _PLAN_TEMPLATE_DEFINITIONS;
+
+export type PlanTemplateResolvedTask = {
+  title: string;
   urgency?: number;
+  content?: string;
+  dueAt?: string;
 };
-
-export type PlanTemplateDefinition = {
-  id: string;
-  nameKey: string;
-  goalKey?: string;
-  tasks: PlanTemplateTask[];
-};
-
-export const PLAN_TEMPLATE_DEFINITIONS: PlanTemplateDefinition[] = [
-  {
-    id: "empty",
-    nameKey: "empty",
-    tasks: [],
-  },
-  {
-    id: "project-launch",
-    nameKey: "projectLaunch",
-    goalKey: "projectLaunchGoal",
-    tasks: [
-      { titleKey: "projectLaunchTask1", urgency: 5 },
-      { titleKey: "projectLaunchTask2", urgency: 5 },
-      { titleKey: "projectLaunchTask3", urgency: 6 },
-    ],
-  },
-  {
-    id: "trip-planning",
-    nameKey: "tripPlanning",
-    goalKey: "tripPlanningGoal",
-    tasks: [
-      { titleKey: "tripPlanningTask1", urgency: 6 },
-      { titleKey: "tripPlanningTask2", urgency: 5 },
-      { titleKey: "tripPlanningTask3", urgency: 5 },
-      { titleKey: "tripPlanningTask4", urgency: 4 },
-    ],
-  },
-];
 
 export type PlanTemplateResolved = {
   id: string;
   name: string;
   goal?: string;
-  tasks: { title: string; urgency?: number }[];
+  description?: string;
+  startAt?: string;
+  endAt?: string;
+  tasks: PlanTemplateResolvedTask[];
 };
 
 type MessagesLike = { templates: Record<string, string> };
 
 export function resolvePlanTemplates(
-  definitions: PlanTemplateDefinition[],
+  definitions: readonly PlanTemplateDefinition[],
   t: MessagesLike,
 ): PlanTemplateResolved[] {
   return definitions.map((def) => ({
     id: def.id,
-    name: t.templates[def.nameKey] ?? def.id,
-    goal: def.goalKey ? (t.templates[def.goalKey] ?? undefined) : undefined,
+    name: def.name ?? (def.nameKey ? (t.templates[def.nameKey] ?? def.nameKey) : def.id),
+    goal: def.goal ?? (def.goalKey ? (t.templates[def.goalKey] ?? undefined) : undefined),
+    description: def.description,
+    startAt: def.startAt,
+    endAt: def.endAt,
     tasks: def.tasks.map((task) => ({
-      title: t.templates[task.titleKey] ?? task.titleKey,
+      title: task.title ?? (task.titleKey ? (t.templates[task.titleKey] ?? task.titleKey) : ""),
       urgency: task.urgency,
+      content: task.content,
+      dueAt: task.dueAt,
     })),
   }));
 }

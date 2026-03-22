@@ -1,0 +1,130 @@
+{
+  "id": "gemini-ai-plan-generic",
+  "name": "Automated AI Personality Launch 2026",
+  "goal": "Go live with a single coherent AI persona—look, voice, and behavior—plus automated publishing, safety checks, and room to scale engagement after launch.",
+  "description": "Playbook v3.0 (comprehensive implementation edition). Target launch: 2026-04-28. Phases: I. Core Identity & Assets · II. The Content Engine · III. Intelligence & Guardrails · IV. Launch & Real-Time Scale",
+  "startAt": "2026-03-21",
+  "endAt": "2026-05-10",
+  "tasks": [
+    {
+      "title": "Niche Validation & Logic Mapping",
+      "urgency": 4,
+      "content": "Phase: I. Core Identity & Assets\n\nSelect a niche (e.g., AI Ethics, Virtual Fashion, or 'Solana-Degenerate'). Use Perplexity to find underserved visual aesthetics in that niche. Map the 'Logic Tree' for how the AI responds to praise vs. criticism to ensure personality stability.\n\nResources:\n- https://perplexity.ai",
+      "dueAt": "2026-03-22"
+    },
+    {
+      "title": "Character Model Training (Ryla.ai)",
+      "urgency": 4,
+      "content": "Phase: I. Core Identity & Assets\n\nUpload 20-30 reference images to Ryla.ai to create a 'Master Identity.' Unlike 2024 tools, Ryla ensures 100% face-geometry consistency across different outfits and lighting. This serves as the visual 'source of truth' for all future media.\n\nResources:\n- https://ryla.ai",
+      "dueAt": "2026-03-25"
+    },
+    {
+      "title": "ElevenLabs Voice Architecture",
+      "urgency": 4,
+      "content": "Phase: I. Core Identity & Assets\n\nClone a voice using ElevenLabs' Professional Voice Cloning (PVC). Adjust the 'Stability' and 'Style Exaggeration' sliders to create a signature verbal tick or cadence. High stability is better for 'expert' personas; low stability is better for 'chaotic' comedians.\n\nResources:\n- https://elevenlabs.io",
+      "dueAt": "2026-03-26"
+    },
+    {
+      "title": "System Prompt Engineering",
+      "urgency": 4,
+      "content": "Phase: I. Core Identity & Assets\n\nConstruct a 2,000-word System Instruction for GPT-4o. Use 'Chain of Thought' prompting to force the AI to 'think' about its character motivation before writing any post. Include a 'Knowledge Base' file of the character's unique backstory.\n\nResources:\n- https://openai.com",
+      "dueAt": "2026-03-29"
+    },
+    {
+      "title": "Autonomous Account Registration",
+      "urgency": 4,
+      "content": "Phase: I. Core Identity & Assets\n\nRegister handles. For Farcaster, use the 'OpenClaw' agent to autonomously fund the FID ($1 USDC/ETH) and set up the profile. This allows the account to be categorized as a 'Verified Agent' rather than a 'Bot,' preventing shadowbans.\n\nResources:\n- https://farcaster.xyz\n- https://x.com",
+      "dueAt": "2026-03-30"
+    },
+    {
+      "title": "n8n Workflow Hub Integration",
+      "urgency": 4,
+      "content": "Phase: II. The Content Engine\n\nSet up a self-hosted n8n instance. This will be the 'General' that tells other APIs when to move. Create a 'Cron Trigger' that starts the content generation cycle every morning at 6:00 AM.\n\nResources:\n- https://n8n.io",
+      "dueAt": "2026-03-31"
+    },
+    {
+      "title": "Trend Scraper & Intelligence",
+      "urgency": 4,
+      "content": "Phase: II. The Content Engine\n\nConnect a 'Perplexity Node' in n8n to scan for daily news in your niche. The AI will ingest these results and decide which 3 topics are worth 'commenting' on today, ensuring relevance to human current events.\n\nResources:\n- https://perplexity.ai/pro",
+      "dueAt": "2026-04-03"
+    },
+    {
+      "title": "Script-to-Video Pipeline (HeyGen)",
+      "urgency": 4,
+      "content": "Phase: II. The Content Engine\n\nAutomate the flow where GPT-4o writes a 60-second script, sends it to ElevenLabs for audio, then sends both to HeyGen's Streaming API to generate a high-res video with perfect lip-syncing and natural micro-expressions.\n\nResources:\n- https://heygen.com",
+      "dueAt": "2026-04-07"
+    },
+    {
+      "title": "Multimodal Vision Metadata",
+      "urgency": 4,
+      "content": "Phase: II. The Content Engine\n\nBefore posting, the video is sent to a GPT-Vision node. It 'watches' the video to ensure no glitches occurred and generates context-aware SEO captions and hashtags that actually describe the visual background.\n\nResources:\n- https://platform.openai.com",
+      "dueAt": "2026-04-08"
+    },
+    {
+      "title": "Enrich Labs Full-Stack Scheduler",
+      "urgency": 4,
+      "content": "Phase: II. The Content Engine\n\nUse Enrich Labs to manage the final distribution. Enrich's 2026 AI doesn't just 'schedule'; it adjusts the post time dynamically based on when your specific followers are most active on each platform.\n\nResources:\n- https://enrichlabs.ai",
+      "dueAt": "2026-04-11"
+    },
+    {
+      "title": "Contextual Reply Logic",
+      "urgency": 4,
+      "content": "Phase: III. Intelligence & Guardrails\n\nBuild a workflow that monitors 'Mentions.' The AI will prioritize replies to high-follower accounts or genuine questions, while ignoring low-effort spam or hate. It uses 'Memory' to remember repeat commenters.",
+      "dueAt": "2026-04-15"
+    },
+    {
+      "title": "Human-in-the-Loop Webhooks",
+      "urgency": 4,
+      "content": "Phase: III. Intelligence & Guardrails\n\nConfigure a Discord bot to ping you with a 'Yes/No' button for any post the AI flags as 'High Risk' (e.g., discussing politics or health). This prevents 99% of potential PR disasters while remaining 90% automated.\n\nResources:\n- https://discord.com",
+      "dueAt": "2026-04-16"
+    },
+    {
+      "title": "The 'Seed Batch' Production",
+      "urgency": 4,
+      "content": "Phase: III. Intelligence & Guardrails\n\nGenerate 15 pieces of varied content (Reels, long-form 'Casts,' and static images). This creates a 'portfolio' that makes the account look established and trustworthy to new visitors on Day 1.",
+      "dueAt": "2026-04-19"
+    },
+    {
+      "title": "API Stress Testing",
+      "urgency": 4,
+      "content": "Phase: III. Intelligence & Guardrails\n\nRun the entire chain end-to-end to check for 'Uncanny Valley' errors (e.g., drifting lips, voice glitches). Verify that the n8n logic can handle API rate limits by implementing 'Wait' nodes between tasks.",
+      "dueAt": "2026-04-22"
+    },
+    {
+      "title": "Character Guardrail Refinement",
+      "urgency": 4,
+      "content": "Phase: III. Intelligence & Guardrails\n\nFinalize the 'Moderation Layer.' Use OpenAI's Moderation API to scan generated content for TOS violations. If a post fails, the workflow automatically regenerates a new version without human intervention.\n\nResources:\n- https://platform.openai.com/docs/guides/moderation",
+      "dueAt": "2026-04-24"
+    },
+    {
+      "title": "Shadow Launch & Warm-up",
+      "urgency": 4,
+      "content": "Phase: IV. Launch & Real-Time Scale\n\nUpload the 'identity' to Linktree and social bios. Have the AI interact (Like/Replying) with 50 niche-relevant accounts to trigger the platform's 'Interest' algorithms.\n\nResources:\n- https://linktr.ee",
+      "dueAt": "2026-04-25"
+    },
+    {
+      "title": "Automated Teaser Sequence",
+      "urgency": 4,
+      "content": "Phase: IV. Launch & Real-Time Scale\n\nDeploy a 48-hour 'Glitch' campaign: 30-second videos of the AI 'assembling' itself. This builds curiosity and provides a high-quality visual hook for early engagement.",
+      "dueAt": "2026-04-27"
+    },
+    {
+      "title": "GO-LIVE: Full Autonomy",
+      "urgency": 4,
+      "content": "Phase: IV. Launch & Real-Time Scale\n\nSwitch n8n to 'Live' mode. The AI begins its 3x daily posting schedule and 24/7 engagement cycle. Monitor the Discord 'Alerts' channel for the first 12 hours.",
+      "dueAt": "2026-04-28"
+    },
+    {
+      "title": "Sentiment & Strategy Audit",
+      "urgency": 4,
+      "content": "Phase: IV. Launch & Real-Time Scale\n\nThe AI pulls a weekly CSV of its performance data. It 'Self-Critiques' by analyzing which hooks led to the most shares and automatically updates its 'Best Practices' doc for the next week's scripts.",
+      "dueAt": "2026-05-05"
+    },
+    {
+      "title": "Live-Stream Integration (Sync Labs)",
+      "urgency": 4,
+      "content": "Phase: IV. Launch & Real-Time Scale\n\nImplement Sync Labs for real-time live-streaming. The AI reads the Twitch/YouTube chat, processes the text via LLM, and streams a 2K resolution talking-head response with less than 500ms latency.\n\nResources:\n- https://synclabs.so",
+      "dueAt": "2026-05-10"
+    }
+  ]
+}

@@ -121,39 +121,51 @@ const plansPageListSelect = {
   },
 } satisfies Prisma.PlanSelect;
 
-async function fetchPlansPage(
-  userId: string,
-  showArchived: boolean,
-  page: number,
-  limit: number,
-) {
+/** Active-only and all-status pages for the same (page, limit) so the plans list can toggle client-side without a second DB round-trip. */
+async function fetchPlansPageBoth(userId: string, page: number, limit: number) {
   const skip = (page - 1) * limit;
-  const where: Prisma.PlanWhereInput = {
+  const baseWhere: Prisma.PlanWhereInput = {
     OR: [{ userId }, { shares: { some: { sharedWithUserId: userId } } }],
-    ...(!showArchived ? { status: { notIn: ["completed", "abandoned"] } } : {}),
+  };
+  const activeWhere: Prisma.PlanWhereInput = {
+    ...baseWhere,
+    status: { notIn: ["completed", "abandoned"] },
   };
 
-  const [planRows, totalPlans] = await Promise.all([
+  const [activeRows, totalActive, allRows, totalAll] = await Promise.all([
     prisma.plan.findMany({
-      where,
+      where: activeWhere,
       orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
       skip,
       take: limit,
       select: plansPageListSelect,
     }),
-    prisma.plan.count({ where }),
+    prisma.plan.count({ where: activeWhere }),
+    prisma.plan.findMany({
+      where: baseWhere,
+      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
+      skip,
+      take: limit,
+      select: plansPageListSelect,
+    }),
+    prisma.plan.count({ where: baseWhere }),
   ]);
 
-  const plans = planRows.map((p) => ({
+  const mapRow = (p: (typeof activeRows)[number]) => ({
     ...p,
     tasks: p.tasks.map((t) => ({
       id: t.id,
       status: t.status,
       completedAt: t.completedAt,
     })),
-  }));
+  });
 
-  return { plans, totalPlans };
+  return {
+    activePlans: activeRows.map(mapRow),
+    totalActive,
+    allPlans: allRows.map(mapRow),
+    totalAll,
+  };
 }
 
 function rehydratePlan<T extends { startAt: unknown; endAt: unknown; actualStartAt?: unknown; actualEndAt?: unknown; createdAt: unknown; updatedAt: unknown; tasks?: Array<{ id: unknown; status: unknown; completedAt?: unknown }>; completedTaskCount?: number }>(
@@ -180,26 +192,21 @@ function rehydratePlan<T extends { startAt: unknown; endAt: unknown; actualStart
   } as T & { completedTaskCount: number };
 }
 
-async function getCachedPlansPageData(
-  userId: string,
-  showArchived: boolean,
-  page: number,
-  limit: number,
-) {
+async function getCachedPlansPageData(userId: string, page: number, limit: number) {
   "use cache";
   cacheLife("max");
   cacheTag(getPlansCacheTag(userId));
-  return fetchPlansPage(userId, showArchived, page, limit);
+  return fetchPlansPageBoth(userId, page, limit);
 }
 
-export async function getCachedPlansPage(
-  userId: string,
-  showArchived: boolean,
-  page: number,
-  limit: number,
-) {
-  const result = await getCachedPlansPageData(userId, showArchived, page, limit);
-  return { plans: result.plans.map(rehydratePlan), totalPlans: result.totalPlans };
+export async function getCachedPlansPage(userId: string, page: number, limit: number) {
+  const result = await getCachedPlansPageData(userId, page, limit);
+  return {
+    activePlans: result.activePlans.map(rehydratePlan),
+    totalActive: result.totalActive,
+    allPlans: result.allPlans.map(rehydratePlan),
+    totalAll: result.totalAll,
+  };
 }
 
 // Tasks list: remaining + optional completed. Attachments are not loaded here; they are fetched when the edit dialog opens.
@@ -225,9 +232,9 @@ export type CachedTasksPageTask = {
   attachments: { id: string; url: string; filename: string; size: number }[];
 };
 
+/** Loads remaining + completed slices in one pass so the tasks list can toggle "show completed" client-side without a second DB round-trip. */
 async function fetchTasksPage(
   userId: string,
-  showCompleted: boolean,
   page: number,
   limit: number,
   completedPage: number,
@@ -249,19 +256,17 @@ async function fetchTasksPage(
   const remainingTasks = remainingRows.map((t) => ({ ...t, attachments: [] as { id: string; url: string; filename: string; size: number }[] }));
 
   const completedWhere = { userId, status: TaskStatus.completed };
-  const [completedRows, totalCompleted] = showCompleted
-    ? await Promise.all([
-        prisma.task.findMany({
-          where: completedWhere,
-          orderBy: [{ urgency: "desc" }, { completedAt: "desc" }],
-          skip: (completedPage - 1) * limit,
-          take: limit,
-          include: taskInclude,
-        }),
-        prisma.task.count({ where: completedWhere }),
-      ])
-    : [[], 0];
-  const completedTasks = (completedRows as typeof remainingRows).map((t) => ({ ...t, attachments: [] as { id: string; url: string; filename: string; size: number }[] }));
+  const [completedRows, totalCompleted] = await Promise.all([
+    prisma.task.findMany({
+      where: completedWhere,
+      orderBy: [{ urgency: "desc" }, { completedAt: "desc" }],
+      skip: (completedPage - 1) * limit,
+      take: limit,
+      include: taskInclude,
+    }),
+    prisma.task.count({ where: completedWhere }),
+  ]);
+  const completedTasks = completedRows.map((t) => ({ ...t, attachments: [] as { id: string; url: string; filename: string; size: number }[] }));
 
   return {
     remainingTasks,
@@ -273,7 +278,6 @@ async function fetchTasksPage(
 
 async function getCachedTasksPageData(
   userId: string,
-  showCompleted: boolean,
   page: number,
   limit: number,
   completedPage: number,
@@ -282,7 +286,7 @@ async function getCachedTasksPageData(
   "use cache";
   cacheLife("max");
   cacheTag(getTasksCacheTag(userId));
-  return fetchTasksPage(userId, showCompleted, page, limit, completedPage, knownTotalRemaining);
+  return fetchTasksPage(userId, page, limit, completedPage, knownTotalRemaining);
 }
 
 function rehydrateTask<T extends { dueAt?: unknown; completedAt?: unknown; status?: unknown; createdAt: unknown; updatedAt: unknown }>(
@@ -299,7 +303,6 @@ function rehydrateTask<T extends { dueAt?: unknown; completedAt?: unknown; statu
 
 export async function getCachedTasksPage(
   userId: string,
-  showCompleted: boolean,
   page: number,
   limit: number,
   completedPage: number,
@@ -312,14 +315,7 @@ export async function getCachedTasksPage(
   totalCompleted: number;
   plans: { id: string; name: string }[];
 }> {
-  const result = await getCachedTasksPageData(
-    userId,
-    showCompleted,
-    page,
-    limit,
-    completedPage,
-    knownTotalRemaining,
-  );
+  const result = await getCachedTasksPageData(userId, page, limit, completedPage, knownTotalRemaining);
   const plans = await getCachedPlansForDropdown(userId);
   const planFor = (planId: string | null): { id: string; name: string } | null =>
     planId ? plans.find((p) => p.id === planId) ?? null : null;

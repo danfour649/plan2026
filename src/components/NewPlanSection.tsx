@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { CancelNewPlanLink } from "@/components/CancelNewPlanLink";
 import { PlanForm } from "@/components/PlanForm";
-import { clearNewPlanFormDirty, setNewPlanFormDirty } from "@/lib/newPlanDirty";
-import type { PlanActionResult } from "@/lib/actions/plans";
 import type { PlanTemplateResolved } from "@/data/planTemplates";
+import type { PlanActionResult } from "@/lib/actions/plans";
+import { recalibratePlanTemplateDates } from "@/lib/plan-template-dates";
+import { clearNewPlanFormDirty, setNewPlanFormDirty } from "@/lib/newPlanDirty";
 
 type NewPlanSectionProps = {
   action: (formData: FormData) => Promise<PlanActionResult>;
@@ -38,16 +39,29 @@ export function NewPlanSection({
   const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>(templates[0]?.id ?? "empty");
 
-  const selectedTemplate = templates.find((t) => t.id === selectedTemplateId);
+  const calibratedTemplate = useMemo(() => {
+    const sel = templates.find((t) => t.id === selectedTemplateId);
+    if (!sel || sel.id === "empty") return null;
+    return recalibratePlanTemplateDates(sel);
+  }, [templates, selectedTemplateId]);
+
   const templateInitialValues =
-    selectedTemplate && selectedTemplate.id !== "empty"
+    calibratedTemplate != null
       ? {
-          name: selectedTemplate.name,
-          goal: selectedTemplate.goal ?? "",
-          newTaskTitles:
-            selectedTemplate.tasks.length > 0
-              ? selectedTemplate.tasks.map((t) => t.title)
-              : [""],
+          name: calibratedTemplate.name,
+          goal: calibratedTemplate.goal ?? "",
+          description: calibratedTemplate.description ?? "",
+          startAt: calibratedTemplate.startAt,
+          endAt: calibratedTemplate.endAt,
+          newTasks:
+            calibratedTemplate.tasks.length > 0
+              ? calibratedTemplate.tasks.map((t) => ({
+                  title: t.title,
+                  content: t.content,
+                  dueAt: t.dueAt,
+                  urgency: t.urgency,
+                }))
+              : [{ title: "" }],
         }
       : undefined;
 

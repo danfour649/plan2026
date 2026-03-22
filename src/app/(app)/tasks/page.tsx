@@ -8,8 +8,7 @@ import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportTasksButton } from "@/components/ExportTasksButton";
 import { RefreshTasksButton } from "@/components/RefreshTasksButton";
-import { ShowCompletedToggle } from "@/components/ShowCompletedToggle";
-import { SyncTasksListFilterCookie } from "@/components/SyncListFilterPreferenceCookies";
+import { TasksShowCompletedRoot, TasksShowCompletedToggle } from "@/components/TasksShowCompletedRoot";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { TaskContent } from "@/components/TaskContent";
 import type { ExportedTask } from "@/lib/export";
@@ -34,7 +33,9 @@ function tasksShowCompletedFromSearchParams(
   if (raw === undefined) return null;
   const v = Array.isArray(raw) ? raw[0] : raw;
   if (v === undefined || v === "") return null;
-  return v === "1";
+  if (v === "1") return true;
+  if (v === "0") return false;
+  return null;
 }
 
 function CompletedCheckIcon() {
@@ -96,7 +97,7 @@ export default async function TasksPage({
   const completedPage = parsePage(resolvedSearchParams.completedPage);
 
   const { remainingTasks, totalRemaining, completedTasks, totalCompleted, plans } =
-    await getCachedTasksPage(userId, showCompleted, page, limit, completedPage);
+    await getCachedTasksPage(userId, page, limit, completedPage);
 
   const hasVisibleTasks = remainingTasks.length > 0 || completedTasks.length > 0;
   const totalRemainingPages = Math.ceil(totalRemaining / limit) || 1;
@@ -137,8 +138,8 @@ export default async function TasksPage({
 
   return (
     <div className="space-y-8">
-      <SyncTasksListFilterCookie showCompleted={showCompleted} />
-      <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+      <TasksShowCompletedRoot initialShowCompleted={showCompleted}>
+        <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
         <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-blue-100 px-6 py-4 dark:border-zinc-700 sm:gap-4">
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <h2 className="text-2xl font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.tasksPage.title}</h2>
@@ -151,7 +152,7 @@ export default async function TasksPage({
             </div>
           </div>
           <div className="ml-auto flex flex-nowrap items-center gap-2 sm:gap-4">
-            <ShowCompletedToggle showCompleted={showCompleted} />
+            <TasksShowCompletedToggle />
             <AddTaskDialog action={addTask} plans={plans} />
           </div>
         </div>
@@ -273,6 +274,7 @@ export default async function TasksPage({
             {completedTasks.map((task) => (
               <li
                 key={task.id}
+                data-completed-only
                 className="flex flex-col gap-3 px-6 py-4 transition hover:bg-emerald-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
               >
                 <EditTaskDialog
@@ -373,7 +375,7 @@ export default async function TasksPage({
                 <div className="flex gap-2">
                   {page > 1 ? (
                     <Link
-                      href={`/tasks?page=${page - 1}&limit=${limit}${showCompleted ? "&showCompleted=1" : ""}${showCompleted && completedPage > 1 ? `&completedPage=${completedPage}` : ""}`}
+                      href={`/tasks?page=${page - 1}&limit=${limit}${completedPage > 1 ? `&completedPage=${completedPage}` : ""}`}
                       className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                     >
                       {t.common.previousPage}
@@ -381,7 +383,7 @@ export default async function TasksPage({
                   ) : null}
                   {page < totalRemainingPages ? (
                     <Link
-                      href={`/tasks?page=${page + 1}&limit=${limit}${showCompleted ? "&showCompleted=1" : ""}${showCompleted ? `&completedPage=${completedPage}` : ""}`}
+                      href={`/tasks?page=${page + 1}&limit=${limit}${completedPage > 1 ? `&completedPage=${completedPage}` : ""}`}
                       className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                     >
                       {t.common.nextPage}
@@ -398,7 +400,7 @@ export default async function TasksPage({
                 <div className="flex gap-2">
                   {completedPage > 1 ? (
                     <Link
-                      href={`/tasks?page=${page}&limit=${limit}&showCompleted=1&completedPage=${completedPage - 1}`}
+                      href={`/tasks?page=${page}&limit=${limit}&completedPage=${completedPage - 1}`}
                       className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                     >
                       {t.common.previousPage}
@@ -406,7 +408,7 @@ export default async function TasksPage({
                   ) : null}
                   {completedPage < totalCompletedPages ? (
                     <Link
-                      href={`/tasks?page=${page}&limit=${limit}&showCompleted=1&completedPage=${completedPage + 1}`}
+                      href={`/tasks?page=${page}&limit=${limit}&completedPage=${completedPage + 1}`}
                       className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                     >
                       {t.common.nextPage}
@@ -417,7 +419,8 @@ export default async function TasksPage({
             )}
           </ul>
         )}
-      </section>
+        </section>
+      </TasksShowCompletedRoot>
     </div>
   );
 }

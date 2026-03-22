@@ -146,6 +146,13 @@ function PlanColorDropdown({
   );
 }
 
+export type PlanFormTemplateNewTaskRow = {
+  title: string;
+  content?: string;
+  dueAt?: string;
+  urgency?: number;
+};
+
 export type PlanFormInitialValues = {
   planId: string;
   name: string;
@@ -187,8 +194,15 @@ type PlanFormProps = {
   renderEditFooterOutside?: boolean;
   /** Form id when renderEditFooterOutside is true (for submit button form attribute). */
   editFormId?: string;
-  /** When creating a new plan, optional pre-fill from template (name, goal, new task titles). */
-  templateInitialValues?: { name: string; goal?: string; newTaskTitles: string[] };
+  /** When creating a new plan, optional pre-fill from template (plan fields + new tasks). */
+  templateInitialValues?: {
+    name: string;
+    goal?: string;
+    description?: string;
+    startAt?: string;
+    endAt?: string;
+    newTasks: PlanFormTemplateNewTaskRow[];
+  };
 };
 
 export function PlanForm({
@@ -211,11 +225,19 @@ export function PlanForm({
   const router = useRouter();
   const markDirty = () => onDirtyChange?.();
   const [state, formAction] = useActionState(wrap(action), null as PlanActionResult | null);
-  const [newTaskTitles, setNewTaskTitles] = useState<string[]>(
-    templateInitialValues?.newTaskTitles?.length
-      ? templateInitialValues.newTaskTitles
-      : [""],
-  );
+  type NewTaskDraftRow = { title: string; content: string; dueAt: string; urgency: number };
+  const [newTaskRows, setNewTaskRows] = useState<NewTaskDraftRow[]>(() => {
+    const rows = templateInitialValues?.newTasks;
+    if (rows?.length) {
+      return rows.map((r) => ({
+        title: r.title,
+        content: r.content ?? "",
+        dueAt: r.dueAt ?? "",
+        urgency: r.urgency ?? 4,
+      }));
+    }
+    return [{ title: "", content: "", dueAt: "", urgency: 4 }];
+  });
   const [taskSearchFilter, setTaskSearchFilter] = useState("");
   const [percentCompleted, setPercentCompleted] = useState(initialValues?.percentCompleted ?? 0);
   const [linkableTasks, setLinkableTasks] = useState<{ id: string; title: string }[] | null>(null);
@@ -278,9 +300,10 @@ export function PlanForm({
     return () => clearTimeout(id);
   }, [initialValues?.percentCompleted]);
 
-  const addNewTaskRow = () => setNewTaskTitles((prev) => [...prev, ""]);
+  const addNewTaskRow = () =>
+    setNewTaskRows((prev) => [...prev, { title: "", content: "", dueAt: "", urgency: 4 }]);
   const removeNewTaskRow = (index: number) =>
-    setNewTaskTitles((prev) => prev.filter((_, i) => i !== index));
+    setNewTaskRows((prev) => prev.filter((_, i) => i !== index));
 
   const defaultPriority = initialValues?.priority ?? 4;
   const defaultStatus = initialValues?.status ?? "draft";
@@ -384,7 +407,7 @@ export function PlanForm({
           name="description"
           placeholder={t.plans.describePlanPlaceholder}
           rows={3}
-          defaultValue={initialValues?.description ?? ""}
+          defaultValue={initialValues?.description ?? templateInitialValues?.description ?? ""}
           onInput={markDirty}
           className="min-h-[4.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
         />
@@ -585,11 +608,14 @@ export function PlanForm({
         )}
         <div className="flex flex-col gap-2">
           <span className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.addNewTasksLabel}</span>
-          {newTaskTitles.map((title, index) => (
+          {newTaskRows.map((row, index) => (
             <div key={index} className="flex min-w-0 flex-row gap-2">
+              <input type="hidden" name="newTaskContent" defaultValue={row.content} />
+              <input type="hidden" name="newTaskDueAt" defaultValue={row.dueAt} />
+              <input type="hidden" name="newTaskUrgency" defaultValue={String(row.urgency)} />
               <input
                 name="newTaskTitle"
-                defaultValue={title}
+                defaultValue={row.title}
                 placeholder={t.plans.newTaskTitlePlaceholder}
                 onInput={markDirty}
                 className="min-w-0 flex-1 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"

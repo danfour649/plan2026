@@ -1,0 +1,28 @@
+{
+  "id": "project-launch",
+  "name": "Project launch",
+  "goal": "Align everyone, agree what you're building, and deliver something real people can react to.",
+  "description": "A simple three-week shape you can follow: kick off with the right people, write down scope so arguments stop, then ship a first slice. Calendar dates line up with the day you start this plan.",
+  "startAt": "2026-01-06",
+  "endAt": "2026-01-27",
+  "tasks": [
+    {
+      "title": "Kick off with stakeholders",
+      "urgency": 5,
+      "dueAt": "2026-01-08",
+      "content": "Get the right people in the (virtual) room and make the why obvious.\n\nWhat to cover:\n- Why this project exists and what \"good\" looks like\n- Who decides what, and how you'll communicate\n- Known risks, assumptions, and open questions\n\nBefore the meeting:\n- Send a short agenda 24-48 hours ahead\n- Pick someone to take notes and share them the same day"
+    },
+    {
+      "title": "Define scope and write it down",
+      "urgency": 5,
+      "dueAt": "2026-01-15",
+      "content": "Turn fuzzy ideas into a shared picture of what's in, what's out, and how you'll know you're done.\n\nAim for one page you can point at:\n- Problem you're solving and the outcome you want\n- Clear boundaries (nice-to-haves vs must-haves)\n- Dependencies on other teams, tools, or vendors\n\nClose the loop:\n- Get a clear yes from your sponsor or product owner so you're not re-litigating scope every week"
+    },
+    {
+      "title": "Ship the first real milestone",
+      "urgency": 6,
+      "dueAt": "2026-01-27",
+      "content": "Deliver something tangible: a prototype, a doc set people can comment on, or a thin slice of the real product.\n\nBefore you build:\n- Write down what \"done\" means for this milestone\n\nWhen it's ready:\n- Walk stakeholders through it and capture feedback\n- Turn feedback into a short list of next steps\n- If scope moved, refresh dates so the plan still feels honest"
+    }
+  ]
+}

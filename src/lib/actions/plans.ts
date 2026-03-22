@@ -12,6 +12,7 @@ import {
 } from "@/lib/data-cache";
 import { prisma } from "@/lib/prisma";
 import {
+  buildNewPlanTasksFromFormData,
   createPlanSchema,
   planIdSchema,
   PLAN_STATUS_VALUES,
@@ -24,9 +25,6 @@ export type PlanActionResult = { success: true } | { success: false; error: stri
 
 function buildPlanPayload(formData: FormData, isUpdate: boolean) {
   const taskIds = formData.getAll("taskIds").filter((v): v is string => typeof v === "string");
-  const newTaskTitles = formData
-    .getAll("newTaskTitle")
-    .filter((v): v is string => typeof v === "string" && v.trim() !== "");
   const raw: Record<string, unknown> = {
     name: formData.get("name") ?? "",
     description: formData.get("description") ?? undefined,
@@ -41,7 +39,7 @@ function buildPlanPayload(formData: FormData, isUpdate: boolean) {
     color: formData.get("color") ?? undefined,
     imageUrl: formData.get("imageUrl") ?? undefined,
     taskIds,
-    newTaskTitles,
+    newTasks: buildNewPlanTasksFromFormData(formData),
   };
   if (isUpdate) {
     raw.planId = formData.get("planId") ?? "";
@@ -60,7 +58,7 @@ export async function createPlan(formData: FormData): Promise<PlanActionResult> 
     return { success: false, error: msg };
   }
 
-  const { taskIds, newTaskTitles, ...planData } = parsed.data;
+  const { taskIds, newTasks, ...planData } = parsed.data;
 
   const plan = await prisma.$transaction(async (tx) => {
     const created = await tx.plan.create({
@@ -82,12 +80,14 @@ export async function createPlan(formData: FormData): Promise<PlanActionResult> 
       },
     });
 
-    if (newTaskTitles.length > 0) {
+    if (newTasks.length > 0) {
       await tx.task.createMany({
-        data: newTaskTitles.map((title) => ({
+        data: newTasks.map((row) => ({
           userId,
-          title: title.slice(0, TASK_TITLE_MAX_LENGTH),
-          urgency: 4,
+          title: row.title.slice(0, TASK_TITLE_MAX_LENGTH),
+          content: row.content ?? null,
+          dueAt: row.dueAt ?? null,
+          urgency: row.urgency,
           planId: created.id,
         })),
       });
@@ -123,7 +123,7 @@ export async function updatePlan(formData: FormData): Promise<PlanActionResult> 
     return { success: false, error: msg };
   }
 
-  const { planId, taskIds, newTaskTitles, ...planData } = parsed.data;
+  const { planId, taskIds, newTasks, ...planData } = parsed.data;
 
   const result = await prisma.$transaction(async (tx) => {
     const updateResult = await tx.plan.updateMany({
@@ -161,12 +161,14 @@ export async function updatePlan(formData: FormData): Promise<PlanActionResult> 
       });
     }
 
-    if (newTaskTitles.length > 0) {
+    if (newTasks.length > 0) {
       await tx.task.createMany({
-        data: newTaskTitles.map((title) => ({
+        data: newTasks.map((row) => ({
           userId,
-          title: title.slice(0, TASK_TITLE_MAX_LENGTH),
-          urgency: 4,
+          title: row.title.slice(0, TASK_TITLE_MAX_LENGTH),
+          content: row.content ?? null,
+          dueAt: row.dueAt ?? null,
+          urgency: row.urgency,
           planId,
         })),
       });
