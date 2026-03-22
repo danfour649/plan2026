@@ -3,6 +3,7 @@
 import { Minus, Plus, Save, X } from "lucide-react";
 
 import { FormSubmitButton } from "@/components/FormSubmitButton";
+import { refreshNavCounts } from "@/components/NavCountsBadges";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState, useCallback } from "react";
@@ -289,6 +290,9 @@ export function PlanForm({
   };
 
   useEffect(() => {
+    if (state?.success) {
+      refreshNavCounts();
+    }
     if (state && !state.success && state.error) {
       toast.error(state.error);
     }

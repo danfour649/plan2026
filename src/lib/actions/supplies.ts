@@ -1,14 +1,14 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 import { getCurrentUserId } from "@/auth";
 import {
-  getNavCountsCacheTag,
-  getPlanDetailCacheTag,
-  getPlansCacheTag,
-  getSuppliesCacheTag,
-} from "@/lib/data-cache";
+  revalidateNavCounts,
+  revalidatePlanDetail,
+  revalidatePlansCaches,
+  revalidateSuppliesCaches,
+} from "@/lib/revalidate-app-data";
 import { prisma } from "@/lib/prisma";
 
 export type SupplyActionResult = { success: true } | { success: false; error: string };
@@ -71,10 +71,10 @@ export async function createSupplyItem(
     },
   });
 
-  revalidateTag(getSuppliesCacheTag(userId), "max");
-  revalidateTag(getPlanDetailCacheTag(planId), "max");
-  revalidateTag(getNavCountsCacheTag(userId), "max");
-  revalidateTag(getPlansCacheTag(userId), "max");
+  revalidateSuppliesCaches(userId);
+  revalidatePlanDetail(planId);
+  revalidateNavCounts(userId);
+  revalidatePlansCaches(userId);
   revalidatePath(`/plans/${planId}`);
   revalidatePath("/supplies");
   return { success: true };
@@ -122,10 +122,10 @@ export async function updateSupplyItem(
     },
   });
 
-  revalidateTag(getSuppliesCacheTag(userId), "max");
-  revalidateTag(getPlanDetailCacheTag(planId), "max");
-  revalidateTag(getNavCountsCacheTag(userId), "max");
-  revalidateTag(getPlansCacheTag(userId), "max");
+  revalidateSuppliesCaches(userId);
+  revalidatePlanDetail(planId);
+  revalidateNavCounts(userId);
+  revalidatePlansCaches(userId);
   revalidatePath(`/plans/${planId}`);
   revalidatePath("/supplies");
   return { success: true };
@@ -143,10 +143,10 @@ export async function deleteSupplyItem(planId: string, itemId: string): Promise<
   if (!existing) return { success: false, error: "Not found" };
 
   await prisma.supplyItem.delete({ where: { id: itemId } });
-  revalidateTag(getSuppliesCacheTag(userId), "max");
-  revalidateTag(getPlanDetailCacheTag(planId), "max");
-  revalidateTag(getNavCountsCacheTag(userId), "max");
-  revalidateTag(getPlansCacheTag(userId), "max");
+  revalidateSuppliesCaches(userId);
+  revalidatePlanDetail(planId);
+  revalidateNavCounts(userId);
+  revalidatePlansCaches(userId);
   revalidatePath(`/plans/${planId}`);
   revalidatePath("/supplies");
   return { success: true };

@@ -1,15 +1,14 @@
-#!/usr/bin/env node
 /**
  * Backfill Task.status = 'completed' for any task that has completedAt set.
  * Safe to run multiple times. Run after prisma generate / migrate if completed
  * tasks still show as 0 on plans list or plan detail.
  *
- * Usage: node scripts/backfill-task-status.mjs
+ * Usage: pnpm exec tsx scripts/backfill-task-status.ts
  */
 
-import { PrismaClient } from "@prisma/client";
+import { createScriptPrisma } from "./lib/prisma-for-scripts";
 
-const prisma = new PrismaClient();
+const prisma = createScriptPrisma();
 
 async function main() {
   const result = await prisma.task.updateMany({
@@ -26,6 +25,6 @@ main()
   .then(() => prisma.$disconnect())
   .catch((e) => {
     console.error(e);
-    prisma.$disconnect();
+    void prisma.$disconnect();
     process.exit(1);
   });

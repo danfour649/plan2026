@@ -79,7 +79,7 @@ If users signed in before the Calendar scope was added, they may need to sign ou
 3. Apply migrations against production:
 
 ```bash
-npx prisma migrate deploy
+pnpm exec prisma migrate deploy
 ```
 
 If you use Vercel build commands or CI automation, make sure `prisma migrate deploy` runs before the app starts serving traffic.
@@ -110,8 +110,8 @@ This project is Postgres-only. For local development:
 3. Run:
 
 ```bash
-npx prisma migrate dev
-npm run dev
+pnpm exec prisma migrate dev
+pnpm run dev
 ```
 
 Keeping development and production on PostgreSQL avoids environment drift.

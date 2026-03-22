@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { FormSubmitButton } from "@/components/FormSubmitButton";
+import { refreshNavCounts } from "@/components/NavCountsBadges";
 import { SupplyItemForm } from "@/components/SupplyItemForm";
 import { useTranslations } from "@/components/TranslationsProvider";
 import {
@@ -66,7 +67,10 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
 
   useEffect(() => {
     if (state && !state.success) toast.error(state.error);
-    if (state?.success) router.refresh();
+    if (state?.success) {
+      refreshNavCounts();
+      router.refresh();
+    }
   }, [state, router]);
 
   return (

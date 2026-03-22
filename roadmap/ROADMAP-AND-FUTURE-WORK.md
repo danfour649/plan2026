@@ -52,14 +52,14 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
    - If the doc presents options/tables, implement according to the **recommended** option unless there is a stated reason to do otherwise.
    - Add all new user-facing strings to `src/lib/i18n.ts` for **en**, **fr**, and **pidgin** (see AGENTS.md “Translations (i18n)”). This is mandatory unless the doc says otherwise.
    - If the doc says to update README or AI_PROJECT_CONTEXT, do it in the same PR.
-4. **Before considering the task done:** Confirm every checklist item is done, every “Recommended next steps” in the doc is addressed, and typecheck passes (`npm run typecheck` unless the user asked to skip).
+4. **Before considering the task done:** Confirm every checklist item is done, every “Recommended next steps” in the doc is addressed, and typecheck passes (`pnpm run typecheck` unless the user asked to skip).
 5. Add a **changeset** in `.changeset/` (short kebab-case filename, standard format).
 6. Commit, push, and **open a PR** with title `<ID> <Title Case description>` (e.g. `TECH-0042 Help pages`).
 7. Move to the next task (new branch from latest `main`).
 
 **Rules:**
 
-- Run `npm run typecheck` (and fix any errors) before considering each task done, unless the user asks to skip for speed.
+- Run `pnpm run typecheck` (and fix any errors) before considering each task done, unless the user asks to skip for speed.
 - When a task is implemented, leave the analysis doc in place and note “Implemented” at the top, or remove the doc if no longer needed.
 - After PRs are open, the user can test and merge using “Testing bulk-task PRs one at a time” in AGENTS.md if desired.
 

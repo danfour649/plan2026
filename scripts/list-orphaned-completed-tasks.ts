@@ -1,14 +1,13 @@
-#!/usr/bin/env node
 /**
  * List tasks that are completed (status = 'completed' or completedAt set) but have no plan (planId null).
  * Use this to find tasks that lost their plan link so you can reassign them in the UI or Prisma Studio.
  *
- * Usage: node scripts/list-orphaned-completed-tasks.mjs
+ * Usage: pnpm exec tsx scripts/list-orphaned-completed-tasks.ts
  */
 
-import { PrismaClient } from "@prisma/client";
+import { createScriptPrisma } from "./lib/prisma-for-scripts";
 
-const prisma = new PrismaClient();
+const prisma = createScriptPrisma();
 
 async function main() {
   const tasks = await prisma.task.findMany({
@@ -37,6 +36,6 @@ main()
   .then(() => prisma.$disconnect())
   .catch((e) => {
     console.error(e);
-    prisma.$disconnect();
+    void prisma.$disconnect();
     process.exit(1);
   });

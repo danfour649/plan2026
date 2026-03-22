@@ -3,11 +3,11 @@
  * Merge a bulk-task PR, update main, then check out the next open PR's branch,
  * merge main into it, push, and print what to test.
  *
- * Usage: npm run bulk:next [PR_NUMBER]
+ * Usage: pnpm run bulk:next [PR_NUMBER]
  * With no argument: merge the PR for the current branch, then switch to the next open PR.
  * With PR_NUMBER: merge that PR, then switch to the next open PR.
- * Example: npm run bulk:next
- * Example: npm run bulk:next -- 58
+ * Example: pnpm run bulk:next
+ * Example: pnpm run bulk:next -- 58
  *
  * Requires: gh (GitHub CLI), git. Run from repo root.
  * On merge conflict after "merge main", the script exits; resolve and push manually.
@@ -47,11 +47,11 @@ function main() {
     try {
       prNum = runQuiet("gh pr view --json number -q .number", execOpts);
     } catch {
-      console.error("No PR number given and current branch has no open PR. Usage: npm run bulk:next [PR_NUMBER]");
+      console.error("No PR number given and current branch has no open PR. Usage: pnpm run bulk:next [PR_NUMBER]");
       process.exit(1);
     }
     if (!prNum || !/^\d+$/.test(prNum)) {
-      console.error("No PR number given and current branch has no open PR. Usage: npm run bulk:next [PR_NUMBER]");
+      console.error("No PR number given and current branch has no open PR. Usage: pnpm run bulk:next [PR_NUMBER]");
       process.exit(1);
     }
   }

@@ -195,7 +195,9 @@ export const planIdSchema = z.object({
 export const updatePlanSchema = basePlanSchema
   .merge(planIdSchema)
   .extend({
-    status: z.enum(PLAN_STATUS_VALUES, { errorMap: () => ({ message: "Status must be draft, started, on hold, completed, or abandoned" }) }),
+    status: z.enum(PLAN_STATUS_VALUES, {
+      message: "Status must be draft, started, on hold, completed, or abandoned",
+    }),
   })
   .refine(
     (data) => data.endAt >= data.startAt,

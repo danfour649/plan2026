@@ -15,9 +15,9 @@
 **Tech stack:**
 - **Runtime/UI:** Node.js, Next.js 16, React 19, TypeScript
 - **Styling:** Tailwind CSS v4
-- **Database:** Prisma ORM with PostgreSQL only
+- **Database:** Prisma ORM 7 with PostgreSQL only (`pg` driver adapter; config in `prisma.config.ts`)
 - **Auth:** NextAuth v4 with Google provider and Prisma adapter; database sessions; session includes `user.id`
-- **Validation:** Zod in `src/lib/validations/task.ts` and `src/lib/validations/plan.ts`
+- **Validation:** Zod 4 in `src/lib/validations/task.ts` and `src/lib/validations/plan.ts`
 - **Rich text:** Tiptap editor for optional task content
 - **Sanitization:** `sanitize-html` in `src/lib/sanitize.ts`
 - **Calendar integration:** Google Calendar API via `googleapis`
@@ -30,15 +30,15 @@
 ```text
 src/
   proxy.ts                              # Cookie-based guard for /tasks, /settings, /plans, /help, /about (not /login, /invite, /share)
-  auth.ts                               # NextAuth config, Google scopes, auth helpers
+  auth.ts                               # NextAuth config, Google scopes, getServerAuthSession, getCurrentUserId, getCurrentUserIdForListPrefs
   app/
     share/[token]/page.tsx              # Public share page: resolve token → plan + tasks; read-only view; token-based "Mark done" / "Restore" (no login). Invalid/expired show same message.
     (app)/
       layout.tsx                        # Authenticated shell; logo links to /actions; tasks nav, plans nav, help, about, settings gear, email, SignOutButton
       actions/page.tsx                  # Urgent and upcoming tasks (urgency 6+ or due in 3 days); overdue icon; edit, mark done, add to calendar
-      tasks/page.tsx                    # Unified tasks page for remaining and optional completed items; shows plan link when task has planId
+      tasks/page.tsx                    # Unified tasks page for remaining and optional completed items; filter from cookie; shows plan link when task has planId
       tasks/loading.tsx                 # Tasks page skeleton
-      plans/page.tsx                    # Plans list (ordered by priority); refresh, show completed/abandoned toggle; per-row Edit and status dropdown; links to /plans/new and /plans/[id]
+      plans/page.tsx                    # Plans list (ordered by priority); refresh, show completed/abandoned toggle (cookie); per-row Edit and status dropdown; links to /plans/new and /plans/[id]
       plans/new/page.tsx                # Full-page create plan form; optional "Start from template" (see src/data/planTemplates.ts)
       plans/[id]/page.tsx               # Full-page plan detail and edit form; delete plan; tasks-in-plan list; List tab for supply items
       help/page.tsx                     # Help: how to use tasks and plans
@@ -66,7 +66,8 @@ src/
     DisconnectGoogleCalendarButton.tsx  # Revokes stored calendar access
     RefreshTasksButton.tsx              # Manual refresh for /tasks
     RefreshPlansButton.tsx              # Manual refresh for /plans
-    ShowArchivedPlansToggle.tsx        # Toggle show completed/abandoned plans on /plans
+    TasksShowCompletedRoot.tsx          # Tasks page: completed visibility + toggle; POST /api/list-prefs + cookie
+    PlansShowArchivedRoot.tsx           # Plans list: archived visibility + toggle; same persistence
     ExportTasksButton.tsx               # Export tasks list to JSON (tasks page)
     ExportPlansButton.tsx               # Export plans list to JSON (plans page)
     ExportPlanButton.tsx                # Export single plan to JSON (plan detail page)
@@ -81,7 +82,10 @@ src/
     actions/share.ts                    # updateTaskStatusByShareToken (token-based, no auth)
     actions/settings.ts                 # Google Calendar disconnect action
     export.ts                           # JSON export types and helpers for plans/tasks (debugging, AI ingestion)
-    prisma.ts                           # Prisma singleton
+    list-filter-preferences.ts          # Cookie names and readers for tasks/plans list filters
+    list-prefs-client.ts                # Browser: POST /api/list-prefs (dedupes against document.cookie)
+    runtime-rsc-memo.ts                 # In-process memo for nav counts, page payloads, auth session (globalThis)
+    prisma.ts                           # Prisma singleton (Prisma 7 + adapter)
     rate-limit.ts                       # In-memory rate limiter for task API routes
     sanitize.ts                         # sanitize-html rules for task content
     validations/task.ts                 # Zod schemas + length limits + CUID taskId + urgency bounds
@@ -95,7 +99,9 @@ DEPLOY.md
 AI_PROJECT_CONTEXT.md
 ```
 
-**Route protection:** `src/proxy.ts` checks only for the presence of a NextAuth session cookie to reduce redirect flicker on `/tasks`, `/actions`, `/settings`, `/plans`, `/help`, `/about`, and `/supplies`. Full session validation (including rejection of invalid or expired cookies) happens in the app layout via `getServerAuthSession()`; all API and server actions use `getCurrentUserId()` or equivalent.
+**Route protection:** `src/proxy.ts` checks only for the presence of a NextAuth session cookie to reduce redirect flicker on `/tasks`, `/actions`, `/settings`, `/plans`, `/help`, `/about`, and `/supplies`. Full session validation (including rejection of invalid or expired cookies) happens in the app layout via `getServerAuthSession()`; all API and server actions use `getCurrentUserId()` or equivalent. **`POST /api/list-prefs`** uses `getCurrentUserIdForListPrefs()`, which reuses the in-process auth session memo when fresh, then a cached Session row lookup, before hitting Prisma again.
+
+**List filter cookies:** `plan2026_tasks_sc` and `plan2026_plans_sa` (`src/lib/list-filter-preferences.ts`). Server reads them on `/tasks` and `/plans`; client updates via `postListPrefs()` → `POST /api/list-prefs` (not a server action) so toggling does not trigger a full RSC reload.
 
 **CSRF:** Forms and API endpoints expect same-origin requests. NextAuth session cookies use SameSite (Lax by default). CSRF protection relies on this same-origin + SameSite behavior; state-changing requests should come from the app origin. If you add endpoints callable from other origins, protect them (e.g. custom header or token).
 
@@ -146,8 +152,8 @@ All task queries and mutations are scoped by the authenticated `userId`.
 
 ### Authentication
 
-- Google OAuth only
-- Sign-in button is disabled if `GOOGLE_CLIENT_ID` or `GOOGLE_CLIENT_SECRET` is missing
+- Google OAuth (primary); optional Facebook when `AUTH_FACEBOOK_ID` / `AUTH_FACEBOOK_SECRET` are set
+- Google sign-in button is disabled if `GOOGLE_CLIENT_ID` or `GOOGLE_CLIENT_SECRET` is missing
 - Session strategy is `database`
 - Session callback injects `user.id` onto `session.user`
 - Requested Google scopes include Calendar event creation:
@@ -161,7 +167,7 @@ All task queries and mutations are scoped by the authenticated `userId`.
 - This is the canonical authenticated app route
 - The root route `/` redirects here
 - Always shows remaining tasks (`completedAt = null`)
-- Optionally shows completed tasks when `showCompleted=1` is present in search params
+- Optionally shows completed tasks when the `plan2026_tasks_sc` cookie is `1` (user toggle persists via `POST /api/list-prefs`; no URL query param)
 - Uses one page instead of separate `/dashboard` and `/completed` routes
 - Remaining tasks are ordered by `urgency desc`, then `createdAt desc`
 - Completed tasks are ordered by `urgency desc`, then `completedAt desc`
@@ -256,6 +262,11 @@ Expected body:
 - Creates a Google Calendar event for the task
 - Returns `{ ok: true, eventId, htmlLink }` on success
 
+### `POST /api/list-prefs`
+
+- Authenticated JSON body: optional boolean `tasksShowCompleted` and/or `plansShowArchived`
+- Sets list-filter cookies for the tasks and plans pages; returns `{ ok: true }` or 400/401
+
 Error conventions across task APIs:
 
 - `401` for unauthenticated access
@@ -317,15 +328,17 @@ Error conventions across task APIs:
 | Calendar event API | `src/app/api/tasks/[id]/calendar/route.ts` |
 | Task attachments upload | `src/app/api/tasks/[id]/attachments/route.ts` (POST) |
 | Task attachment delete | `src/app/api/tasks/[id]/attachments/[attachmentId]/route.ts` (DELETE) |
+| List filter cookies API | `src/app/api/list-prefs/route.ts` |
+| List filter cookie helpers | `src/lib/list-filter-preferences.ts`, `src/lib/list-prefs-client.ts` |
 
 ---
 
 ## 8. Scripts and quality gates
 
-- **`npm run lint`** – ESLint (catches rules such as `react-hooks/set-state-in-effect`).
-- **`npm run build`** – Prisma generate + Next.js production build (catches TypeScript and build errors).
-- **`npm run prepush`** – lint + typecheck only; run manually or via the **pre-push** Git hook. Full **`npm run build`** runs in CI.
-- **`npm run sync:about`** – Regenerates `src/lib/recent-updates.generated.ts` from `CHANGELOG.md` so the About page "Recent updates" section stays in sync. The script also runs during **`npm run build`** and **postinstall**.
+- **`pnpm run lint`** – ESLint (catches rules such as `react-hooks/set-state-in-effect`).
+- **`pnpm run build`** – Prisma generate + Next.js production build (catches TypeScript and build errors).
+- **`pnpm run prepush`** – lint + typecheck only; run manually or via the **pre-push** Git hook. Full **`pnpm run build`** runs in CI.
+- **`pnpm run sync:about`** – Regenerates `src/lib/recent-updates.generated.ts` from `CHANGELOG.md` so the About page "Recent updates" section stays in sync. The script also runs during **`pnpm run build`** and **postinstall**.
 
 ---
 

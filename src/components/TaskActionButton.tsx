@@ -5,6 +5,7 @@ import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
 import { FormSubmitButton } from "@/components/FormSubmitButton";
+import { refreshNavCounts } from "@/components/NavCountsBadges";
 import type { ActionResult } from "@/lib/actions/tasks";
 
 /** useActionState passes (prevState, formData); server actions accept both. */
@@ -43,6 +44,7 @@ export function TaskActionButton({
     if (!state) return;
     if (state.success) {
       toast.success(successMessage ?? label);
+      refreshNavCounts();
     } else if (state.error) {
       toast.error(state.error);
     }
@@ -70,7 +72,7 @@ export function TaskActionButton({
             {actionVisual === "restore" ? (
               <RotateCcw className="h-5 w-5 sm:hidden" strokeWidth={2} aria-hidden />
             ) : (
-              <Check className="h-5 w-5 sm:hidden" strokeWidth={2} aria-hidden />
+              <Check className="h-5 w-5 sm:hidden" strokeWidth={3} aria-hidden />
             )}
             <span className="hidden sm:inline">{label}</span>
           </>

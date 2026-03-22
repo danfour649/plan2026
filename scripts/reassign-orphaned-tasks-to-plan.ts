@@ -1,12 +1,11 @@
-#!/usr/bin/env node
 /**
  * One-off: set planId for all tasks that currently have planId null.
- * Usage: node scripts/reassign-orphaned-tasks-to-plan.mjs
+ * Usage: pnpm exec tsx scripts/reassign-orphaned-tasks-to-plan.ts
  */
 
-import { PrismaClient } from "@prisma/client";
+import { createScriptPrisma } from "./lib/prisma-for-scripts";
 
-const prisma = new PrismaClient();
+const prisma = createScriptPrisma();
 
 const TARGET_PLAN_ID = "cmmftd9i20001lb04kgvm269t";
 
@@ -22,6 +21,6 @@ main()
   .then(() => prisma.$disconnect())
   .catch((e) => {
     console.error(e);
-    prisma.$disconnect();
+    void prisma.$disconnect();
     process.exit(1);
   });

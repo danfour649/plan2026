@@ -3,6 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
+import { refreshNavCounts } from "@/components/NavCountsBadges";
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { PlanActionResult } from "@/lib/actions/plans";
 import { PLAN_STATUS_VALUES } from "@/lib/validations/plan";
@@ -29,6 +30,7 @@ export function PlanStatusSelect({ planId, currentStatus, action }: PlanStatusSe
     if (!state) return;
     if (state.success) {
       toast.success(t.toasts.statusUpdated);
+      refreshNavCounts();
     } else {
       toast.error(state.error);
     }

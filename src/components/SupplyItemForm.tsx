@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { FormSubmitButton } from "@/components/FormSubmitButton";
+import { refreshNavCounts } from "@/components/NavCountsBadges";
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { SupplyActionResult } from "@/lib/actions/supplies";
 
@@ -47,6 +48,7 @@ export function SupplyItemForm({
 
   useEffect(() => {
     if (state?.success) {
+      refreshNavCounts();
       router.refresh();
       onSuccess?.();
     }

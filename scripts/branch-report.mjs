@@ -4,7 +4,7 @@
  * local branch why it appears unmerged (squash-merged PR vs closed PR vs no PR).
  *
  * Usage: node scripts/branch-report.mjs [-d]
- *    or: npm run branch:report [-- -d]
+ *    or: pnpm run branch:report [-- -d]
  *
  * Options:
  *   -d, --delete   Delete all branches merged into main (local and remote).
