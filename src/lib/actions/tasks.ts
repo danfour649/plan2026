@@ -16,7 +16,11 @@ import { addTaskSchema, taskIdSchema, updateTaskSchema } from "@/lib/validations
 
 export type ActionResult = { success: true } | { success: false; error: string };
 
-export async function addTask(formData: FormData): Promise<ActionResult> {
+/** When used with useActionState, Next/React pass (prevState, formData); we must accept both and use formData. */
+export async function addTask(
+  _prevState: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
   const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
 
@@ -52,16 +56,24 @@ export async function addTask(formData: FormData): Promise<ActionResult> {
   if (parsed.data.planId) {
     revalidateTag(getPlansCacheTag(userId), "max");
     revalidateTag(getPlanDetailCacheTag(parsed.data.planId), "max");
+    revalidatePath("/plans");
+    revalidatePath(`/plans/${parsed.data.planId}`);
   }
   revalidatePath("/tasks");
-  revalidatePath("/plans");
-  if (parsed.data.planId) revalidatePath(`/plans/${parsed.data.planId}`);
   return { success: true };
 }
 
-export async function updateTask(formData: FormData): Promise<ActionResult> {
+/** When used with useActionState, Next/React pass (prevState, formData); we must accept both and use formData. */
+export async function updateTask(
+  _prevState: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
   const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
+
+  const rawPlanId = formData.get("planId");
+  const planIdFromForm =
+    rawPlanId === null ? undefined : rawPlanId === "" ? null : typeof rawPlanId === "string" ? rawPlanId.trim() || null : undefined;
 
   const parsed = updateTaskSchema.safeParse({
     taskId: formData.get("taskId") ?? "",
@@ -69,7 +81,7 @@ export async function updateTask(formData: FormData): Promise<ActionResult> {
     content: formData.get("content") ?? undefined,
     dueAt: formData.get("dueAt") ?? undefined,
     urgency: formData.get("urgency") ?? 4,
-    planId: formData.get("planId") ?? undefined,
+    planId: rawPlanId === null ? undefined : rawPlanId === "" ? null : rawPlanId,
     status: formData.get("status") ?? undefined,
   });
   if (!parsed.success) {
@@ -82,7 +94,7 @@ export async function updateTask(formData: FormData): Promise<ActionResult> {
     content: parsed.data.content,
     dueAt: parsed.data.dueAt,
     urgency: parsed.data.urgency,
-    planId: parsed.data.planId,
+    planId: planIdFromForm ?? undefined,
     status: parsed.data.status,
   });
   if ("error" in result) return { success: false, error: result.error };
@@ -100,7 +112,11 @@ export async function updateTask(formData: FormData): Promise<ActionResult> {
   return { success: true };
 }
 
-export async function completeTask(formData: FormData): Promise<ActionResult> {
+/** When used with useActionState, Next/React pass (prevState, formData); we must accept both and use formData. */
+export async function completeTask(
+  _prevState: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
   const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
 
@@ -124,7 +140,11 @@ export async function completeTask(formData: FormData): Promise<ActionResult> {
   return { success: true };
 }
 
-export async function restoreTask(formData: FormData): Promise<ActionResult> {
+/** When used with useActionState, Next/React pass (prevState, formData); we must accept both and use formData. */
+export async function restoreTask(
+  _prevState: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
   const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
 
@@ -148,7 +168,11 @@ export async function restoreTask(formData: FormData): Promise<ActionResult> {
   return { success: true };
 }
 
-export async function deleteTask(formData: FormData): Promise<ActionResult> {
+/** When used with useActionState, Next/React pass (prevState, formData); we must accept both and use formData. */
+export async function deleteTask(
+  _prevState: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
   const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
 

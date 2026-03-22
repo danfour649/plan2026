@@ -7,8 +7,6 @@ import { prisma } from "@/lib/prisma";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { isValidTaskId } from "@/lib/validations/task";
 
-export const runtime = "nodejs";
-
 type Params = { params: Promise<{ id: string }> };
 
 /** Strip HTML tags for plain-text description. */

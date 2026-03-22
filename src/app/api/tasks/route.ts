@@ -6,8 +6,6 @@ import { createTaskForUser } from "@/lib/task-service";
 import { prisma } from "@/lib/prisma";
 import { addTaskSchema } from "@/lib/validations/task";
 
-export const runtime = "nodejs";
-
 export async function GET() {
   const userId = await getCurrentUserId();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

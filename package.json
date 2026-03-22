@@ -11,6 +11,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "check:quick": "npm run typecheck && npm run lint",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -26,7 +27,8 @@
     "postinstall": "prisma generate && node scripts/sync-about-changelog.mjs",
     "pr": "gh pr create --fill --base main",
     "bulk:next": "node scripts/bulk-merge-and-next.mjs",
-    "branch:report": "node scripts/branch-report.mjs"
+    "branch:report": "node scripts/branch-report.mjs",
+    "git:squash": "node scripts/squash-soft.mjs"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.7",

@@ -1,6 +1,6 @@
 /**
- * Server-side data cache using Next.js unstable_cache + revalidateTag.
- * Cached data is reused when navigating between pages; mutations call
+ * Server-side data cache using Next.js Cache Components (`use cache`) + cacheTag +
+ * revalidateTag. Cached data is reused when navigating between pages; mutations call
  * revalidateTag() so the next request gets fresh data.
  *
  * Cache keys include userId (and page params where relevant) so data is
@@ -11,12 +11,11 @@
  * We rehydrate them after reading from cache so consumers always get Date instances.
  */
 
-import { unstable_cache } from "next/cache";
+import { cache } from "react";
+import { cacheLife, cacheTag } from "next/cache";
 import type { Prisma } from "@prisma/client";
 import { TaskStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-
-const ARCHIVED_STATUSES = ["completed", "abandoned"] as const;
 
 /** Turn a cache-deserialized value back into a Date (cache stores dates as ISO strings). */
 function toDate(v: unknown): Date {
@@ -43,6 +42,11 @@ export function getPlansCacheTag(userId: string): string {
   return `plans-${userId}`;
 }
 
+/** Plan list (id, name) for dropdowns. Invalidated only when plans are created/updated/deleted, not when tasks change. */
+export function getPlanListCacheTag(userId: string): string {
+  return `plan-list-${userId}`;
+}
+
 export function getTasksCacheTag(userId: string): string {
   return `tasks-${userId}`;
 }
@@ -55,70 +59,79 @@ export function getPlanDetailCacheTag(planId: string): string {
   return `plan-${planId}`;
 }
 
-// Shared remaining-task count so layout (nav badge) and tasks page (pagination) don't run it twice
+// Shared remaining-task count so layout (nav badge) and tasks page (pagination) don't run it twice.
+// Wrapped in cache() so layout and tasks page only trigger one DB count per request.
 async function fetchRemainingTaskCount(userId: string): Promise<number> {
   return prisma.task.count({
     where: { userId, status: { not: TaskStatus.completed } },
   });
 }
 
-export function getCachedRemainingTaskCount(userId: string): Promise<number> {
-  return unstable_cache(
-    () => fetchRemainingTaskCount(userId),
-    ["remaining-task-count", userId],
-    { tags: [navCountsTag(userId)] },
-  )();
+async function getCachedRemainingTaskCountData(userId: string): Promise<number> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(navCountsTag(userId));
+  return fetchRemainingTaskCount(userId);
 }
 
-async function fetchActivePlanCount(userId: string): Promise<number> {
-  return prisma.plan.count({
-    where: {
-      userId,
-      status: { notIn: [...ARCHIVED_STATUSES] },
-    },
-  });
+export const getCachedRemainingTaskCount = cache((userId: string): Promise<number> => {
+  return getCachedRemainingTaskCountData(userId);
+});
+
+/** Single query for all three nav counts (remaining tasks, active plans, supplies). */
+async function fetchNavCounts(userId: string): Promise<NavCounts> {
+  const row = await prisma.$queryRaw<
+    [{ remaining_task_count: bigint; active_plan_count: bigint; supplies_count: bigint }]
+  >`
+    SELECT
+      (SELECT COUNT(*)::int FROM "Task" WHERE "userId" = ${userId} AND "status" <> 'completed') AS "remaining_task_count",
+      (SELECT COUNT(*)::int FROM "Plan" WHERE "userId" = ${userId} AND "status" NOT IN ('completed', 'abandoned')) AS "active_plan_count",
+      (SELECT COUNT(*)::int FROM "SupplyItem" s
+       INNER JOIN "Plan" p ON p.id = s."planId"
+       WHERE p."userId" = ${userId}
+          OR EXISTS (SELECT 1 FROM "PlanShare" ps WHERE ps."planId" = p.id AND ps."sharedWithUserId" = ${userId})) AS "supplies_count"
+  `;
+  const r = row[0];
+  return {
+    remainingTaskCount: Number(r?.remaining_task_count ?? 0),
+    activePlanCount: Number(r?.active_plan_count ?? 0),
+    suppliesCount: Number(r?.supplies_count ?? 0),
+  };
 }
 
-function getCachedActivePlanCount(userId: string): Promise<number> {
-  return unstable_cache(
-    () => fetchActivePlanCount(userId),
-    ["active-plan-count", userId],
-    { tags: [navCountsTag(userId)] },
-  )();
+async function getCachedNavCountsData(userId: string): Promise<NavCounts> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(navCountsTag(userId));
+  return fetchNavCounts(userId);
 }
 
-async function fetchSuppliesCount(userId: string): Promise<number> {
-  return prisma.supplyItem.count({
-    where: {
-      plan: {
-        OR: [
-          { userId },
-          { shares: { some: { sharedWithUserId: userId } } },
-        ],
-      },
-    },
-  });
-}
+export const getCachedNavCounts = cache((userId: string): Promise<NavCounts> => {
+  return getCachedNavCountsData(userId);
+});
 
-function getCachedSuppliesCount(userId: string): Promise<number> {
-  return unstable_cache(
-    () => fetchSuppliesCount(userId),
-    ["supplies-count", userId],
-    { tags: [navCountsTag(userId)] },
-  )();
-}
-
-export async function getCachedNavCounts(userId: string): Promise<NavCounts> {
-  const [remainingTaskCount, activePlanCount, suppliesCount] = await Promise.all([
-    getCachedRemainingTaskCount(userId),
-    getCachedActivePlanCount(userId),
-    getCachedSuppliesCount(userId),
-  ]);
-  return { remainingTaskCount, activePlanCount, suppliesCount };
-}
-
-// Plans list: used by /plans page
-type PlanWhereInput = Prisma.PlanWhereInput;
+// Plans list: used by /plans page — single query for plans + completed task count + total count
+type PlanRow = {
+  id: string;
+  userId: string;
+  name: string;
+  description: string | null;
+  goal: string | null;
+  startAt: Date;
+  endAt: Date;
+  actualStartAt: Date | null;
+  actualEndAt: Date | null;
+  status: string;
+  priority: number;
+  percentCompleted: number;
+  notes: string | null;
+  color: string | null;
+  imageUrl: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  completed_task_count: number;
+  total_plans: number;
+};
 
 async function fetchPlansPage(
   userId: string,
@@ -126,32 +139,66 @@ async function fetchPlansPage(
   page: number,
   limit: number,
 ) {
-  const baseWhere: PlanWhereInput = {
-    OR: [
-      { userId },
-      { shares: { some: { sharedWithUserId: userId } } },
-    ],
-  };
-  const where: PlanWhereInput = showArchived
-    ? baseWhere
-    : { ...baseWhere, status: { notIn: [...ARCHIVED_STATUSES] } };
+  const skip = (page - 1) * limit;
+  // Single query: plans + completed counts via one LEFT JOIN (no per-row scalar subqueries).
+  const rows = await prisma.$queryRaw<PlanRow[]>`
+    WITH completed AS (
+      SELECT t."planId", COUNT(*)::int AS cnt
+      FROM "Task" t
+      WHERE (t.status = 'completed' OR t."completedAt" IS NOT NULL)
+      GROUP BY t."planId"
+    )
+    SELECT
+      p.id, p."userId", p.name, p.description, p.goal, p."startAt", p."endAt",
+      p."actualStartAt", p."actualEndAt", p.status, p.priority, p."percentCompleted",
+      p.notes, p.color, p."imageUrl", p."createdAt", p."updatedAt",
+      COALESCE(c.cnt, 0) AS completed_task_count,
+      COUNT(*) OVER()::int AS total_plans
+    FROM "Plan" p
+    LEFT JOIN completed c ON c."planId" = p.id
+    WHERE (p."userId" = ${userId}
+       OR EXISTS (SELECT 1 FROM "PlanShare" ps WHERE ps."planId" = p.id AND ps."sharedWithUserId" = ${userId}))
+      AND (${showArchived} = true OR p.status NOT IN ('completed', 'abandoned'))
+    ORDER BY p.priority DESC, p."createdAt" DESC
+    LIMIT ${limit} OFFSET ${skip}
+  `;
 
-  const [plans, totalPlans] = await Promise.all([
-    prisma.plan.findMany({
-      where,
-      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
-      skip: (page - 1) * limit,
-      take: limit,
-      include: { tasks: { select: { id: true, status: true } } },
-    }),
-    prisma.plan.count({ where }),
-  ]);
+  const plans = rows.map((row) => ({
+    id: row.id,
+    userId: row.userId,
+    name: row.name,
+    description: row.description,
+    goal: row.goal,
+    startAt: row.startAt,
+    endAt: row.endAt,
+    actualStartAt: row.actualStartAt,
+    actualEndAt: row.actualEndAt,
+    status: row.status,
+    priority: row.priority,
+    percentCompleted: row.percentCompleted,
+    notes: row.notes,
+    color: row.color,
+    imageUrl: row.imageUrl,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+    tasks: [] as Array<{ id: string; status: string; completedAt: Date | null }>,
+    completedTaskCount: row.completed_task_count,
+  }));
+  const totalPlans = rows[0]?.total_plans ?? 0;
   return { plans, totalPlans };
 }
 
-function rehydratePlan<T extends { startAt: unknown; endAt: unknown; actualStartAt?: unknown; actualEndAt?: unknown; createdAt: unknown; updatedAt: unknown; tasks?: Array<{ id: unknown; status: unknown }> }>(
+function rehydratePlan<T extends { startAt: unknown; endAt: unknown; actualStartAt?: unknown; actualEndAt?: unknown; createdAt: unknown; updatedAt: unknown; tasks?: Array<{ id: unknown; status: unknown; completedAt?: unknown }>; completedTaskCount?: number }>(
   p: T,
-): T {
+): T & { completedTaskCount: number } {
+  const tasks = p.tasks?.map((t) => ({ ...t, completedAt: t.completedAt != null ? toDate(t.completedAt) : null }));
+  const completedTaskCount =
+    p.completedTaskCount ??
+    (tasks?.filter((t) => {
+      const status = String((t as { status?: unknown }).status ?? "");
+      const hasCompletedAt = (t as { completedAt?: unknown }).completedAt != null;
+      return status === "completed" || hasCompletedAt;
+    }).length ?? 0);
   return {
     ...p,
     startAt: toDate(p.startAt),
@@ -160,8 +207,21 @@ function rehydratePlan<T extends { startAt: unknown; endAt: unknown; actualStart
     actualEndAt: p.actualEndAt != null ? toDate(p.actualEndAt) : null,
     createdAt: toDate(p.createdAt),
     updatedAt: toDate(p.updatedAt),
-    tasks: p.tasks?.map((t) => ({ ...t })),
-  } as T;
+    tasks,
+    completedTaskCount,
+  } as T & { completedTaskCount: number };
+}
+
+async function getCachedPlansPageData(
+  userId: string,
+  showArchived: boolean,
+  page: number,
+  limit: number,
+) {
+  "use cache";
+  cacheLife("max");
+  cacheTag(getPlansCacheTag(userId));
+  return fetchPlansPage(userId, showArchived, page, limit);
 }
 
 export async function getCachedPlansPage(
@@ -170,21 +230,15 @@ export async function getCachedPlansPage(
   page: number,
   limit: number,
 ) {
-  const result = await unstable_cache(
-    () => fetchPlansPage(userId, showArchived, page, limit),
-    ["plans-page", userId, String(showArchived), String(page), String(limit)],
-    { tags: [getPlansCacheTag(userId)] },
-  )();
+  const result = await getCachedPlansPageData(userId, showArchived, page, limit);
   return { plans: result.plans.map(rehydratePlan), totalPlans: result.totalPlans };
 }
 
-// Tasks list: remaining + optional completed
-const taskInclude = {
-  plan: { select: { id: true, name: true } },
-  attachments: { select: { id: true, url: true, filename: true, size: true } },
-} as const;
+// Tasks list: remaining + optional completed. Attachments are not loaded here; they are fetched when the edit dialog opens.
+/** No plan relation: tasks page and actions page attach plan from getCachedPlansForDropdown to avoid a second Plan query (Plan WHERE id IN (...)). */
+const taskInclude = {} as const;
 
-/** Task shape returned by getCachedTasksPage (includes status, plan, attachments). */
+/** Task shape returned by getCachedTasksPage (includes status, plan). attachments are always [] from list; edit dialog fetches them on open. */
 export type CachedTasksPageTask = {
   id: string;
   userId: string;
@@ -194,7 +248,7 @@ export type CachedTasksPageTask = {
   urgency: number;
   googleCalendarEventId: string | null;
   googleCalendarEventUrl: string | null;
-  status: import("@prisma/client").TaskStatus;
+  status: TaskStatus;
   completedAt: Date | null;
   planId: string | null;
   createdAt: Date;
@@ -209,9 +263,10 @@ async function fetchTasksPage(
   page: number,
   limit: number,
   completedPage: number,
+  knownTotalRemaining?: number,
 ) {
   const remainingWhere = { userId, status: { not: TaskStatus.completed } };
-  const [remainingTasks, totalRemaining] = await Promise.all([
+  const [remainingRows, totalRemaining] = await Promise.all([
     prisma.task.findMany({
       where: remainingWhere,
       orderBy: [{ status: "asc" }, { urgency: "desc" }, { createdAt: "desc" }],
@@ -219,11 +274,14 @@ async function fetchTasksPage(
       take: limit,
       include: taskInclude,
     }),
-    getCachedRemainingTaskCount(userId),
+    knownTotalRemaining !== undefined
+      ? Promise.resolve(knownTotalRemaining)
+      : getCachedRemainingTaskCount(userId),
   ]);
+  const remainingTasks = remainingRows.map((t) => ({ ...t, attachments: [] as { id: string; url: string; filename: string; size: number }[] }));
 
   const completedWhere = { userId, status: TaskStatus.completed };
-  const [completedTasks, totalCompleted] = showCompleted
+  const [completedRows, totalCompleted] = showCompleted
     ? await Promise.all([
         prisma.task.findMany({
           where: completedWhere,
@@ -235,20 +293,28 @@ async function fetchTasksPage(
         prisma.task.count({ where: completedWhere }),
       ])
     : [[], 0];
-
-  const plans = await prisma.plan.findMany({
-    where: { userId },
-    orderBy: [{ priority: "desc" }, { name: "asc" }],
-    select: { id: true, name: true },
-  });
+  const completedTasks = (completedRows as typeof remainingRows).map((t) => ({ ...t, attachments: [] as { id: string; url: string; filename: string; size: number }[] }));
 
   return {
     remainingTasks,
     totalRemaining,
     completedTasks,
     totalCompleted,
-    plans,
   };
+}
+
+async function getCachedTasksPageData(
+  userId: string,
+  showCompleted: boolean,
+  page: number,
+  limit: number,
+  completedPage: number,
+  knownTotalRemaining?: number,
+) {
+  "use cache";
+  cacheLife("max");
+  cacheTag(getTasksCacheTag(userId));
+  return fetchTasksPage(userId, showCompleted, page, limit, completedPage, knownTotalRemaining);
 }
 
 function rehydrateTask<T extends { dueAt?: unknown; completedAt?: unknown; status?: unknown; createdAt: unknown; updatedAt: unknown }>(
@@ -269,6 +335,8 @@ export async function getCachedTasksPage(
   page: number,
   limit: number,
   completedPage: number,
+  /** When provided (e.g. from getCachedNavCounts), avoids an extra remaining-task count query. */
+  knownTotalRemaining?: number,
 ): Promise<{
   remainingTasks: CachedTasksPageTask[];
   totalRemaining: number;
@@ -276,24 +344,29 @@ export async function getCachedTasksPage(
   totalCompleted: number;
   plans: { id: string; name: string }[];
 }> {
-  const result = await unstable_cache(
-    () => fetchTasksPage(userId, showCompleted, page, limit, completedPage),
-    [
-      "tasks-page",
-      userId,
-      String(showCompleted),
-      String(page),
-      String(limit),
-      String(completedPage),
-    ],
-    { tags: [getTasksCacheTag(userId), getPlansCacheTag(userId)] },
-  )();
+  const result = await getCachedTasksPageData(
+    userId,
+    showCompleted,
+    page,
+    limit,
+    completedPage,
+    knownTotalRemaining,
+  );
+  const plans = await getCachedPlansForDropdown(userId);
+  const planFor = (planId: string | null): { id: string; name: string } | null =>
+    planId ? plans.find((p) => p.id === planId) ?? null : null;
   return {
-    remainingTasks: result.remainingTasks.map(rehydrateTask) as CachedTasksPageTask[],
+    remainingTasks: result.remainingTasks.map((t) => ({
+      ...rehydrateTask(t),
+      plan: planFor(t.planId),
+    })) as CachedTasksPageTask[],
     totalRemaining: result.totalRemaining,
-    completedTasks: result.completedTasks.map(rehydrateTask) as CachedTasksPageTask[],
+    completedTasks: result.completedTasks.map((t) => ({
+      ...rehydrateTask(t),
+      plan: planFor(t.planId),
+    })) as CachedTasksPageTask[],
     totalCompleted: result.totalCompleted,
-    plans: result.plans,
+    plans,
   };
 }
 
@@ -308,8 +381,17 @@ function getActionsDateRange(): { startOfToday: Date; endOfThreeDays: Date } {
   return { startOfToday, endOfThreeDays };
 }
 
-async function fetchActionsPage(userId: string) {
-  const { endOfThreeDays } = getActionsDateRange();
+/** UTC day boundaries for the actions list cache key (YYYY-MM-DD). */
+function getActionsDateRangeForDay(dateKey: string): { startOfToday: Date; endOfThreeDays: Date } {
+  const [y, m, d] = dateKey.split("-").map(Number);
+  const startOfToday = new Date(Date.UTC(y, m - 1, d, 0, 0, 0, 0));
+  const endOfThreeDays = new Date(startOfToday);
+  endOfThreeDays.setUTCDate(endOfThreeDays.getUTCDate() + 4);
+  return { startOfToday, endOfThreeDays };
+}
+
+async function fetchActionsPage(userId: string, dateKey: string) {
+  const { endOfThreeDays } = getActionsDateRangeForDay(dateKey);
   const tasks = await prisma.task.findMany({
     where: {
       userId,
@@ -323,7 +405,8 @@ async function fetchActionsPage(userId: string) {
     include: taskInclude,
   });
   const now = new Date();
-  const sorted = [...tasks].sort((a, b) => {
+  const withAttachments = tasks.map((t) => ({ ...t, attachments: [] as { id: string; url: string; filename: string; size: number }[] }));
+  const sorted = [...withAttachments].sort((a, b) => {
     if (a.status !== b.status) return a.status === "active" ? -1 : 1;
     const aDue = a.dueAt != null ? toDate(a.dueAt) : null;
     const bDue = b.dueAt != null ? toDate(b.dueAt) : null;
@@ -335,35 +418,49 @@ async function fetchActionsPage(userId: string) {
     if (bDue) return 1;
     return b.urgency - a.urgency;
   });
-  const plans = await prisma.plan.findMany({
-    where: { userId },
-    orderBy: [{ priority: "desc" }, { name: "asc" }],
-    select: { id: true, name: true },
-  });
-  return { tasks: sorted, plans };
+  return { tasks: sorted };
 }
 
-export async function getCachedActionsPage(userId: string) {
+async function getCachedActionsPageData(
+  userId: string,
+  dateKey: string,
+): Promise<Awaited<ReturnType<typeof fetchActionsPage>>> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(getTasksCacheTag(userId));
+  return fetchActionsPage(userId, dateKey);
+}
+
+export async function getCachedActionsPage(userId: string): Promise<{
+  tasks: CachedTasksPageTask[];
+  plans: { id: string; name: string }[];
+}> {
   const { startOfToday } = getActionsDateRange();
   const dateKey = startOfToday.toISOString().slice(0, 10);
-  const result = await unstable_cache(
-    () => fetchActionsPage(userId),
-    ["actions-page", userId, dateKey],
-    { tags: [getTasksCacheTag(userId), getPlansCacheTag(userId)] },
-  )();
+  const [result, plans] = await Promise.all([
+    getCachedActionsPageData(userId, dateKey),
+    getCachedPlansForDropdown(userId),
+  ]);
+  const planFor = (planId: string | null): { id: string; name: string } | null =>
+    planId ? plans.find((p) => p.id === planId) ?? null : null;
   return {
-    tasks: result.tasks.map(rehydrateTask),
-    plans: result.plans,
+    tasks: result.tasks.map((t) => ({
+      ...rehydrateTask(t),
+      plan: planFor(t.planId),
+    })) as CachedTasksPageTask[],
+    plans,
   };
 }
 
-// Plan detail page: plan + supplyItems + tasks (paginated + export) + dropdowns
+// Plan detail page: plan + supplyItems + all tasks (then split incomplete/completed in JS)
 const PLAN_TASKS_ORDER = [
   { status: "asc" as const },
   { completedAt: "desc" as const },
   { urgency: "desc" as const },
   { createdAt: "desc" as const },
 ] as const;
+
+const MAX_COMPLETED_TASKS_ON_PLAN_DETAIL = 200;
 
 const planDetailTaskSelect = {
   id: true,
@@ -377,13 +474,38 @@ const planDetailTaskSelect = {
   updatedAt: true,
 } as const;
 
+type PlanDetailTaskRow = Prisma.TaskGetPayload<{ select: typeof planDetailTaskSelect }> & {
+  attachments: { id: string; url: string; filename: string; size: number }[];
+};
+
+type PlanDetailPlanRow = Prisma.PlanGetPayload<{
+  include: { supplyItems: true };
+}>;
+
+/** Rehydrated plan detail payload for the plan page and consumers that need typed tasks/plan. */
+export type CachedPlanDetailBundle = {
+  plan: PlanDetailPlanRow | null;
+  incompleteTasks: PlanDetailTaskRow[];
+  totalIncomplete: number;
+  completedTasks: PlanDetailTaskRow[];
+  totalCompleted: number;
+  exportTasks: PlanDetailTaskRow[];
+};
+
+function isTaskCompleted(task: { status: unknown; completedAt: unknown }): boolean {
+  const status = String(task.status ?? "");
+  const hasCompletedAt = task.completedAt != null && task.completedAt !== undefined;
+  return status === "completed" || hasCompletedAt;
+}
+
 async function fetchPlanDetail(
   planId: string,
   userId: string,
   taskPage: number,
   taskLimit: number,
 ) {
-  const [plan, planTasks, totalPlanTasks, exportTasks] = await Promise.all([
+  // Attachments are not loaded here; edit dialog fetches them when opened.
+  const [plan, allTasksRows] = await Promise.all([
     prisma.plan.findFirst({
       where: {
         id: planId,
@@ -401,23 +523,47 @@ async function fetchPlanDetail(
     prisma.task.findMany({
       where: { planId },
       orderBy: [...PLAN_TASKS_ORDER],
-      skip: (taskPage - 1) * taskLimit,
-      take: taskLimit,
-      select: {
-        ...planDetailTaskSelect,
-        attachments: {
-          select: { id: true, url: true, filename: true, size: true },
-        },
-      },
-    }),
-    prisma.task.count({ where: { planId } }),
-    prisma.task.findMany({
-      where: { planId },
-      orderBy: [...PLAN_TASKS_ORDER],
       select: planDetailTaskSelect,
     }),
   ]);
-  return { plan, planTasks, totalPlanTasks, exportTasks };
+  const allTasks = allTasksRows.map((t) => ({ ...t, attachments: [] as { id: string; url: string; filename: string; size: number }[] }));
+
+  if (!plan) {
+    return {
+      plan: null,
+      incompleteTasks: [],
+      totalIncomplete: 0,
+      completedTasks: [],
+      totalCompleted: 0,
+      exportTasks: [],
+    };
+  }
+
+  const incompleteTasks = allTasks.filter((t) => !isTaskCompleted(t));
+  const completedTasks = [...allTasks.filter((t) => isTaskCompleted(t))].sort(
+    (a, b) => (b.completedAt?.getTime() ?? 0) - (a.completedAt?.getTime() ?? 0),
+  );
+
+  const totalIncomplete = incompleteTasks.length;
+  const totalCompleted = completedTasks.length;
+
+  const incompletePaginated = incompleteTasks.slice(
+    (taskPage - 1) * taskLimit,
+    taskPage * taskLimit,
+  );
+
+  const completedToShow = completedTasks.slice(0, MAX_COMPLETED_TASKS_ON_PLAN_DETAIL);
+
+  const exportTasks = allTasks;
+
+  return {
+    plan,
+    incompleteTasks: incompletePaginated,
+    totalIncomplete,
+    completedTasks: completedToShow,
+    totalCompleted,
+    exportTasks,
+  };
 }
 
 function rehydratePlanWithSupplyItems<
@@ -439,11 +585,24 @@ function rehydratePlanWithSupplyItems<
     actualEndAt: p.actualEndAt != null ? toDate(p.actualEndAt) : null,
     createdAt: toDate(p.createdAt),
     updatedAt: toDate(p.updatedAt),
-    supplyItems: p.supplyItems?.map((s) => ({
-      ...s,
-      createdAt: s.createdAt != null ? toDate(s.createdAt) : undefined,
-    })),
+    supplyItems: p.supplyItems?.map((s) => rehydrateSupplyItem(s)),
   } as T;
+}
+
+async function getCachedPlanDetailData(
+  planId: string,
+  userId: string,
+  taskPage: number,
+  taskLimit: number,
+): Promise<Awaited<ReturnType<typeof fetchPlanDetail>>> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(getPlanDetailCacheTag(planId));
+  const result = await fetchPlanDetail(planId, userId, taskPage, taskLimit);
+  return {
+    ...result,
+    plan: result.plan ? rehydratePlanWithSupplyItems(result.plan) : null,
+  } as Awaited<ReturnType<typeof fetchPlanDetail>>;
 }
 
 export async function getCachedPlanDetail(
@@ -451,18 +610,16 @@ export async function getCachedPlanDetail(
   userId: string,
   taskPage: number,
   taskLimit: number,
-) {
-  const result = await unstable_cache(
-    () => fetchPlanDetail(planId, userId, taskPage, taskLimit),
-    ["plan-detail", planId, userId, String(taskPage), String(taskLimit)],
-    { tags: [getPlanDetailCacheTag(planId)] },
-  )();
+): Promise<CachedPlanDetailBundle> {
+  const result = await getCachedPlanDetailData(planId, userId, taskPage, taskLimit);
   return {
-    plan: result.plan ? rehydratePlanWithSupplyItems(result.plan) : null,
-    planTasks: result.planTasks.map(rehydrateTask),
-    totalPlanTasks: result.totalPlanTasks,
+    plan: result.plan,
+    incompleteTasks: result.incompleteTasks.map(rehydrateTask),
+    totalIncomplete: result.totalIncomplete,
+    completedTasks: result.completedTasks.map(rehydrateTask),
+    totalCompleted: result.totalCompleted,
     exportTasks: result.exportTasks.map(rehydrateTask),
-  };
+  } as CachedPlanDetailBundle;
 }
 
 async function fetchPlansForDropdown(userId: string) {
@@ -473,12 +630,17 @@ async function fetchPlansForDropdown(userId: string) {
   });
 }
 
+async function getCachedPlansForDropdownData(
+  userId: string,
+): Promise<{ id: string; name: string }[]> {
+  "use cache";
+  cacheLife("max");
+  cacheTag(getPlanListCacheTag(userId));
+  return fetchPlansForDropdown(userId);
+}
+
 export async function getCachedPlansForDropdown(userId: string) {
-  return unstable_cache(
-    () => fetchPlansForDropdown(userId),
-    ["plans-dropdown", userId],
-    { tags: [getPlansCacheTag(userId)] },
-  )();
+  return getCachedPlansForDropdownData(userId);
 }
 
 async function fetchUserTasksForDropdown(userId: string) {
@@ -489,12 +651,15 @@ async function fetchUserTasksForDropdown(userId: string) {
   });
 }
 
+async function getCachedUserTasksForDropdownData(userId: string) {
+  "use cache";
+  cacheLife("max");
+  cacheTag(getTasksCacheTag(userId));
+  return fetchUserTasksForDropdown(userId);
+}
+
 export async function getCachedUserTasksForDropdown(userId: string) {
-  return unstable_cache(
-    () => fetchUserTasksForDropdown(userId),
-    ["user-tasks-dropdown", userId],
-    { tags: [getTasksCacheTag(userId)] },
-  )();
+  return getCachedUserTasksForDropdownData(userId);
 }
 
 // Supplies page
@@ -517,9 +682,10 @@ async function fetchSuppliesPage(userId: string) {
   return { plansWithSupplies };
 }
 
-function rehydrateSupplyItem<T extends { createdAt?: unknown; updatedAt?: unknown }>(s: T): T {
+function rehydrateSupplyItem<T extends { createdAt?: unknown; updatedAt?: unknown; price?: unknown }>(s: T): T {
   return {
     ...s,
+    price: s.price != null ? Number(s.price as number | string) : null,
     createdAt: s.createdAt != null ? toDate(s.createdAt) : undefined,
     updatedAt: s.updatedAt != null ? toDate(s.updatedAt) : undefined,
   } as T;
@@ -536,13 +702,16 @@ function rehydratePlanWithSupplies<T extends { createdAt: unknown; updatedAt: un
   } as T;
 }
 
-export async function getCachedSuppliesPage(userId: string) {
-  const result = await unstable_cache(
-    () => fetchSuppliesPage(userId),
-    ["supplies-page", userId],
-    { tags: [getSuppliesCacheTag(userId)] },
-  )();
+async function getCachedSuppliesPageData(userId: string) {
+  "use cache";
+  cacheLife("max");
+  cacheTag(getSuppliesCacheTag(userId));
+  const result = await fetchSuppliesPage(userId);
   return {
     plansWithSupplies: result.plansWithSupplies.map(rehydratePlanWithSupplies),
   };
+}
+
+export async function getCachedSuppliesPage(userId: string) {
+  return getCachedSuppliesPageData(userId);
 }

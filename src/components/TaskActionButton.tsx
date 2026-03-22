@@ -6,11 +6,8 @@ import { toast } from "sonner";
 import { FormSubmitButton } from "@/components/FormSubmitButton";
 import type { ActionResult } from "@/lib/actions/tasks";
 
-type TaskAction = (formData: FormData) => Promise<ActionResult>;
-
-function wrapForActionState(fn: TaskAction): (prev: ActionResult | null, formData: FormData) => Promise<ActionResult> {
-  return (_prev, formData) => fn(formData);
-}
+/** useActionState passes (prevState, formData); server actions accept both. */
+type TaskAction = (prevState: ActionResult | null, formData: FormData) => Promise<ActionResult>;
 
 type TaskActionButtonProps = {
   action: TaskAction;
@@ -31,7 +28,7 @@ export function TaskActionButton({
   variant = "default",
   planId,
 }: TaskActionButtonProps) {
-  const [state, formAction] = useActionState(wrapForActionState(action), null as ActionResult | null);
+  const [state, formAction] = useActionState(action, null as ActionResult | null);
 
   useEffect(() => {
     if (!state) return;

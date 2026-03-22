@@ -2,6 +2,7 @@ import { Printer } from "lucide-react";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { getCurrentUserId } from "@/auth";
 import { AddTaskDialog } from "@/components/AddTaskDialog";
@@ -47,19 +48,35 @@ function parseLimit(value: string | string[] | undefined, defaultSize: number): 
   return Math.min(n, MAX_PLAN_TASKS_PAGE_SIZE);
 }
 
-export default async function PlanDetailPage({
-  params,
-  searchParams,
+function PlanDetailSuspenseFallback() {
+  return (
+    <div className="mx-auto max-w-6xl animate-pulse space-y-6 px-4 py-6 sm:px-0 sm:py-8">
+      <div className="h-9 w-48 rounded-lg bg-blue-100/80 dark:bg-zinc-700" />
+      <div className="h-40 rounded-2xl border border-blue-100 bg-white/60 dark:border-zinc-700 dark:bg-zinc-900/60" />
+      <div className="h-64 rounded-2xl border border-blue-100 bg-white/60 dark:border-zinc-700 dark:bg-zinc-900/60" />
+    </div>
+  );
+}
+
+type PlanSearchParams = {
+  taskPage?: string | string[];
+  taskLimit?: string | string[];
+  tab?: string | string[];
+  edit?: string | string[];
+};
+
+async function PlanDetailRoot({
+  id,
+  searchParams: searchParamsPromise,
 }: {
-  params: Promise<{ id: string }>;
-  searchParams?: Promise<{ taskPage?: string | string[]; taskLimit?: string | string[]; tab?: string | string[]; edit?: string | string[] }>;
+  id: string;
+  searchParams: Promise<PlanSearchParams>;
 }) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
   const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
   const t = getTranslations(locale);
-  const { id } = await params;
-  const resolvedSearchParams = (await searchParams) ?? {};
+  const resolvedSearchParams = (await searchParamsPromise) ?? {};
   const taskPage = parsePage(resolvedSearchParams.taskPage);
   const taskLimit = parseLimit(resolvedSearchParams.taskLimit, PLAN_TASKS_PAGE_SIZE);
   const tabRaw = Array.isArray(resolvedSearchParams.tab) ? resolvedSearchParams.tab[0] : resolvedSearchParams.tab;
@@ -73,10 +90,11 @@ export default async function PlanDetailPage({
     getCachedUserTasksForDropdown(userId),
   ]);
 
-  const { plan, planTasks, totalPlanTasks, exportTasks } = planDetail;
+  const { plan, incompleteTasks, totalIncomplete, completedTasks, totalCompleted, exportTasks } = planDetail;
   if (!plan) notFound();
 
-  const totalTaskPages = Math.ceil(totalPlanTasks / taskLimit) || 1;
+  const totalTaskPages = Math.ceil(totalIncomplete / taskLimit) || 1;
+  const hasAnyTasks = incompleteTasks.length > 0 || completedTasks.length > 0;
   const isOwner = plan.userId === userId;
 
   const supplyItemsForClient = plan.supplyItems.map((item) => ({
@@ -259,9 +277,10 @@ export default async function PlanDetailPage({
             <div className="px-3 py-4 sm:px-6 sm:py-6">
               <PlanSupplyList planId={plan.id} items={supplyItemsForClient} isOwner={isOwner} initialEditingItemId={editItemId} />
             </div>
-          ) : planTasks.length > 0 ? (
+          ) : hasAnyTasks ? (
+            <>
             <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
-              {planTasks.map((task) => (
+              {incompleteTasks.map((task) => (
                 <li
                   key={task.id}
                   className="flex flex-col gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
@@ -431,6 +450,163 @@ export default async function PlanDetailPage({
                 </li>
               )}
             </ul>
+            {completedTasks.length > 0 ? (
+              <div className="mt-6 border-t border-blue-100 dark:border-zinc-700 pt-4">
+                <h3 className="px-3 text-sm font-semibold text-zinc-500 dark:text-zinc-400 sm:px-6">
+                  {t.tasks.completed}
+                  {totalCompleted > completedTasks.length
+                    ? ` (${completedTasks.length} / ${totalCompleted})`
+                    : ` (${completedTasks.length})`}
+                </h3>
+                <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
+                  {completedTasks.map((task) => (
+                <li
+                  key={task.id}
+                  className="flex flex-col gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
+                >
+                  {isOwner ? (
+                    <>
+                      <EditTaskDialog
+                        action={updateTask}
+                        deleteAction={deleteTask}
+                        completeAction={completeTask}
+                        restoreAction={restoreTask}
+                        planId={plan.id}
+                        plans={plans}
+                        triggerClassName="min-w-0 flex-1 cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1 text-left"
+                        showButton={false}
+                        task={{
+                          id: task.id,
+                          title: task.title,
+                          content: task.content,
+                          dueAt: task.dueAt?.toISOString() ?? null,
+                          urgency: task.urgency,
+                          status: task.status,
+                          completedAt: task.completedAt?.toISOString() ?? null,
+                          planId: plan.id,
+                          planName: plan.name,
+                          createdAt: task.createdAt.toISOString(),
+                          updatedAt: task.updatedAt.toISOString(),
+                          attachments: task.attachments.map((a) => ({
+                            id: a.id,
+                            url: a.url,
+                            filename: a.filename,
+                            size: a.size,
+                          })),
+                        }}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <div
+                            className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
+                              task.urgency,
+                            )}`}
+                          >
+                            <span className={task.status === "completed" ? "truncate line-through" : "truncate"}>
+                              {task.title}
+                            </span>
+                            {task.status === "on_hold" ? (
+                              <span className="shrink-0 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+                                {t.tasks.onHold}
+                              </span>
+                            ) : null}
+                          </div>
+                          <TaskContent content={task.content} />
+                          <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
+                            {task.status === "completed" && task.completedAt ? (
+                              <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
+                            ) : (
+                              <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
+                            )}
+                            {task.dueAt && (
+                              <span className="sm:before:content-['·'] sm:before:mr-1">
+                                {t.tasks.due}{" "}
+                                <span className="max-sm:hidden sm:inline">{formatShortDateTime(new Date(task.dueAt))}</span>
+                                <span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.dueAt))}</span>
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </EditTaskDialog>
+                      <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
+                        <span className="order-1">
+                          <TaskActionButton
+                            action={task.status === "completed" ? restoreTask : completeTask}
+                            taskId={task.id}
+                            planId={plan.id}
+                            label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
+                            successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
+                          />
+                        </span>
+                        <span className="order-2">
+                        <EditTaskDialog
+                          action={updateTask}
+                          deleteAction={deleteTask}
+                          completeAction={completeTask}
+                          restoreAction={restoreTask}
+                          planId={plan.id}
+                          plans={plans}
+                          task={{
+                            id: task.id,
+                            title: task.title,
+                            content: task.content,
+                            dueAt: task.dueAt?.toISOString() ?? null,
+                            urgency: task.urgency,
+                            status: task.status,
+                            completedAt: task.completedAt?.toISOString() ?? null,
+                            planId: plan.id,
+                            planName: plan.name,
+                            createdAt: task.createdAt.toISOString(),
+                            updatedAt: task.updatedAt.toISOString(),
+                            attachments: task.attachments.map((a) => ({
+                              id: a.id,
+                              url: a.url,
+                              filename: a.filename,
+                              size: a.size,
+                            })),
+                          }}
+                        />
+                        </span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="min-w-0 flex-1">
+                      <div
+                        className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
+                          task.urgency,
+                        )}`}
+                      >
+                        <span className={task.status === "completed" ? "truncate line-through" : "truncate"}>
+                          {task.title}
+                        </span>
+                        {task.status === "on_hold" ? (
+                          <span className="shrink-0 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+                            {t.tasks.onHold}
+                          </span>
+                        ) : null}
+                      </div>
+                      <TaskContent content={task.content} />
+                      <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
+                        {task.status === "completed" && task.completedAt ? (
+                          <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
+                        ) : (
+                          <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
+                        )}
+                        {task.dueAt && (
+                          <span className="sm:before:content-['·'] sm:before:mr-1">
+                            {t.tasks.due}{" "}
+                            <span className="max-sm:hidden sm:inline">{formatShortDateTime(new Date(task.dueAt))}</span>
+                            <span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.dueAt))}</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+            </>
           ) : (
             <div className="px-3 py-6 text-center sm:px-6 sm:py-8">
               <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.plans.noTasksInPlan}</p>
@@ -442,5 +618,22 @@ export default async function PlanDetailPage({
         </section>
       </div>
     </div>
+  );
+}
+
+export default function PlanDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<PlanSearchParams>;
+}) {
+  const searchParamsPromise = searchParams ?? Promise.resolve({});
+  return (
+    <Suspense fallback={<PlanDetailSuspenseFallback />}>
+      {params.then(({ id }) => (
+        <PlanDetailRoot id={id} searchParams={searchParamsPromise} />
+      ))}
+    </Suspense>
   );
 }

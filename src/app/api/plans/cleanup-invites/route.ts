@@ -3,8 +3,6 @@ import { NextResponse } from "next/server";
 import { getCurrentUserId } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
-export const runtime = "nodejs";
-
 /**
  * POST /api/plans/cleanup-invites — delete expired plan invites.
  * Callable by an authenticated user or a cron with valid session.

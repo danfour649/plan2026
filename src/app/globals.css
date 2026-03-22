@@ -30,7 +30,8 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not(.theme-light) {
+  /* Theme class may live on .theme-root (Suspense) instead of :root */
+  :root:not(:has(.theme-root.theme-light)) {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
@@ -46,7 +47,8 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-.dark body {
+.dark body,
+.theme-root.min-h-screen.dark {
   background:
     radial-gradient(circle at top left, rgb(37 99 235 / 0.08), transparent 30%),
     radial-gradient(circle at top right, rgb(220 38 38 / 0.06), transparent 28%),
