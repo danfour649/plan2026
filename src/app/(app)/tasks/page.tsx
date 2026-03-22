@@ -170,7 +170,7 @@ export default async function TasksPage({
             {remainingTasks.map((task) => (
               <li
                 key={task.id}
-                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                className="flex flex-row items-start gap-3 px-6 py-4 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:items-center sm:justify-between sm:gap-4"
               >
                 <EditTaskDialog
                   action={updateTask}
@@ -236,10 +236,17 @@ export default async function TasksPage({
                     </div>
                   </div>
                 </EditTaskDialog>
-                <div className="flex min-w-0 flex-shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="order-1"><TaskActionButton action={completeTask} taskId={task.id} label={t.tasks.markDone} successMessage={t.tasks.markedDone} /></span>
-                    <span className="order-2"><EditTaskDialog
+                <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
+                  <TaskActionButton
+                    compact
+                    actionVisual="complete"
+                    action={completeTask}
+                    taskId={task.id}
+                    label={t.tasks.markDone}
+                    successMessage={t.tasks.markedDone}
+                  />
+                  <EditTaskDialog
+                    compactListTrigger
                     action={updateTask}
                     deleteAction={deleteTask}
                     plans={plans}
@@ -262,12 +269,11 @@ export default async function TasksPage({
                         size: a.size,
                       })),
                     }}
-                  /></span>
-                    <AddToCalendarButton
-                      taskId={task.id}
-                      initiallyLinked={Boolean(task.googleCalendarEventId)}
-                    />
-                  </div>
+                  />
+                  <AddToCalendarButton
+                    taskId={task.id}
+                    initiallyLinked={Boolean(task.googleCalendarEventId)}
+                  />
                 </div>
               </li>
             ))}
@@ -275,7 +281,7 @@ export default async function TasksPage({
               <li
                 key={task.id}
                 data-completed-only
-                className="flex flex-col gap-3 px-6 py-4 transition hover:bg-emerald-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                className="flex flex-row items-start gap-3 px-6 py-4 transition hover:bg-emerald-50/40 dark:hover:bg-zinc-800/50 sm:items-center sm:justify-between sm:gap-4"
               >
                 <EditTaskDialog
                   action={updateTask}
@@ -332,38 +338,44 @@ export default async function TasksPage({
                     </div>
                   </div>
                 </EditTaskDialog>
-                <div className="flex min-w-0 flex-shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="order-1"><TaskActionButton action={restoreTask} taskId={task.id} label={t.tasks.restore} successMessage={t.tasks.taskRestored} /></span>
-                    <span className="order-2"><EditTaskDialog
-                      action={updateTask}
-                      deleteAction={deleteTask}
-                      plans={plans}
-                      task={{
-                        id: task.id,
-                        title: task.title,
-                        content: task.content,
-                        dueAt: task.dueAt?.toISOString() ?? null,
-                        urgency: task.urgency,
-                        status: task.status,
-                        completedAt: task.completedAt?.toISOString() ?? null,
-                        planId: task.plan?.id ?? null,
-                        planName: task.plan?.name ?? null,
-                        createdAt: task.createdAt.toISOString(),
-                        updatedAt: task.updatedAt.toISOString(),
-                        attachments: task.attachments.map((a) => ({
-                          id: a.id,
-                          url: a.url,
-                          filename: a.filename,
-                          size: a.size,
-                        })),
-                      }}
-                    /></span>
-                    <AddToCalendarButton
-                      taskId={task.id}
-                      initiallyLinked={Boolean(task.googleCalendarEventId)}
-                    />
-                  </div>
+                <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
+                  <TaskActionButton
+                    compact
+                    actionVisual="restore"
+                    action={restoreTask}
+                    taskId={task.id}
+                    label={t.tasks.restore}
+                    successMessage={t.tasks.taskRestored}
+                  />
+                  <EditTaskDialog
+                    compactListTrigger
+                    action={updateTask}
+                    deleteAction={deleteTask}
+                    plans={plans}
+                    task={{
+                      id: task.id,
+                      title: task.title,
+                      content: task.content,
+                      dueAt: task.dueAt?.toISOString() ?? null,
+                      urgency: task.urgency,
+                      status: task.status,
+                      completedAt: task.completedAt?.toISOString() ?? null,
+                      planId: task.plan?.id ?? null,
+                      planName: task.plan?.name ?? null,
+                      createdAt: task.createdAt.toISOString(),
+                      updatedAt: task.updatedAt.toISOString(),
+                      attachments: task.attachments.map((a) => ({
+                        id: a.id,
+                        url: a.url,
+                        filename: a.filename,
+                        size: a.size,
+                      })),
+                    }}
+                  />
+                  <AddToCalendarButton
+                    taskId={task.id}
+                    initiallyLinked={Boolean(task.googleCalendarEventId)}
+                  />
                 </div>
               </li>
             ))}

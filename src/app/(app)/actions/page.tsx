@@ -66,7 +66,7 @@ export default async function ActionsPage() {
               return (
                 <li
                   key={task.id}
-                  className="flex flex-col gap-3 px-6 py-4 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+                  className="flex flex-row items-start gap-3 px-6 py-4 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:items-center sm:justify-between sm:gap-4"
                 >
                   <EditTaskDialog
                     action={updateTask}
@@ -153,14 +153,17 @@ export default async function ActionsPage() {
                       </div>
                     </div>
                   </EditTaskDialog>
-                  <div className="flex min-w-0 flex-shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
+                  <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
                     <TaskActionButton
+                      compact
+                      actionVisual="complete"
                       action={completeTask}
                       taskId={task.id}
                       label={t.tasks.markDone}
                       successMessage={t.tasks.markedDone}
                     />
                     <EditTaskDialog
+                      compactListTrigger
                       action={updateTask}
                       deleteAction={deleteTask}
                       plans={plans}

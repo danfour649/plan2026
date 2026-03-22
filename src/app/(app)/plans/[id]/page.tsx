@@ -258,7 +258,7 @@ async function PlanDetailRoot({
               {incompleteTasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex flex-col gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
+                  className="flex flex-row items-start gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
                 >
                   {isOwner ? (
                     <>
@@ -323,18 +323,18 @@ async function PlanDetailRoot({
                           </div>
                         </div>
                       </EditTaskDialog>
-                      <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
-                        <span className="order-1">
-                          <TaskActionButton
-                            action={task.status === "completed" ? restoreTask : completeTask}
-                            taskId={task.id}
-                            planId={plan.id}
-                            label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
-                            successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
-                          />
-                        </span>
-                        <span className="order-2">
+                      <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
+                        <TaskActionButton
+                          compact
+                          actionVisual={task.status === "completed" ? "restore" : "complete"}
+                          action={task.status === "completed" ? restoreTask : completeTask}
+                          taskId={task.id}
+                          planId={plan.id}
+                          label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
+                          successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
+                        />
                         <EditTaskDialog
+                          compactListTrigger
                           action={updateTask}
                           deleteAction={deleteTask}
                           completeAction={completeTask}
@@ -361,7 +361,6 @@ async function PlanDetailRoot({
                             })),
                           }}
                         />
-                        </span>
                       </div>
                     </>
                   ) : (
@@ -437,7 +436,7 @@ async function PlanDetailRoot({
                   {completedTasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex flex-col gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
+                  className="flex flex-row items-start gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
                 >
                   {isOwner ? (
                     <>
@@ -502,18 +501,18 @@ async function PlanDetailRoot({
                           </div>
                         </div>
                       </EditTaskDialog>
-                      <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
-                        <span className="order-1">
-                          <TaskActionButton
-                            action={task.status === "completed" ? restoreTask : completeTask}
-                            taskId={task.id}
-                            planId={plan.id}
-                            label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
-                            successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
-                          />
-                        </span>
-                        <span className="order-2">
+                      <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
+                        <TaskActionButton
+                          compact
+                          actionVisual={task.status === "completed" ? "restore" : "complete"}
+                          action={task.status === "completed" ? restoreTask : completeTask}
+                          taskId={task.id}
+                          planId={plan.id}
+                          label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
+                          successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
+                        />
                         <EditTaskDialog
+                          compactListTrigger
                           action={updateTask}
                           deleteAction={deleteTask}
                           completeAction={completeTask}
@@ -540,7 +539,6 @@ async function PlanDetailRoot({
                             })),
                           }}
                         />
-                        </span>
                       </div>
                     </>
                   ) : (
@@ -577,8 +575,8 @@ async function PlanDetailRoot({
                     </div>
                   )}
                 </li>
-                  ))}
-                </ul>
+              ))}
+            </ul>
               </div>
             ) : null}
             </>
