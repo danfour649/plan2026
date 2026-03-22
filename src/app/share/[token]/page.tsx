@@ -1,10 +1,9 @@
 import Link from "next/link";
 
-import { cookies } from "next/headers";
-
 import { Plan2026Logo } from "@/components/Plan2026Logo";
 import { SharePageTaskRow } from "@/components/SharePageTaskRow";
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 import { formatShortDateOnly } from "@/lib/format";
 
@@ -14,7 +13,7 @@ export default async function SharePage({
   params: Promise<{ token: string }>;
 }) {
   const { token } = await params;
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
 
   const link = await prisma.planShareLink.findUnique({

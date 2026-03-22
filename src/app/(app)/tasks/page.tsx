@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 
 import { getCurrentUserId } from "@/auth";
 
@@ -18,7 +17,8 @@ import {
   formatShortDateTime,
   getUrgencyPillClasses,
 } from "@/lib/format";
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getTranslations } from "@/lib/i18n";
 import { getCachedTasksPage } from "@/lib/data-cache";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
 
@@ -67,7 +67,7 @@ export default async function TasksPage({
   const userId = await getCurrentUserId();
 
   if (!userId) return null;
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
   const resolvedSearchParams = (await searchParams) ?? {};
   const showCompleted = Array.isArray(resolvedSearchParams.showCompleted)

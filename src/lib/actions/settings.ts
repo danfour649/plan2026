@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-import { getCurrentUserId } from "@/auth";
+import { getCurrentUserId, revalidateAuthSessionCache } from "@/auth";
 import { DEFAULT_LOCALE, getLocaleFromCookie, LOCALE_COOKIE, LOCALES, type Locale } from "@/lib/i18n";
 import { THEME_COOKIE, THEMES, type Theme } from "@/lib/theme";
 import type { ActionResult } from "@/lib/actions/tasks";
@@ -84,6 +84,10 @@ export async function setLocale(formData: FormData): Promise<{ success: true } |
   const locale = typeof raw === "string" ? getLocaleFromCookie(raw) : DEFAULT_LOCALE;
   const value = LOCALES.includes(locale as Locale) ? locale : DEFAULT_LOCALE;
   (await cookies()).set(LOCALE_COOKIE, value, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+  await prisma.user.update({
+    where: { id: userId },
+    data: { preferredLocale: value },
+  });
   revalidatePath("/", "layout");
   return { success: true };
 }
@@ -92,6 +96,14 @@ export async function setTheme(formData: FormData): Promise<{ success: true } | 
   const raw = formData.get("theme");
   const theme = typeof raw === "string" && THEMES.includes(raw as Theme) ? (raw as Theme) : "system";
   (await cookies()).set(THEME_COOKIE, theme, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+  const userId = await getCurrentUserId();
+  if (userId) {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { preferredTheme: theme },
+    });
+    await revalidateAuthSessionCache();
+  }
   revalidatePath("/", "layout");
   return { success: true };
 }

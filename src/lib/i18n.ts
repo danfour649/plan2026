@@ -26,7 +26,8 @@ const messages = {
       calendarConnected: "Your account can currently create Google Calendar events from tasks.",
       calendarDisconnected:
         "Google Calendar access has been disconnected. Reconnect with Google to grant Calendar permissions again.",
-      pageDescription: "Manage your account, language, and Google Calendar connection.",
+      pageDescription:
+        "Manage your account, language, and Google Calendar connection. Language and theme are saved to your account and apply on any device when you sign in.",
       theme: "Theme",
       themeLight: "Light",
       themeDark: "Dark",
@@ -359,7 +360,8 @@ const messages = {
       calendarConnected: "Votre compte peut actuellement créer des événements Google Agenda à partir des tâches.",
       calendarDisconnected:
         "L'accès à Google Agenda a été déconnecté. Reconnectez-vous avec Google pour accorder à nouveau les autorisations.",
-      pageDescription: "Gérez votre compte, la langue et la connexion Google Agenda.",
+      pageDescription:
+        "Gérez votre compte, la langue et la connexion Google Agenda. La langue et le thème sont enregistrés sur votre compte et s’appliquent sur chaque appareil lorsque vous êtes connecté.",
       theme: "Thème",
       themeLight: "Clair",
       themeDark: "Sombre",
@@ -692,7 +694,8 @@ const messages = {
       calendarConnected: "Your account fit create Google Calendar events from your work now.",
       calendarDisconnected:
         "Google Calendar don cut. Connect am again make you fit get permission.",
-      pageDescription: "Arrange your account, language, and Google Calendar connection.",
+      pageDescription:
+        "Arrange your account, language, and Google Calendar connection. Language and theme dey save for your account and go work for any device when you sign in.",
       theme: "How e look",
       themeLight: "Light",
       themeDark: "Dark",

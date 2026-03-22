@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 
 import { getCurrentUserId } from "@/auth";
 import { ExportPlansButton } from "@/components/ExportPlansButton";
@@ -12,7 +11,8 @@ import {
   getPriorityOvalClasses,
   getStatusPillClasses,
 } from "@/lib/format";
-import { formatTasksCount, getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { formatTasksCount, getTranslations } from "@/lib/i18n";
 import { getCachedPlansPage } from "@/lib/data-cache";
 import type { ExportedPlan } from "@/lib/export";
 import { updatePlanStatus } from "@/lib/actions/plans";
@@ -44,7 +44,7 @@ export default async function PlansPage({
 }) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
   const resolvedSearchParams = (await searchParams) ?? {};
   const showArchived = Array.isArray(resolvedSearchParams.showArchived)

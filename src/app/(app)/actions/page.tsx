@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { AlertTriangle } from "lucide-react";
 
 import { getCurrentUserId } from "@/auth";
@@ -14,7 +13,8 @@ import {
   formatShortDateTime,
   getUrgencyPillClasses,
 } from "@/lib/format";
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getTranslations } from "@/lib/i18n";
 import { getCachedActionsPage } from "@/lib/data-cache";
 import { addTask, completeTask, deleteTask, updateTask } from "@/lib/actions/tasks";
 
@@ -22,7 +22,7 @@ export default async function ActionsPage() {
   const userId = await getCurrentUserId();
   if (!userId) return null;
 
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
   const { tasks, plans } = await getCachedActionsPage(userId);
 

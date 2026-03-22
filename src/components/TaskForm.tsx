@@ -164,7 +164,7 @@ export function TaskForm({
                 defaultChecked={defaultStatus === "active"}
                 className="peer sr-only"
               />
-              <span className="rounded-full border border-blue-200 bg-white px-3 py-1.5 text-sm font-medium transition hover:opacity-90 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:ring-2 peer-checked:ring-blue-400 peer-checked:ring-offset-2 dark:border-zinc-600 dark:bg-zinc-800 dark:peer-checked:border-blue-500 dark:peer-checked:bg-blue-950/40 dark:peer-checked:ring-blue-500/30">
+              <span className="rounded-full border border-blue-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 transition hover:opacity-90 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-950 peer-checked:ring-2 peer-checked:ring-blue-400 peer-checked:ring-offset-2 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:peer-checked:border-blue-500 dark:peer-checked:bg-blue-950/40 dark:peer-checked:text-blue-200 dark:peer-checked:ring-blue-500/30">
                 {t.tasks.statusActive}
               </span>
             </label>

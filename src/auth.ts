@@ -5,6 +5,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { getServerSession } from "next-auth/next";
 import { cacheLife, cacheTag } from "next/cache";
 import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
 import { cache } from "react";
 
 import { GOOGLE_AUTHORIZATION_PARAMS } from "@/lib/google-oauth";
@@ -130,6 +131,8 @@ async function getSessionByToken(sessionToken: string) {
       name: session.user.name,
       email: session.user.email,
       image: session.user.image,
+      preferredLocale: session.user.preferredLocale ?? null,
+      preferredTheme: session.user.preferredTheme ?? null,
     },
     expires: session.expires.toISOString(),
   };
@@ -164,5 +167,16 @@ export function getServerAuthSession() {
 
 export async function getCurrentUserId() {
   return (await getServerAuthSession())?.user?.id ?? null;
+}
+
+/** Invalidate cached session row (includes preferredLocale / preferredTheme) after settings change. */
+export async function revalidateAuthSessionCache(): Promise<void> {
+  const cookieStore = await cookies();
+  const sessionToken =
+    cookieStore.get(NEXTAUTH_SESSION_COOKIE)?.value ??
+    cookieStore.get(NEXTAUTH_SESSION_COOKIE_SECURE)?.value;
+  if (sessionToken) {
+    revalidateTag(`auth-session-${sessionToken}`, "max");
+  }
 }
 

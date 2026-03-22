@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import Link from "next/link";
 
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getTranslations } from "@/lib/i18n";
 import { RECENT_UPDATES } from "@/lib/recent-updates.generated";
 import { APP_VERSION } from "@/lib/version";
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
 
   return (

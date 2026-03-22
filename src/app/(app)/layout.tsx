@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
@@ -9,7 +8,8 @@ import { HeaderRightNav } from "@/components/HeaderRightNav";
 import { CheckboxIcon, CurrencyIcon, LightbulbIcon } from "@/components/NavIcons";
 import { Plan2026Logo } from "@/components/Plan2026Logo";
 import { TranslationsProvider } from "@/components/TranslationsProvider";
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getTranslations } from "@/lib/i18n";
 import { getCachedNavCounts } from "@/lib/data-cache";
 
 function AppLayoutFallback() {
@@ -36,7 +36,7 @@ async function AppLayoutInner({ children }: { children: React.ReactNode }) {
   await connection();
   const session = await getServerAuthSession();
   if (!session?.user) redirect("/login");
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
   const { remainingTaskCount, activePlanCount, suppliesCount } =
     await getCachedNavCounts(session.user.id);

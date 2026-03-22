@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getTranslations } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Help",
 };
 
 export default async function HelpPage() {
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
 
   return (

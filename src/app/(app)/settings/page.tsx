@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 
 import { getCurrentUserId } from "@/auth";
+import { getLocaleForRequest, getThemeForRequest } from "@/lib/account-preferences";
 import { DisconnectGoogleCalendarButton } from "@/components/DisconnectGoogleCalendarButton";
 import { ReconnectGoogleCalendarButton } from "@/components/ReconnectGoogleCalendarButton";
 import { LanguageSelect } from "@/components/LanguageSelect";
 import { ThemeSelect } from "@/components/ThemeSelect";
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
-import { getThemeFromCookie, THEME_COOKIE } from "@/lib/theme";
+import { getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
@@ -18,9 +17,8 @@ export default async function SettingsPage() {
   const userId = await getCurrentUserId();
   if (!userId) return null;
 
-  const cookieStore = await cookies();
-  const locale = getLocaleFromCookie(cookieStore.get("PLAN2026_LOCALE")?.value);
-  const theme = getThemeFromCookie(cookieStore.get(THEME_COOKIE)?.value);
+  const locale = await getLocaleForRequest();
+  const theme = await getThemeForRequest();
   const t = getTranslations(locale);
 
   const account = await prisma.account.findFirst({

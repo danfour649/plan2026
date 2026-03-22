@@ -1,6 +1,5 @@
 import { Printer } from "lucide-react";
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -16,7 +15,8 @@ import { InviteByLinkButton } from "@/components/InviteByLinkButton";
 import { ShareByPublicLinkButton } from "@/components/ShareByPublicLinkButton";
 import { SharePlanButton } from "@/components/SharePlanButton";
 import { TaskContent } from "@/components/TaskContent";
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getTranslations } from "@/lib/i18n";
 import {
   getCachedPlanDetail,
   getCachedPlansForDropdown,
@@ -74,7 +74,7 @@ async function PlanDetailRoot({
 }) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
   const resolvedSearchParams = (await searchParamsPromise) ?? {};
   const taskPage = parsePage(resolvedSearchParams.taskPage);

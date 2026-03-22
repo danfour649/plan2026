@@ -4,6 +4,8 @@ declare module "next-auth" {
   interface Session {
     user?: {
       id: string;
+      preferredLocale?: string | null;
+      preferredTheme?: string | null;
     } & DefaultSession["user"];
   }
 }
