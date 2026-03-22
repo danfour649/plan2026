@@ -10,6 +10,7 @@ import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { TaskForm } from "@/components/TaskForm";
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { ActionResult } from "@/lib/actions/tasks";
+import { getThemePortalContainer } from "@/lib/theme";
 
 /** useActionState passes (prevState, formData); must match TaskForm and server actions. */
 type TaskFormAction = (prevState: ActionResult | null, formData: FormData) => Promise<ActionResult>;
@@ -418,7 +419,7 @@ export function EditTaskDialog({
             </div>
           </div>
         </div>,
-          document.body,
+          getThemePortalContainer(),
         )}
     </>
   );
