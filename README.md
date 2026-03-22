@@ -7,7 +7,7 @@
 - Google sign-in with NextAuth v4 and Prisma-backed database sessions
 - **Actions** – The app logo links to `/actions`, a page showing urgent and upcoming tasks (urgency 6+ or due within the next three days). Overdue tasks show an alarm icon; you can edit, mark done, or add to calendar from the list.
 - **Tasks** – A single `/tasks` page for day-to-day work:
-  - Optional completed-task visibility with a `showCompleted=1` toggle
+  - Optional completed-task visibility via a header toggle; choice is stored in a first-party cookie (updated with `POST /api/list-prefs`, not the URL)
   - Add and edit tasks in dialogs (title, rich text notes, due date, urgency 1–7)
   - Mark tasks done, restore them, or delete them
   - Export tasks (or a single task from the edit dialog) to JSON for debugging or AI ingestion
@@ -15,7 +15,7 @@
   - Tasks can be linked to a plan; task rows show a “Plan: …” link when set
 - **Plans** – A `/plans` area to group tasks and track progress:
   - List of plans ordered by priority (1–7, like task urgency); each plan has name, status (draft / started / on hold / completed / abandoned), percent completed, dates, and optional image (paste URL)
-  - Refresh button and “Show completed / abandoned” toggle on the plans list; each row has an Edit link and a status dropdown
+  - Refresh button and “Show completed / abandoned” toggle on the plans list (same cookie + `POST /api/list-prefs` persistence as tasks); each row has an Edit link and a status dropdown
   - Full-page create at `/plans/new` and edit at `/plans/[id]` (no modals)
   - Add existing tasks or create new tasks when editing a plan; on the plan detail page you can edit any task in the plan via an edit-task modal
   - Export plans (or a single plan from its detail page) to JSON for debugging or AI ingestion
@@ -30,16 +30,16 @@
 - React 19
 - TypeScript
 - Tailwind CSS v4
-- Prisma ORM
+- Prisma ORM 7 (PostgreSQL via driver adapter; see `prisma.config.ts`)
 - PostgreSQL
 - NextAuth v4
-- Zod
+- Zod 4
 - Tiptap
 - Sonner
 
 ## Requirements
 
-- Node.js installed
+- Node.js 20+ and [pnpm](https://pnpm.io/installation) (the repo pins the version via `packageManager` in `package.json`; with Corepack: `corepack enable`)
 - A PostgreSQL database for local development and testing
 - A Google OAuth client with Calendar access enabled
 
@@ -63,7 +63,7 @@ This app uses PostgreSQL in every environment, including local development, loca
 1. Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 2. Configure the environment variables listed above in `.env`, pointing `DATABASE_URL` at your local development or test Postgres database.
@@ -71,13 +71,13 @@ npm install
 3. Run Prisma migrations against your local Postgres database:
 
 ```bash
-npx prisma migrate dev
+pnpm exec prisma migrate dev
 ```
 
 4. Start the app:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 5. Open `http://localhost:3000`.
@@ -86,10 +86,10 @@ npm run dev
 
 The project uses [Vitest](https://vitest.dev/) for unit and integration tests. Run tests with:
 
-- `npm test` – run tests once
-- `npm run test:watch` – run tests in watch mode
-- `npm run test:coverage` – run tests with coverage report
-- `npm run bulk:next -- <PR_NUMBER>` – merge that PR, update main, check out the next open PR’s branch and merge main into it; prints what to test (see AGENTS.md “Testing bulk-task PRs”).
+- `pnpm test` – run tests once
+- `pnpm run test:watch` – run tests in watch mode
+- `pnpm run test:coverage` – run tests with coverage report
+- `pnpm run bulk:next -- <PR_NUMBER>` – merge that PR, update main, check out the next open PR’s branch and merge main into it; prints what to test (see AGENTS.md “Testing bulk-task PRs”).
 
 Tests live next to source files (e.g. `src/lib/export.test.ts`). Good candidates for unit tests:
 
@@ -100,15 +100,15 @@ For React components, add `@vitest-environment jsdom` at the top of the test fil
 
 ### Before you push
 
-A **pre-push** Git hook (via [Husky](https://typicode.github.io/husky/)) runs `npm run prepush`, which runs **lint** and **typecheck** only so pushes stay fast. Full **`npm run build`** (Prisma generate + Next.js build) runs in CI and will catch build failures. To run the same checks manually: `npm run prepush`. For a full build: `npm run build`.
+A **pre-push** Git hook (via [Husky](https://typicode.github.io/husky/)) runs `pnpm run prepush`, which runs **lint** and **typecheck** only so pushes stay fast. Full **`pnpm run build`** (Prisma generate + Next.js build) runs in CI and will catch build failures. To run the same checks manually: `pnpm run prepush`. For a full build: `pnpm run build`.
 
 ### Port 3000 already in use
 
 If you see **"Port 3000 is in use"** or **"Unable to acquire lock at .next/dev/lock"**, a previous dev server is still running. On Windows this often happens when the terminal is closed without stopping the server, or when the process doesn’t receive a shutdown signal.
 
-- **Stop the server properly:** Use **Ctrl+C** in the terminal where `npm run dev` is running instead of closing the window.
-- **Free the port:** Run `npm run dev:kill` to kill the process on port 3000, then run `npm run dev` again.
-- **Manual kill (Windows):** `netstat -ano | findstr :3000`, then `taskkill /PID <pid> /F`. Or use Task Manager → Details → end the `node.exe` process (or "End process tree" on the npm parent).
+- **Stop the server properly:** Use **Ctrl+C** in the terminal where `pnpm run dev` is running instead of closing the window.
+- **Free the port:** Run `pnpm run dev:kill` to kill the process on port 3000, then run `pnpm run dev` again.
+- **Manual kill (Windows):** `netstat -ano | findstr :3000`, then `taskkill /PID <pid> /F`. Or use Task Manager → Details → end the `node.exe` process (or "End process tree" on the pnpm parent).
 
 The root route redirects to `/tasks`. The app shell includes **Tasks**, **Plans**, **Help**, and **About** nav links; **Plans** lists your plans and links to **Add plan** (`/plans/new`) and to each plan’s detail/edit page (`/plans/[id]`). **Help** (`/help`) shows how to use tasks and plans plus recent updates; **About** (`/about`) shows app version and contributor info.
 
@@ -149,6 +149,7 @@ All API routes require an authenticated session. Responses use JSON; errors retu
 - **`PATCH /api/tasks/:id`** — Update completion. Body: `{ "completed": true | false }`. Sets `completedAt` to now or null.
 - **`DELETE /api/tasks/:id`** — Delete a task (owner only).
 - **`POST /api/tasks/:id/calendar`** — Create a Google Calendar event for the task.
+- **`POST /api/list-prefs`** — Persist list UI preferences for the signed-in user. JSON body: optional `tasksShowCompleted` and/or `plansShowArchived` (booleans). Sets first-party cookies used by `/tasks` and `/plans` (not server actions, to avoid an RSC refresh on every toggle).
 - **`GET /api/plans`** — List plans (owned + shared). **Paginated.** Query: `page` (default 1), `limit` (default 20, max 100), `showArchived=1` to include completed/abandoned. Order: `priority desc`, then `createdAt desc`. Response: `{ plans, total, page, limit, totalPages }`. Each plan includes `tasks: { id, completedAt }`.
 - **`POST /api/plans/cleanup-invites`** — Delete expired plan invites (e.g. for cron). Requires auth.
 

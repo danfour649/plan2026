@@ -45,7 +45,7 @@ You can:
 1. **List affected tasks**  
    Run:
    ```bash
-   npm run db:list-orphaned-completed-tasks
+   pnpm run db:list-orphaned-completed-tasks
    ```
    This prints task ids and titles for tasks that are completed but have no plan (so you can reassign them in the app or in Prisma Studio).
 

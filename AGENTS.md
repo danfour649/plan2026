@@ -1,6 +1,24 @@
 # Agent Instructions
 
-**Windows PowerShell:** chain commands with `;`, not `&&` (e.g. `git checkout main; git pull`).
+## Shell — Windows 11 PowerShell (not bash/zsh)
+
+This machine runs **PowerShell**. Never emit bash/Linux/macOS syntax.
+
+| Bash / Linux | PowerShell equivalent |
+|---|---|
+| `cmd1 && cmd2` | `cmd1; cmd2` (or use separate Shell calls) |
+| `cat <<'EOF' … EOF` (heredoc) | Write content to a temp file, pipe with `Get-Content file \| cmd`, delete file after |
+| `echo "text" \| cmd --stdin` | `"text" \| cmd --stdin` or write to file first |
+| `head -n 10 file` | `Get-Content file -TotalCount 10` |
+| `tail -n 20 file` | `Get-Content file -Tail 20` |
+| `export FOO=bar` | `$env:FOO = "bar"` |
+| `FOO=bar cmd` | `$env:FOO = "bar"; cmd` |
+
+**Key rules:**
+- Prefer the Shell tool's `working_directory` parameter over `cd`.
+- When a command needs multi-line input (SQL, PR body, etc.), **write to a temp file first**, use it, then delete.
+- Never use `&&` — it is a parse error in PowerShell.
+- Never use heredocs (`<< 'EOF'`) — they don't exist in PowerShell.
 
 ## PR branches and commits
 
@@ -21,25 +39,25 @@
 
 `gh pr create --title "<ID> <Title Case>" --base main --fill`
 
-Non-interactive `gh` needs `--fill` or `--body`. **`npm run pr`** uses `--fill` (title from commit)—fix title with `gh pr edit --title "..."` if needed. **Never leave a pushed branch without a PR** unless the user asked not to.
+Non-interactive `gh` needs `--fill` or `--body`. **`pnpm run pr`** uses `--fill` (title from commit)—fix title with `gh pr edit --title "..."` if needed. **Never leave a pushed branch without a PR** unless the user asked not to.
 
 **After merge:** `git checkout main; git pull`.
 
 ## Type checking
 
-- Run **`npm run typecheck`** (or `npm run prepush`) before finishing; fix all errors. Pre-push runs `lint` + `typecheck` only; **CI runs full `build`**.
-- **ESLint ≠ TypeScript:** `npm run lint` does not run `tsc`. Type errors only show when `typecheck` or build compiles.
+- Run **`pnpm run typecheck`** (or `pnpm run prepush`) before finishing; fix all errors. Pre-push runs `lint` + `typecheck` only; **CI runs full `build`**.
+- **ESLint ≠ TypeScript:** `pnpm run lint` does not run `tsc`. Type errors only show when `typecheck` or build compiles.
 
 ## Next.js build / Cache Components
 
 - With **`cacheComponents: true`**, `next build` may fail: **“Uncached data was accessed outside of `<Suspense>`”**. The error names one route, but the cause is often **shared layouts** (`src/app/layout.tsx`, `src/app/(app)/layout.tsx`) that **`await` cookies, session, `connection()`, etc.** without `<Suspense>`. If many routes fail the same way, fix layouts before individual pages.
-- Debug: **`npx next build --debug-prerender`** (debug-only; not a normal build). Routine check: **`npm run build:next`** or full `build` after App Router / caching changes.
+- Debug: **`pnpm exec next build --debug-prerender`** (debug-only; not a normal build). Routine check: **`pnpm run build:next`** or full `build` after App Router / caching changes.
 
 ## Changesets
 
 - **Include** for user-visible UI/behavior, auth, data model, deploy-affecting config. **Skip** for format-only, tests-only, deps-only, CI-only, or internal refactors with no user impact.
 - **Bump:** `patch` = fixes/small UX; `minor` = features/workflow; `major` = breaking / migration.
-- **Do not** use interactive `changeset add` / `npm run changeset` from the agent (prompts hang). **Create `.changeset/<kebab>.md` manually:**
+- **Do not** use interactive `changeset add` / `pnpm run changeset` from the agent (prompts hang). **Create `.changeset/<kebab>.md` manually:**
 
   ```md
   ---
@@ -49,7 +67,7 @@ Non-interactive `gh` needs `--fill` or `--body`. **`npm run pr`** uses `--fill` 
   Brief user-facing summary.
   ```
 
-- **Do not** run `npm run changeset:version` in feature work—automation does that on `main` after merge.
+- **Do not** run `pnpm run changeset:version` in feature work—automation does that on `main` after merge.
 - Branch with **pre-existing uncommitted release-worthy changes:** add the changeset before/with the first commit.
 
 ## Translations (i18n)
@@ -74,7 +92,7 @@ Triggered when the user supplies tasks as **JSON** (e.g. exported plan/tasks).
 3. **Deferred task:** New `roadmap/TECH-<ID>-<kebab>.md` matching existing analysis docs: **Status**, **Goal**, **Why deferred** (+ estimated effort when obvious), **What is needed**, **Summary checklist**. Register in `roadmap/ROADMAP-AND-FUTURE-WORK.md` (Active + Index), link from task row.
 4. **Changeset per implemented task** — enough detail for a good CHANGELOG line.
 5. **User may skip local build/typecheck** for speed → don’t run them; rely on CI.
-6. **Quality gate** before push/PR on implemented work: `npm run lint` and `npm run typecheck` (or `prepush`), unless user asked to skip. Optional: `npm run build:next`.
+6. **Quality gate** before push/PR on implemented work: `pnpm run lint` and `pnpm run typecheck` (or `prepush`), unless user asked to skip. Optional: `pnpm run build:next`.
 7. **PR title:** `<ID> <Title Case>` via `gh pr create --title "..." --base main --fill`.
 
 **PostgreSQL null sort:** `ASC` → `NULLS LAST`, `DESC` → `NULLS FIRST`. For “incomplete (null) first, completed last” use `orderBy: [{ completedAt: "desc" }]`, not `asc`.
@@ -84,5 +102,5 @@ Triggered when the user supplies tasks as **JSON** (e.g. exported plan/tasks).
 1. Checkout PR branch; merge latest `main`; resolve conflicts; push.
 2. Tell the user what to verify locally.
 3. On merge confirmation: merge to `main`, push, delete branch locally and remote.
-4. Next PR: repeat. **`npm run bulk:next -- <PR_NUMBER>`** automates merge → next branch → merge main → push; on conflict, resolve manually.
+4. Next PR: repeat. **`pnpm run bulk:next -- <PR_NUMBER>`** automates merge → next branch → merge main → push; on conflict, resolve manually.
 5. **`git push --no-verify`** if user asked to skip hooks.

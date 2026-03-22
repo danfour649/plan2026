@@ -1,3 +1,7 @@
 #!/bin/sh
-# Run lint and build before push so CI-style failures are caught locally.
-npm run prepush
+# Same checks as `pnpm run prepush`; avoid `pnpm` here (Git Bash + Windows Corepack shim breaks).
+echo "husky(pre-push): eslint..."
+eslint
+echo "husky(pre-push): tsc --noEmit (prepush config, can take a minute)..."
+tsc --noEmit -p tsconfig.prepush.json
+echo "husky(pre-push): ok"

@@ -4,6 +4,9 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
+/** Seconds — aligns `cacheLife("max")` + client router stale floors with app memo TTL (15 min). */
+const CACHE_TTL_MIN_SECONDS = 60 * 15;
+
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
@@ -25,6 +28,19 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  cacheLife: {
+    max: {
+      stale: CACHE_TTL_MIN_SECONDS,
+      revalidate: 60 * 60 * 24 * 30,
+      expire: 60 * 60 * 24 * 365,
+    },
+  },
+  experimental: {
+    staleTimes: {
+      dynamic: CACHE_TTL_MIN_SECONDS,
+      static: CACHE_TTL_MIN_SECONDS,
+    },
+  },
   poweredByHeader: false,
   reactStrictMode: true,
   async headers() {

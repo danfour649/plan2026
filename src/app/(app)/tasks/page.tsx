@@ -27,17 +27,6 @@ import {
   TASKS_SHOW_COMPLETED_COOKIE,
 } from "@/lib/list-filter-preferences";
 
-function tasksShowCompletedFromSearchParams(
-  raw: string | string[] | undefined,
-): boolean | null {
-  if (raw === undefined) return null;
-  const v = Array.isArray(raw) ? raw[0] : raw;
-  if (v === undefined || v === "") return null;
-  if (v === "1") return true;
-  if (v === "0") return false;
-  return null;
-}
-
 function CompletedCheckIcon() {
   return (
     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300">
@@ -74,7 +63,6 @@ export default async function TasksPage({
   searchParams,
 }: {
   searchParams?: Promise<{
-    showCompleted?: string | string[];
     page?: string | string[];
     limit?: string | string[];
     completedPage?: string | string[];
@@ -86,12 +74,10 @@ export default async function TasksPage({
   const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
   const resolvedSearchParams = (await searchParams) ?? {};
-  const fromUrl = tasksShowCompletedFromSearchParams(resolvedSearchParams.showCompleted);
   const cookieStore = await cookies();
-  const fromCookie = readTasksShowCompletedFromCookie(
+  const showCompleted = readTasksShowCompletedFromCookie(
     cookieStore.get(TASKS_SHOW_COMPLETED_COOKIE)?.value,
   );
-  const showCompleted = fromUrl !== null ? fromUrl : fromCookie;
   const page = parsePage(resolvedSearchParams.page);
   const limit = parseLimit(resolvedSearchParams.limit, DEFAULT_TASKS_PAGE_SIZE);
   const completedPage = parsePage(resolvedSearchParams.completedPage);

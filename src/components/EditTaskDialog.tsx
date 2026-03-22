@@ -196,7 +196,7 @@ export function EditTaskDialog({
           {compactListTrigger ? (
             <>
               <span className="sr-only sm:hidden">{t.common.edit}</span>
-              <Pencil className="h-5 w-5 sm:hidden" strokeWidth={2} aria-hidden />
+              <Pencil className="h-5 w-5 sm:hidden" strokeWidth={3} aria-hidden />
               <span className="hidden sm:inline">{t.common.edit}</span>
             </>
           ) : (

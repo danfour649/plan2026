@@ -18,17 +18,6 @@ import {
   readPlansShowArchivedFromCookie,
 } from "@/lib/list-filter-preferences";
 
-function plansShowArchivedFromSearchParams(
-  raw: string | string[] | undefined,
-): boolean | null {
-  if (raw === undefined) return null;
-  const v = Array.isArray(raw) ? raw[0] : raw;
-  if (v === undefined || v === "") return null;
-  if (v === "1") return true;
-  if (v === "0") return false;
-  return null;
-}
-
 const DEFAULT_PLANS_PAGE_SIZE = 20;
 const MAX_PLANS_PAGE_SIZE = 100;
 
@@ -65,10 +54,8 @@ function mapPlansToExport(
     imageUrl: p.imageUrl,
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
-    taskSummaries: p.tasks.map((task) => ({
-      id: task.id,
-      status: task.status,
-    })),
+    totalTaskCount: p.totalTaskCount,
+    completedTaskCount: p.completedTaskCount,
   }));
 }
 
@@ -76,7 +63,6 @@ export default async function PlansPage({
   searchParams,
 }: {
   searchParams?: Promise<{
-    showArchived?: string | string[];
     page?: string | string[];
     limit?: string | string[];
   }>;
@@ -86,12 +72,10 @@ export default async function PlansPage({
   const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
   const resolvedSearchParams = (await searchParams) ?? {};
-  const fromUrl = plansShowArchivedFromSearchParams(resolvedSearchParams.showArchived);
   const cookieStore = await cookies();
-  const fromCookie = readPlansShowArchivedFromCookie(
+  const showArchived = readPlansShowArchivedFromCookie(
     cookieStore.get(PLANS_SHOW_ARCHIVED_COOKIE)?.value,
   );
-  const showArchived = fromUrl !== null ? fromUrl : fromCookie;
   const page = parsePage(resolvedSearchParams.page);
   const limit = parseLimit(resolvedSearchParams.limit, DEFAULT_PLANS_PAGE_SIZE);
 

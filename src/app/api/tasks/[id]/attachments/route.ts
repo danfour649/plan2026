@@ -7,6 +7,29 @@ import { isValidTaskId } from "@/lib/validations/task";
 
 type Params = { params: Promise<{ id: string }> };
 
+export async function GET(_req: Request, { params }: Params) {
+  const userId = await getCurrentUserId();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { id: taskId } = await params;
+  if (!isValidTaskId(taskId)) {
+    return NextResponse.json({ error: "Invalid task ID" }, { status: 400 });
+  }
+
+  const task = await prisma.task.findFirst({
+    where: { id: taskId, userId },
+    select: {
+      attachments: {
+        select: { id: true, url: true, filename: true, size: true },
+        orderBy: { createdAt: "asc" },
+      },
+    },
+  });
+
+  if (!task) return NextResponse.json({ error: "Task not found" }, { status: 404 });
+  return NextResponse.json({ attachments: task.attachments });
+}
+
 const MAX_FILE_SIZE = 4.2 * 1024 * 1024; // 4.2 MB
 
 export async function POST(req: Request, { params }: Params) {

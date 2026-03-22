@@ -1,16 +1,17 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { getCurrentUserId } from "@/auth";
 import {
-  getNavCountsCacheTag,
-  getPlanDetailCacheTag,
-  getPlansCacheTag,
-  getTasksCacheTag,
-} from "@/lib/data-cache";
+  revalidateNavCounts,
+  revalidatePlanDetail,
+  revalidatePlansCaches,
+  revalidateTasksCaches,
+} from "@/lib/revalidate-app-data";
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@/generated/prisma/client";
 import {
   buildNewPlanTasksFromFormData,
   createPlanSchema,
@@ -104,10 +105,10 @@ export async function createPlan(formData: FormData): Promise<PlanActionResult> 
     return created;
   });
 
-  revalidateTag(getPlansCacheTag(userId), "max");
-  revalidateTag(getPlanDetailCacheTag(plan.id), "max");
-  revalidateTag(getNavCountsCacheTag(userId), "max");
-  revalidateTag(getTasksCacheTag(userId), "max");
+  revalidatePlansCaches(userId);
+  revalidatePlanDetail(plan.id);
+  revalidateNavCounts(userId);
+  revalidateTasksCaches(userId);
   revalidatePath("/plans");
   revalidatePath("/tasks");
   redirect(`/plans/${plan.id}`);
@@ -125,7 +126,7 @@ export async function updatePlan(formData: FormData): Promise<PlanActionResult> 
 
   const { planId, taskIds, newTasks, ...planData } = parsed.data;
 
-  const result = await prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const updateResult = await tx.plan.updateMany({
       where: { id: planId, userId },
       data: {
@@ -179,10 +180,10 @@ export async function updatePlan(formData: FormData): Promise<PlanActionResult> 
 
   if (result.count === 0) return { success: false, error: "Plan not found" };
 
-  revalidateTag(getPlansCacheTag(userId), "max");
-  revalidateTag(getPlanDetailCacheTag(planId), "max");
-  revalidateTag(getNavCountsCacheTag(userId), "max");
-  revalidateTag(getTasksCacheTag(userId), "max");
+  revalidatePlansCaches(userId);
+  revalidatePlanDetail(planId);
+  revalidateNavCounts(userId);
+  revalidateTasksCaches(userId);
   revalidatePath("/plans");
   revalidatePath(`/plans/${planId}`);
   revalidatePath("/tasks");
@@ -210,10 +211,10 @@ export async function updatePlanStatus(formData: FormData): Promise<PlanActionRe
 
   if (result.count === 0) return { success: false, error: "Plan not found" };
 
-  revalidateTag(getPlansCacheTag(userId), "max");
-  revalidateTag(getPlanDetailCacheTag(planId), "max");
-  revalidateTag(getNavCountsCacheTag(userId), "max");
-  revalidateTag(getTasksCacheTag(userId), "max");
+  revalidatePlansCaches(userId);
+  revalidatePlanDetail(planId);
+  revalidateNavCounts(userId);
+  revalidateTasksCaches(userId);
   revalidatePath("/plans");
   revalidatePath(`/plans/${planId}`);
   revalidatePath("/tasks");
@@ -234,10 +235,10 @@ export async function deletePlan(formData: FormData): Promise<void> {
 
   if (result.count === 0) throw new Error("Plan not found");
 
-  revalidateTag(getPlansCacheTag(userId), "max");
-  revalidateTag(getPlanDetailCacheTag(parsed.data.planId), "max");
-  revalidateTag(getNavCountsCacheTag(userId), "max");
-  revalidateTag(getTasksCacheTag(userId), "max");
+  revalidatePlansCaches(userId);
+  revalidatePlanDetail(parsed.data.planId);
+  revalidateNavCounts(userId);
+  revalidateTasksCaches(userId);
   revalidatePath("/plans");
   revalidatePath("/tasks");
   redirect("/plans");
@@ -282,8 +283,8 @@ export async function sharePlanByEmail(planId: string, email: string): Promise<S
     throw e;
   }
 
-  revalidateTag(getPlansCacheTag(userId), "max");
-  revalidateTag(getPlanDetailCacheTag(plan.id), "max");
+  revalidatePlansCaches(userId);
+  revalidatePlanDetail(plan.id);
   revalidatePath("/plans");
   revalidatePath(`/plans/${plan.id}`);
   return { success: true };
@@ -322,8 +323,8 @@ export async function createPlanInvite(planId: string): Promise<CreateInviteResu
 
   const baseUrl = process.env.NEXTAUTH_URL ?? "https://plan2026-pi.vercel.app";
   const inviteUrl = `${baseUrl}/invite/${token}`;
-  revalidateTag(getPlansCacheTag(userId), "max");
-  revalidateTag(getPlanDetailCacheTag(plan.id), "max");
+  revalidatePlansCaches(userId);
+  revalidatePlanDetail(plan.id);
   revalidatePath(`/plans/${plan.id}`);
   return { success: true, inviteUrl };
 }
@@ -361,8 +362,8 @@ export async function createPlanShareLink(planId: string): Promise<CreateShareLi
 
   const baseUrl = process.env.NEXTAUTH_URL ?? "https://plan2026-pi.vercel.app";
   const shareUrl = `${baseUrl}/share/${token}`;
-  revalidateTag(getPlansCacheTag(userId), "max");
-  revalidateTag(getPlanDetailCacheTag(plan.id), "max");
+  revalidatePlansCaches(userId);
+  revalidatePlanDetail(plan.id);
   revalidatePath(`/plans/${plan.id}`);
   return { success: true, shareUrl };
 }

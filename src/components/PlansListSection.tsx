@@ -117,21 +117,21 @@ export function PlansListSection({
                     t.plans.tasksCountZero,
                     t.plans.tasksCountOne,
                     t.plans.tasksCountMany,
-                    plan.tasks.length,
-                    plan.tasks.filter((task) => task.status === "completed").length,
+                    plan.totalTaskCount,
+                    plan.completedTaskCount,
                   )}
                 </p>
-                {plan.tasks.length > 0 ? (
+                {plan.totalTaskCount > 0 ? (
                   <div
                     className="mt-1.5 flex max-w-full flex-wrap items-center gap-0.5"
                     role="img"
                     aria-label={t.plans.tasksCountAria
-                      .replace("{{completed}}", String(plan.tasks.filter((x) => x.status === "completed").length))
-                      .replace("{{total}}", String(plan.tasks.length))}
+                      .replace("{{completed}}", String(plan.completedTaskCount))
+                      .replace("{{total}}", String(plan.totalTaskCount))}
                   >
                     {(() => {
-                      const total = plan.tasks.length;
-                      const completed = plan.tasks.filter((x) => x.status === "completed").length;
+                      const total = plan.totalTaskCount;
+                      const completed = plan.completedTaskCount;
                       const maxSegments = 100;
                       if (total <= maxSegments) {
                         return (

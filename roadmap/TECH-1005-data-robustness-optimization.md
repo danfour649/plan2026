@@ -34,7 +34,7 @@
 | Area | Finding |
 |------|---------|
 | **Cache** | Only `revalidatePath()` is used (tasks, plans, supplies, share). No `revalidateTag()`. Paths revalidated are consistent per action. List is manageable today; tag-based invalidation is optional for future growth. |
-| **Data loading** | Tasks list page and plan-detail tasks use pagination (`skip`/`take`). **GET /api/tasks** returns **all** tasks for the user (no pagination); GET /api/plans has pagination (page, limit, showArchived). Risk: large task lists via API. App layout nav badge counts (task, plan, supply) run in parallel via `Promise.all`. Session fetch is deduplicated per request with React `cache()`. **List and nav data** are cached with Next.js `unstable_cache` + tag-based invalidation: layout counts and plans/tasks/supplies list pages read from the Data Cache when navigating; all mutations call `revalidateTag(…, "max")` so the next visit refetches. Browsing between plans/tasks/supplies avoids repeated DB hits until data changes. |
+| **Data loading** | Tasks list page and plan-detail tasks use pagination (`skip`/`take`). **GET /api/tasks** returns **all** tasks for the user (no pagination); GET /api/plans has pagination (page, limit, `showArchived` query for the API only). The **app UI** tasks/plans “show completed / archived” toggles use **cookies** plus `POST /api/list-prefs`, not URL search params. Risk: large task lists via API. App layout nav badge counts (task, plan, supply) run in parallel via `Promise.all`. Session fetch is deduplicated per request with React `cache()` plus `use cache` / in-process memo where applicable. **List and nav data** are cached with Next.js `unstable_cache` + tag-based invalidation: layout counts and plans/tasks/supplies list pages read from the Data Cache when navigating; mutations call `revalidateTag(…, "max")` so the next visit refetches. Browsing between plans/tasks/supplies avoids repeated DB hits until data changes. |
 | **Mutations** | Plan create/update use `prisma.$transaction`; revalidation after commit. Task mutations use task-service; revalidation in actions. |
 | **API vs UI** | GET /api/tasks order: `completedAt desc`, `createdAt desc`; includes plan (id, name) and attachments. GET /api/plans: paginated, order `priority desc`, `createdAt desc`; filter by showArchived. README documents endpoints; ordering and response shape documented in this pass. |
 | **Rate limiting** | `src/lib/rate-limit.ts`: in-memory Map, 100 req/min per identifier. Used by GET/POST /api/tasks and GET /api/plans. Not shared across serverless instances; production should use distributed limiter (e.g. Upstash Redis). |
@@ -71,7 +71,7 @@
 ## 4. API contract and documentation
 
 - **Current:** GET `/api/tasks` and GET `/api/plans` exist; task API uses shared task-service. Ordering and shape may differ from UI (e.g. API vs tasks page sort).
-- **Re-audit:** Document actual order, `include`/shape, and query params (e.g. `showCompleted`, pagination) for GET `/api/tasks` and GET `/api/plans`. Note any discrepancies with server-action–driven UI.
+- **Re-audit:** Document actual order, `include`/shape, and query params (pagination; `showArchived` on GET `/api/plans` only) for GET `/api/tasks` and GET `/api/plans`. Note UI list filters use cookies, not those query params on `/tasks` or `/plans` pages.
 - **Recommendation:** Add a short “API” section to README or a dedicated API doc: method, path, query params, response shape, and ordering. If API and UI should align, either change the API to match UI sort or document the difference and the reason. Ensure any new filters/pagination are documented.
 
 ---
@@ -126,3 +126,33 @@
 | 6 | Add a changeset for user- or deployer-visible changes (e.g. new env for Redis); no changeset for doc-only or internal refactors. |
 
 **Order:** Do step 1 (audit) first so the rest of the doc and checklist reflect the current codebase. Then steps 2–6.
+
+---
+
+## 11. Performance optimization (TECH-0068 branch, March 2026)
+
+### Implemented
+
+| Optimization | File(s) | Impact |
+|---|---|---|
+| **Composite DB indexes** for Task, Plan, PlanShare, SupplyItem sorting/filtering | `prisma/schema.prisma` | Eliminates in-memory sorts for hot queries |
+| **Parallelized all independent queries** with `Promise.all` | `src/lib/data-cache.ts` (tasks page, plan detail, actions page, nav counts) | Removed sequential waterfalls |
+| **Consolidated plan detail to single query** using Prisma `include` (plan + tasks + supplyItems in 1 round-trip; split/paginate in JS) | `src/lib/data-cache.ts` `fetchPlanDetail()` | Reduced from 6 parallel DB queries to 1 |
+| **React `cache()` wrappers** on all exported fetchers | `src/lib/data-cache.ts` | Deduplicates DB calls within a single request (e.g. `generateMetadata` + page) |
+| **`runtime-rsc-memo`** in-process memoization | `src/lib/runtime-rsc-memo.ts` + all `getCached*` functions | Skips repeat work when dev mode's data cache misses |
+| **`use cache` + `cacheTag` + `cacheLife("max")`** on all data functions | `src/lib/data-cache.ts` | Tag-based invalidation; fast cache hits on navigation |
+| **Nav counts UNION rewrite** (was `OR EXISTS`) | `src/lib/data-cache.ts` `fetchNavCounts()` | Better index utilization for the supplies subquery |
+| **Nav counts moved to client-side** — new `/api/nav-counts` route + `useNavCounts` hook | `src/app/api/nav-counts/route.ts`, `src/components/NavCountsBadges.tsx`, `src/components/AppNavBar.tsx`, `src/app/(app)/layout.tsx` | Layout no longer blocks page render waiting for the triple-count query |
+| **405 fast-path** on POST-only attachments route | `src/app/api/tasks/[id]/attachments/route.ts` | `GET` returns 405 without hitting auth |
+| **Targeted `revalidatePath`** after mutations | `src/lib/actions/tasks.ts` | Only revalidates `/tasks` and `/plans/[id]` — not the whole app |
+
+### Remaining / not yet implemented
+
+| Recommendation | Priority | Notes |
+|---|---|---|
+| **Test in production mode** (`pnpm build; pnpm start`) | High | Dev server adds 3-7s overhead (compilation, HMR). True performance should be validated with a production build. Most `next.js:` overhead in the logs is dev mode compilation. |
+| **`generate-params` overhead** | N/A (not actionable) | There is no `generateMetadata` or `generateStaticParams` in `/plans/[id]`. The 3.3s `generate-params` time is Next.js dev mode resolving the dynamic `[id]` route params; on cached hits it drops to microseconds. No code fix needed. |
+| **Composite index for plan-specific tasks** | Medium | `CREATE INDEX idx_task_plan_view ON "Task" ("planId", "status", "completedAt" DESC, "urgency" DESC);` — useful if plan detail page is still slow after the `include` consolidation. Test with `EXPLAIN ANALYZE` first. |
+| **Distributed rate limiter** (Upstash Redis) | High (production) | In-memory limiter does not share state across serverless instances. See §5 above. |
+| **Connection pooling documentation** | Medium | Verify production `DATABASE_URL` uses a pooler (PgBouncer / Prisma Accelerate / provider pooling). See §6. |
+| **Optimistic UI updates** for task complete/restore | Low | Using `useOptimistic` to immediately update the UI before the server action completes would eliminate perceived latency for "mark done". |

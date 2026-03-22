@@ -1,10 +1,10 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 
 import { ExportPlansButton } from "@/components/ExportPlansButton";
 import { useTranslations } from "@/components/TranslationsProvider";
-import { persistPlansShowArchived } from "@/lib/actions/list-filter-preferences";
+import { postListPrefs } from "@/lib/list-prefs-client";
 import type { ExportedPlan } from "@/lib/export";
 
 type PlansArchiveFilterContextValue = {
@@ -33,22 +33,17 @@ export function PlansShowArchivedRoot({
   activeSlot: ReactNode;
   fullSlot: ReactNode;
 }) {
-  const [showArchived, setShowArchived] = useState(initialShowArchived);
+  const [showArchived, setShowArchivedState] = useState(initialShowArchived);
 
   useEffect(() => {
-    setShowArchived(initialShowArchived);
+    setShowArchivedState(initialShowArchived);
   }, [initialShowArchived]);
 
-  useEffect(() => {
-    void persistPlansShowArchived(showArchived);
-  }, [showArchived]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const url = new URL(window.location.href);
-    url.searchParams.set("showArchived", showArchived ? "1" : "0");
-    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
-  }, [showArchived]);
+  /** User toggles only — avoids POST on mount / Strict Mode / server prop sync. */
+  const setShowArchived = useCallback((value: boolean) => {
+    setShowArchivedState(value);
+    postListPrefs({ plansShowArchived: value });
+  }, []);
 
   return (
     <PlansArchiveFilterContext.Provider value={{ showArchived, setShowArchived }}>

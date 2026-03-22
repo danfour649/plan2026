@@ -5,6 +5,7 @@ import { useActionState, useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 
 import { FormSubmitButton } from "@/components/FormSubmitButton";
+import { refreshNavCounts } from "@/components/NavCountsBadges";
 import { useTranslations } from "@/components/TranslationsProvider";
 
 const TaskContentEditor = dynamic(
@@ -101,6 +102,7 @@ export function TaskForm({
     if (state.success) {
       toast.success(successMessage);
       onSuccess?.();
+      refreshNavCounts();
     } else if (state.error) {
       toast.error(state.error);
     }

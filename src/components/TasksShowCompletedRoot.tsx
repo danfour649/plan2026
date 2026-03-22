@@ -1,9 +1,9 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 
 import { useTranslations } from "@/components/TranslationsProvider";
-import { persistTasksShowCompleted } from "@/lib/actions/list-filter-preferences";
+import { postListPrefs } from "@/lib/list-prefs-client";
 
 type TasksShowCompletedContextValue = {
   showCompleted: boolean;
@@ -19,22 +19,17 @@ export function TasksShowCompletedRoot({
   initialShowCompleted: boolean;
   children: ReactNode;
 }) {
-  const [showCompleted, setShowCompleted] = useState(initialShowCompleted);
+  const [showCompleted, setShowCompletedState] = useState(initialShowCompleted);
 
   useEffect(() => {
-    setShowCompleted(initialShowCompleted);
+    setShowCompletedState(initialShowCompleted);
   }, [initialShowCompleted]);
 
-  useEffect(() => {
-    void persistTasksShowCompleted(showCompleted);
-  }, [showCompleted]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const url = new URL(window.location.href);
-    url.searchParams.set("showCompleted", showCompleted ? "1" : "0");
-    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
-  }, [showCompleted]);
+  /** User toggles only — avoids POST on mount / Strict Mode / server prop sync. */
+  const setShowCompleted = useCallback((value: boolean) => {
+    setShowCompletedState(value);
+    postListPrefs({ tasksShowCompleted: value });
+  }, []);
 
   return (
     <TasksShowCompletedContext.Provider value={{ showCompleted, setShowCompleted }}>

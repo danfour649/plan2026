@@ -9,6 +9,12 @@ import { revalidateTag } from "next/cache";
 import { cache } from "react";
 
 import { GOOGLE_AUTHORIZATION_PARAMS } from "@/lib/google-oauth";
+import {
+  memoAuthSessionClear,
+  memoAuthSessionGet,
+  memoAuthSessionResolve,
+  type AuthSessionMemo,
+} from "@/lib/runtime-rsc-memo";
 import { prisma } from "@/lib/prisma";
 
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
@@ -56,7 +62,8 @@ if (hasFacebookCredentials) {
 }
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // Runtime-compatible; adapter still types against legacy @prisma/client generics.
+  adapter: PrismaAdapter(prisma as never),
   providers,
   get secret() {
     return getAuthSecret();
@@ -115,6 +122,29 @@ export const authOptions: NextAuthOptions = {
 const NEXTAUTH_SESSION_COOKIE = "next-auth.session-token";
 const NEXTAUTH_SESSION_COOKIE_SECURE = "__Secure-next-auth.session-token";
 
+type ListPrefsUserIdEntry = { userId: string | null; staleAt: number };
+
+/**
+ * POST /api/list-prefs cannot rely on RSC `use cache` session; short TTL Session lookup.
+ * Store on globalThis so duplicate `auth` bundles share one map (same issue as runtime-rsc-memo).
+ */
+const LIST_PREFS_USER_ID_CACHE_KEY = "__plan2026ListPrefsUserIdCache_v1" as const;
+
+function getListPrefsUserIdCache(): Map<string, ListPrefsUserIdEntry> {
+  const g = globalThis as typeof globalThis & {
+    [LIST_PREFS_USER_ID_CACHE_KEY]?: Map<string, ListPrefsUserIdEntry>;
+  };
+  if (!g[LIST_PREFS_USER_ID_CACHE_KEY]) {
+    g[LIST_PREFS_USER_ID_CACHE_KEY] = new Map();
+  }
+  return g[LIST_PREFS_USER_ID_CACHE_KEY];
+}
+
+/** Re-check Session row at most this often; always capped by `session.expires` (≥ 15 min policy). */
+const LIST_PREFS_SESSION_TTL_MS = 60 * 60_000;
+/** Invalid-token negative cache only — kept short on purpose. */
+const LIST_PREFS_NEGATIVE_TTL_MS = 10_000;
+
 /**
  * Look up session by token using only Prisma (no headers/cookies).
  * Used inside `use cache` so the cache callback does not access dynamic data.
@@ -125,7 +155,7 @@ async function getSessionByToken(sessionToken: string) {
     include: { user: true },
   });
   if (!session || session.expires < new Date()) return null;
-  return {
+  const row: AuthSessionMemo = {
     user: {
       id: session.user.id,
       name: session.user.name,
@@ -136,6 +166,7 @@ async function getSessionByToken(sessionToken: string) {
     },
     expires: session.expires.toISOString(),
   };
+  return row;
 }
 
 /**
@@ -152,13 +183,17 @@ async function getSessionByTokenCached(sessionToken: string) {
   return getSessionByToken(sessionToken);
 }
 
+function getSessionByTokenCachedWithMemo(sessionToken: string) {
+  return memoAuthSessionResolve(sessionToken, () => getSessionByTokenCached(sessionToken));
+}
+
 const getServerAuthSessionCached = cache(async () => {
   const cookieStore = await cookies();
   const sessionToken =
     cookieStore.get(NEXTAUTH_SESSION_COOKIE)?.value ??
     cookieStore.get(NEXTAUTH_SESSION_COOKIE_SECURE)?.value;
   if (!sessionToken) return getServerSession(authOptions);
-  return getSessionByTokenCached(sessionToken);
+  return getSessionByTokenCachedWithMemo(sessionToken);
 });
 
 export function getServerAuthSession() {
@@ -169,6 +204,47 @@ export async function getCurrentUserId() {
   return (await getServerAuthSession())?.user?.id ?? null;
 }
 
+/**
+ * For lightweight API routes that only need to confirm login (e.g. setting list filter cookies).
+ * Reuses the same in-process auth memo as `getServerAuthSession` (nav/layout) when still fresh,
+ * then a Session-only Prisma row + long TTL map — avoids duplicate Session queries after RSC auth.
+ */
+export async function getCurrentUserIdForListPrefs(): Promise<string | null> {
+  const cookieStore = await cookies();
+  const sessionToken =
+    cookieStore.get(NEXTAUTH_SESSION_COOKIE)?.value ??
+    cookieStore.get(NEXTAUTH_SESSION_COOKIE_SECURE)?.value;
+  if (!sessionToken) return null;
+
+  const authMemo = memoAuthSessionGet(sessionToken);
+  if (authMemo !== undefined) {
+    return authMemo?.user?.id ?? null;
+  }
+
+  const cache = getListPrefsUserIdCache();
+  const now = Date.now();
+  const hit = cache.get(sessionToken);
+  if (hit !== undefined && hit.staleAt > now) {
+    return hit.userId;
+  }
+
+  const row = await prisma.session.findUnique({
+    where: { sessionToken },
+    select: { userId: true, expires: true },
+  });
+  if (!row || row.expires < new Date()) {
+    cache.set(sessionToken, {
+      userId: null,
+      staleAt: now + LIST_PREFS_NEGATIVE_TTL_MS,
+    });
+    return null;
+  }
+
+  const staleAt = Math.min(now + LIST_PREFS_SESSION_TTL_MS, row.expires.getTime());
+  cache.set(sessionToken, { userId: row.userId, staleAt });
+  return row.userId;
+}
+
 /** Invalidate cached session row (includes preferredLocale / preferredTheme) after settings change. */
 export async function revalidateAuthSessionCache(): Promise<void> {
   const cookieStore = await cookies();
@@ -176,6 +252,8 @@ export async function revalidateAuthSessionCache(): Promise<void> {
     cookieStore.get(NEXTAUTH_SESSION_COOKIE)?.value ??
     cookieStore.get(NEXTAUTH_SESSION_COOKIE_SECURE)?.value;
   if (sessionToken) {
+    getListPrefsUserIdCache().delete(sessionToken);
+    memoAuthSessionClear(sessionToken);
     revalidateTag(`auth-session-${sessionToken}`, "max");
   }
 }

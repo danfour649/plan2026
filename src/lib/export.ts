@@ -4,7 +4,7 @@
  * Payload includes source and schema hints for future tooling.
  */
 
-import type { Plan, Task } from "@prisma/client";
+import type { Plan, Task } from "@/generated/prisma/client";
 
 /** Converts Date fields to ISO strings for JSON-serializable payloads. */
 type Serialized<T> = {
@@ -50,6 +50,8 @@ export type ExportedPlan = Serialized<
   tasks?: ExportedPlanTask[];
   /** When plan is from list view, only id and status per task. */
   taskSummaries?: { id: string; status: string }[];
+  totalTaskCount?: number;
+  completedTaskCount?: number;
 };
 
 export type ExportType = "tasks" | "plans" | "task" | "plan";

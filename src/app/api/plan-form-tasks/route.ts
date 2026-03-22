@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { TaskStatus } from "@prisma/client";
+import { TaskStatus } from "@/generated/prisma/client";
 
 import { getCurrentUserId } from "@/auth";
 import { checkRateLimit } from "@/lib/rate-limit";
