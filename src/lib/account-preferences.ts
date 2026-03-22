@@ -4,13 +4,13 @@ import { cookies } from "next/headers";
 import { getServerAuthSession, revalidateAuthSessionCache } from "@/auth";
 import {
   DEFAULT_LOCALE,
-  getLocaleFromCookie,
+  parseLocale,
   LOCALE_COOKIE,
   LOCALES,
   type Locale,
 } from "@/lib/i18n";
-import { prisma } from "@/lib/prisma";
 import { getThemeFromCookie, THEME_COOKIE, THEMES, type Theme } from "@/lib/theme";
+import { updateUserPreferredLocale, updateUserPreferredTheme } from "@/lib/user-preference-sql";
 
 function parseStoredLocale(value: string | null | undefined): Locale | null {
   if (value && LOCALES.includes(value as Locale)) return value as Locale;
@@ -28,7 +28,7 @@ function parseStoredTheme(value: string | null | undefined): Theme | null {
  */
 export const resolveAccountPreferences = cache(async (): Promise<{ locale: Locale; theme: Theme }> => {
   const cookieStore = await cookies();
-  const cookieLocale = getLocaleFromCookie(cookieStore.get(LOCALE_COOKIE)?.value);
+  const cookieLocale = parseLocale(cookieStore.get(LOCALE_COOKIE)?.value);
   const cookieTheme = getThemeFromCookie(cookieStore.get(THEME_COOKIE)?.value);
 
   const session = await getServerAuthSession();
@@ -44,13 +44,8 @@ export const resolveAccountPreferences = cache(async (): Promise<{ locale: Local
   if (locale === null || theme === null) {
     const nextLocale = locale ?? cookieLocale;
     const nextTheme = theme ?? cookieTheme;
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        ...(locale === null ? { preferredLocale: nextLocale } : {}),
-        ...(theme === null ? { preferredTheme: nextTheme } : {}),
-      },
-    });
+    if (locale === null) await updateUserPreferredLocale(userId, nextLocale);
+    if (theme === null) await updateUserPreferredTheme(userId, nextTheme);
     await revalidateAuthSessionCache();
     locale = nextLocale;
     theme = nextTheme;

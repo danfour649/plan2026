@@ -1023,8 +1023,9 @@ export function getTranslations(locale: Locale): Messages {
   return messages[loc] as Messages;
 }
 
-export function getLocaleFromCookie(cookieValue: string | undefined): Locale {
-  if (cookieValue && LOCALES.includes(cookieValue as Locale)) return cookieValue as Locale;
+/** Normalize a locale string (cookie value, form field, etc.) to a supported `Locale`. */
+export function parseLocale(value: string | undefined): Locale {
+  if (value && LOCALES.includes(value as Locale)) return value as Locale;
   return DEFAULT_LOCALE;
 }
 
