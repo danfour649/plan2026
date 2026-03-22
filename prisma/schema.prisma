@@ -16,6 +16,10 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  // en | fr | pidgin; mirrored to PLAN2026_LOCALE when signed in
+  preferredLocale  String?
+  // light | dark | system; mirrored to PLAN2026_THEME when signed in
+  preferredTheme   String?
 
   accounts            Account[]
   sessions            Session[]

@@ -1,9 +1,7 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
-import Underline from "@tiptap/extension-underline";
 import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import { useCallback, useEffect, useRef } from "react";
 
@@ -26,11 +24,11 @@ export function TaskContentEditor({
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
-      StarterKit,
-      Underline,
-      Link.configure({
-        openOnClick: false,
-        HTMLAttributes: { target: "_blank", rel: "noopener noreferrer" },
+      StarterKit.configure({
+        link: {
+          openOnClick: false,
+          HTMLAttributes: { target: "_blank", rel: "noopener noreferrer" },
+        },
       }),
       Placeholder.configure({ placeholder: resolvedPlaceholder }),
     ],

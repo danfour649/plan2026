@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { cookies } from "next/headers";
 
 import { getCurrentUserId } from "@/auth";
 import { EditSupplyItemDialog } from "@/components/EditSupplyItemDialog";
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getTranslations } from "@/lib/i18n";
 import { getCachedSuppliesPage } from "@/lib/data-cache";
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export default async function SuppliesPage() {
   const userId = await getCurrentUserId();
   if (!userId) return null;
 
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
 
   const { plansWithSupplies } = await getCachedSuppliesPage(userId);

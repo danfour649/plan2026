@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
@@ -10,6 +10,7 @@ import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { TaskForm } from "@/components/TaskForm";
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { ActionResult } from "@/lib/actions/tasks";
+import { getThemePortalContainer } from "@/lib/theme";
 
 /** useActionState passes (prevState, formData); must match TaskForm and server actions. */
 type TaskFormAction = (prevState: ActionResult | null, formData: FormData) => Promise<ActionResult>;
@@ -40,6 +41,8 @@ type EditTaskDialogProps = {
   planId?: string;
   /** When provided, show plan selector in the edit form. */
   plans?: { id: string; name: string }[];
+  /** Below `sm`, show icon-only trigger; from `sm`, show translated "Edit" label. */
+  compactListTrigger?: boolean;
 };
 
 function isInteractiveTarget(target: EventTarget | null, currentTarget: EventTarget | null): boolean {
@@ -63,6 +66,7 @@ export function EditTaskDialog({
   restoreAction,
   planId,
   plans,
+  compactListTrigger = false,
 }: EditTaskDialogProps) {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
@@ -183,9 +187,21 @@ export function EditTaskDialog({
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
+          className={
+            compactListTrigger
+              ? "inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 text-sm text-blue-700 transition hover:bg-blue-100 max-sm:h-10 max-sm:w-10 max-sm:p-0 sm:px-3 sm:py-2"
+              : "rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
+          }
         >
-          {t.common.edit}
+          {compactListTrigger ? (
+            <>
+              <span className="sr-only sm:hidden">{t.common.edit}</span>
+              <Pencil className="h-5 w-5 sm:hidden" strokeWidth={2} aria-hidden />
+              <span className="hidden sm:inline">{t.common.edit}</span>
+            </>
+          ) : (
+            t.common.edit
+          )}
         </button>
       ) : null}
 
@@ -418,7 +434,7 @@ export function EditTaskDialog({
             </div>
           </div>
         </div>,
-          document.body,
+          getThemePortalContainer(),
         )}
     </>
   );

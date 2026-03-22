@@ -1,9 +1,9 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getServerAuthSession } from "@/auth";
 import { Plan2026Logo } from "@/components/Plan2026Logo";
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getTranslations } from "@/lib/i18n";
 import { FacebookSignInButton } from "./FacebookSignInButton";
 import { GoogleSignInButton } from "./GoogleSignInButton";
 
@@ -17,7 +17,7 @@ export default async function LoginPage({
   const callbackUrl = resolved?.callbackUrl ?? "/tasks";
   if (session?.user) redirect(callbackUrl);
 
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
 
   const hasGoogleCredentials = Boolean(

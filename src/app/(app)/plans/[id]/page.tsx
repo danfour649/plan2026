@@ -1,6 +1,5 @@
 import { Printer } from "lucide-react";
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -10,18 +9,16 @@ import { DeletePlanButton } from "@/components/DeletePlanButton";
 import { EditPlanFormWrapper } from "@/components/EditPlanFormWrapper";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportPlanButton } from "@/components/ExportPlanButton";
+import { PlanDetailTabSection } from "@/components/PlanDetailTabSection";
 import { PlanSupplyList } from "@/components/PlanSupplyList";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { InviteByLinkButton } from "@/components/InviteByLinkButton";
 import { ShareByPublicLinkButton } from "@/components/ShareByPublicLinkButton";
 import { SharePlanButton } from "@/components/SharePlanButton";
 import { TaskContent } from "@/components/TaskContent";
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
-import {
-  getCachedPlanDetail,
-  getCachedPlansForDropdown,
-  getCachedUserTasksForDropdown,
-} from "@/lib/data-cache";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getTranslations } from "@/lib/i18n";
+import { getCachedPlanDetail, getCachedPlansForDropdown } from "@/lib/data-cache";
 import type { ExportedPlan, ExportedPlanTask } from "@/lib/export";
 import { deletePlan, updatePlan } from "@/lib/actions/plans";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
@@ -74,7 +71,7 @@ async function PlanDetailRoot({
 }) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
   const resolvedSearchParams = (await searchParamsPromise) ?? {};
   const taskPage = parsePage(resolvedSearchParams.taskPage);
@@ -84,10 +81,9 @@ async function PlanDetailRoot({
   const editRaw = Array.isArray(resolvedSearchParams.edit) ? resolvedSearchParams.edit[0] : resolvedSearchParams.edit;
   const editItemId = editRaw && /^[a-z0-9]+$/i.test(editRaw) ? editRaw : undefined;
 
-  const [planDetail, plans, userTasks] = await Promise.all([
+  const [planDetail, plans] = await Promise.all([
     getCachedPlanDetail(id, userId, taskPage, taskLimit),
     getCachedPlansForDropdown(userId),
-    getCachedUserTasksForDropdown(userId),
   ]);
 
   const { plan, incompleteTasks, totalIncomplete, completedTasks, totalCompleted, exportTasks } = planDetail;
@@ -197,7 +193,6 @@ async function PlanDetailRoot({
           <EditPlanFormWrapper
             action={updatePlan}
             initialValues={initialValues}
-            userTasks={userTasks}
             submitLabel={t.common.savePlan}
             cancelLabel={t.common.cancel}
             singleColumn={true}
@@ -229,61 +224,41 @@ async function PlanDetailRoot({
           </div>
         )}
 
-        <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
-          <div className="sticky top-0 z-10 border-b border-blue-100 bg-white/90 px-3 py-3 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 max-sm:sticky sm:static sm:bg-transparent sm:backdrop-blur-none sm:dark:bg-transparent sm:px-6 sm:py-4">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <nav className="flex gap-1" aria-label={t.plans.tasksInThisPlan}>
-                  <Link
-                    href={`/plans/${plan.id}${taskPage > 1 || taskLimit !== PLAN_TASKS_PAGE_SIZE ? `?taskPage=${taskPage}&taskLimit=${taskLimit}` : ""}`}
-                    className={`rounded-xl px-3 py-1.5 text-sm font-medium transition ${
-                      tab === "tasks"
-                        ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200"
-                        : "text-zinc-600 hover:bg-blue-50 hover:text-blue-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-200"
-                    }`}
-                  >
-                    {t.nav.tasks}
-                  </Link>
-                  <Link
-                    href={`/plans/${plan.id}?tab=list`}
-                    className={`rounded-xl px-3 py-1.5 text-sm font-medium transition ${
-                      tab === "list"
-                        ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200"
-                        : "text-zinc-600 hover:bg-blue-50 hover:text-blue-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-blue-200"
-                    }`}
-                  >
-                    {t.supplyList.tabLabel}
-                  </Link>
-                </nav>
-              </div>
-              {tab === "tasks" && isOwner ? (
-                <AddTaskDialog action={addTask} plans={plans} defaultPlanId={plan.id} />
-              ) : null}
+        <PlanDetailTabSection
+          planId={plan.id}
+          initialTab={tab}
+          taskPage={taskPage}
+          taskLimit={taskLimit}
+          defaultTaskLimit={PLAN_TASKS_PAGE_SIZE}
+          navAriaLabel={t.plans.tasksInThisPlan}
+          tasksTabLabel={t.nav.tasks}
+          suppliesTabLabel={t.supplyList.tabLabel}
+          isOwner={isOwner}
+          addTaskSlot={<AddTaskDialog action={addTask} plans={plans} defaultPlanId={plan.id} />}
+          tasksHeader={
+            <div className="mt-2">
+              <h2 className="text-lg font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.plans.tasksInThisPlan}</h2>
+              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                {isOwner ? t.plans.editTaskBelowDescription : t.plans.tasksInSharedPlan}
+              </p>
             </div>
-            {tab === "tasks" ? (
-              <>
-                <div className="mt-2">
-                  <h2 className="text-lg font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.plans.tasksInThisPlan}</h2>
-                  <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                    {isOwner ? t.plans.editTaskBelowDescription : t.plans.tasksInSharedPlan}
-                  </p>
-                </div>
-              </>
-            ) : (
-              <h2 className="mt-2 text-lg font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.supplyList.title}</h2>
-            )}
-          </div>
-          {tab === "list" ? (
+          }
+          suppliesHeader={
+            <h2 className="mt-2 text-lg font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.supplyList.title}</h2>
+          }
+          listPanel={
             <div className="px-3 py-4 sm:px-6 sm:py-6">
               <PlanSupplyList planId={plan.id} items={supplyItemsForClient} isOwner={isOwner} initialEditingItemId={editItemId} />
             </div>
-          ) : hasAnyTasks ? (
+          }
+          tasksPanel={
+            hasAnyTasks ? (
             <>
             <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
               {incompleteTasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex flex-col gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
+                  className="flex flex-row items-start gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
                 >
                   {isOwner ? (
                     <>
@@ -348,18 +323,18 @@ async function PlanDetailRoot({
                           </div>
                         </div>
                       </EditTaskDialog>
-                      <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
-                        <span className="order-1">
-                          <TaskActionButton
-                            action={task.status === "completed" ? restoreTask : completeTask}
-                            taskId={task.id}
-                            planId={plan.id}
-                            label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
-                            successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
-                          />
-                        </span>
-                        <span className="order-2">
+                      <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
+                        <TaskActionButton
+                          compact
+                          actionVisual={task.status === "completed" ? "restore" : "complete"}
+                          action={task.status === "completed" ? restoreTask : completeTask}
+                          taskId={task.id}
+                          planId={plan.id}
+                          label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
+                          successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
+                        />
                         <EditTaskDialog
+                          compactListTrigger
                           action={updateTask}
                           deleteAction={deleteTask}
                           completeAction={completeTask}
@@ -386,7 +361,6 @@ async function PlanDetailRoot({
                             })),
                           }}
                         />
-                        </span>
                       </div>
                     </>
                   ) : (
@@ -462,7 +436,7 @@ async function PlanDetailRoot({
                   {completedTasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex flex-col gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
+                  className="flex flex-row items-start gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
                 >
                   {isOwner ? (
                     <>
@@ -527,18 +501,18 @@ async function PlanDetailRoot({
                           </div>
                         </div>
                       </EditTaskDialog>
-                      <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-shrink-0">
-                        <span className="order-1">
-                          <TaskActionButton
-                            action={task.status === "completed" ? restoreTask : completeTask}
-                            taskId={task.id}
-                            planId={plan.id}
-                            label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
-                            successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
-                          />
-                        </span>
-                        <span className="order-2">
+                      <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
+                        <TaskActionButton
+                          compact
+                          actionVisual={task.status === "completed" ? "restore" : "complete"}
+                          action={task.status === "completed" ? restoreTask : completeTask}
+                          taskId={task.id}
+                          planId={plan.id}
+                          label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
+                          successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
+                        />
                         <EditTaskDialog
+                          compactListTrigger
                           action={updateTask}
                           deleteAction={deleteTask}
                           completeAction={completeTask}
@@ -565,7 +539,6 @@ async function PlanDetailRoot({
                             })),
                           }}
                         />
-                        </span>
                       </div>
                     </>
                   ) : (
@@ -602,8 +575,8 @@ async function PlanDetailRoot({
                     </div>
                   )}
                 </li>
-                  ))}
-                </ul>
+              ))}
+            </ul>
               </div>
             ) : null}
             </>
@@ -614,8 +587,8 @@ async function PlanDetailRoot({
                 {isOwner ? t.plans.addOrLinkTasksDescription : t.plans.planOwnerAddTasks}
               </p>
             </div>
-          )}
-        </section>
+            )}
+        />
       </div>
     </div>
   );

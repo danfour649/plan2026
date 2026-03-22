@@ -26,7 +26,8 @@ const messages = {
       calendarConnected: "Your account can currently create Google Calendar events from tasks.",
       calendarDisconnected:
         "Google Calendar access has been disconnected. Reconnect with Google to grant Calendar permissions again.",
-      pageDescription: "Manage your account, language, and Google Calendar connection.",
+      pageDescription:
+        "Manage your account, language, and Google Calendar connection. Language and theme are saved to your account and apply on any device when you sign in.",
       theme: "Theme",
       themeLight: "Light",
       themeDark: "Dark",
@@ -228,23 +229,15 @@ const messages = {
       selectedCount: "{{count}} selected",
       noTasksMatchSearch: "No tasks match your search.",
       noTasksYetDescription: "No tasks yet. Add new tasks below or create some from the Tasks page.",
+      loadingLinkableTasks: "Loading tasks…",
+      linkableTasksLoadError: "Could not load tasks. Try again.",
+      retryLoadTasks: "Retry",
       addNewTasksLabel: "Add new tasks",
       addAnotherTask: "Add another task",
     },
     templates: {
       startFrom: "Start from",
       empty: "Empty",
-      projectLaunch: "Project launch",
-      projectLaunchGoal: "Ship the project on time",
-      projectLaunchTask1: "Kickoff meeting",
-      projectLaunchTask2: "Define scope",
-      projectLaunchTask3: "First deliverable",
-      tripPlanning: "Trip planning",
-      tripPlanningGoal: "Plan and book the trip",
-      tripPlanningTask1: "Choose dates",
-      tripPlanningTask2: "Book transport",
-      tripPlanningTask3: "Book accommodation",
-      tripPlanningTask4: "List activities",
     },
     toasts: {
       inviteLinkCopied: "Invite link copied to clipboard",
@@ -359,7 +352,8 @@ const messages = {
       calendarConnected: "Votre compte peut actuellement créer des événements Google Agenda à partir des tâches.",
       calendarDisconnected:
         "L'accès à Google Agenda a été déconnecté. Reconnectez-vous avec Google pour accorder à nouveau les autorisations.",
-      pageDescription: "Gérez votre compte, la langue et la connexion Google Agenda.",
+      pageDescription:
+        "Gérez votre compte, la langue et la connexion Google Agenda. La langue et le thème sont enregistrés sur votre compte et s’appliquent sur chaque appareil lorsque vous êtes connecté.",
       theme: "Thème",
       themeLight: "Clair",
       themeDark: "Sombre",
@@ -561,23 +555,15 @@ const messages = {
       selectedCount: "{{count}} sélectionnée(s)",
       noTasksMatchSearch: "Aucun résultat.",
       noTasksYetDescription: "Aucune tâche. Ajoutez-en ci-dessous.",
+      loadingLinkableTasks: "Chargement des tâches…",
+      linkableTasksLoadError: "Impossible de charger les tâches. Réessayez.",
+      retryLoadTasks: "Réessayer",
       addNewTasksLabel: "Ajouter des tâches",
       addAnotherTask: "Ajouter une autre tâche",
     },
     templates: {
       startFrom: "Commencer avec",
       empty: "Vide",
-      projectLaunch: "Lancement de projet",
-      projectLaunchGoal: "Livrer le projet à temps",
-      projectLaunchTask1: "Réunion de lancement",
-      projectLaunchTask2: "Définir le périmètre",
-      projectLaunchTask3: "Première livraison",
-      tripPlanning: "Planification de voyage",
-      tripPlanningGoal: "Planifier et réserver le voyage",
-      tripPlanningTask1: "Choisir les dates",
-      tripPlanningTask2: "Réserver le transport",
-      tripPlanningTask3: "Réserver l'hébergement",
-      tripPlanningTask4: "Lister les activités",
     },
     toasts: {
       inviteLinkCopied: "Lien copié",
@@ -692,7 +678,8 @@ const messages = {
       calendarConnected: "Your account fit create Google Calendar events from your work now.",
       calendarDisconnected:
         "Google Calendar don cut. Connect am again make you fit get permission.",
-      pageDescription: "Arrange your account, language, and Google Calendar connection.",
+      pageDescription:
+        "Arrange your account, language, and Google Calendar connection. Language and theme dey save for your account and go work for any device when you sign in.",
       theme: "How e look",
       themeLight: "Light",
       themeDark: "Dark",
@@ -894,23 +881,15 @@ const messages = {
       selectedCount: "{{count}} don select",
       noTasksMatchSearch: "Nothing like dat.",
       noTasksYetDescription: "No work yet. Put new ones for down or go di Work page.",
+      loadingLinkableTasks: "E dey load work…",
+      linkableTasksLoadError: "No fit load work. Try again.",
+      retryLoadTasks: "Try again",
       addNewTasksLabel: "Put new work",
       addAnotherTask: "Put another one",
     },
     templates: {
       startFrom: "Start from",
       empty: "Empty",
-      projectLaunch: "Project launch",
-      projectLaunchGoal: "Ship di project for time",
-      projectLaunchTask1: "Kickoff meeting",
-      projectLaunchTask2: "Define scope",
-      projectLaunchTask3: "First deliverable",
-      tripPlanning: "Trip planning",
-      tripPlanningGoal: "Plan and book di trip",
-      tripPlanningTask1: "Choose dates",
-      tripPlanningTask2: "Book transport",
-      tripPlanningTask3: "Book accommodation",
-      tripPlanningTask4: "List activities",
     },
     toasts: {
       inviteLinkCopied: "Invite link don copy",
@@ -1020,8 +999,9 @@ export function getTranslations(locale: Locale): Messages {
   return messages[loc] as Messages;
 }
 
-export function getLocaleFromCookie(cookieValue: string | undefined): Locale {
-  if (cookieValue && LOCALES.includes(cookieValue as Locale)) return cookieValue as Locale;
+/** Normalize a locale string (cookie value, form field, etc.) to a supported `Locale`. */
+export function parseLocale(value: string | undefined): Locale {
+  if (value && LOCALES.includes(value as Locale)) return value as Locale;
   return DEFAULT_LOCALE;
 }
 

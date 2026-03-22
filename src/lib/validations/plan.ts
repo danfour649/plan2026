@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+import { sanitizeTaskContent } from "@/lib/sanitize";
+import {
+  TASK_CONTENT_MAX_LENGTH,
+  TASK_TITLE_MAX_LENGTH,
+  TASK_URGENCY_MAX,
+  TASK_URGENCY_MIN,
+} from "@/lib/validations/task";
+
 export const PLAN_NAME_MAX_LENGTH = 500;
 export const PLAN_DESCRIPTION_MAX_LENGTH = 10_000;
 export const PLAN_GOAL_MAX_LENGTH = 500;
@@ -34,6 +42,98 @@ const optionalUrl = z
     (v) => v === undefined || (v.startsWith("https://") && v.length <= PLAN_IMAGE_URL_MAX_LENGTH),
     "Image URL must be https and at most 2048 characters",
   );
+
+/**
+ * Turn plain text (e.g. from plan templates) or HTML from the form into sanitized task HTML.
+ */
+export function taskContentFromPlainOrHtml(raw: string | undefined): string | undefined {
+  if (raw == null || typeof raw !== "string" || raw.trim() === "") return undefined;
+  let html: string;
+  if (/<[a-z][\s\S]*>/i.test(raw)) {
+    html = raw.trim();
+  } else {
+    const escaped = raw
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    html = escaped
+      .split(/\n\n+/)
+      .filter((block) => block.length > 0)
+      .map((block) => `<p>${block.replace(/\n/g, "<br />")}</p>`)
+      .join("");
+  }
+  const sanitized = sanitizeTaskContent(html);
+  if (!sanitized.trim()) return undefined;
+  return sanitized.length > TASK_CONTENT_MAX_LENGTH
+    ? sanitized.slice(0, TASK_CONTENT_MAX_LENGTH)
+    : sanitized;
+}
+
+export type NewPlanTaskPayload = {
+  title: string;
+  content?: string;
+  dueAt?: Date;
+  urgency: number;
+};
+
+function asFormText(v: FormDataEntryValue | undefined): string {
+  return typeof v === "string" ? v : "";
+}
+
+/** Reads parallel newTask* fields from the plan form; skips rows with empty titles. */
+export function buildNewPlanTasksFromFormData(formData: FormData): NewPlanTaskPayload[] {
+  const titles = formData.getAll("newTaskTitle");
+  const contents = formData.getAll("newTaskContent");
+  const dueAts = formData.getAll("newTaskDueAt");
+  const urgencies = formData.getAll("newTaskUrgency");
+  const len = Math.max(titles.length, contents.length, dueAts.length, urgencies.length);
+  const out: NewPlanTaskPayload[] = [];
+  for (let i = 0; i < len; i++) {
+    const title = asFormText(titles[i]).trim();
+    if (!title) continue;
+    const contentRaw = asFormText(contents[i]).trim();
+    const rawDue = asFormText(dueAts[i]).trim();
+    const u = urgencies[i];
+    let urgency = 4;
+    if (typeof u === "string" && u.trim() !== "") {
+      const n = Number(u);
+      if (Number.isFinite(n)) urgency = n;
+    } else if (typeof u === "number" && Number.isFinite(u)) {
+      urgency = u;
+    }
+    urgency = Math.min(TASK_URGENCY_MAX, Math.max(TASK_URGENCY_MIN, Math.round(urgency)));
+    let dueAt: Date | undefined;
+    if (rawDue) {
+      const d = new Date(rawDue);
+      if (!Number.isNaN(d.getTime())) dueAt = d;
+    }
+    out.push({
+      title,
+      content: taskContentFromPlainOrHtml(contentRaw || undefined),
+      dueAt,
+      urgency,
+    });
+  }
+  return out;
+}
+
+const newPlanTaskSchema = z.object({
+  title: z
+    .string()
+    .min(1, "New task title is required")
+    .max(TASK_TITLE_MAX_LENGTH, `Task title must be at most ${TASK_TITLE_MAX_LENGTH} characters`)
+    .transform((s) => s.trim()),
+  content: z
+    .string()
+    .optional()
+    .refine((v) => v === undefined || v.length <= TASK_CONTENT_MAX_LENGTH, "Task content too long"),
+  dueAt: z.date().optional(),
+  urgency: z
+    .number()
+    .int()
+    .min(TASK_URGENCY_MIN, `Urgency must be between ${TASK_URGENCY_MIN} and ${TASK_URGENCY_MAX}`)
+    .max(TASK_URGENCY_MAX, `Urgency must be between ${TASK_URGENCY_MIN} and ${TASK_URGENCY_MAX}`),
+});
 
 const basePlanSchema = z.object({
   name: z
@@ -80,10 +180,7 @@ const basePlanSchema = z.object({
     (v) => (Array.isArray(v) ? v : v == null || v === "" ? [] : [v]),
     z.array(z.string().min(1)).default([]),
   ),
-  newTaskTitles: z.preprocess(
-    (v) => (Array.isArray(v) ? v : v == null || v === "" ? [] : [v]),
-    z.array(z.string().min(1, "New task title is required").max(PLAN_NAME_MAX_LENGTH)).default([]),
-  ),
+  newTasks: z.array(newPlanTaskSchema).default([]),
 });
 
 export const createPlanSchema = basePlanSchema.refine(

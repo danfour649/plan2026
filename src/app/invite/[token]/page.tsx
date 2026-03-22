@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { getServerAuthSession } from "@/auth";
 import { Plan2026Logo } from "@/components/Plan2026Logo";
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 
 export default async function InviteAcceptPage({
@@ -15,7 +15,7 @@ export default async function InviteAcceptPage({
   const session = await getServerAuthSession();
   const { token } = await params;
 
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
 
   const invite = await prisma.planInvite.findUnique({

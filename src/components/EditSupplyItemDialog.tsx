@@ -9,6 +9,7 @@ import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { SupplyItemForm, type SupplyItemFormValues } from "@/components/SupplyItemForm";
 import { useTranslations } from "@/components/TranslationsProvider";
 import { deleteSupplyItem, updateSupplyItem, type SupplyActionResult } from "@/lib/actions/supplies";
+import { getThemePortalContainer } from "@/lib/theme";
 
 export type SupplyItemForEdit = {
   id: string;
@@ -233,7 +234,7 @@ export function EditSupplyItemDialog({
               </div>
             </div>
           </div>,
-          document.body,
+          getThemePortalContainer(),
         )}
     </>
   );

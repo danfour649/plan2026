@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import { getCurrentUserId } from "@/auth";
-import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
+import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 import { PrintChecklistActions } from "@/components/PrintChecklistActions";
 
@@ -37,7 +37,7 @@ function PlanPrintFallback() {
 async function PlanPrintRoot({ id }: { id: string }) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
-  const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
+  const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
 
   const plan = await prisma.plan.findFirst({

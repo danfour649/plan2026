@@ -3,11 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-import { getCurrentUserId } from "@/auth";
-import { DEFAULT_LOCALE, getLocaleFromCookie, LOCALE_COOKIE, LOCALES, type Locale } from "@/lib/i18n";
+import { getCurrentUserId, revalidateAuthSessionCache } from "@/auth";
+import { LOCALE_COOKIE, parseLocale } from "@/lib/i18n";
 import { THEME_COOKIE, THEMES, type Theme } from "@/lib/theme";
 import type { ActionResult } from "@/lib/actions/tasks";
 import { prisma } from "@/lib/prisma";
+import { updateUserPreferredLocale, updateUserPreferredTheme } from "@/lib/user-preference-sql";
 
 function isAlreadyRevokedResponse(status: number, body: string): boolean {
   return status === 400 && /invalid token/i.test(body);
@@ -81,9 +82,10 @@ export async function setLocale(formData: FormData): Promise<{ success: true } |
   const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
   const raw = formData.get("locale");
-  const locale = typeof raw === "string" ? getLocaleFromCookie(raw) : DEFAULT_LOCALE;
-  const value = LOCALES.includes(locale as Locale) ? locale : DEFAULT_LOCALE;
+  const value = parseLocale(typeof raw === "string" ? raw : undefined);
   (await cookies()).set(LOCALE_COOKIE, value, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+  await updateUserPreferredLocale(userId, value);
+  await revalidateAuthSessionCache();
   revalidatePath("/", "layout");
   return { success: true };
 }
@@ -92,6 +94,11 @@ export async function setTheme(formData: FormData): Promise<{ success: true } | 
   const raw = formData.get("theme");
   const theme = typeof raw === "string" && THEMES.includes(raw as Theme) ? (raw as Theme) : "system";
   (await cookies()).set(THEME_COOKIE, theme, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+  const userId = await getCurrentUserId();
+  if (userId) {
+    await updateUserPreferredTheme(userId, theme);
+    await revalidateAuthSessionCache();
+  }
   revalidatePath("/", "layout");
   return { success: true };
 }

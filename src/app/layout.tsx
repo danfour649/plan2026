@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense, type ReactNode } from "react";
 import { Toaster } from "sonner";
-import { THEME_COOKIE, getThemeFromCookie } from "@/lib/theme";
+import { getThemeForRequest } from "@/lib/account-preferences";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -52,7 +51,7 @@ function RootLayoutFallback() {
 }
 
 async function RootLayoutBody({ children }: Readonly<{ children: ReactNode }>) {
-  const theme = getThemeFromCookie((await cookies()).get(THEME_COOKIE)?.value);
+  const theme = await getThemeForRequest();
   const themeClass = theme === "dark" ? "dark" : theme === "light" ? "theme-light" : "";
   return (
     <>

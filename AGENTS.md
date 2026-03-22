@@ -55,7 +55,7 @@ Non-interactive `gh` needs `--fill` or `--body`. **`npm run pr`** uses `--fill` 
 ## Translations (i18n)
 
 - **No hardcoded user-facing strings.** Locales: **en**, **fr**, **pidgin** — add keys to **`src/lib/i18n.ts`** (`messages.en` / `.fr` / `.pidgin`, same shape). After edits, spot-check or grep for stray literals in JSX/labels/placeholders.
-- **Server:** `getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value)`, `getTranslations(locale)` from `@/lib/i18n` → `t.section.key`.
+- **Server:** `await getLocaleForRequest()` from `@/lib/account-preferences` (account + cookie); `parseLocale(string)` from `@/lib/i18n` for raw values; `getTranslations(locale)` → `t.section.key`.
 - **Client (inside provider):** `useTranslations()` from `@/components/TranslationsProvider` → `t.section.key`.
 - **Outside provider** (e.g. login): pass strings from a server parent or cookie + props (`label` / `ariaLabel`).
 - Placeholders: `{{name}}` in copy; `string.replace("{{name}}", value)` in code.

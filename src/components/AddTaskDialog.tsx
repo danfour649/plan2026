@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 
 import { AddTaskForm } from "@/components/AddTaskForm";
 import { useTranslations } from "@/components/TranslationsProvider";
+import { getThemePortalContainer } from "@/lib/theme";
 import type { ActionResult } from "@/lib/actions/tasks";
 
 type AddTaskAction = (prevState: ActionResult | null, formData: FormData) => Promise<ActionResult>;
@@ -88,7 +89,7 @@ export function AddTaskDialog({
               </div>
             </div>
           </div>,
-          document.body,
+          getThemePortalContainer(),
         )}
     </>
   );

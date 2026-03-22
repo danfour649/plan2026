@@ -29,6 +29,7 @@ Ready to implement. Each has a **dedicated analysis doc** in this folder for imp
 | TECH-0058 | Optimize app code before future work | [TECH-0058-optimize-app-before-future-work.md](./TECH-0058-optimize-app-before-future-work.md) |
 | TECH-0062 | Expand help section and task/plan wizard | [TECH-0062-expand-help-section-task-plan-wizard.md](./TECH-0062-expand-help-section-task-plan-wizard.md) |
 | TECH-0067 | Put tasks on hold | [TECH-0067-put-tasks-on-hold.md](./TECH-0067-put-tasks-on-hold.md) |
+| TECH-0068 | Upgrade to Prisma 7 and Zod 4 | [TECH-0068-upgrade-prisma7-zod4.md](./TECH-0068-upgrade-prisma7-zod4.md) |
 
 When implementing: use branch `tech/<ID>-<kebab-description>`, add a changeset, and open a PR per task (see AGENTS.md).
 
@@ -71,7 +72,7 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 
 **Update this section when closing a session** so the next run knows where to continue.
 
-- **Next:** Active items ready to implement: **Schedule/Calendar** ([TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md)), **Data robustness** ([TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md)), **Optimize app** ([TECH-0058-optimize-app-before-future-work.md](./TECH-0058-optimize-app-before-future-work.md)), **Help + wizard** (TECH-0062), **Tasks on hold** (TECH-0067). Deferred: TECH-0056 (Facebook/email-password).
+- **Next:** Active items ready to implement: **Schedule/Calendar** ([TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md)), **Data robustness** ([TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md)), **Optimize app** ([TECH-0058-optimize-app-before-future-work.md](./TECH-0058-optimize-app-before-future-work.md)), **Help + wizard** (TECH-0062), **Tasks on hold** (TECH-0067), **Prisma 7 + Zod 4** ([TECH-0068-upgrade-prisma7-zod4.md](./TECH-0068-upgrade-prisma7-zod4.md)). Deferred: TECH-0056 (Facebook/email-password).
 
 ---
 
@@ -90,6 +91,7 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 | [TECH-0056-facebook-email-password-login.md](./TECH-0056-facebook-email-password-login.md) | Facebook login and email/password sign-up (analysis). | Deferred — bulk run |
 | [TECH-0062-expand-help-section-task-plan-wizard.md](./TECH-0062-expand-help-section-task-plan-wizard.md) | Expand help content and add 3-step task/plan wizard. | Active (deferred bulk run) |
 | [TECH-0067-put-tasks-on-hold.md](./TECH-0067-put-tasks-on-hold.md) | Task status “on hold”; sort to bottom of lists. | Active (deferred bulk run) |
+| [TECH-0068-upgrade-prisma7-zod4.md](./TECH-0068-upgrade-prisma7-zod4.md) | Upgrade Prisma and Zod to latest majors; fix breaking changes (transactions, validations). | Active |
 
 ---
 
