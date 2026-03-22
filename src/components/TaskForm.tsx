@@ -13,7 +13,8 @@ const TaskContentEditor = dynamic(
 );
 import type { ActionResult } from "@/lib/actions/tasks";
 
-type TaskFormAction = (formData: FormData) => Promise<ActionResult>;
+/** useActionState passes (prevState, formData); server actions must accept both. */
+type TaskFormAction = (prevState: ActionResult | null, formData: FormData) => Promise<ActionResult>;
 
 type TaskFormProps = {
   action: TaskFormAction;
@@ -51,12 +52,6 @@ const URGENCY_OPTIONS = [
   { value: 1, label: "1 - Lowest", shortLabel: "1", className: "bg-blue-100 text-blue-700" },
 ];
 
-function wrap(
-  fn: TaskFormAction,
-): (prev: ActionResult | null, formData: FormData) => Promise<ActionResult> {
-  return (_prev, formData) => fn(formData);
-}
-
 function formatDateTimeLocal(value: Date): string {
   const year = value.getFullYear();
   const month = String(value.getMonth() + 1).padStart(2, "0");
@@ -90,7 +85,7 @@ export function TaskForm({
   onStateChange,
 }: TaskFormProps) {
   const t = useTranslations();
-  const [state, formAction] = useActionState(wrap(action), null as ActionResult | null);
+  const [state, formAction] = useActionState(action, null as ActionResult | null);
   const defaultDueAtValue = useMemo(
     () => getDefaultDueAtValue(initialValues?.dueAt),
     [initialValues?.dueAt],

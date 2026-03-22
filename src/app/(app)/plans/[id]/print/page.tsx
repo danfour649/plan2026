@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { getCurrentUserId } from "@/auth";
 import { getLocaleFromCookie, getTranslations } from "@/lib/i18n";
@@ -24,16 +25,20 @@ function formatTime(d: Date, locale: string): string {
   });
 }
 
-export default async function PlanPrintPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+function PlanPrintFallback() {
+  return (
+    <div className="mx-auto max-w-3xl animate-pulse space-y-4 p-6 sm:p-10">
+      <div className="h-8 w-2/3 rounded bg-zinc-200 dark:bg-zinc-700" />
+      <div className="h-64 rounded border border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900" />
+    </div>
+  );
+}
+
+async function PlanPrintRoot({ id }: { id: string }) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
   const locale = getLocaleFromCookie((await cookies()).get("PLAN2026_LOCALE")?.value);
   const t = getTranslations(locale);
-  const { id } = await params;
 
   const plan = await prisma.plan.findFirst({
     where: {
@@ -226,5 +231,15 @@ export default async function PlanPrintPage({
         </section>
       </div>
     </div>
+  );
+}
+
+export default function PlanPrintPage({ params }: { params: Promise<{ id: string }> }) {
+  return (
+    <Suspense fallback={<PlanPrintFallback />}>
+      {params.then(({ id }) => (
+        <PlanPrintRoot id={id} />
+      ))}
+    </Suspense>
   );
 }

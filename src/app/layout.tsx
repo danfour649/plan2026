@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense, type ReactNode } from "react";
 import { Toaster } from "sonner";
 import { THEME_COOKIE, getThemeFromCookie } from "@/lib/theme";
 import "./globals.css";
@@ -41,20 +42,39 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+function RootLayoutFallback() {
+  return (
+    <div
+      className="theme-root min-h-screen animate-pulse bg-zinc-100 dark:bg-zinc-900"
+      aria-hidden
+    />
+  );
+}
+
+async function RootLayoutBody({ children }: Readonly<{ children: ReactNode }>) {
   const theme = getThemeFromCookie((await cookies()).get(THEME_COOKIE)?.value);
   const themeClass = theme === "dark" ? "dark" : theme === "light" ? "theme-light" : "";
   return (
-    <html lang="en" className={themeClass}>
+    <>
+      <div className={`theme-root min-h-screen ${themeClass}`.trim()}>{children}</div>
+      <Toaster richColors position="top-center" />
+    </>
+  );
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-        <Toaster richColors position="top-center" />
+        <Suspense fallback={<RootLayoutFallback />}>
+          <RootLayoutBody>{children}</RootLayoutBody>
+        </Suspense>
       </body>
     </html>
   );

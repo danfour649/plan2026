@@ -5,8 +5,6 @@ import { getCurrentUserId } from "@/auth";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { prisma } from "@/lib/prisma";
 
-export const runtime = "nodejs";
-
 const ARCHIVED_STATUSES = ["completed", "abandoned"] as const;
 const DEFAULT_PLANS_PAGE_SIZE = 20;
 const MAX_PLANS_PAGE_SIZE = 100;

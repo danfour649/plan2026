@@ -11,19 +11,12 @@ import { TaskForm } from "@/components/TaskForm";
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { ActionResult } from "@/lib/actions/tasks";
 
-type EditTaskAction = (formData: FormData) => Promise<ActionResult>;
-type DeleteTaskAction = (formData: FormData) => Promise<ActionResult>;
-type CompleteOrRestoreAction = (formData: FormData) => Promise<ActionResult>;
-
-function wrap(
-  fn: DeleteTaskAction | CompleteOrRestoreAction,
-): (prev: ActionResult | null, formData: FormData) => Promise<ActionResult> {
-  return (_prev, formData) => fn(formData);
-}
+/** useActionState passes (prevState, formData); must match TaskForm and server actions. */
+type TaskFormAction = (prevState: ActionResult | null, formData: FormData) => Promise<ActionResult>;
 
 type EditTaskDialogProps = {
-  action: EditTaskAction;
-  deleteAction: DeleteTaskAction;
+  action: TaskFormAction;
+  deleteAction: TaskFormAction;
   task: {
     id: string;
     title: string;
@@ -42,8 +35,8 @@ type EditTaskDialogProps = {
   triggerClassName?: string;
   showButton?: boolean;
   /** When set, show "Mark done" (or "Restore" if task is completed) in the dialog. Pass planId to revalidate the plan page after. */
-  completeAction?: CompleteOrRestoreAction;
-  restoreAction?: CompleteOrRestoreAction;
+  completeAction?: TaskFormAction;
+  restoreAction?: TaskFormAction;
   planId?: string;
   /** When provided, show plan selector in the edit form. */
   plans?: { id: string; name: string }[];
@@ -87,16 +80,34 @@ export function EditTaskDialog({
       isMountedRef.current = false;
     };
   }, []);
+  // When dialog opens, use task.attachments if we have any; otherwise fetch attachments (list queries don't load them).
   useEffect(() => {
-    if (isOpen) setAttachments(task.attachments ?? []);
-  }, [isOpen, task.attachments]);
+    if (!isOpen) return;
+    const fromTask = task.attachments ?? [];
+    if (fromTask.length > 0) {
+      setAttachments(fromTask);
+      return;
+    }
+    let cancelled = false;
+    fetch(`/api/tasks/${task.id}/attachments`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { attachments?: { id: string; url: string; filename: string; size: number }[] } | null) => {
+        if (!cancelled && Array.isArray(data?.attachments)) setAttachments(data.attachments);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, task.id, task.attachments]);
   const doneRestoreAction = isCompleted ? restoreAction : completeAction;
-  const [deleteState, deleteFormAction] = useActionState(
-    wrap(deleteAction),
-    null as ActionResult | null,
-  );
+  const [deleteState, deleteFormAction] = useActionState(deleteAction, null as ActionResult | null);
   const [doneRestoreState, doneRestoreFormAction] = useActionState(
-    wrap(doneRestoreAction ?? (() => Promise.resolve({ success: false, error: "" }))),
+    doneRestoreAction ??
+      (async (_prev: ActionResult | null, _formData: FormData) => {
+        void _prev;
+        void _formData;
+        return { success: false, error: "" } as ActionResult;
+      }),
     null as ActionResult | null,
   );
 

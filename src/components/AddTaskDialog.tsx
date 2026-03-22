@@ -7,7 +7,7 @@ import { AddTaskForm } from "@/components/AddTaskForm";
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { ActionResult } from "@/lib/actions/tasks";
 
-type AddTaskAction = (formData: FormData) => Promise<ActionResult>;
+type AddTaskAction = (prevState: ActionResult | null, formData: FormData) => Promise<ActionResult>;
 
 export function AddTaskDialog({
   action,

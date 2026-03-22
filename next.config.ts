@@ -24,15 +24,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
   poweredByHeader: false,
   reactStrictMode: true,
-  experimental: {
-    // Reuse RSC payload when navigating back to dynamic routes (e.g. /actions) so we don’t refetch every click.
-    staleTimes: {
-      dynamic: 60,
-      static: 300,
-    },
-  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

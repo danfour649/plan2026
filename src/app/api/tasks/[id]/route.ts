@@ -7,8 +7,6 @@ import { isValidTaskId } from "@/lib/validations/task";
 
 type Params = { params: Promise<{ id: string }> };
 
-export const runtime = "nodejs";
-
 export async function PATCH(req: Request, { params }: Params) {
   const userId = await getCurrentUserId();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
