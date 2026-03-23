@@ -15,6 +15,9 @@ type TaskMetadataProps = {
   isCompleted?: boolean;
   plan?: { id: string; name: string } | null;
   labels: TaskMetadataLabels;
+  className?: string;
+  /** Plan detail owner rows: due on its own line under added/completed at every breakpoint. */
+  stackDueOnDesktop?: boolean;
 };
 
 export function TaskMetadata({
@@ -24,9 +27,17 @@ export function TaskMetadata({
   isCompleted,
   plan,
   labels,
+  className = "",
+  stackDueOnDesktop = false,
 }: TaskMetadataProps) {
+  const dueSepClass = stackDueOnDesktop ? "" : "before:content-['·'] before:mr-1";
+
+  const rootClass = stackDueOnDesktop
+    ? `mt-1 flex flex-col flex-nowrap items-start gap-y-0.5 break-words text-[0.8125rem] sm:text-xs text-muted ${className}`.trim()
+    : `mt-1 flex flex-row flex-wrap gap-x-1 gap-y-0.5 break-words text-[0.8125rem] sm:text-xs text-muted ${className}`.trim();
+
   return (
-    <div className="mt-1 flex flex-row flex-wrap gap-x-1 gap-y-0.5 break-words text-[0.8125rem] sm:text-xs text-muted">
+    <div className={rootClass}>
       {isCompleted ? (
         <span>
           {labels.completed}{" "}
@@ -47,7 +58,7 @@ export function TaskMetadata({
         </span>
       )}
       {dueAt ? (
-        <span className="before:content-['·'] before:mr-1">
+        <span className={dueSepClass || undefined}>
           {labels.due}{" "}
           <span className="max-sm:hidden sm:inline">{formatShortDateTime(dueAt)}</span>
           <span className="max-sm:inline sm:hidden">{formatShortDateOnly(dueAt)}</span>

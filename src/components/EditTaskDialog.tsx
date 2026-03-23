@@ -43,6 +43,8 @@ type EditTaskDialogProps = {
   plans?: { id: string; name: string }[];
   /** Below `sm`, show icon-only trigger; from `sm`, show translated "Edit" label. */
   compactListTrigger?: boolean;
+  /** With `compactListTrigger`, use the icon-only trigger at all breakpoints (e.g. plan detail). */
+  compactListTriggerIconsOnly?: boolean;
 };
 
 function isInteractiveTarget(target: EventTarget | null, currentTarget: EventTarget | null): boolean {
@@ -67,6 +69,7 @@ export function EditTaskDialog({
   planId,
   plans,
   compactListTrigger = false,
+  compactListTriggerIconsOnly = false,
 }: EditTaskDialogProps) {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
@@ -219,18 +222,25 @@ export function EditTaskDialog({
         <button
           type="button"
           onClick={() => setIsOpen(true)}
+          aria-label={compactListTrigger && compactListTriggerIconsOnly ? t.common.edit : undefined}
           className={
             compactListTrigger
-              ? "inline-flex shrink-0 items-center justify-center rounded-xl border border-rose-400 bg-rose-200 text-rose-900 text-sm transition hover:bg-rose-300 max-sm:h-10 max-sm:w-10 max-sm:p-0 sm:px-3 sm:py-2 dark:border-rose-800 dark:bg-rose-900/40 dark:text-rose-300 dark:hover:bg-rose-800/50"
+              ? compactListTriggerIconsOnly
+                ? "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-rose-400 bg-rose-200 p-0 text-rose-900 text-sm transition hover:bg-rose-300 dark:border-rose-800 dark:bg-rose-900/40 dark:text-rose-300 dark:hover:bg-rose-800/50"
+                : "inline-flex shrink-0 items-center justify-center rounded-xl border border-rose-400 bg-rose-200 text-rose-900 text-sm transition hover:bg-rose-300 max-sm:h-10 max-sm:w-10 max-sm:p-0 sm:px-3 sm:py-2 dark:border-rose-800 dark:bg-rose-900/40 dark:text-rose-300 dark:hover:bg-rose-800/50"
               : "rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
           }
         >
           {compactListTrigger ? (
-            <>
-              <span className="sr-only sm:hidden">{t.common.edit}</span>
-              <Pencil className="h-5 w-5 sm:hidden" strokeWidth={3} aria-hidden />
-              <span className="hidden sm:inline">{t.common.edit}</span>
-            </>
+            compactListTriggerIconsOnly ? (
+              <Pencil className="h-5 w-5" strokeWidth={3} aria-hidden />
+            ) : (
+              <>
+                <span className="sr-only sm:hidden">{t.common.edit}</span>
+                <Pencil className="h-5 w-5 sm:hidden" strokeWidth={3} aria-hidden />
+                <span className="hidden sm:inline">{t.common.edit}</span>
+              </>
+            )
           ) : (
             t.common.edit
           )}

@@ -7,6 +7,7 @@ import { getCurrentUserId } from "@/auth";
 import { AddTaskDialog } from "@/components/AddTaskDialog";
 import { DeletePlanButton } from "@/components/DeletePlanButton";
 import { EditPlanFormWrapper } from "@/components/EditPlanFormWrapper";
+import { PlanDetailBackToPlansButton } from "@/components/PlanDetailBackToPlansButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportPlanButton } from "@/components/ExportPlanButton";
 import { PlanDetailTabSection } from "@/components/PlanDetailTabSection";
@@ -157,15 +158,23 @@ async function PlanDetailRoot({
     planLabel: t.tasks.planLabel,
   };
 
+  /** Full-width title/body, then metadata + actions on one row (same at all breakpoints). */
+  const ownerPlanTaskRowClass =
+    "flex flex-col gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:px-6 sm:py-4";
+  const ownerPlanTaskMetaRowClass =
+    "flex min-w-0 w-full flex-row items-end justify-between gap-3 sm:gap-4";
+  const ownerPlanTaskDialogShellClass = "min-w-0 w-full max-w-full";
+  const ownerPlanTaskMetadataClass = "min-w-0 flex-1 !mt-0";
+  const ownerPlanTaskActionsClass =
+    "flex shrink-0 flex-row flex-wrap items-end justify-end gap-2";
+
   const titleRow = (
-    <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex min-w-0 flex-col gap-3">
       <div className="min-w-0">
         <h1 className="truncate text-2xl font-bold tracking-tight text-blue-950 dark:text-zinc-100">{plan.name}</h1>
-        <p className="mt-1 text-sm text-muted">
-          {isOwner ? t.plans.editPlanDescription : t.plans.viewingSharedPlan}
-        </p>
+        {!isOwner ? <p className="mt-1 text-sm text-muted">{t.plans.viewingSharedPlan}</p> : null}
       </div>
-      <div className="flex min-w-0 flex-nowrap items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+      <div className="flex min-w-0 flex-wrap items-center gap-2">
         <ExportPlanButton plan={planForExport} />
         <Link
           href={`/plans/${plan.id}/print`}
@@ -190,43 +199,57 @@ async function PlanDetailRoot({
   );
 
   return (
-    <div className="min-w-0 overflow-x-hidden space-y-8">
-      <div className="grid min-w-0 gap-6 lg:grid-cols-2 lg:gap-8">
+    <div className="min-w-0 overflow-x-hidden space-y-6 md:space-y-8">
+      <header className="w-full min-w-0">
         {isOwner ? (
-          <EditPlanFormWrapper
-            action={updatePlan}
-            initialValues={initialValues}
-            submitLabel={t.common.savePlan}
-            cancelLabel={t.common.cancel}
-            singleColumn={true}
-            backLabel={t.common.backToPlans}
-            confirmMessage={t.plans.discardEditPlanConfirm}
-            discardLeaveLabel={t.plansPage.discardLeave}
-            discardStayLabel={t.plansPage.discardStay}
-          >
-            {titleRow}
-          </EditPlanFormWrapper>
+          <PlanDetailBackToPlansButton label={t.common.backToPlans} />
         ) : (
-          <div className="flex min-w-0 flex-col gap-3">
-            <Link
-              href="/plans"
-              className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-blue-700 transition hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-200"
-            >
-              <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden="true">
-                <path
-                  d="M12.5 15L7.5 10l5-5"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              {t.common.backToPlans}
-            </Link>
-            {titleRow}
-          </div>
+          <Link
+            href="/plans"
+            className="mb-4 inline-flex w-fit items-center gap-1.5 text-sm font-medium text-blue-700 transition hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-200"
+          >
+            <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden="true">
+              <path
+                d="M12.5 15L7.5 10l5-5"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            {t.common.backToPlans}
+          </Link>
         )}
+        {titleRow}
+      </header>
 
+      <div
+        className={
+          isOwner
+            ? "flex min-w-0 flex-col gap-6 md:flex-row md:items-start md:gap-8"
+            : "min-w-0"
+        }
+      >
+        {isOwner ? (
+          <div className="min-w-0 w-full md:min-w-0 md:flex-1 md:basis-0">
+            <EditPlanFormWrapper
+              action={updatePlan}
+              initialValues={initialValues}
+              submitLabel={t.common.savePlan}
+              cancelLabel={t.common.cancel}
+              singleColumn={true}
+              confirmMessage={t.plans.discardEditPlanConfirm}
+              discardLeaveLabel={t.plansPage.discardLeave}
+              discardStayLabel={t.plansPage.discardStay}
+            />
+          </div>
+        ) : null}
+
+        <div
+          className={
+            isOwner ? "min-w-0 w-full md:min-w-0 md:flex-1 md:basis-0" : "min-w-0 w-full"
+          }
+        >
         <PlanDetailTabSection
           planId={plan.id}
           initialTab={tab}
@@ -261,69 +284,24 @@ async function PlanDetailRoot({
               {incompleteTasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex flex-row items-start gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
+                  className={
+                    isOwner
+                      ? ownerPlanTaskRowClass
+                      : "flex flex-row px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:px-6 sm:py-4"
+                  }
                 >
                   {isOwner ? (
                     <>
-                      <EditTaskDialog
-                        action={updateTask}
-                        deleteAction={deleteTask}
-                        completeAction={completeTask}
-                        restoreAction={restoreTask}
-                        planId={plan.id}
-                        plans={plans}
-                        triggerClassName="min-w-0 flex-1 cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1 text-left"
-                        showButton={false}
-                        task={{
-                          id: task.id,
-                          title: task.title,
-                          content: task.content,
-                          dueAt: task.dueAt?.toISOString() ?? null,
-                          urgency: task.urgency,
-                          status: task.status,
-                          completedAt: task.completedAt?.toISOString() ?? null,
-                          planId: plan.id,
-                          planName: plan.name,
-                          createdAt: task.createdAt.toISOString(),
-                          updatedAt: task.updatedAt.toISOString(),
-                          attachments: task.attachments.map((a) => ({
-                            id: a.id,
-                            url: a.url,
-                            filename: a.filename,
-                            size: a.size,
-                          })),
-                        }}
-                      >
-                        <div className="min-w-0 flex-1">
-                          <UrgencyPill urgency={task.urgency} title={task.title} completed={task.status === "completed"} status={task.status} onHoldLabel={t.tasks.onHold} />
-                          <TaskContent content={task.content} />
-                          <TaskMetadata
-                            isCompleted={task.status === "completed"}
-                            createdAt={task.createdAt}
-                            completedAt={task.completedAt ? new Date(task.completedAt) : null}
-                            dueAt={task.dueAt ? new Date(task.dueAt) : null}
-                            labels={metaLabels}
-                          />
-                        </div>
-                      </EditTaskDialog>
-                      <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
-                        <TaskActionButton
-                          compact
-                          actionVisual={task.status === "completed" ? "restore" : "complete"}
-                          action={task.status === "completed" ? restoreTask : completeTask}
-                          taskId={task.id}
-                          planId={plan.id}
-                          label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
-                          successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
-                        />
+                      <div className={ownerPlanTaskDialogShellClass}>
                         <EditTaskDialog
-                          compactListTrigger
                           action={updateTask}
                           deleteAction={deleteTask}
                           completeAction={completeTask}
                           restoreAction={restoreTask}
                           planId={plan.id}
                           plans={plans}
+                          triggerClassName="min-w-0 min-h-0 w-full max-w-full cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1 text-left md:block"
+                          showButton={false}
                           task={{
                             id: task.id,
                             title: task.title,
@@ -343,7 +321,64 @@ async function PlanDetailRoot({
                               size: a.size,
                             })),
                           }}
+                        >
+                          <div className="min-w-0 w-full max-w-full">
+                            <UrgencyPill urgency={task.urgency} title={task.title} completed={task.status === "completed"} status={task.status} onHoldLabel={t.tasks.onHold} />
+                            <TaskContent content={task.content} />
+                          </div>
+                        </EditTaskDialog>
+                      </div>
+                      <div className={ownerPlanTaskMetaRowClass}>
+                        <TaskMetadata
+                          isCompleted={task.status === "completed"}
+                          createdAt={task.createdAt}
+                          completedAt={task.completedAt ? new Date(task.completedAt) : null}
+                          dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                          labels={metaLabels}
+                          stackDueOnDesktop
+                          className={ownerPlanTaskMetadataClass}
                         />
+                        <div className={ownerPlanTaskActionsClass}>
+                          <TaskActionButton
+                            compact
+                            compactIconsOnly
+                            actionVisual={task.status === "completed" ? "restore" : "complete"}
+                            action={task.status === "completed" ? restoreTask : completeTask}
+                            taskId={task.id}
+                            planId={plan.id}
+                            label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
+                            successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
+                          />
+                          <EditTaskDialog
+                            compactListTrigger
+                            compactListTriggerIconsOnly
+                            action={updateTask}
+                            deleteAction={deleteTask}
+                            completeAction={completeTask}
+                            restoreAction={restoreTask}
+                            planId={plan.id}
+                            plans={plans}
+                            task={{
+                              id: task.id,
+                              title: task.title,
+                              content: task.content,
+                              dueAt: task.dueAt?.toISOString() ?? null,
+                              urgency: task.urgency,
+                              status: task.status,
+                              completedAt: task.completedAt?.toISOString() ?? null,
+                              planId: plan.id,
+                              planName: plan.name,
+                              createdAt: task.createdAt.toISOString(),
+                              updatedAt: task.updatedAt.toISOString(),
+                              attachments: task.attachments.map((a) => ({
+                                id: a.id,
+                                url: a.url,
+                                filename: a.filename,
+                                size: a.size,
+                              })),
+                            }}
+                          />
+                        </div>
                       </div>
                     </>
                   ) : (
@@ -399,69 +434,24 @@ async function PlanDetailRoot({
                   {completedTasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex flex-row items-start gap-3 px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-4"
+                  className={
+                    isOwner
+                      ? ownerPlanTaskRowClass
+                      : "flex flex-row px-3 py-3 transition hover:bg-blue-50/40 dark:hover:bg-zinc-800/50 sm:px-6 sm:py-4"
+                  }
                 >
                   {isOwner ? (
                     <>
-                      <EditTaskDialog
-                        action={updateTask}
-                        deleteAction={deleteTask}
-                        completeAction={completeTask}
-                        restoreAction={restoreTask}
-                        planId={plan.id}
-                        plans={plans}
-                        triggerClassName="min-w-0 flex-1 cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1 text-left"
-                        showButton={false}
-                        task={{
-                          id: task.id,
-                          title: task.title,
-                          content: task.content,
-                          dueAt: task.dueAt?.toISOString() ?? null,
-                          urgency: task.urgency,
-                          status: task.status,
-                          completedAt: task.completedAt?.toISOString() ?? null,
-                          planId: plan.id,
-                          planName: plan.name,
-                          createdAt: task.createdAt.toISOString(),
-                          updatedAt: task.updatedAt.toISOString(),
-                          attachments: task.attachments.map((a) => ({
-                            id: a.id,
-                            url: a.url,
-                            filename: a.filename,
-                            size: a.size,
-                          })),
-                        }}
-                      >
-                        <div className="min-w-0 flex-1">
-                          <UrgencyPill urgency={task.urgency} title={task.title} completed={task.status === "completed"} status={task.status} onHoldLabel={t.tasks.onHold} />
-                          <TaskContent content={task.content} />
-                          <TaskMetadata
-                            isCompleted={task.status === "completed"}
-                            createdAt={task.createdAt}
-                            completedAt={task.completedAt ? new Date(task.completedAt) : null}
-                            dueAt={task.dueAt ? new Date(task.dueAt) : null}
-                            labels={metaLabels}
-                          />
-                        </div>
-                      </EditTaskDialog>
-                      <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
-                        <TaskActionButton
-                          compact
-                          actionVisual={task.status === "completed" ? "restore" : "complete"}
-                          action={task.status === "completed" ? restoreTask : completeTask}
-                          taskId={task.id}
-                          planId={plan.id}
-                          label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
-                          successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
-                        />
+                      <div className={ownerPlanTaskDialogShellClass}>
                         <EditTaskDialog
-                          compactListTrigger
                           action={updateTask}
                           deleteAction={deleteTask}
                           completeAction={completeTask}
                           restoreAction={restoreTask}
                           planId={plan.id}
                           plans={plans}
+                          triggerClassName="min-w-0 min-h-0 w-full max-w-full cursor-pointer rounded-xl px-1 py-1 -mx-1 -my-1 text-left md:block"
+                          showButton={false}
                           task={{
                             id: task.id,
                             title: task.title,
@@ -481,7 +471,64 @@ async function PlanDetailRoot({
                               size: a.size,
                             })),
                           }}
+                        >
+                          <div className="min-w-0 w-full max-w-full">
+                            <UrgencyPill urgency={task.urgency} title={task.title} completed={task.status === "completed"} status={task.status} onHoldLabel={t.tasks.onHold} />
+                            <TaskContent content={task.content} />
+                          </div>
+                        </EditTaskDialog>
+                      </div>
+                      <div className={ownerPlanTaskMetaRowClass}>
+                        <TaskMetadata
+                          isCompleted={task.status === "completed"}
+                          createdAt={task.createdAt}
+                          completedAt={task.completedAt ? new Date(task.completedAt) : null}
+                          dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                          labels={metaLabels}
+                          stackDueOnDesktop
+                          className={ownerPlanTaskMetadataClass}
                         />
+                        <div className={ownerPlanTaskActionsClass}>
+                          <TaskActionButton
+                            compact
+                            compactIconsOnly
+                            actionVisual={task.status === "completed" ? "restore" : "complete"}
+                            action={task.status === "completed" ? restoreTask : completeTask}
+                            taskId={task.id}
+                            planId={plan.id}
+                            label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
+                            successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
+                          />
+                          <EditTaskDialog
+                            compactListTrigger
+                            compactListTriggerIconsOnly
+                            action={updateTask}
+                            deleteAction={deleteTask}
+                            completeAction={completeTask}
+                            restoreAction={restoreTask}
+                            planId={plan.id}
+                            plans={plans}
+                            task={{
+                              id: task.id,
+                              title: task.title,
+                              content: task.content,
+                              dueAt: task.dueAt?.toISOString() ?? null,
+                              urgency: task.urgency,
+                              status: task.status,
+                              completedAt: task.completedAt?.toISOString() ?? null,
+                              planId: plan.id,
+                              planName: plan.name,
+                              createdAt: task.createdAt.toISOString(),
+                              updatedAt: task.updatedAt.toISOString(),
+                              attachments: task.attachments.map((a) => ({
+                                id: a.id,
+                                url: a.url,
+                                filename: a.filename,
+                                size: a.size,
+                              })),
+                            }}
+                          />
+                        </div>
                       </div>
                     </>
                   ) : (
@@ -512,6 +559,7 @@ async function PlanDetailRoot({
             </div>
             )}
         />
+        </div>
       </div>
     </div>
   );

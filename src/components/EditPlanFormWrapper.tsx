@@ -8,6 +8,7 @@ import { useTranslations } from "@/components/TranslationsProvider";
 
 import { PlanForm } from "@/components/PlanForm";
 import { clearEditPlanFormDirty, setEditPlanFormDirty } from "@/lib/editPlanDirty";
+import { registerPlanEditBackHandler } from "@/lib/planEditBackNav";
 import type { PlanActionResult } from "@/lib/actions/plans";
 import type { PlanFormInitialValues } from "@/components/PlanForm";
 
@@ -19,11 +20,11 @@ type EditPlanFormWrapperProps = {
   submitLabel: string;
   cancelLabel: string;
   singleColumn: boolean;
-  backLabel: string;
   confirmMessage: string;
   discardLeaveLabel: string;
   discardStayLabel: string;
-  children: React.ReactNode;
+  /** Optional header slot (e.g. plan title); may be rendered above the two-column layout on the plan page. */
+  children?: React.ReactNode;
 };
 
 export function EditPlanFormWrapper({
@@ -32,7 +33,6 @@ export function EditPlanFormWrapper({
   submitLabel,
   cancelLabel,
   singleColumn,
-  backLabel,
   confirmMessage,
   discardLeaveLabel,
   discardStayLabel,
@@ -47,6 +47,17 @@ export function EditPlanFormWrapper({
   useEffect(() => {
     return () => clearEditPlanFormDirty();
   }, []);
+
+  useEffect(() => {
+    registerPlanEditBackHandler(() => {
+      if (editFormDirty) {
+        setShowDiscardConfirm(true);
+        return;
+      }
+      router.push("/plans");
+    });
+    return () => registerPlanEditBackHandler(null);
+  }, [editFormDirty, router]);
 
   useEffect(() => {
     if (!showDiscardConfirm) return;
@@ -65,34 +76,9 @@ export function EditPlanFormWrapper({
   };
 
   return (
-    <div className="min-w-0 space-y-8">
-      <div className="flex min-w-0 flex-col gap-3">
-        <button
-          type="button"
-          onClick={() => {
-            if (editFormDirty) {
-              setShowDiscardConfirm(true);
-              return;
-            }
-            router.push("/plans");
-          }}
-          className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-blue-700 transition hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-200"
-        >
-          <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden="true">
-            <path
-              d="M12.5 15L7.5 10l5-5"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          {backLabel}
-        </button>
-        {children}
-      </div>
-
+    <div className="min-w-0">
       <section className="min-w-0 overflow-x-hidden rounded-2xl border border-border bg-white/90 px-2 py-4 shadow-sm shadow-blue-100/40 backdrop-blur dark:bg-zinc-900/90 dark:shadow-zinc-950/40 sm:px-4 sm:py-6">
+        {children ? <div className="mb-4 flex min-w-0 flex-col gap-3">{children}</div> : null}
         <PlanForm
           key={`${initialValues.planId}:${initialValues.taskIds.join("\0")}`}
           action={action}

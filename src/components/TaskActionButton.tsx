@@ -1,6 +1,6 @@
 "use client";
 
-import { RotateCcw, SquareCheck } from "lucide-react";
+import { Recycle, SquareCheck } from "lucide-react";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -25,6 +25,8 @@ type TaskActionButtonProps = {
    * Use `actionVisual` to pick the icon (complete vs restore).
    */
   compact?: boolean;
+  /** With `compact`, use the square icon button at all breakpoints (e.g. plan detail). */
+  compactIconsOnly?: boolean;
   actionVisual?: "complete" | "restore";
 };
 
@@ -36,9 +38,11 @@ export function TaskActionButton({
   variant = "default",
   planId,
   compact = false,
+  compactIconsOnly = false,
   actionVisual = "complete",
 }: TaskActionButtonProps) {
   const [state, formAction] = useActionState(action, null as ActionResult | null);
+  const iconOnlyAll = compact && compactIconsOnly;
 
   useEffect(() => {
     if (!state) return;
@@ -53,12 +57,16 @@ export function TaskActionButton({
   const baseTone =
     variant === "muted"
       ? "border-red-200 bg-red-50 text-red-700 hover:bg-red-100 dark:border-red-800 dark:bg-red-900/40 dark:text-red-200 dark:hover:bg-red-800/50"
-      : compact && actionVisual === "complete"
-        ? "border-green-300 bg-green-200 text-green-800 hover:bg-green-300 dark:border-green-700 dark:bg-green-800/50 dark:text-green-200 dark:hover:bg-green-700/60"
-        : "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700";
+      : actionVisual === "restore"
+        ? "border-yellow-300 bg-yellow-200 text-yellow-950 hover:bg-yellow-300 dark:border-yellow-700 dark:bg-yellow-800/50 dark:text-yellow-100 dark:hover:bg-yellow-700/60"
+        : compact && actionVisual === "complete"
+          ? "border-green-300 bg-green-200 text-green-800 hover:bg-green-300 dark:border-green-700 dark:bg-green-800/50 dark:text-green-200 dark:hover:bg-green-700/60"
+          : "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700";
 
   const sizeClass = compact
-    ? "inline-flex max-sm:h-10 max-sm:w-10 max-sm:items-center max-sm:justify-center max-sm:p-0 max-sm:shrink-0 sm:px-3 sm:py-2"
+    ? iconOnlyAll
+      ? "inline-flex h-10 w-10 shrink-0 items-center justify-center p-0"
+      : "inline-flex max-sm:h-10 max-sm:w-10 max-sm:items-center max-sm:justify-center max-sm:p-0 max-sm:shrink-0 sm:px-3 sm:py-2"
     : "px-3 py-2";
 
   return (
@@ -66,18 +74,27 @@ export function TaskActionButton({
       <input type="hidden" name="taskId" value={taskId} />
       {planId ? <input type="hidden" name="planId" value={planId} /> : null}
       <FormSubmitButton
+        aria-label={iconOnlyAll ? label : undefined}
         className={`rounded-xl border text-sm transition disabled:cursor-not-allowed disabled:opacity-70 ${baseTone} ${sizeClass}`}
       >
         {compact ? (
-          <>
-            <span className="sr-only sm:hidden">{label}</span>
-            {actionVisual === "restore" ? (
-              <RotateCcw className="h-5 w-5 sm:hidden" strokeWidth={2} aria-hidden />
+          iconOnlyAll ? (
+            actionVisual === "restore" ? (
+              <Recycle className="h-5 w-5" strokeWidth={2} aria-hidden />
             ) : (
-              <SquareCheck className="h-5 w-5 sm:hidden" strokeWidth={2} aria-hidden />
-            )}
-            <span className="hidden sm:inline">{label}</span>
-          </>
+              <SquareCheck className="h-5 w-5" strokeWidth={2} aria-hidden />
+            )
+          ) : (
+            <>
+              <span className="sr-only sm:hidden">{label}</span>
+              {actionVisual === "restore" ? (
+                <Recycle className="h-5 w-5 sm:hidden" strokeWidth={2} aria-hidden />
+              ) : (
+                <SquareCheck className="h-5 w-5 sm:hidden" strokeWidth={2} aria-hidden />
+              )}
+              <span className="hidden sm:inline">{label}</span>
+            </>
+          )
         ) : (
           label
         )}
