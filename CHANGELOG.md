@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.1
+
+### Patch Changes
+
+- c1714e5: TECH-0069 Fix text in dark mode, other fixes
+
 ## 0.24.0
 
 ### Minor Changes
