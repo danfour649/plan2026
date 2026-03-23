@@ -19,7 +19,7 @@ export function RefreshTasksButton() {
         setTimeout(() => setRefreshing(false), 600);
       }}
       disabled={refreshing}
-      className="group relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
+      className="group relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-green-300 bg-green-200 text-green-800 transition hover:bg-green-300 disabled:cursor-not-allowed disabled:opacity-60 dark:border-green-700 dark:bg-green-800/50 dark:text-green-200 dark:hover:bg-green-700/60"
       title={t.calendar.reloadTasks}
       aria-label={t.calendar.reloadTasks}
     >

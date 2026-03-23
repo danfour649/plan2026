@@ -141,13 +141,13 @@ export function HeaderRightNav() {
           aria-expanded={menuOpen}
           aria-haspopup="true"
           aria-label={t.nav.menu ?? "Menu"}
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-100 bg-blue-50/80 p-2.5 text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-border bg-blue-50/80 p-2.5 text-blue-700 transition hover:bg-blue-100 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
         >
           <MenuIcon className="h-5 w-5" />
         </button>
         {menuOpen && (
           <div
-            className="absolute right-0 top-full z-50 mt-1 min-w-[12rem] rounded-xl border border-blue-100 bg-white py-2 shadow-lg shadow-blue-950/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950/50"
+            className="absolute right-0 top-full z-50 mt-1 min-w-[12rem] rounded-xl border border-border bg-white py-2 shadow-lg shadow-blue-950/10 dark:bg-zinc-900 dark:shadow-zinc-950/50"
             role="menu"
           >
             <Link
@@ -180,7 +180,7 @@ export function HeaderRightNav() {
               <SettingsIcon className="h-5 w-5 shrink-0" />
               {t.nav.settings}
             </Link>
-            <div className="mt-2 border-t border-blue-100 pt-2 dark:border-zinc-700">
+            <div className="mt-2 border-t border-border pt-2">
               <div className="px-2 pb-1">
                 <SignOutButton
                   alwaysShowLabel

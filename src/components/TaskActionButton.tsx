@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, RotateCcw } from "lucide-react";
+import { RotateCcw, SquareCheck } from "lucide-react";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -52,8 +52,10 @@ export function TaskActionButton({
 
   const baseTone =
     variant === "muted"
-      ? "border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
-      : "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100";
+      ? "border-red-200 bg-red-50 text-red-700 hover:bg-red-100 dark:border-red-800 dark:bg-red-900/40 dark:text-red-200 dark:hover:bg-red-800/50"
+      : compact && actionVisual === "complete"
+        ? "border-green-300 bg-green-200 text-green-800 hover:bg-green-300 dark:border-green-700 dark:bg-green-800/50 dark:text-green-200 dark:hover:bg-green-700/60"
+        : "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700";
 
   const sizeClass = compact
     ? "inline-flex max-sm:h-10 max-sm:w-10 max-sm:items-center max-sm:justify-center max-sm:p-0 max-sm:shrink-0 sm:px-3 sm:py-2"
@@ -72,7 +74,7 @@ export function TaskActionButton({
             {actionVisual === "restore" ? (
               <RotateCcw className="h-5 w-5 sm:hidden" strokeWidth={2} aria-hidden />
             ) : (
-              <Check className="h-5 w-5 sm:hidden" strokeWidth={3} aria-hidden />
+              <SquareCheck className="h-5 w-5 sm:hidden" strokeWidth={2} aria-hidden />
             )}
             <span className="hidden sm:inline">{label}</span>
           </>

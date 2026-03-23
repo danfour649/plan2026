@@ -11,8 +11,9 @@ import { PlansListSection } from "@/components/PlansListSection";
 import { RefreshPlansButton } from "@/components/RefreshPlansButton";
 import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
-import { getCachedPlansPage } from "@/lib/data-cache";
+import { getCachedPlansPage, getCachedPlansForDropdown } from "@/lib/data-cache";
 import type { ExportedPlan } from "@/lib/export";
+import { addTask } from "@/lib/actions/tasks";
 import {
   PLANS_SHOW_ARCHIVED_COOKIE,
   readPlansShowArchivedFromCookie,
@@ -79,7 +80,10 @@ export default async function PlansPage({
   const page = parsePage(resolvedSearchParams.page);
   const limit = parseLimit(resolvedSearchParams.limit, DEFAULT_PLANS_PAGE_SIZE);
 
-  const { activePlans, totalActive, allPlans, totalAll } = await getCachedPlansPage(userId, page, limit);
+  const [{ activePlans, totalActive, allPlans, totalAll }, plansForDropdown] = await Promise.all([
+    getCachedPlansPage(userId, page, limit),
+    getCachedPlansForDropdown(userId),
+  ]);
   const totalPagesActive = Math.ceil(totalActive / limit) || 1;
   const totalPagesAll = Math.ceil(totalAll / limit) || 1;
 
@@ -87,7 +91,7 @@ export default async function PlansPage({
   const exportFull = mapPlansToExport(allPlans);
 
   const header = (
-    <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-blue-100 px-6 py-4 dark:border-zinc-700 sm:gap-4">
+    <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-4 sm:gap-4">
       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
         <h2 className="text-2xl font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.plansPage.title}</h2>
         <div className="flex shrink-0 items-center gap-1">
@@ -95,7 +99,7 @@ export default async function PlansPage({
           <ExportPlansButtonFiltered
             activePlans={exportActive}
             fullPlans={exportFull}
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-0 text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-300 bg-amber-100 p-0 text-amber-700 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-amber-700 dark:bg-amber-900/40 dark:text-amber-200 dark:hover:bg-amber-800/50"
           />
         </div>
       </div>
@@ -104,7 +108,7 @@ export default async function PlansPage({
         <Link
           href="/plans/new"
           prefetch={false}
-          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 sm:h-auto sm:w-fit sm:px-4 sm:py-2"
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm shadow-shadow transition hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 sm:h-auto sm:w-fit sm:px-4 sm:py-2"
           aria-label={t.plans.addPlanAria}
         >
           <span className="text-xl font-medium sm:hidden" aria-hidden>
@@ -124,6 +128,8 @@ export default async function PlansPage({
       page={page}
       limit={limit}
       totalPages={totalPagesActive}
+      addTaskAction={addTask}
+      plansForDropdown={plansForDropdown}
     />
   );
 
@@ -135,6 +141,8 @@ export default async function PlansPage({
       page={page}
       limit={limit}
       totalPages={totalPagesAll}
+      addTaskAction={addTask}
+      plansForDropdown={plansForDropdown}
     />
   );
 

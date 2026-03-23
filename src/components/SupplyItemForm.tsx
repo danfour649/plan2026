@@ -30,7 +30,7 @@ type SupplyItemFormProps = {
 };
 
 const inputClass =
-  "w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 placeholder:text-zinc-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30";
+  "w-full min-w-0 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition focus:border-blue-300 focus:ring-4 placeholder:text-zinc-500 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500";
 
 export function SupplyItemForm({
   idPrefix,

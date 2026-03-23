@@ -80,8 +80,8 @@ export function PlanDetailTabSection({
   };
 
   return (
-    <section className="min-w-0 overflow-x-hidden rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
-      <div className="sticky top-0 z-10 border-b border-blue-100 bg-white/90 px-3 py-3 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 max-sm:sticky sm:static sm:bg-transparent sm:backdrop-blur-none sm:dark:bg-transparent sm:px-6 sm:py-4">
+    <section className="min-w-0 overflow-x-hidden rounded-2xl border border-border bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+      <div className="sticky top-0 z-10 border-b border-border bg-white/90 px-3 py-3 backdrop-blur dark:bg-zinc-900/90 max-sm:sticky sm:static sm:bg-transparent sm:backdrop-blur-none sm:dark:bg-transparent sm:px-6 sm:py-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <nav className="flex gap-1" aria-label={navAriaLabel}>

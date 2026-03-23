@@ -48,7 +48,7 @@ export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonP
           role="presentation"
         >
           <div
-            className="w-full max-w-md shrink-0 rounded-2xl border border-blue-100 bg-white px-6 py-5 shadow-2xl shadow-blue-950/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950/50"
+            className="w-full max-w-md shrink-0 rounded-2xl border border-border bg-white px-6 py-5 shadow-2xl shadow-blue-950/10 dark:bg-zinc-900 dark:shadow-zinc-950/50"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -60,7 +60,7 @@ export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonP
             >
               {t.plans.deletePlanConfirmTitle}
             </h2>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="mt-2 text-sm text-tertiary">
               {t.plans.deletePlanConfirmMessage.replace("{planName}", planName)}
             </p>
             <div className="mt-5 flex flex-wrap justify-end gap-3">

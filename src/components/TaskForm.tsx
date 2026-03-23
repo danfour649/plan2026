@@ -122,7 +122,7 @@ export function TaskForm({
           placeholder={t.tasks.taskNamePlaceholder}
           required
           defaultValue={initialValues?.title ?? ""}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-black outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+          className="w-full min-w-0 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-black outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
         />
         <div className="flex w-full flex-col gap-1.5">
           <label className="text-xs whitespace-nowrap text-blue-700 dark:text-blue-300">{t.tasks.urgencyLabel}</label>
@@ -190,7 +190,7 @@ export function TaskForm({
             <select
               name="planId"
               defaultValue={initialValues?.planId ?? ""}
-              className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-black outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+              className="w-full rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-black outline-none ring-ring transition focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500"
             >
               <option value="">{t.form.none}</option>
               {plans.map((plan) => (
@@ -209,7 +209,7 @@ export function TaskForm({
               name="dueAt"
               type="datetime-local"
               defaultValue={defaultDueAtValue}
-              className="w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-black outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+              className="w-full rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-black outline-none ring-ring transition focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500"
             />
             <button
               type="button"
@@ -232,7 +232,7 @@ export function TaskForm({
       </div>
       {!hideSubmit ? (
         <FormSubmitButton
-          className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600 sm:w-auto"
+          className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-shadow transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-blue-500 dark:hover:bg-blue-600 sm:w-auto"
           pendingChildren={t.common.saving}
         >
           {submitLabel}

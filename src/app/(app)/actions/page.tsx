@@ -30,8 +30,8 @@ export default async function ActionsPage() {
 
   return (
     <div className="space-y-8">
-      <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
-        <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-blue-100 px-6 py-4 dark:border-zinc-700 sm:gap-4">
+      <section className="rounded-2xl border border-border bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+        <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-4 sm:gap-4">
           <h2 className="text-2xl font-bold tracking-tight text-blue-950 dark:text-zinc-100">
             {t.actionsPage.title}
           </h2>
@@ -46,7 +46,7 @@ export default async function ActionsPage() {
             <p className="mt-3 text-base font-medium text-blue-900 dark:text-zinc-100">
               {t.actionsPage.emptyTitle}
             </p>
-            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-1 text-sm text-muted">
               {t.actionsPage.emptyDescription}
             </p>
             <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
@@ -119,7 +119,7 @@ export default async function ActionsPage() {
                         </div>
                       </div>
                       <TaskContent content={task.content} />
-                      <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
+                      <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-muted sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
                         <span>
                           {t.tasks.added}{" "}
                           <span className="max-sm:hidden sm:inline">
@@ -144,7 +144,7 @@ export default async function ActionsPage() {
                           <span className="min-w-0 max-sm:block sm:before:content-['·'] sm:before:mr-1">
                             <Link
                               href={`/plans/${task.plan.id}`}
-                              className="max-w-[12rem] truncate text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300 max-sm:inline-block sm:max-w-none sm:truncate"
+                              className="max-w-[12rem] truncate text-accent-blue hover:underline dark:hover:text-blue-300 max-sm:inline-block sm:max-w-none sm:truncate"
                             >
                               {t.tasks.planLabel} {task.plan.name}
                             </Link>

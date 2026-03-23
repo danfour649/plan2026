@@ -76,7 +76,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
   return (
     <div className="flex flex-col gap-4">
       {isOwner ? (
-        <form action={createAction} className="flex flex-col gap-3 border-b border-blue-100 pb-4 dark:border-zinc-700">
+        <form action={createAction} className="flex flex-col gap-3 border-b border-border pb-4">
           <div className="w-full min-w-0 sm:flex-1 sm:min-w-[10rem]">
             <label htmlFor="supply-label-new" className="sr-only">
               {t.supplyList.labelPlaceholder}
@@ -87,7 +87,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
               type="text"
               required
               placeholder={t.supplyList.labelPlaceholder}
-              className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+              className="w-full min-w-0 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
             />
           </div>
           <div className="w-full min-w-0">
@@ -99,7 +99,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
               name="description"
               type="text"
               placeholder={t.supplyList.descriptionPlaceholder}
-              className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+              className="w-full min-w-0 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
             />
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-end sm:gap-2">
@@ -114,7 +114,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                 step="0.01"
                 min="0"
                 placeholder={t.supplyList.pricePlaceholder}
-                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+                className="w-full min-w-0 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
               />
             </div>
             <div className="w-full min-w-0 sm:w-20">
@@ -129,7 +129,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                 max="999999"
                 defaultValue={1}
                 placeholder={t.supplyList.quantityPlaceholder}
-                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+                className="w-full min-w-0 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
               />
             </div>
             <div className="w-full sm:w-32">
@@ -139,7 +139,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
               <select
                 id="supply-status-new"
                 name="acquiredStatus"
-                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+                className="w-full min-w-0 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500"
               >
                 <option value="needed">{t.supplyList.statusNeeded}</option>
                 <option value="ordered">{t.supplyList.statusOrdered}</option>
@@ -156,7 +156,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                 name="link"
                 type="url"
                 placeholder={t.supplyList.linkPlaceholder}
-                className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+                className="w-full min-w-0 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
               />
             </div>
             <FormSubmitButton
@@ -185,10 +185,10 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                   <div className="min-w-0 flex-1">
                     <span className="font-medium text-blue-950 dark:text-zinc-100">{item.label}</span>
                     {item.quantity > 1 ? (
-                      <span className="ml-2 text-sm text-zinc-500 dark:text-zinc-400">× {item.quantity}</span>
+                      <span className="ml-2 text-sm text-muted">× {item.quantity}</span>
                     ) : null}
                     {item.price != null && !Number.isNaN(item.price) ? (
-                      <span className="ml-2 text-sm text-zinc-600 dark:text-zinc-300">
+                      <span className="ml-2 text-sm text-tertiary">
                         {typeof item.price === "number" ? item.price.toFixed(2) : String(item.price)}
                       </span>
                     ) : null}
@@ -210,14 +210,14 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
                   ) : null}
                 </div>
                 {item.description ? (
-                  <p className="pl-3 text-sm text-zinc-500 dark:text-zinc-400">{item.description}</p>
+                  <p className="pl-3 text-sm text-muted">{item.description}</p>
                 ) : null}
                 {item.link ? (
                   <a
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block truncate text-sm text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                    className="inline-block truncate text-sm text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300"
                   >
                     {item.link}
                   </a>
@@ -227,7 +227,7 @@ export function PlanSupplyList({ planId, items: initialItems, isOwner, initialEd
           )}
         </ul>
       ) : (
-        <p className="py-4 text-sm text-zinc-500 dark:text-zinc-400">{t.supplyList.noItems}</p>
+        <p className="py-4 text-sm text-muted">{t.supplyList.noItems}</p>
       )}
     </div>
   );
@@ -246,7 +246,7 @@ function SupplyItemEditRow({
 }) {
   const t = useTranslations();
   return (
-    <li className="border-b border-blue-100 py-3 dark:border-zinc-700">
+    <li className="border-b border-border py-3">
       <SupplyItemForm
         idPrefix={`supply-${item.id}`}
         initialValues={{

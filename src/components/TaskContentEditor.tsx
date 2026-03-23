@@ -36,7 +36,7 @@ export function TaskContentEditor({
     editorProps: {
       attributes: {
         class:
-          "min-h-[80px] w-full resize-y rounded-b-xl border border-t-0 border-blue-100 bg-white px-3 py-2 text-sm text-black outline-none ring-blue-200/70 focus:ring-4 prose prose-sm max-w-none prose-p:text-black [&_a]:text-blue-600 [&_a]:underline dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:prose-p:text-zinc-100 [&_a]:dark:text-blue-400",
+          "min-h-[80px] w-full resize-y rounded-b-xl border border-t-0 border-border bg-white px-3 py-2 text-sm text-black outline-none ring-ring focus:ring-4 prose prose-sm max-w-none prose-p:text-black [&_a]:text-accent-blue [&_a]:underline dark:bg-zinc-800 dark:text-zinc-100 dark:prose-p:text-zinc-100",
       },
     },
   });
@@ -61,9 +61,9 @@ export function TaskContentEditor({
   if (!editor) return null;
 
   return (
-    <div className="rounded-xl border border-blue-100 bg-white/90 focus-within:ring-4 focus-within:ring-blue-200/70 dark:border-zinc-600 dark:bg-zinc-800/90 dark:focus-within:ring-blue-500/30">
+    <div className="rounded-xl border border-border bg-white/90 focus-within:ring-4 focus-within:ring-ring dark:bg-zinc-800/90">
       <input ref={hiddenInputRef} type="hidden" name={name} defaultValue={defaultValue} />
-      <div className="flex items-center gap-2 rounded-t-xl border-b border-blue-100 bg-blue-50/70 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-700/70">
+      <div className="flex items-center gap-2 rounded-t-xl border-b border-border bg-blue-50/70 px-3 py-2 dark:bg-zinc-700/70">
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}

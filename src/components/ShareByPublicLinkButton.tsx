@@ -63,13 +63,13 @@ export function ShareByPublicLinkButton({ planId }: { planId: string }) {
         )}
       </button>
       {shareUrl ? (
-        <div className="mt-2 rounded-xl border border-blue-100 bg-blue-50/50 px-3 py-2 text-xs text-zinc-600">
+        <div className="mt-2 rounded-xl border border-border bg-blue-50/50 px-3 py-2 text-xs text-zinc-600">
           <div className="flex flex-wrap items-center gap-2">
             <a
               href={shareUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="break-all text-blue-600 underline hover:text-blue-800"
+              className="break-all text-accent-blue underline hover:text-blue-800"
             >
               {shareUrl}
             </a>

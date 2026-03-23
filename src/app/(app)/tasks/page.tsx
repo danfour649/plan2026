@@ -11,13 +11,9 @@ import { RefreshTasksButton } from "@/components/RefreshTasksButton";
 import { TasksShowCompletedRoot, TasksShowCompletedToggle } from "@/components/TasksShowCompletedRoot";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { TaskContent } from "@/components/TaskContent";
+import { TaskMetadata, type TaskMetadataLabels } from "@/components/TaskMetadata";
+import { UrgencyPill } from "@/components/UrgencyPill";
 import type { ExportedTask } from "@/lib/export";
-import {
-  formatShortDate,
-  formatShortDateOnly,
-  formatShortDateTime,
-  getUrgencyPillClasses,
-} from "@/lib/format";
 import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
 import { getCachedTasksPage } from "@/lib/data-cache";
@@ -122,18 +118,25 @@ export default async function TasksPage({
     })),
   ];
 
+  const metaLabels: TaskMetadataLabels = {
+    added: t.tasks.added,
+    completed: t.tasks.completed,
+    due: t.tasks.due,
+    planLabel: t.tasks.planLabel,
+  };
+
   return (
     <div className="space-y-8">
       <TasksShowCompletedRoot initialShowCompleted={showCompleted}>
-        <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
-        <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-blue-100 px-6 py-4 dark:border-zinc-700 sm:gap-4">
+        <section className="rounded-2xl border border-border bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+        <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-4 sm:gap-4">
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <h2 className="text-2xl font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.tasksPage.title}</h2>
             <div className="flex shrink-0 items-center gap-1">
               <RefreshTasksButton />
               <ExportTasksButton
                 tasks={allTasksForExport}
-                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-0 text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-300 bg-amber-100 p-0 text-amber-700 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-amber-700 dark:bg-amber-900/40 dark:text-amber-200 dark:hover:bg-amber-800/50"
               />
             </div>
           </div>
@@ -149,7 +152,7 @@ export default async function TasksPage({
               ✓
             </p>
             <p className="mt-3 text-base font-medium text-blue-900 dark:text-zinc-100">{t.tasksPage.allClear}</p>
-            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{t.tasksPage.noTasks}</p>
+            <p className="mt-1 text-sm text-muted">{t.tasksPage.noTasks}</p>
           </div>
         ) : (
           <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
@@ -186,40 +189,10 @@ export default async function TasksPage({
                 >
                   <div className="min-w-0 flex-1 overflow-visible">
                     <div className="pt-0.5 pl-0.5">
-                      <div
-                        className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
-                          task.urgency,
-                        )}`}
-                      >
-                        <span className="truncate">{task.title}</span>
-                        {task.status === "on_hold" ? (
-                          <span className="shrink-0 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
-                            {t.tasks.onHold}
-                          </span>
-                        ) : null}
-                      </div>
+                      <UrgencyPill urgency={task.urgency} title={task.title} status={task.status} onHoldLabel={t.tasks.onHold} />
                     </div>
                     <TaskContent content={task.content} />
-                    <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
-                      <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
-                      {task.dueAt && (
-                        <span className="sm:before:content-['·'] sm:before:mr-1">
-                          {t.tasks.due}{" "}
-                          <span className="max-sm:hidden sm:inline">{formatShortDateTime(task.dueAt)}</span>
-                          <span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.dueAt)}</span>
-                        </span>
-                      )}
-                        {task.plan && (
-                          <span className="min-w-0 max-sm:block sm:before:content-['·'] sm:before:mr-1">
-                            <Link
-                              href={`/plans/${task.plan.id}`}
-                              className="max-w-[12rem] truncate text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300 max-sm:inline-block sm:max-w-none sm:truncate"
-                            >
-                              {t.tasks.planLabel} {task.plan.name}
-                            </Link>
-                          </span>
-                        )}
-                    </div>
+                    <TaskMetadata createdAt={task.createdAt} dueAt={task.dueAt} plan={task.plan} labels={metaLabels} />
                   </div>
                 </EditTaskDialog>
                 <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
@@ -230,6 +203,10 @@ export default async function TasksPage({
                     taskId={task.id}
                     label={t.tasks.markDone}
                     successMessage={t.tasks.markedDone}
+                  />
+                  <AddToCalendarButton
+                    taskId={task.id}
+                    initiallyLinked={Boolean(task.googleCalendarEventId)}
                   />
                   <EditTaskDialog
                     compactListTrigger
@@ -255,10 +232,6 @@ export default async function TasksPage({
                         size: a.size,
                       })),
                     }}
-                  />
-                  <AddToCalendarButton
-                    taskId={task.id}
-                    initiallyLinked={Boolean(task.googleCalendarEventId)}
                   />
                 </div>
               </li>
@@ -299,28 +272,10 @@ export default async function TasksPage({
                     <CompletedCheckIcon />
                     <div className="min-w-0 flex-1 overflow-visible">
                       <div className="pt-0.5 pl-0.5">
-                        <div
-                          className={`inline-flex max-w-full rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
-                            task.urgency,
-                          )}`}
-                        >
-                          <span className="truncate line-through">{task.title}</span>
-                        </div>
+                        <UrgencyPill urgency={task.urgency} title={task.title} completed />
                       </div>
                       <TaskContent content={task.content} />
-                      <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
-                        <span>{t.tasks.completed} {task.completedAt ? (<><span className="max-sm:hidden sm:inline">{formatShortDate(task.completedAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.completedAt)}</span></>) : "—"}</span>
-                        {task.plan && (
-                          <span className="min-w-0 max-sm:block sm:before:content-['·'] sm:before:mr-1">
-                            <Link
-                              href={`/plans/${task.plan.id}`}
-                              className="max-w-[12rem] truncate text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300 max-sm:inline-block sm:max-w-none sm:truncate"
-                            >
-                              {t.tasks.planLabel} {task.plan.name}
-                            </Link>
-                          </span>
-                        )}
-                      </div>
+                      <TaskMetadata isCompleted createdAt={task.createdAt} completedAt={task.completedAt} plan={task.plan} labels={metaLabels} />
                     </div>
                   </div>
                 </EditTaskDialog>
@@ -332,6 +287,10 @@ export default async function TasksPage({
                     taskId={task.id}
                     label={t.tasks.restore}
                     successMessage={t.tasks.taskRestored}
+                  />
+                  <AddToCalendarButton
+                    taskId={task.id}
+                    initiallyLinked={Boolean(task.googleCalendarEventId)}
                   />
                   <EditTaskDialog
                     compactListTrigger
@@ -358,16 +317,12 @@ export default async function TasksPage({
                       })),
                     }}
                   />
-                  <AddToCalendarButton
-                    taskId={task.id}
-                    initiallyLinked={Boolean(task.googleCalendarEventId)}
-                  />
                 </div>
               </li>
             ))}
             {totalRemainingPages > 1 && (
-              <li className="flex flex-wrap items-center justify-between gap-2 border-t border-blue-100 px-6 py-3 dark:border-zinc-700">
-                <span className="text-sm text-zinc-500 dark:text-zinc-400">
+              <li className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-6 py-3">
+                <span className="text-sm text-muted">
                   {t.common.pageOf.replace("{{current}}", String(page)).replace("{{total}}", String(totalRemainingPages))}
                 </span>
                 <div className="flex gap-2">
@@ -391,8 +346,8 @@ export default async function TasksPage({
               </li>
             )}
             {showCompleted && totalCompletedPages > 1 && (
-              <li className="flex flex-wrap items-center justify-between gap-2 border-t border-blue-100 px-6 py-3 dark:border-zinc-700">
-                <span className="text-sm text-zinc-500 dark:text-zinc-400">
+              <li className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-6 py-3">
+                <span className="text-sm text-muted">
                   {t.common.pageOf.replace("{{current}}", String(completedPage)).replace("{{total}}", String(totalCompletedPages))} ({t.tasks.completed})
                 </span>
                 <div className="flex gap-2">

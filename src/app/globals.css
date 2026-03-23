@@ -6,25 +6,59 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --secondary: #3f3f46;
+  --tertiary: #525252;
+  --muted: #737373;
   --accent-blue: #2563eb;
   --accent-red: #dc2626;
+  --border: #dbeafe;
+  --surface: #fafafa;
+  --ring: rgb(191 219 254 / 0.7);
+  --shadow: rgb(147 197 253 / 0.6);
 }
 
 /* User chose light: force light vars even when system prefers dark */
 .theme-light {
   --background: #ffffff;
   --foreground: #171717;
+  --secondary: #3f3f46;
+  --tertiary: #525252;
+  --muted: #737373;
+  --accent-blue: #2563eb;
+  --accent-red: #dc2626;
+  --border: #dbeafe;
+  --surface: #fafafa;
+  --ring: rgb(191 219 254 / 0.7);
+  --shadow: rgb(147 197 253 / 0.6);
 }
 
 /* User chose dark: force dark vars */
 .dark {
   --background: #0a0a0a;
   --foreground: #ededed;
+  --secondary: #d4d4d8;
+  --tertiary: #a1a1aa;
+  --muted: #d4d4d8;
+  --accent-blue: #60a5fa;
+  --accent-red: #f87171;
+  --border: #3f3f46;
+  --surface: #27272a;
+  --ring: rgb(59 130 246 / 0.3);
+  --shadow: rgb(9 9 11 / 0.4);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-muted: var(--muted);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-red: var(--accent-red);
+  --color-border: var(--border);
+  --color-surface: var(--surface);
+  --color-ring: var(--ring);
+  --color-shadow: var(--shadow);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -34,14 +68,23 @@
   :root:not(:has(.theme-root.theme-light)) {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --secondary: #d4d4d8;
+    --tertiary: #a1a1aa;
+    --muted: #d4d4d8;
+    --accent-blue: #60a5fa;
+    --accent-red: #f87171;
+    --border: #3f3f46;
+    --surface: #27272a;
+    --ring: rgb(59 130 246 / 0.3);
+    --shadow: rgb(9 9 11 / 0.4);
   }
 }
 
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgb(37 99 235 / 0.14), transparent 30%),
-    radial-gradient(circle at top right, rgb(220 38 38 / 0.12), transparent 28%),
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent-blue) 14%, transparent), transparent 30%),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent-red) 12%, transparent), transparent 28%),
     linear-gradient(180deg, #f8fbff 0%, #fff8f8 48%, var(--background) 100%);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
@@ -50,7 +93,7 @@ body {
 .dark body,
 .theme-root.min-h-screen.dark {
   background:
-    radial-gradient(circle at top left, rgb(37 99 235 / 0.08), transparent 30%),
-    radial-gradient(circle at top right, rgb(220 38 38 / 0.06), transparent 28%),
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent-blue) 8%, transparent), transparent 30%),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent-red) 6%, transparent), transparent 28%),
     linear-gradient(180deg, #0f0f0f 0%, #0a0a0a 48%, var(--background) 100%);
 }
