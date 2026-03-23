@@ -149,7 +149,7 @@ export function EditSupplyItemDialog({
             role="presentation"
           >
             <div
-              className="w-full max-w-2xl shrink-0 rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950/50"
+              className="w-full max-w-2xl shrink-0 rounded-3xl border border-border bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10 dark:bg-zinc-900 dark:shadow-zinc-950/50"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
@@ -164,7 +164,7 @@ export function EditSupplyItemDialog({
                     {t.supplyList.editItem}
                   </h2>
                   {item.planName ? (
-                    <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">{item.planName}</p>
+                    <p className="mt-0.5 text-sm text-muted">{item.planName}</p>
                   ) : null}
                 </div>
                 <button
@@ -194,11 +194,11 @@ export function EditSupplyItemDialog({
                 />
               </div>
 
-              <div className="mt-6 border-t border-blue-100 pt-4 dark:border-zinc-700">
+              <div className="mt-6 border-t border-border pt-4">
                 <form action={deleteFormAction} className="flex flex-col gap-3">
                   {!showDeleteConfirm ? (
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.supplyList.deleteItemConfirm}</p>
+                      <p className="text-sm text-muted">{t.supplyList.deleteItemConfirm}</p>
                       <button
                         type="button"
                         onClick={() => setShowDeleteConfirm(true)}
@@ -213,7 +213,7 @@ export function EditSupplyItemDialog({
                     </div>
                   ) : (
                     <div className="flex flex-col gap-3">
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">{t.supplyList.deleteItemConfirm}</p>
+                      <p className="text-sm text-tertiary">{t.supplyList.deleteItemConfirm}</p>
                       <div className="flex flex-wrap gap-3">
                         <button
                           type="button"

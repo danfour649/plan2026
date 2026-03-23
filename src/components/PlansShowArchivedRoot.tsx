@@ -47,7 +47,7 @@ export function PlansShowArchivedRoot({
 
   return (
     <PlansArchiveFilterContext.Provider value={{ showArchived, setShowArchived }}>
-      <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+      <section className="rounded-2xl border border-border bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
         {header}
         {showArchived ? fullSlot : activeSlot}
       </section>

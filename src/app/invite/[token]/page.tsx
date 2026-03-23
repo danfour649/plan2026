@@ -26,7 +26,7 @@ export default async function InviteAcceptPage({
   if (!invite || invite.expiresAt < new Date()) {
     return (
       <main className="min-h-screen px-6 py-16 text-zinc-950">
-        <div className="mx-auto max-w-md rounded-2xl border border-blue-100 bg-white/90 p-8 shadow-sm backdrop-blur">
+        <div className="mx-auto max-w-md rounded-2xl border border-border bg-white/90 p-8 shadow-sm backdrop-blur">
           <Plan2026Logo className="mb-6" iconClassName="h-16 w-20" ariaLabel={t.common.goToPlans} />
           <h1 className="text-xl font-semibold text-blue-950">{t.invite.invalidTitle}</h1>
           <p className="mt-2 text-sm text-zinc-600">{t.invite.invalidDescription}</p>

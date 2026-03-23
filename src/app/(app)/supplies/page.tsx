@@ -42,24 +42,24 @@ export default async function SuppliesPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.supplyList.pageTitle}</h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{t.supplyList.pageDescription}</p>
+        <p className="mt-1 text-sm text-muted">{t.supplyList.pageDescription}</p>
       </div>
 
       {plansWithSupplies.length === 0 ? (
-        <section className="rounded-2xl border border-blue-100 bg-white/90 px-6 py-8 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.supplyList.pageNoItems}</p>
+        <section className="rounded-2xl border border-border bg-white/90 px-6 py-8 shadow-sm shadow-blue-100/40 backdrop-blur dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+          <p className="text-sm text-muted">{t.supplyList.pageNoItems}</p>
           <p className="mt-2">
             <Link
               href="/plans"
-              className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+              className="text-sm font-medium text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300"
             >
               {t.common.goToPlans}
             </Link>
           </p>
         </section>
       ) : (
-        <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
-          <div className="border-b border-blue-100 px-6 py-4 dark:border-zinc-700">
+        <section className="rounded-2xl border border-border bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+          <div className="border-b border-border px-6 py-4">
             <h2 className="text-lg font-semibold text-blue-950 dark:text-zinc-100">{t.supplyList.byPlan}</h2>
           </div>
           <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
@@ -78,7 +78,7 @@ export default async function SuppliesPage() {
                       {plan.name}
                     </Link>
                     {planTotal > 0 ? (
-                      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                      <span className="text-sm font-medium text-secondary">
                         {t.supplyList.totalLabel}: {planTotal.toFixed(2)}
                       </span>
                     ) : null}
@@ -94,10 +94,10 @@ export default async function SuppliesPage() {
                             <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
                               <span className="text-zinc-800 dark:text-zinc-200">{item.label}</span>
                               {qty > 1 ? (
-                                <span className="text-zinc-500 dark:text-zinc-400">× {qty}</span>
+                                <span className="text-muted">× {qty}</span>
                               ) : null}
                               {item.price != null && (
-                                <span className="text-zinc-500 dark:text-zinc-400">
+                                <span className="text-muted">
                                   {Number(item.price).toFixed(2)}
                                 </span>
                               )}
@@ -123,7 +123,7 @@ export default async function SuppliesPage() {
                             ) : null}
                           </div>
                           {item.description ? (
-                            <span className="pl-3 text-zinc-500 dark:text-zinc-400">{item.description}</span>
+                            <span className="pl-3 text-muted">{item.description}</span>
                           ) : null}
                         </li>
                       );

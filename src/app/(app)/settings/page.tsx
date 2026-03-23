@@ -33,26 +33,26 @@ export default async function SettingsPage() {
 
   return (
     <div className="space-y-8">
-      <section className="rounded-2xl border border-blue-100 bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
-        <div className="border-b border-blue-100 px-6 py-4 dark:border-zinc-700">
+      <section className="rounded-2xl border border-border bg-white/90 shadow-sm shadow-blue-100/40 backdrop-blur dark:bg-zinc-900/90 dark:shadow-zinc-950/40">
+        <div className="border-b border-border px-6 py-4">
           <h1 className="text-lg font-semibold text-blue-950 dark:text-zinc-100">{t.settings.title}</h1>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{t.settings.pageDescription}</p>
+          <p className="mt-1 text-sm text-tertiary">{t.settings.pageDescription}</p>
         </div>
 
         <div className="space-y-4 px-6 py-6">
-          <div className="flex flex-col gap-3 rounded-2xl border border-blue-100 bg-blue-50/40 p-5 dark:border-zinc-700 dark:bg-zinc-800/50">
+          <div className="flex flex-col gap-3 rounded-2xl border border-border bg-blue-50/40 p-5 dark:bg-zinc-800/50">
             <h2 className="text-sm font-semibold text-blue-950 dark:text-zinc-100">{t.settings.theme}</h2>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">{t.settings.themeDescription}</p>
+            <p className="text-sm text-tertiary">{t.settings.themeDescription}</p>
             <ThemeSelect currentTheme={theme} />
           </div>
 
-          <div className="flex flex-col gap-3 rounded-2xl border border-blue-100 bg-blue-50/40 p-5 dark:border-zinc-700 dark:bg-zinc-800/50">
+          <div className="flex flex-col gap-3 rounded-2xl border border-border bg-blue-50/40 p-5 dark:bg-zinc-800/50">
             <h2 className="text-sm font-semibold text-blue-950 dark:text-zinc-100">{t.settings.language}</h2>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">{t.settings.languageDescription}</p>
+            <p className="text-sm text-tertiary">{t.settings.languageDescription}</p>
             <LanguageSelect currentLocale={locale} />
           </div>
 
-          <div className="flex flex-col gap-4 rounded-2xl border border-blue-100 bg-blue-50/40 p-5 dark:border-zinc-700 dark:bg-zinc-800/50 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex flex-col gap-4 rounded-2xl border border-border bg-blue-50/40 p-5 dark:bg-zinc-800/50 sm:flex-row sm:items-start sm:justify-between">
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-3">
                 <h2 className="text-sm font-semibold text-blue-950 dark:text-zinc-100">{t.settings.googleCalendar}</h2>
@@ -67,7 +67,7 @@ export default async function SettingsPage() {
                 </span>
               </div>
 
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              <p className="text-sm text-tertiary">
                 {isCalendarConnected
                   ? t.settings.calendarConnected
                   : t.settings.calendarDisconnected}

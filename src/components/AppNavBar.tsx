@@ -18,7 +18,7 @@ export function AppNavBar({ initialCounts, labels }: AppNavBarProps) {
   const { remainingTaskCount, activePlanCount, suppliesCount } = useNavCounts(initialCounts);
 
   return (
-    <nav className="flex min-w-0 shrink items-center gap-0 text-sm text-zinc-700 dark:text-zinc-300 sm:gap-4">
+    <nav className="flex min-w-0 shrink items-center gap-0 text-sm text-secondary sm:gap-4">
       <div className="flex min-w-0 shrink items-center gap-0 sm:gap-2 md:gap-3">
         <AppNavLink
           href="/plans"

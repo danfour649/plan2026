@@ -1,7 +1,7 @@
 "use client";
 
 import { Pencil, Trash2 } from "lucide-react";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
 
@@ -72,6 +72,16 @@ export function EditTaskDialog({
   const [isOpen, setIsOpen] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
   const isMountedRef = useRef(true);
+  const pushedHistoryRef = useRef(false);
+
+  const closeDialog = useCallback(() => {
+    setIsOpen(false);
+    if (pushedHistoryRef.current) {
+      pushedHistoryRef.current = false;
+      window.history.back();
+    }
+  }, []);
+
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [attachments, setAttachments] = useState(task.attachments ?? []);
   const [uploading, setUploading] = useState(false);
@@ -118,13 +128,28 @@ export function EditTaskDialog({
   useEffect(() => {
     if (!isOpen) return;
 
+    window.history.pushState(null, "");
+    pushedHistoryRef.current = true;
+
+    const onPopState = () => {
+      pushedHistoryRef.current = false;
+      setIsOpen(false);
+    };
+
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setIsOpen(false);
+      if (event.key === "Escape") closeDialog();
     }
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isOpen]);
+  }, [isOpen, closeDialog]);
 
   // Reset overlay scroll so the dialog form is in view when opened (does not move page scroll).
   useEffect(() => {
@@ -141,12 +166,12 @@ export function EditTaskDialog({
     if (deleteState.success) {
       toast.success(t.tasks.taskDeleted);
       queueMicrotask(() => {
-        if (isMountedRef.current) setIsOpen(false);
+        if (isMountedRef.current) closeDialog();
       });
     } else if (deleteState.error) {
       toast.error(deleteState.error);
     }
-  }, [deleteState, t.tasks.taskDeleted]);
+  }, [deleteState, t.tasks.taskDeleted, closeDialog]);
 
   useEffect(() => {
     if (!doneRestoreState || !doneRestoreAction) return;
@@ -155,12 +180,19 @@ export function EditTaskDialog({
       // Show message for the action we just ran (complete vs restore), not the resulting state
       toast.success(doneRestoreAction === completeAction ? t.tasks.markedDone : t.tasks.taskRestored);
       queueMicrotask(() => {
-        if (isMountedRef.current) setIsOpen(false);
+        if (isMountedRef.current) closeDialog();
       });
     } else if (doneRestoreState.error) {
       toast.error(doneRestoreState.error);
     }
-  }, [doneRestoreState, doneRestoreAction, completeAction, t.tasks.markedDone, t.tasks.taskRestored]);
+  }, [
+    doneRestoreState,
+    doneRestoreAction,
+    completeAction,
+    t.tasks.markedDone,
+    t.tasks.taskRestored,
+    closeDialog,
+  ]);
 
   return (
     <>
@@ -189,7 +221,7 @@ export function EditTaskDialog({
           onClick={() => setIsOpen(true)}
           className={
             compactListTrigger
-              ? "inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 text-sm text-blue-700 transition hover:bg-blue-100 max-sm:h-10 max-sm:w-10 max-sm:p-0 sm:px-3 sm:py-2"
+              ? "inline-flex shrink-0 items-center justify-center rounded-xl border border-rose-400 bg-rose-200 text-rose-900 text-sm transition hover:bg-rose-300 max-sm:h-10 max-sm:w-10 max-sm:p-0 sm:px-3 sm:py-2 dark:border-rose-800 dark:bg-rose-900/40 dark:text-rose-300 dark:hover:bg-rose-800/50"
               : "rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100"
           }
         >
@@ -211,11 +243,11 @@ export function EditTaskDialog({
           <div
             ref={overlayRef}
             className="fixed inset-0 z-50 flex flex-col items-center overflow-y-auto bg-zinc-950/45 px-4 pt-6 pb-8 sm:pt-8"
-            onClick={() => setIsOpen(false)}
+            onClick={closeDialog}
             role="presentation"
           >
             <div
-              className="w-full max-w-2xl shrink-0 rounded-3xl border border-blue-100 bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-zinc-950/50"
+              className="w-full max-w-2xl shrink-0 rounded-3xl border border-border bg-white px-6 pb-6 pt-4 shadow-2xl shadow-blue-950/10 dark:bg-zinc-900 dark:shadow-zinc-950/50"
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
@@ -237,7 +269,7 @@ export function EditTaskDialog({
               </div>
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={closeDialog}
                 className="rounded-full p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
                 aria-label={t.common.closeEditTaskDialog}
               >
@@ -254,7 +286,7 @@ export function EditTaskDialog({
 
             <TaskForm
               action={action}
-              onSuccess={() => setIsOpen(false)}
+              onSuccess={closeDialog}
               submitLabel={t.common.saveChanges}
               successMessage={t.tasks.taskUpdated}
               initialValues={{
@@ -273,8 +305,8 @@ export function EditTaskDialog({
               onStateChange={() => setSaving(false)}
             />
 
-            <div className="mt-4 border-t border-blue-100 pt-4 dark:border-zinc-700">
-              <p className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">{t.common.attachments}</p>
+            <div className="mt-4 border-t border-border pt-4">
+              <p className="mb-2 text-sm font-medium text-secondary">{t.common.attachments}</p>
               {attachments.length > 0 ? (
                 <ul className="mb-2 space-y-1">
                   {attachments.map((a) => (
@@ -283,7 +315,7 @@ export function EditTaskDialog({
                         href={`/api/tasks/${task.id}/attachments/${a.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="truncate text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+                        className="truncate text-accent-blue hover:underline dark:hover:text-blue-300"
                       >
                         {a.filename}
                       </a>
@@ -308,7 +340,7 @@ export function EditTaskDialog({
                   ))}
                 </ul>
               ) : null}
-              <label className="flex cursor-pointer items-center gap-2 text-sm text-blue-600 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
+              <label className="flex cursor-pointer items-center gap-2 text-sm text-accent-blue hover:underline dark:hover:text-blue-300">
                 <input
                   type="file"
                   className="sr-only"
@@ -355,7 +387,7 @@ export function EditTaskDialog({
               </label>
             </div>
 
-            <div className="mt-6 border-t border-blue-100 pt-4 dark:border-zinc-700">
+            <div className="mt-6 border-t border-border pt-4">
               <div className="flex flex-wrap items-center gap-3">
                 <ExportTaskButton
                   task={{
@@ -400,7 +432,7 @@ export function EditTaskDialog({
                     </button>
                   ) : (
                     <>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                      <p className="text-sm text-tertiary">
                         {t.tasks.deleteTaskConfirm}
                       </p>
                       <button
@@ -421,13 +453,13 @@ export function EditTaskDialog({
               </div>
             </div>
 
-            <div className="mt-6 border-t border-blue-100 pt-4 dark:border-zinc-700">
+            <div className="mt-6 border-t border-border pt-4">
               <button
                 type="submit"
                 form={`edit-task-form-${task.id}`}
                 disabled={saving}
                 aria-busy={saving}
-                className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600 sm:w-auto"
+                className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-shadow transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-blue-500 dark:hover:bg-blue-600 sm:w-auto"
               >
                 {saving ? t.common.saving : t.common.saveChanges}
               </button>

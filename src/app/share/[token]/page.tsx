@@ -44,7 +44,7 @@ export default async function SharePage({
   if (invalidOrExpired) {
     return (
       <main className="min-h-screen px-6 py-16 text-zinc-950">
-        <div className="mx-auto max-w-md rounded-2xl border border-blue-100 bg-white/90 p-8 shadow-sm backdrop-blur">
+        <div className="mx-auto max-w-md rounded-2xl border border-border bg-white/90 p-8 shadow-sm backdrop-blur">
           <Plan2026Logo className="mb-6" iconClassName="h-16 w-20" ariaLabel={t.common.goToPlans} />
           <h1 className="text-xl font-semibold text-blue-950">{t.sharePage.linkExpired}</h1>
           <p className="mt-2 text-sm text-zinc-600">{t.sharePage.linkExpiredDescription}</p>
@@ -62,14 +62,14 @@ export default async function SharePage({
   const plan = link.plan;
 
   return (
-    <main className="min-h-screen bg-zinc-50 px-4 py-8 text-zinc-950 sm:px-6 sm:py-12">
+    <main className="min-h-screen bg-surface px-4 py-8 text-zinc-950 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-lg">
         <Plan2026Logo
           className="mb-6"
           iconClassName="h-12 w-14"
           ariaLabel={t.common.goToPlans}
         />
-        <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm sm:p-8">
+        <div className="rounded-2xl border border-border bg-white p-6 shadow-sm sm:p-8">
           <h1 className="text-xl font-semibold text-blue-950">{t.sharePage.title}</h1>
           <p className="mt-1 text-sm font-medium text-zinc-600">
             {t.sharePage.planLabel}: {plan.name}
@@ -113,7 +113,7 @@ export default async function SharePage({
           <p className="mt-8 text-center">
             <Link
               href="/login"
-              className="text-sm text-blue-600 underline hover:text-blue-800"
+              className="text-sm text-accent-blue underline hover:text-blue-800"
             >
               {t.sharePage.signInToManage}
             </Link>

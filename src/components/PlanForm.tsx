@@ -93,7 +93,7 @@ function PlanColorDropdown({
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-label={label}
-          className="flex min-w-0 w-full items-center gap-2 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-left text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800/95 dark:text-zinc-100 dark:ring-zinc-500/50 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+          className="flex min-w-0 w-full items-center gap-2 rounded-xl border border-border bg-white/95 px-3 py-2 text-left text-sm text-zinc-900 outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800/95 dark:text-zinc-100 dark:focus:border-blue-500"
         >
           {selectedColor ? (
             <>
@@ -101,14 +101,14 @@ function PlanColorDropdown({
               <span className="truncate">{getOptionLabel(options.find((o) => o.value === selectedColor)?.labelKey ?? selectedColor)}</span>
             </>
           ) : (
-            <span className="text-zinc-500 dark:text-zinc-400">{getOptionLabel("none")}</span>
+            <span className="text-muted">{getOptionLabel("none")}</span>
           )}
           <span className="ml-auto shrink-0 text-zinc-400 dark:text-zinc-500" aria-hidden>{open ? "▲" : "▼"}</span>
         </button>
         {open ? (
           <ul
             role="listbox"
-            className="absolute z-10 mt-1 max-h-56 w-full min-w-[8rem] overflow-auto rounded-xl border border-blue-100 bg-white py-1 shadow-lg dark:border-zinc-600 dark:bg-zinc-800"
+            className="absolute z-10 mt-1 max-h-56 w-full min-w-[8rem] overflow-auto rounded-xl border border-border bg-white py-1 shadow-lg dark:bg-zinc-800"
           >
             {options.map((c) => (
               <li
@@ -136,7 +136,7 @@ function PlanColorDropdown({
                     <span>{getOptionLabel(c.labelKey)}</span>
                   </>
                 ) : (
-                  <span className="text-zinc-500 dark:text-zinc-400">{getOptionLabel(c.labelKey)}</span>
+                  <span className="text-muted">{getOptionLabel(c.labelKey)}</span>
                 )}
               </li>
             ))}
@@ -195,6 +195,8 @@ type PlanFormProps = {
   renderEditFooterOutside?: boolean;
   /** Form id when renderEditFooterOutside is true (for submit button form attribute). */
   editFormId?: string;
+  /** Exposes the add-task-row callback so the parent can render the button externally. */
+  onAddTaskRowRef?: React.MutableRefObject<(() => void) | null>;
   /** When creating a new plan, optional pre-fill from template (plan fields + new tasks). */
   templateInitialValues?: {
     name: string;
@@ -220,6 +222,7 @@ export function PlanForm({
   editFormDirty = false,
   renderEditFooterOutside = false,
   editFormId,
+  onAddTaskRowRef,
   templateInitialValues,
 }: PlanFormProps) {
   const t = useTranslations();
@@ -304,8 +307,9 @@ export function PlanForm({
     return () => clearTimeout(id);
   }, [initialValues?.percentCompleted]);
 
-  const addNewTaskRow = () =>
-    setNewTaskRows((prev) => [...prev, { title: "", content: "", dueAt: "", urgency: 4 }]);
+  const addNewTaskRow = useCallback(() =>
+    setNewTaskRows((prev) => [...prev, { title: "", content: "", dueAt: "", urgency: 4 }]), []);
+  if (onAddTaskRowRef) onAddTaskRowRef.current = addNewTaskRow;
   const removeNewTaskRow = (index: number) =>
     setNewTaskRows((prev) => prev.filter((_, i) => i !== index));
 
@@ -401,7 +405,7 @@ export function PlanForm({
           required
           defaultValue={initialValues?.name ?? templateInitialValues?.name ?? ""}
           onInput={markDirty}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+          className="w-full min-w-0 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm outline-none ring-ring transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
         />
       </div>
 
@@ -413,7 +417,7 @@ export function PlanForm({
           rows={3}
           defaultValue={initialValues?.description ?? templateInitialValues?.description ?? ""}
           onInput={markDirty}
-          className="min-h-[4.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+          className="min-h-[4.5rem] w-full min-w-0 resize-y rounded-xl border border-border bg-white/95 px-3 py-2 text-sm outline-none ring-ring transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
         />
       </div>
 
@@ -424,7 +428,7 @@ export function PlanForm({
           placeholder={t.planForm.goalPlaceholder}
           defaultValue={initialValues?.goal ?? templateInitialValues?.goal ?? ""}
           onInput={markDirty}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+          className="w-full min-w-0 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm outline-none ring-ring transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
         />
       </div>
 
@@ -437,7 +441,7 @@ export function PlanForm({
             required
             defaultValue={defaultStart}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+            className="min-w-0 w-full rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500"
           />
         </div>
         <div className="flex min-w-0 flex-col gap-2">
@@ -448,7 +452,7 @@ export function PlanForm({
             required
             defaultValue={defaultEnd}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+            className="min-w-0 w-full rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500"
           />
         </div>
       </div>
@@ -461,7 +465,7 @@ export function PlanForm({
             type="date"
             defaultValue={toDateInputValue(initialValues?.actualStartAt)}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+            className="min-w-0 w-full rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500"
           />
         </div>
         <div className="flex min-w-0 flex-col gap-2">
@@ -471,7 +475,7 @@ export function PlanForm({
             type="date"
             defaultValue={toDateInputValue(initialValues?.actualEndAt)}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+            className="min-w-0 w-full rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500"
           />
         </div>
       </div>
@@ -483,7 +487,7 @@ export function PlanForm({
             name="status"
             defaultValue={defaultStatus}
             onChange={markDirty}
-            className="min-w-0 w-full rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+            className="min-w-0 w-full rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500"
           >
             {PLAN_STATUS_VALUES.map((s) => (
               <option key={s} value={s}>
@@ -502,7 +506,7 @@ export function PlanForm({
           rows={2}
           defaultValue={initialValues?.notes ?? ""}
           onInput={markDirty}
-          className="min-h-[3.5rem] w-full min-w-0 resize-y rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+          className="min-h-[3.5rem] w-full min-w-0 resize-y rounded-xl border border-border bg-white/95 px-3 py-2 text-sm outline-none ring-ring transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
         />
       </div>
 
@@ -523,12 +527,12 @@ export function PlanForm({
           placeholder={t.planForm.imageUrlPlaceholder}
           defaultValue={initialValues?.imageUrl ?? ""}
           onInput={markDirty}
-          className="w-full min-w-0 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+          className="w-full min-w-0 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm outline-none ring-ring transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
         />
         {initialValues?.imageUrl ? (
           <div className="mt-1 flex justify-start">
             <div
-              className="h-40 w-40 max-w-full rounded-lg border border-blue-100 bg-zinc-50 bg-contain bg-center bg-no-repeat dark:border-zinc-600 dark:bg-zinc-800"
+              className="h-40 w-40 max-w-full rounded-lg border border-border bg-surface bg-contain bg-center bg-no-repeat"
               style={{ backgroundImage: `url(${initialValues.imageUrl})` }}
               role="img"
               aria-label=""
@@ -539,9 +543,9 @@ export function PlanForm({
 
       <div className="flex min-w-0 flex-col gap-3">
         <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.tasksInPlanLabel}</label>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">{t.planForm.selectTasksDescription}</p>
+        <p className="text-xs text-muted">{t.planForm.selectTasksDescription}</p>
         {linkableTasksLoading ? (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.planForm.loadingLinkableTasks}</p>
+          <p className="text-sm text-muted">{t.planForm.loadingLinkableTasks}</p>
         ) : linkableTasksError ? (
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
             <p className="text-sm text-red-600 dark:text-red-400">{t.planForm.linkableTasksLoadError}</p>
@@ -554,7 +558,7 @@ export function PlanForm({
             </button>
           </div>
         ) : linkableTasks && linkableTasks.length > 0 ? (
-          <details className="group rounded-xl border border-blue-100 bg-blue-50/30 dark:border-zinc-600 dark:bg-zinc-800/50">
+          <details className="group rounded-xl border border-border bg-blue-50/30 dark:bg-zinc-800/50">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-sm font-medium text-blue-950 transition hover:bg-blue-100/50 dark:text-zinc-100 dark:hover:bg-zinc-700/50 [&::-webkit-details-marker]:hidden">
               <span>
                 {t.planForm.selectTasksSummary}
@@ -566,16 +570,16 @@ export function PlanForm({
                 ▼
               </span>
             </summary>
-            <div className="border-t border-blue-100 px-3 pb-3 pt-2 dark:border-zinc-600">
+            <div className="border-t border-border px-3 pb-3 pt-2">
               <input
                 type="search"
                 value={taskSearchFilter}
                 onChange={(e) => setTaskSearchFilter(e.target.value)}
                 placeholder={t.plans.searchTasksPlaceholder}
                 aria-label={t.plans.filterTasksByName}
-                className="mb-2 w-full rounded-lg border border-blue-100 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-blue-200/70 transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-2 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+                className="mb-2 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-ring transition placeholder:text-zinc-500 focus:border-blue-300 focus:ring-2 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
               />
-              <ul className="flex max-h-48 flex-col gap-1.5 overflow-y-auto rounded-lg border border-blue-100 bg-white p-2 dark:border-zinc-600 dark:bg-zinc-800">
+              <ul className="flex max-h-48 flex-col gap-1.5 overflow-y-auto rounded-lg border border-border bg-white p-2 dark:bg-zinc-800">
                 {linkableTasks.map((task) => {
                   const matches =
                     taskSearchFilter.trim() === "" ||
@@ -602,13 +606,13 @@ export function PlanForm({
                   !linkableTasks.some((t) =>
                     t.title.toLowerCase().includes(taskSearchFilter.toLowerCase()),
                   ) ? (
-                  <li className="py-2 px-1.5 text-sm text-zinc-500 dark:text-zinc-400">{t.planForm.noTasksMatchSearch}</li>
+                  <li className="py-2 px-1.5 text-sm text-muted">{t.planForm.noTasksMatchSearch}</li>
                 ) : null}
               </ul>
             </div>
           </details>
         ) : (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.planForm.noTasksYetDescription}</p>
+          <p className="text-sm text-muted">{t.planForm.noTasksYetDescription}</p>
         )}
         <div className="flex flex-col gap-2">
           <span className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.addNewTasksLabel}</span>
@@ -622,7 +626,7 @@ export function PlanForm({
                 defaultValue={row.title}
                 placeholder={t.plans.newTaskTitlePlaceholder}
                 onInput={markDirty}
-                className="min-w-0 flex-1 rounded-xl border border-blue-100 bg-white/95 px-3 py-2 text-sm outline-none ring-blue-200/70 transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500 dark:focus:ring-blue-500/30"
+                className="min-w-0 flex-1 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm outline-none ring-ring transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
               />
               <button
                 type="button"
@@ -639,15 +643,17 @@ export function PlanForm({
       </div>
 
       <div className="flex min-w-0 flex-row flex-wrap items-center justify-end gap-2 sm:flex-col sm:items-start sm:justify-start">
-        <button
-          type="button"
-          onClick={addNewTaskRow}
-          aria-label={t.planForm.addAnotherTask}
-          className="flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-2 text-sm text-blue-700 transition hover:bg-blue-100 sm:px-3 sm:py-2 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600"
-        >
-          <span className="sm:hidden" aria-hidden><Plus className="size-5" /></span>
-          <span className="hidden sm:inline">{t.planForm.addAnotherTask}</span>
-        </button>
+        {!renderEditFooterOutside ? (
+          <button
+            type="button"
+            onClick={addNewTaskRow}
+            aria-label={t.planForm.addAnotherTask}
+            className="flex shrink-0 items-center justify-center rounded-xl border border-green-300 bg-green-200 p-2 text-sm text-green-800 transition hover:bg-green-300 sm:px-3 sm:py-2 dark:border-green-700 dark:bg-green-800/50 dark:text-green-200 dark:hover:bg-green-700/60"
+          >
+            <span className="sm:hidden" aria-hidden><Plus className="size-5" /></span>
+            <span className="hidden sm:inline">{t.planForm.addAnotherTask}</span>
+          </button>
+        ) : null}
         {!renderEditFooterOutside ? (
           <div className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-2 sm:flex-initial sm:flex-row sm:justify-start">
             {!isEdit && discardConfirmMessage ? (
@@ -704,7 +710,7 @@ export function PlanForm({
             )}
             <FormSubmitButton
               aria-label={submitLabel}
-              className="flex min-h-[2.75rem] min-w-0 items-center justify-center gap-2 rounded-xl bg-blue-600 p-2 text-sm font-medium text-white shadow-sm shadow-blue-300/60 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 sm:px-4 sm:py-2 dark:bg-blue-500 dark:shadow-zinc-950/40 dark:hover:bg-blue-600"
+              className="flex min-h-[2.75rem] min-w-0 items-center justify-center gap-2 rounded-xl bg-blue-600 p-2 text-sm font-medium text-white shadow-sm shadow-shadow transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 sm:px-4 sm:py-2 dark:bg-blue-500 dark:hover:bg-blue-600"
             >
               <span className="sm:hidden" aria-hidden><Save className="size-5" /></span>
               <span className="hidden sm:inline">{submitLabel}</span>

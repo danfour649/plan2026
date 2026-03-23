@@ -51,7 +51,7 @@ export function AddToCalendarButton({
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-blue-700 transition hover:bg-blue-100 disabled:opacity-50"
+      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-300 bg-blue-100 text-blue-700 transition hover:bg-blue-200 disabled:opacity-50 dark:border-blue-700 dark:bg-blue-900/40 dark:text-blue-300 dark:hover:bg-blue-800/50 sm:h-auto sm:w-auto sm:px-3 sm:py-2"
       title={linked ? t.toasts.updateInCalendar : t.toasts.addToCalendar}
       aria-label={linked ? t.toasts.updateInCalendar : t.toasts.addToCalendar}
     >

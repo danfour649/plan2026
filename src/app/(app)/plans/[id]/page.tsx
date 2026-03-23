@@ -16,18 +16,14 @@ import { InviteByLinkButton } from "@/components/InviteByLinkButton";
 import { ShareByPublicLinkButton } from "@/components/ShareByPublicLinkButton";
 import { SharePlanButton } from "@/components/SharePlanButton";
 import { TaskContent } from "@/components/TaskContent";
+import { TaskMetadata, type TaskMetadataLabels } from "@/components/TaskMetadata";
+import { UrgencyPill } from "@/components/UrgencyPill";
 import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
 import { getCachedPlanDetail, getCachedPlansForDropdown } from "@/lib/data-cache";
 import type { ExportedPlan, ExportedPlanTask } from "@/lib/export";
 import { deletePlan, updatePlan } from "@/lib/actions/plans";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
-import {
-  formatShortDate,
-  formatShortDateOnly,
-  formatShortDateTime,
-  getUrgencyPillClasses,
-} from "@/lib/format";
 
 const PLAN_TASKS_PAGE_SIZE = 50;
 const MAX_PLAN_TASKS_PAGE_SIZE = 100;
@@ -49,8 +45,8 @@ function PlanDetailSuspenseFallback() {
   return (
     <div className="mx-auto max-w-6xl animate-pulse space-y-6 px-4 py-6 sm:px-0 sm:py-8">
       <div className="h-9 w-48 rounded-lg bg-blue-100/80 dark:bg-zinc-700" />
-      <div className="h-40 rounded-2xl border border-blue-100 bg-white/60 dark:border-zinc-700 dark:bg-zinc-900/60" />
-      <div className="h-64 rounded-2xl border border-blue-100 bg-white/60 dark:border-zinc-700 dark:bg-zinc-900/60" />
+      <div className="h-40 rounded-2xl border border-border bg-white/60 dark:bg-zinc-900/60" />
+      <div className="h-64 rounded-2xl border border-border bg-white/60 dark:bg-zinc-900/60" />
     </div>
   );
 }
@@ -154,11 +150,18 @@ async function PlanDetailRoot({
     ),
   };
 
+  const metaLabels: TaskMetadataLabels = {
+    added: t.tasks.added,
+    completed: t.tasks.completed,
+    due: t.tasks.due,
+    planLabel: t.tasks.planLabel,
+  };
+
   const titleRow = (
     <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0">
         <h1 className="truncate text-2xl font-bold tracking-tight text-blue-950 dark:text-zinc-100">{plan.name}</h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-1 text-sm text-muted">
           {isOwner ? t.plans.editPlanDescription : t.plans.viewingSharedPlan}
         </p>
       </div>
@@ -238,7 +241,7 @@ async function PlanDetailRoot({
           tasksHeader={
             <div className="mt-2">
               <h2 className="text-lg font-bold tracking-tight text-blue-950 dark:text-zinc-100">{t.plans.tasksInThisPlan}</h2>
-              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              <p className="mt-1 text-sm text-muted">
                 {isOwner ? t.plans.editTaskBelowDescription : t.plans.tasksInSharedPlan}
               </p>
             </div>
@@ -292,35 +295,15 @@ async function PlanDetailRoot({
                         }}
                       >
                         <div className="min-w-0 flex-1">
-                          <div
-                            className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
-                              task.urgency,
-                            )}`}
-                          >
-                            <span className={task.status === "completed" ? "truncate line-through" : "truncate"}>
-                              {task.title}
-                            </span>
-                            {task.status === "on_hold" ? (
-                              <span className="shrink-0 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
-                                {t.tasks.onHold}
-                              </span>
-                            ) : null}
-                          </div>
+                          <UrgencyPill urgency={task.urgency} title={task.title} completed={task.status === "completed"} status={task.status} onHoldLabel={t.tasks.onHold} />
                           <TaskContent content={task.content} />
-                          <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
-                            {task.status === "completed" && task.completedAt ? (
-                              <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
-                            ) : (
-                              <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
-                            )}
-                            {task.dueAt && (
-                              <span className="sm:before:content-['·'] sm:before:mr-1">
-                                {t.tasks.due}{" "}
-                                <span className="max-sm:hidden sm:inline">{formatShortDateTime(new Date(task.dueAt))}</span>
-                                <span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.dueAt))}</span>
-                              </span>
-                            )}
-                          </div>
+                          <TaskMetadata
+                            isCompleted={task.status === "completed"}
+                            createdAt={task.createdAt}
+                            completedAt={task.completedAt ? new Date(task.completedAt) : null}
+                            dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                            labels={metaLabels}
+                          />
                         </div>
                       </EditTaskDialog>
                       <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
@@ -365,42 +348,22 @@ async function PlanDetailRoot({
                     </>
                   ) : (
                     <div className="min-w-0 flex-1">
-                      <div
-                        className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
-                          task.urgency,
-                        )}`}
-                      >
-                        <span className={task.status === "completed" ? "truncate line-through" : "truncate"}>
-                          {task.title}
-                        </span>
-                        {task.status === "on_hold" ? (
-                          <span className="shrink-0 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
-                            {t.tasks.onHold}
-                          </span>
-                        ) : null}
-                      </div>
+                      <UrgencyPill urgency={task.urgency} title={task.title} completed={task.status === "completed"} status={task.status} onHoldLabel={t.tasks.onHold} />
                       <TaskContent content={task.content} />
-                      <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
-                        {task.status === "completed" && task.completedAt ? (
-                          <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
-                        ) : (
-                          <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
-                        )}
-                        {task.dueAt && (
-                          <span className="sm:before:content-['·'] sm:before:mr-1">
-                            {t.tasks.due}{" "}
-                            <span className="max-sm:hidden sm:inline">{formatShortDateTime(new Date(task.dueAt))}</span>
-                            <span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.dueAt))}</span>
-                          </span>
-                        )}
-                      </div>
+                      <TaskMetadata
+                        isCompleted={task.status === "completed"}
+                        createdAt={task.createdAt}
+                        completedAt={task.completedAt ? new Date(task.completedAt) : null}
+                        dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                        labels={metaLabels}
+                      />
                     </div>
                   )}
                 </li>
               ))}
               {totalTaskPages > 1 && (
-                <li className="flex flex-wrap items-center justify-between gap-2 border-t border-blue-100 px-3 py-3 dark:border-zinc-700 sm:px-6">
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                <li className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-3 py-3 sm:px-6">
+                  <span className="text-sm text-muted">
                     {t.common.pageOf.replace("{{current}}", String(taskPage)).replace("{{total}}", String(totalTaskPages))}
                   </span>
                   <div className="flex gap-2">
@@ -425,8 +388,8 @@ async function PlanDetailRoot({
               )}
             </ul>
             {completedTasks.length > 0 ? (
-              <div className="mt-6 border-t border-blue-100 dark:border-zinc-700 pt-4">
-                <h3 className="px-3 text-sm font-semibold text-zinc-500 dark:text-zinc-400 sm:px-6">
+              <div className="mt-6 border-t border-border pt-4">
+                <h3 className="px-3 text-sm font-semibold text-muted sm:px-6">
                   {t.tasks.completed}
                   {totalCompleted > completedTasks.length
                     ? ` (${completedTasks.length} / ${totalCompleted})`
@@ -470,35 +433,15 @@ async function PlanDetailRoot({
                         }}
                       >
                         <div className="min-w-0 flex-1">
-                          <div
-                            className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
-                              task.urgency,
-                            )}`}
-                          >
-                            <span className={task.status === "completed" ? "truncate line-through" : "truncate"}>
-                              {task.title}
-                            </span>
-                            {task.status === "on_hold" ? (
-                              <span className="shrink-0 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
-                                {t.tasks.onHold}
-                              </span>
-                            ) : null}
-                          </div>
+                          <UrgencyPill urgency={task.urgency} title={task.title} completed={task.status === "completed"} status={task.status} onHoldLabel={t.tasks.onHold} />
                           <TaskContent content={task.content} />
-                          <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
-                            {task.status === "completed" && task.completedAt ? (
-                              <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
-                            ) : (
-                              <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
-                            )}
-                            {task.dueAt && (
-                              <span className="sm:before:content-['·'] sm:before:mr-1">
-                                {t.tasks.due}{" "}
-                                <span className="max-sm:hidden sm:inline">{formatShortDateTime(new Date(task.dueAt))}</span>
-                                <span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.dueAt))}</span>
-                              </span>
-                            )}
-                          </div>
+                          <TaskMetadata
+                            isCompleted={task.status === "completed"}
+                            createdAt={task.createdAt}
+                            completedAt={task.completedAt ? new Date(task.completedAt) : null}
+                            dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                            labels={metaLabels}
+                          />
                         </div>
                       </EditTaskDialog>
                       <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
@@ -543,35 +486,15 @@ async function PlanDetailRoot({
                     </>
                   ) : (
                     <div className="min-w-0 flex-1">
-                      <div
-                        className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
-                          task.urgency,
-                        )}`}
-                      >
-                        <span className={task.status === "completed" ? "truncate line-through" : "truncate"}>
-                          {task.title}
-                        </span>
-                        {task.status === "on_hold" ? (
-                          <span className="shrink-0 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
-                            {t.tasks.onHold}
-                          </span>
-                        ) : null}
-                      </div>
+                      <UrgencyPill urgency={task.urgency} title={task.title} completed={task.status === "completed"} status={task.status} onHoldLabel={t.tasks.onHold} />
                       <TaskContent content={task.content} />
-                      <div className="mt-1 flex flex-col gap-0.5 break-words text-xs text-zinc-500 dark:text-zinc-400 sm:flex-row sm:flex-wrap sm:gap-x-1 sm:gap-y-0">
-                        {task.status === "completed" && task.completedAt ? (
-                          <span>{t.tasks.completed} <span className="max-sm:hidden sm:inline">{formatShortDate(new Date(task.completedAt))}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.completedAt))}</span></span>
-                        ) : (
-                          <span>{t.tasks.added} <span className="max-sm:hidden sm:inline">{formatShortDate(task.createdAt)}</span><span className="max-sm:inline sm:hidden">{formatShortDateOnly(task.createdAt)}</span></span>
-                        )}
-                        {task.dueAt && (
-                          <span className="sm:before:content-['·'] sm:before:mr-1">
-                            {t.tasks.due}{" "}
-                            <span className="max-sm:hidden sm:inline">{formatShortDateTime(new Date(task.dueAt))}</span>
-                            <span className="max-sm:inline sm:hidden">{formatShortDateOnly(new Date(task.dueAt))}</span>
-                          </span>
-                        )}
-                      </div>
+                      <TaskMetadata
+                        isCompleted={task.status === "completed"}
+                        createdAt={task.createdAt}
+                        completedAt={task.completedAt ? new Date(task.completedAt) : null}
+                        dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                        labels={metaLabels}
+                      />
                     </div>
                   )}
                 </li>
@@ -582,7 +505,7 @@ async function PlanDetailRoot({
             </>
           ) : (
             <div className="px-3 py-6 text-center sm:px-6 sm:py-8">
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.plans.noTasksInPlan}</p>
+              <p className="text-sm text-muted">{t.plans.noTasksInPlan}</p>
               <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
                 {isOwner ? t.plans.addOrLinkTasksDescription : t.plans.planOwnerAddTasks}
               </p>

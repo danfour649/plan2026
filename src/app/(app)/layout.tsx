@@ -13,7 +13,7 @@ import { getTranslations } from "@/lib/i18n";
 function AppLayoutFallback() {
   return (
     <div className="min-h-screen bg-transparent text-zinc-950 dark:text-zinc-100" aria-hidden>
-      <header className="relative z-50 border-b border-blue-100 bg-white/85 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90">
+      <header className="relative z-50 border-b border-border bg-white/85 backdrop-blur dark:bg-zinc-900/90">
         <div className="mx-auto flex h-[52px] w-full max-w-6xl items-center px-2 sm:h-14 sm:px-8">
           <div className="h-10 w-24 animate-pulse rounded-lg bg-blue-100/80 dark:bg-zinc-700" />
           <div className="ml-4 flex gap-2">
@@ -39,7 +39,7 @@ async function AppLayoutInner({ children }: { children: React.ReactNode }) {
   return (
     <TranslationsProvider locale={locale}>
       <div className="min-h-screen bg-transparent text-zinc-950 dark:text-zinc-100">
-        <header className="relative z-50 border-b border-blue-100 bg-white/85 backdrop-blur dark:border-zinc-700 dark:bg-zinc-900/90">
+        <header className="relative z-50 border-b border-border bg-white/85 backdrop-blur dark:bg-zinc-900/90">
           <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-2 py-2 sm:px-8 sm:py-3">
             <div className="relative z-10 flex min-w-0 flex-1 items-center gap-3 overflow-visible sm:gap-8">
               <Plan2026Logo

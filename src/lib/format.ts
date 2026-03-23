@@ -18,19 +18,19 @@ export function formatShortDateTime(d: Date): string {
 export function getUrgencyPillClasses(urgency: number): string {
   switch (urgency) {
     case 7:
-      return "bg-red-100 text-red-700 ring-1 ring-red-200";
+      return "bg-red-100 text-red-700 ring-1 ring-red-200 dark:bg-red-900/40 dark:text-red-200 dark:ring-red-800";
     case 6:
-      return "bg-orange-100 text-orange-700 ring-1 ring-orange-200";
+      return "bg-orange-100 text-orange-700 ring-1 ring-orange-200 dark:bg-orange-900/40 dark:text-orange-200 dark:ring-orange-800";
     case 5:
-      return "bg-amber-100 text-amber-700 ring-1 ring-amber-200";
+      return "bg-amber-100 text-amber-700 ring-1 ring-amber-200 dark:bg-amber-900/40 dark:text-amber-200 dark:ring-amber-800";
     case 4:
-      return "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200";
+      return "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-200 dark:ring-emerald-800";
     case 3:
-      return "bg-cyan-100 text-cyan-700 ring-1 ring-cyan-200";
+      return "bg-cyan-100 text-cyan-700 ring-1 ring-cyan-200 dark:bg-cyan-900/40 dark:text-cyan-200 dark:ring-cyan-800";
     case 2:
-      return "bg-sky-100 text-sky-700 ring-1 ring-sky-200";
+      return "bg-sky-100 text-sky-700 ring-1 ring-sky-200 dark:bg-sky-900/40 dark:text-sky-200 dark:ring-sky-800";
     default:
-      return "bg-blue-100 text-blue-700 ring-1 ring-blue-200";
+      return "bg-blue-100 text-blue-700 ring-1 ring-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:ring-blue-800";
   }
 }
 
