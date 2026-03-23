@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.2
+
+### Patch Changes
+
+- 340243e: TECH-0070 more fixes
+
 ## 0.24.1
 
 ### Patch Changes
