@@ -50,6 +50,7 @@ export async function POST(req: Request) {
           urgency?: unknown;
           planId?: unknown;
           status?: unknown;
+          recurrence?: unknown;
         })
       : {};
   const parsed = addTaskSchema.safeParse({
@@ -59,6 +60,7 @@ export async function POST(req: Request) {
     urgency: raw.urgency ?? 4,
     planId: raw.planId ?? undefined,
     status: raw.status ?? undefined,
+    recurrence: raw.recurrence ?? undefined,
   });
 
   if (!parsed.success) {

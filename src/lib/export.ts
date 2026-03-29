@@ -13,7 +13,20 @@ type Serialized<T> = {
 
 /** Task fields we export, with dates as strings. planName and calendar fields optional (dialog export may omit them). */
 export type ExportedTask = Serialized<
-  Pick<Task, "id" | "title" | "content" | "dueAt" | "urgency" | "status" | "completedAt" | "planId" | "createdAt" | "updatedAt">
+  Pick<
+    Task,
+    | "id"
+    | "title"
+    | "content"
+    | "dueAt"
+    | "urgency"
+    | "status"
+    | "completedAt"
+    | "planId"
+    | "createdAt"
+    | "updatedAt"
+    | "recurrence"
+  >
 > & {
   planName?: string | null;
   googleCalendarEventId?: string | null;
@@ -22,7 +35,19 @@ export type ExportedTask = Serialized<
 
 /** Subset of Task for plan-in-plan export (no planId / calendar fields). */
 export type ExportedPlanTask = Serialized<
-  Pick<Task, "id" | "title" | "content" | "dueAt" | "urgency" | "status" | "completedAt" | "createdAt" | "updatedAt">
+  Pick<
+    Task,
+    | "id"
+    | "title"
+    | "content"
+    | "dueAt"
+    | "urgency"
+    | "status"
+    | "completedAt"
+    | "createdAt"
+    | "updatedAt"
+    | "recurrence"
+  >
 >;
 
 /** Plan fields we export, with dates as strings. tasks or taskSummaries added depending on context. */

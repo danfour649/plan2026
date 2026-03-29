@@ -12,6 +12,8 @@ type TaskMetadataProps = {
   createdAt: Date;
   completedAt?: Date | null;
   dueAt?: Date | null;
+  /** Short label when task has recurrence (e.g. "Repeats daily"). */
+  recurrenceHint?: string | null;
   isCompleted?: boolean;
   plan?: { id: string; name: string } | null;
   labels: TaskMetadataLabels;
@@ -24,6 +26,7 @@ export function TaskMetadata({
   createdAt,
   completedAt,
   dueAt,
+  recurrenceHint,
   isCompleted,
   plan,
   labels,
@@ -62,6 +65,11 @@ export function TaskMetadata({
           {labels.due}{" "}
           <span className="max-sm:hidden sm:inline">{formatShortDateTime(dueAt)}</span>
           <span className="max-sm:inline sm:hidden">{formatShortDateOnly(dueAt)}</span>
+        </span>
+      ) : null}
+      {recurrenceHint ? (
+        <span className="rounded-full bg-violet-100 px-2 py-0.5 text-[0.7rem] font-medium text-violet-800 dark:bg-violet-900/40 dark:text-violet-200">
+          {recurrenceHint}
         </span>
       ) : null}
       {plan ? (

@@ -75,12 +75,20 @@ enum TaskStatus {
   completed
 }
 
+enum TaskRecurrence {
+  daily
+  weekly
+  monthly
+}
+
 model Task {
   id                    String     @id @default(cuid())
   userId                String
   title                 String
   content               String?    // optional rich text (sanitized HTML)
   dueAt                 DateTime?  // optional due date for Google Calendar
+  /** When set, "Mark done" advances dueAt by one period and keeps the task active (single row). */
+  recurrence            TaskRecurrence?
   urgency               Int        @default(4)
   googleCalendarEventId String?
   googleCalendarEventUrl String?

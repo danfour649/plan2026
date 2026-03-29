@@ -17,6 +17,8 @@ type TaskActionButtonProps = {
   label: string;
   /** Translated message for success toast. If not provided, uses label. */
   successMessage?: string;
+  /** When the server rolls a recurring task forward instead of completing it. */
+  recurringSuccessMessage?: string;
   variant?: "default" | "muted";
   /** When provided (e.g. on plan detail page), submitted with form so the plan page can revalidate. */
   planId?: string;
@@ -35,6 +37,7 @@ export function TaskActionButton({
   taskId,
   label,
   successMessage,
+  recurringSuccessMessage,
   variant = "default",
   planId,
   compact = false,
@@ -47,12 +50,16 @@ export function TaskActionButton({
   useEffect(() => {
     if (!state) return;
     if (state.success) {
-      toast.success(successMessage ?? label);
+      const msg =
+        state.recurringAdvanced && recurringSuccessMessage
+          ? recurringSuccessMessage
+          : successMessage ?? label;
+      toast.success(msg);
       refreshNavCounts();
     } else if (state.error) {
       toast.error(state.error);
     }
-  }, [state, label, successMessage]);
+  }, [state, label, successMessage, recurringSuccessMessage]);
 
   const baseTone =
     variant === "muted"

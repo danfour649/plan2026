@@ -11,10 +11,13 @@ import {
   revalidateTasksCaches,
 } from "@/lib/revalidate-app-data";
 import { createTaskForUser, updateTaskForUser } from "@/lib/task-service";
+import { applyMarkTaskDone } from "@/lib/task-complete";
 import { prisma } from "@/lib/prisma";
 import { addTaskSchema, taskIdSchema, updateTaskSchema } from "@/lib/validations/task";
 
-export type ActionResult = { success: true } | { success: false; error: string };
+export type ActionResult =
+  | { success: true; recurringAdvanced?: boolean }
+  | { success: false; error: string };
 
 /** When used with useActionState, Next/React pass (prevState, formData); we must accept both and use formData. */
 export async function addTask(
@@ -31,6 +34,7 @@ export async function addTask(
     urgency: formData.get("urgency") ?? 4,
     planId: formData.get("planId") ?? undefined,
     status: formData.get("status") ?? undefined,
+    recurrence: formData.get("recurrence") ?? undefined,
   });
   if (!parsed.success) {
     const msg = parsed.error.flatten().formErrors[0] ?? "Invalid input";
@@ -82,6 +86,7 @@ export async function updateTask(
     urgency: formData.get("urgency") ?? 4,
     planId: rawPlanId === null ? undefined : rawPlanId === "" ? null : rawPlanId,
     status: formData.get("status") ?? undefined,
+    recurrence: formData.get("recurrence") ?? undefined,
   });
   if (!parsed.success) {
     const msg = parsed.error.flatten().formErrors[0] ?? "Invalid input";
@@ -92,6 +97,7 @@ export async function updateTask(
     title: parsed.data.title,
     content: parsed.data.content,
     dueAt: parsed.data.dueAt,
+    recurrence: parsed.data.recurrence,
     urgency: parsed.data.urgency,
     planId: planIdFromForm ?? undefined,
     status: parsed.data.status,
@@ -120,11 +126,11 @@ export async function completeTask(
   const parsed = taskIdSchema.safeParse({ taskId: formData.get("taskId") ?? "" });
   if (!parsed.success) return { success: false, error: "Invalid task" };
 
-  const result = await prisma.task.updateMany({
-    where: { id: parsed.data.taskId, userId },
-    data: { status: "completed", completedAt: new Date() },
+  const { ok, recurringAdvanced } = await applyMarkTaskDone({
+    id: parsed.data.taskId,
+    userId,
   });
-  if (result.count === 0) return { success: false, error: "Operation failed" };
+  if (!ok) return { success: false, error: "Operation failed" };
   revalidateTasksCaches(userId);
   revalidateNavCounts(userId);
   revalidatePath("/tasks");
@@ -134,7 +140,7 @@ export async function completeTask(
     revalidatePlanDetail(planId.trim());
     revalidatePath(`/plans/${planId.trim()}`);
   }
-  return { success: true };
+  return { success: true, recurringAdvanced };
 }
 
 /** When used with useActionState, Next/React pass (prevState, formData); we must accept both and use formData. */

@@ -14,6 +14,9 @@ export const TASK_URGENCY_MAX = 7;
 export const TASK_STATUS_ACTIVE_OR_ON_HOLD = ["active", "on_hold"] as const;
 export type TaskStatusActiveOrOnHold = (typeof TASK_STATUS_ACTIVE_OR_ON_HOLD)[number];
 
+export const TASK_RECURRENCE_VALUES = ["daily", "weekly", "monthly"] as const;
+export type TaskRecurrenceFormValue = (typeof TASK_RECURRENCE_VALUES)[number];
+
 export const addTaskSchema = z.object({
   title: z
     .string()
@@ -51,6 +54,16 @@ export const addTaskSchema = z.object({
     .enum(TASK_STATUS_ACTIVE_OR_ON_HOLD)
     .optional()
     .default("active"),
+  recurrence: z
+    .string()
+    .optional()
+    .transform((s) => {
+      if (s == null) return null;
+      const t = String(s).trim();
+      if (t === "" || t === "none") return null;
+      if ((TASK_RECURRENCE_VALUES as readonly string[]).includes(t)) return t as TaskRecurrenceFormValue;
+      return null;
+    }),
 });
 
 /** CUID format used by Prisma @default(cuid()) - 25 chars, 'c' prefix, base36. */
