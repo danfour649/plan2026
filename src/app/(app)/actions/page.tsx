@@ -16,6 +16,7 @@ import {
 import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
 import { getCachedActionsPage } from "@/lib/data-cache";
+import { taskRecurrenceHint } from "@/lib/task-recurrence-ui";
 import { addTask, completeTask, deleteTask, updateTask } from "@/lib/actions/tasks";
 
 export default async function ActionsPage() {
@@ -25,6 +26,11 @@ export default async function ActionsPage() {
   const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
   const { tasks, plans } = await getCachedActionsPage(userId);
+  const recurrenceLabels = {
+    daily: t.tasks.recursDaily,
+    weekly: t.tasks.recursWeekly,
+    monthly: t.tasks.recursMonthly,
+  };
 
   const now = new Date();
 
@@ -63,6 +69,7 @@ export default async function ActionsPage() {
           <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
             {tasks.map((task) => {
               const isOverdue = task.dueAt !== null && task.dueAt < now;
+              const recurHint = taskRecurrenceHint(task.recurrence, recurrenceLabels);
               return (
                 <li
                   key={task.id}
@@ -80,6 +87,7 @@ export default async function ActionsPage() {
                       content: task.content,
                       dueAt: task.dueAt?.toISOString() ?? null,
                       urgency: task.urgency,
+                      recurrence: task.recurrence ?? null,
                       status: task.status,
                       completedAt: task.completedAt?.toISOString() ?? null,
                       planId: task.plan?.id ?? null,
@@ -140,6 +148,11 @@ export default async function ActionsPage() {
                             </span>
                           </span>
                         )}
+                        {recurHint ? (
+                          <span className="max-sm:mt-0.5 rounded-full bg-violet-100 px-2 py-0.5 text-[0.65rem] font-medium text-violet-800 dark:bg-violet-900/40 dark:text-violet-200 sm:ml-1">
+                            {recurHint}
+                          </span>
+                        ) : null}
                         {task.plan && (
                           <span className="min-w-0 max-sm:block sm:before:content-['·'] sm:before:mr-1">
                             <Link
@@ -161,6 +174,7 @@ export default async function ActionsPage() {
                       taskId={task.id}
                       label={t.tasks.markDone}
                       successMessage={t.tasks.markedDone}
+                      recurringSuccessMessage={t.tasks.markedDoneRecurring}
                     />
                     <EditTaskDialog
                       compactListTrigger
@@ -173,6 +187,9 @@ export default async function ActionsPage() {
                         content: task.content,
                         dueAt: task.dueAt?.toISOString() ?? null,
                         urgency: task.urgency,
+                        recurrence: task.recurrence ?? null,
+                        status: task.status,
+                        completedAt: task.completedAt?.toISOString() ?? null,
                         planId: task.plan?.id ?? null,
                         planName: task.plan?.name ?? null,
                         createdAt: task.createdAt.toISOString(),

@@ -30,6 +30,7 @@ type TaskFormProps = {
     urgency?: number;
     planId?: string | null;
     status?: "active" | "on_hold";
+    recurrence?: "daily" | "weekly" | "monthly" | null;
   };
   /** When provided, show a plan selector (optional association). */
   plans?: { id: string; name: string }[];
@@ -93,6 +94,7 @@ export function TaskForm({
   );
   const defaultUrgency = initialValues?.urgency ?? 4;
   const defaultStatus = initialValues?.status ?? "active";
+  const defaultRecurrence = initialValues?.recurrence ?? "";
   const dueAtInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -201,6 +203,19 @@ export function TaskForm({
             </select>
           </div>
         ) : null}
+        <div className="flex w-full flex-col gap-1.5">
+          <label className="text-xs whitespace-nowrap text-blue-700 dark:text-blue-300">{t.tasks.recurrenceLabel}</label>
+          <select
+            name="recurrence"
+            defaultValue={defaultRecurrence || ""}
+            className="w-full rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-black outline-none ring-ring transition focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500"
+          >
+            <option value="">{t.tasks.recurrenceNone}</option>
+            <option value="daily">{t.tasks.recurrenceDaily}</option>
+            <option value="weekly">{t.tasks.recurrenceWeekly}</option>
+            <option value="monthly">{t.tasks.recurrenceMonthly}</option>
+          </select>
+        </div>
         <div className="flex w-full flex-col gap-1.5">
           <label className="text-xs whitespace-nowrap text-blue-700 dark:text-blue-300">Due (optional)</label>
           <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">

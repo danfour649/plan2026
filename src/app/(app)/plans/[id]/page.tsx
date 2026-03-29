@@ -22,6 +22,7 @@ import { UrgencyPill } from "@/components/UrgencyPill";
 import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
 import { getCachedPlanDetail, getCachedPlansForDropdown } from "@/lib/data-cache";
+import { taskRecurrenceHint } from "@/lib/task-recurrence-ui";
 import type { ExportedPlan, ExportedPlanTask } from "@/lib/export";
 import { deletePlan, updatePlan } from "@/lib/actions/plans";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
@@ -145,6 +146,7 @@ async function PlanDetailRoot({
         urgency: taskItem.urgency,
         status: taskItem.status,
         completedAt: taskItem.completedAt?.toISOString() ?? null,
+        recurrence: taskItem.recurrence ?? null,
         createdAt: taskItem.createdAt.toISOString(),
         updatedAt: taskItem.updatedAt.toISOString(),
       }),
@@ -156,6 +158,11 @@ async function PlanDetailRoot({
     completed: t.tasks.completed,
     due: t.tasks.due,
     planLabel: t.tasks.planLabel,
+  };
+  const recurrenceLabels = {
+    daily: t.tasks.recursDaily,
+    weekly: t.tasks.recursWeekly,
+    monthly: t.tasks.recursMonthly,
   };
 
   /** Full-width title/body, then metadata + actions on one row (same at all breakpoints). */
@@ -308,6 +315,7 @@ async function PlanDetailRoot({
                             content: task.content,
                             dueAt: task.dueAt?.toISOString() ?? null,
                             urgency: task.urgency,
+                            recurrence: task.recurrence ?? null,
                             status: task.status,
                             completedAt: task.completedAt?.toISOString() ?? null,
                             planId: plan.id,
@@ -334,6 +342,7 @@ async function PlanDetailRoot({
                           createdAt={task.createdAt}
                           completedAt={task.completedAt ? new Date(task.completedAt) : null}
                           dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                          recurrenceHint={taskRecurrenceHint(task.recurrence, recurrenceLabels)}
                           labels={metaLabels}
                           stackDueOnDesktop
                           className={ownerPlanTaskMetadataClass}
@@ -348,6 +357,7 @@ async function PlanDetailRoot({
                             planId={plan.id}
                             label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
                             successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
+                            recurringSuccessMessage={t.tasks.markedDoneRecurring}
                           />
                           <EditTaskDialog
                             compactListTrigger
@@ -364,6 +374,7 @@ async function PlanDetailRoot({
                               content: task.content,
                               dueAt: task.dueAt?.toISOString() ?? null,
                               urgency: task.urgency,
+                              recurrence: task.recurrence ?? null,
                               status: task.status,
                               completedAt: task.completedAt?.toISOString() ?? null,
                               planId: plan.id,
@@ -390,6 +401,7 @@ async function PlanDetailRoot({
                         createdAt={task.createdAt}
                         completedAt={task.completedAt ? new Date(task.completedAt) : null}
                         dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                        recurrenceHint={taskRecurrenceHint(task.recurrence, recurrenceLabels)}
                         labels={metaLabels}
                       />
                     </div>
@@ -458,6 +470,7 @@ async function PlanDetailRoot({
                             content: task.content,
                             dueAt: task.dueAt?.toISOString() ?? null,
                             urgency: task.urgency,
+                            recurrence: task.recurrence ?? null,
                             status: task.status,
                             completedAt: task.completedAt?.toISOString() ?? null,
                             planId: plan.id,
@@ -484,6 +497,7 @@ async function PlanDetailRoot({
                           createdAt={task.createdAt}
                           completedAt={task.completedAt ? new Date(task.completedAt) : null}
                           dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                          recurrenceHint={taskRecurrenceHint(task.recurrence, recurrenceLabels)}
                           labels={metaLabels}
                           stackDueOnDesktop
                           className={ownerPlanTaskMetadataClass}
@@ -498,6 +512,7 @@ async function PlanDetailRoot({
                             planId={plan.id}
                             label={task.status === "completed" ? t.tasks.restore : t.tasks.markDone}
                             successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
+                            recurringSuccessMessage={t.tasks.markedDoneRecurring}
                           />
                           <EditTaskDialog
                             compactListTrigger
@@ -514,6 +529,7 @@ async function PlanDetailRoot({
                               content: task.content,
                               dueAt: task.dueAt?.toISOString() ?? null,
                               urgency: task.urgency,
+                              recurrence: task.recurrence ?? null,
                               status: task.status,
                               completedAt: task.completedAt?.toISOString() ?? null,
                               planId: plan.id,
@@ -540,6 +556,7 @@ async function PlanDetailRoot({
                         createdAt={task.createdAt}
                         completedAt={task.completedAt ? new Date(task.completedAt) : null}
                         dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                        recurrenceHint={taskRecurrenceHint(task.recurrence, recurrenceLabels)}
                         labels={metaLabels}
                       />
                     </div>

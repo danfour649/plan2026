@@ -14,7 +14,7 @@
 
 import { cache } from "react";
 import { cacheLife, cacheTag } from "next/cache";
-import { Prisma, TaskStatus } from "@/generated/prisma/client";
+import { Prisma, type TaskRecurrence, TaskStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
   memoActionsPageKey,
@@ -243,6 +243,7 @@ export type CachedTasksPageTask = {
   title: string;
   content: string | null;
   dueAt: Date | null;
+  recurrence: TaskRecurrence | null;
   urgency: number;
   googleCalendarEventId: string | null;
   googleCalendarEventUrl: string | null;
@@ -478,6 +479,7 @@ const planDetailTaskSelect = {
   title: true,
   content: true,
   dueAt: true,
+  recurrence: true,
   urgency: true,
   status: true,
   completedAt: true,

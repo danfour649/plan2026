@@ -17,6 +17,7 @@ import type { ExportedTask } from "@/lib/export";
 import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
 import { getCachedTasksPage } from "@/lib/data-cache";
+import { taskRecurrenceHint } from "@/lib/task-recurrence-ui";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
 import {
   readTasksShowCompletedFromCookie,
@@ -94,6 +95,7 @@ export default async function TasksPage({
       urgency: task.urgency,
       status: task.status,
       completedAt: null as string | null,
+      recurrence: task.recurrence ?? null,
       planId: task.plan?.id ?? null,
       planName: task.plan?.name ?? null,
       createdAt: task.createdAt.toISOString(),
@@ -109,6 +111,7 @@ export default async function TasksPage({
       urgency: task.urgency,
       status: task.status,
       completedAt: task.completedAt?.toISOString() ?? null,
+      recurrence: task.recurrence ?? null,
       planId: task.plan?.id ?? null,
       planName: task.plan?.name ?? null,
       createdAt: task.createdAt.toISOString(),
@@ -123,6 +126,11 @@ export default async function TasksPage({
     completed: t.tasks.completed,
     due: t.tasks.due,
     planLabel: t.tasks.planLabel,
+  };
+  const recurrenceLabels = {
+    daily: t.tasks.recursDaily,
+    weekly: t.tasks.recursWeekly,
+    monthly: t.tasks.recursMonthly,
   };
 
   return (
@@ -173,6 +181,7 @@ export default async function TasksPage({
                     content: task.content,
                     dueAt: task.dueAt?.toISOString() ?? null,
                     urgency: task.urgency,
+                    recurrence: task.recurrence ?? null,
                     status: task.status,
                     completedAt: task.completedAt?.toISOString() ?? null,
                     planId: task.plan?.id ?? null,
@@ -192,7 +201,13 @@ export default async function TasksPage({
                       <UrgencyPill urgency={task.urgency} title={task.title} status={task.status} onHoldLabel={t.tasks.onHold} />
                     </div>
                     <TaskContent content={task.content} />
-                    <TaskMetadata createdAt={task.createdAt} dueAt={task.dueAt} plan={task.plan} labels={metaLabels} />
+                    <TaskMetadata
+                      createdAt={task.createdAt}
+                      dueAt={task.dueAt}
+                      recurrenceHint={taskRecurrenceHint(task.recurrence, recurrenceLabels)}
+                      plan={task.plan}
+                      labels={metaLabels}
+                    />
                   </div>
                 </EditTaskDialog>
                 <div className="flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2 sm:flex-shrink-0">
@@ -203,6 +218,7 @@ export default async function TasksPage({
                     taskId={task.id}
                     label={t.tasks.markDone}
                     successMessage={t.tasks.markedDone}
+                    recurringSuccessMessage={t.tasks.markedDoneRecurring}
                   />
                   <AddToCalendarButton
                     taskId={task.id}
@@ -219,6 +235,7 @@ export default async function TasksPage({
                       content: task.content,
                       dueAt: task.dueAt?.toISOString() ?? null,
                       urgency: task.urgency,
+                      recurrence: task.recurrence ?? null,
                       status: task.status,
                       completedAt: task.completedAt?.toISOString() ?? null,
                       planId: task.plan?.id ?? null,
@@ -254,20 +271,21 @@ export default async function TasksPage({
                     content: task.content,
                     dueAt: task.dueAt?.toISOString() ?? null,
                     urgency: task.urgency,
+                    recurrence: task.recurrence ?? null,
                     status: task.status,
                     completedAt: task.completedAt?.toISOString() ?? null,
-                      planId: task.plan?.id ?? null,
-                      planName: task.plan?.name ?? null,
-                      createdAt: task.createdAt.toISOString(),
-                      updatedAt: task.updatedAt.toISOString(),
-                      attachments: task.attachments.map((a) => ({
-                        id: a.id,
-                        url: a.url,
-                        filename: a.filename,
-                        size: a.size,
-                      })),
-                    }}
-                  >
+                    planId: task.plan?.id ?? null,
+                    planName: task.plan?.name ?? null,
+                    createdAt: task.createdAt.toISOString(),
+                    updatedAt: task.updatedAt.toISOString(),
+                    attachments: task.attachments.map((a) => ({
+                      id: a.id,
+                      url: a.url,
+                      filename: a.filename,
+                      size: a.size,
+                    })),
+                  }}
+                >
                   <div className="flex min-w-0 flex-1 items-start gap-3 overflow-visible">
                     <CompletedCheckIcon />
                     <div className="min-w-0 flex-1 overflow-visible">
@@ -275,7 +293,15 @@ export default async function TasksPage({
                         <UrgencyPill urgency={task.urgency} title={task.title} completed />
                       </div>
                       <TaskContent content={task.content} />
-                      <TaskMetadata isCompleted createdAt={task.createdAt} completedAt={task.completedAt} plan={task.plan} labels={metaLabels} />
+                      <TaskMetadata
+                        isCompleted
+                        createdAt={task.createdAt}
+                        completedAt={task.completedAt}
+                        dueAt={task.dueAt}
+                        recurrenceHint={taskRecurrenceHint(task.recurrence, recurrenceLabels)}
+                        plan={task.plan}
+                        labels={metaLabels}
+                      />
                     </div>
                   </div>
                 </EditTaskDialog>
@@ -303,6 +329,7 @@ export default async function TasksPage({
                       content: task.content,
                       dueAt: task.dueAt?.toISOString() ?? null,
                       urgency: task.urgency,
+                      recurrence: task.recurrence ?? null,
                       status: task.status,
                       completedAt: task.completedAt?.toISOString() ?? null,
                       planId: task.plan?.id ?? null,

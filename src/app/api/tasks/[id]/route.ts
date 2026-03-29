@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUserId } from "@/auth";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { prisma } from "@/lib/prisma";
+import { applyMarkTaskDone } from "@/lib/task-complete";
 import { isValidTaskId } from "@/lib/validations/task";
 
 type Params = { params: Promise<{ id: string }> };
@@ -36,11 +37,19 @@ export async function PATCH(req: Request, { params }: Params) {
     );
   }
 
+  if (completed) {
+    const { ok, recurringAdvanced } = await applyMarkTaskDone({ id, userId });
+    if (!ok) {
+      return NextResponse.json({ error: "Operation failed" }, { status: 404 });
+    }
+    return NextResponse.json({ ok: true, recurringAdvanced });
+  }
+
   const task = await prisma.task.updateMany({
     where: { id, userId },
     data: {
-      status: completed ? "completed" : "active",
-      completedAt: completed ? new Date() : null,
+      status: "active",
+      completedAt: null,
     },
   });
 

@@ -24,6 +24,7 @@ type EditTaskDialogProps = {
     content: string | null;
     dueAt: string | null;
     urgency: number;
+    recurrence?: "daily" | "weekly" | "monthly" | null;
     status?: "active" | "on_hold" | "completed";
     completedAt?: string | null;
     planId?: string | null;
@@ -180,8 +181,14 @@ export function EditTaskDialog({
     if (!doneRestoreState || !doneRestoreAction) return;
 
     if (doneRestoreState.success) {
-      // Show message for the action we just ran (complete vs restore), not the resulting state
-      toast.success(doneRestoreAction === completeAction ? t.tasks.markedDone : t.tasks.taskRestored);
+      const isComplete = doneRestoreAction === completeAction;
+      const msg =
+        isComplete && doneRestoreState.recurringAdvanced
+          ? t.tasks.markedDoneRecurring
+          : isComplete
+            ? t.tasks.markedDone
+            : t.tasks.taskRestored;
+      toast.success(msg);
       queueMicrotask(() => {
         if (isMountedRef.current) closeDialog();
       });
@@ -193,6 +200,7 @@ export function EditTaskDialog({
     doneRestoreAction,
     completeAction,
     t.tasks.markedDone,
+    t.tasks.markedDoneRecurring,
     t.tasks.taskRestored,
     closeDialog,
   ]);
@@ -307,6 +315,7 @@ export function EditTaskDialog({
                 urgency: task.urgency,
                 planId: task.planId ?? undefined,
                 status: task.status === "completed" ? "active" : task.status ?? "active",
+                recurrence: task.recurrence ?? null,
               }}
               plans={plans}
               formId={`edit-task-form-${task.id}`}
@@ -412,6 +421,7 @@ export function EditTaskDialog({
                     planName: task.planName ?? null,
                     createdAt: task.createdAt ?? new Date().toISOString(),
                     updatedAt: task.updatedAt ?? new Date().toISOString(),
+                    recurrence: task.recurrence ?? null,
                   }}
                 />
                 {completeAction && restoreAction ? (

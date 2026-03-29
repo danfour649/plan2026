@@ -32,6 +32,7 @@ export async function createTaskForUser(
       title: data.title,
       content: data.content ?? null,
       dueAt: data.dueAt ?? null,
+      recurrence: data.recurrence ?? null,
       urgency: data.urgency,
       planId: data.planId ?? null,
       status: data.status ?? "active",
@@ -69,6 +70,7 @@ export async function updateTaskForUser(
       title: data.title,
       content: data.content ?? null,
       dueAt: data.dueAt ?? null,
+      recurrence: data.recurrence ?? null,
       urgency: data.urgency,
       planId: data.planId ?? null,
       ...(isCompleted

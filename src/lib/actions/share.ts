@@ -3,9 +3,10 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { applyMarkTaskDone } from "@/lib/task-complete";
 
 export type UpdateStatusByShareResult =
-  | { success: true }
+  | { success: true; recurringAdvanced?: boolean }
   | { success: false; error: string };
 
 /**
@@ -38,11 +39,21 @@ export async function updateTaskStatusByShareToken(
   });
   if (!task) return { success: false, error: "Task not found" };
 
+  if (completedAt) {
+    const { ok, recurringAdvanced } = await applyMarkTaskDone({
+      id: task.id,
+      planId: link.plan.id,
+    });
+    if (!ok) return { success: false, error: "Task not found" };
+    revalidatePath(`/share/${token}`);
+    return { success: true, recurringAdvanced };
+  }
+
   await prisma.task.update({
     where: { id: task.id },
     data: {
-      status: completedAt ? "completed" : "active",
-      completedAt,
+      status: "active",
+      completedAt: null,
     },
   });
 
