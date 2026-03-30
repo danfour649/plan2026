@@ -3,17 +3,22 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
+import { AddTaskDialog } from "@/components/AddTaskDialog";
 import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
+import { ExportTasksButton } from "@/components/ExportTasksButton";
+import { RefreshTasksButton } from "@/components/RefreshTasksButton";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { TaskContent } from "@/components/TaskContent";
 import { TaskMetadata, type TaskMetadataLabels } from "@/components/TaskMetadata";
+import { TasksShowCompletedToggle } from "@/components/TasksShowCompletedRoot";
 import { useTranslations } from "@/components/TranslationsProvider";
 import { UrgencyPill } from "@/components/UrgencyPill";
 import type { CachedTasksPageTask } from "@/lib/data-cache";
 import { taskMatchesLocalSearch } from "@/lib/task-list-local-search";
+import { tasksPageSlicesToExportedTasks } from "@/lib/tasks-page-export-map";
 import { taskRecurrenceHint } from "@/lib/task-recurrence-ui";
-import { completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
+import { addTask as addTaskServer, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
 
 function CompletedCheckIcon() {
   return (
@@ -41,6 +46,11 @@ function toIso(d: Date | string | null | undefined): string | null {
 }
 
 export function TasksListWithLocalSearch({
+  title,
+  hasVisibleTasks,
+  emptyTitle,
+  emptyDescription,
+  addTask,
   remainingTasks,
   completedTasks,
   plans,
@@ -53,6 +63,11 @@ export function TasksListWithLocalSearch({
   totalCompletedPages,
   showCompleted,
 }: {
+  title: string;
+  hasVisibleTasks: boolean;
+  emptyTitle: string;
+  emptyDescription: string;
+  addTask: typeof addTaskServer;
   remainingTasks: CachedTasksPageTask[];
   completedTasks: CachedTasksPageTask[];
   plans: { id: string; name: string }[];
@@ -80,27 +95,59 @@ export function TasksListWithLocalSearch({
     [completedTasks, needle],
   );
 
+  const tasksForExport = useMemo(
+    () => tasksPageSlicesToExportedTasks(filteredRemaining, filteredCompleted),
+    [filteredRemaining, filteredCompleted],
+  );
+
   const hadAnyTasksOnPage = remainingTasks.length > 0 || completedTasks.length > 0;
   const filterHidEverything =
     needle.length > 0 && hadAnyTasksOnPage && filteredRemaining.length === 0 && filteredCompleted.length === 0;
 
   return (
     <>
-      <div className="border-b border-border px-6 py-3">
-        <label className="sr-only" htmlFor="tasks-local-search">
-          {t.tasksPage.searchTasks}
-        </label>
-        <input
-          id="tasks-local-search"
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={t.tasksPage.searchTasksPlaceholder}
-          autoComplete="off"
-          className="w-full max-w-md rounded-xl border border-border bg-white px-3 py-2 text-sm text-blue-950 shadow-inner placeholder:text-muted focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-900/50"
-        />
+      <div className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-4 sm:gap-4">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <h2 className="text-2xl font-bold tracking-tight text-blue-950 dark:text-zinc-100">{title}</h2>
+          <div className="flex shrink-0 items-center gap-1">
+            <RefreshTasksButton />
+            <ExportTasksButton
+              tasks={tasksForExport}
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-300 bg-amber-100 p-0 text-amber-700 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-amber-700 dark:bg-amber-900/40 dark:text-amber-200 dark:hover:bg-amber-800/50"
+            />
+          </div>
+        </div>
+        <div className="ml-auto flex flex-nowrap items-center gap-2 sm:gap-4">
+          <TasksShowCompletedToggle />
+          <AddTaskDialog action={addTask} plans={plans} />
+        </div>
       </div>
-      <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
+
+      {!hasVisibleTasks ? (
+        <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+          <p className="text-4xl font-light text-blue-300 dark:text-blue-500" aria-hidden>
+            ✓
+          </p>
+          <p className="mt-3 text-base font-medium text-blue-900 dark:text-zinc-100">{emptyTitle}</p>
+          <p className="mt-1 text-sm text-muted">{emptyDescription}</p>
+        </div>
+      ) : (
+        <>
+          <div className="border-b border-border px-6 py-3">
+            <label className="sr-only" htmlFor="tasks-local-search">
+              {t.tasksPage.searchTasks}
+            </label>
+            <input
+              id="tasks-local-search"
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t.tasksPage.searchTasksPlaceholder}
+              autoComplete="off"
+              className="w-full max-w-md rounded-xl border border-border bg-white px-3 py-2 text-sm text-blue-950 shadow-inner placeholder:text-muted focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-900/50"
+            />
+          </div>
+          <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
         {filterHidEverything ? (
           <li className="px-6 py-10 text-center text-sm text-muted">{t.tasksPage.noTasksMatchSearch}</li>
         ) : null}
@@ -347,7 +394,9 @@ export function TasksListWithLocalSearch({
             </div>
           </li>
         )}
-      </ul>
+          </ul>
+        </>
+      )}
     </>
   );
 }
