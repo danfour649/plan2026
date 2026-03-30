@@ -39,6 +39,9 @@ const messages = {
       addTask: "Add task",
       allClear: "All clear!",
       noTasks: "You're all caught up. Add a new task when you're ready.",
+      searchTasks: "Search tasks",
+      searchTasksPlaceholder: "Search by name, description, or plan…",
+      noTasksMatchSearch: "No tasks on this page match your search.",
     },
     actionsPage: {
       title: "Actions",
@@ -373,6 +376,9 @@ const messages = {
       addTask: "Ajouter une tâche",
       allClear: "Tout est clair !",
       noTasks: "Vous êtes à jour. Ajoutez une nouvelle tâche quand vous serez prêt.",
+      searchTasks: "Rechercher des tâches",
+      searchTasksPlaceholder: "Nom, description ou plan…",
+      noTasksMatchSearch: "Aucune tâche sur cette page ne correspond à votre recherche.",
     },
     actionsPage: {
       title: "Actions",
@@ -707,6 +713,9 @@ const messages = {
       addTask: "Put work",
       allClear: "Everywhere good!",
       noTasks: "You don finish everything. Put new work when you ready.",
+      searchTasks: "Find work",
+      searchTasksPlaceholder: "Name, wetin you write, or plan…",
+      noTasksMatchSearch: "No work for this page match your search.",
     },
     actionsPage: {
       title: "Actions",
