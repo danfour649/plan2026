@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+
+import { useAppLocale } from "@/components/TranslationsProvider";
 import { formatShortDate, formatShortDateOnly, formatShortDateTime } from "@/lib/format";
 
 export type TaskMetadataLabels = {
@@ -33,6 +37,7 @@ export function TaskMetadata({
   className = "",
   stackDueOnDesktop = false,
 }: TaskMetadataProps) {
+  const appLocale = useAppLocale();
   const dueSepClass = stackDueOnDesktop ? "" : "before:content-['·'] before:mr-1";
 
   const rootClass = stackDueOnDesktop
@@ -46,8 +51,8 @@ export function TaskMetadata({
           {labels.completed}{" "}
           {completedAt ? (
             <>
-              <span className="max-sm:hidden sm:inline">{formatShortDate(completedAt)}</span>
-              <span className="max-sm:inline sm:hidden">{formatShortDateOnly(completedAt)}</span>
+              <span className="max-sm:hidden sm:inline">{formatShortDate(completedAt, appLocale)}</span>
+              <span className="max-sm:inline sm:hidden">{formatShortDateOnly(completedAt, appLocale)}</span>
             </>
           ) : (
             "—"
@@ -56,15 +61,15 @@ export function TaskMetadata({
       ) : (
         <span>
           {labels.added}{" "}
-          <span className="max-sm:hidden sm:inline">{formatShortDate(createdAt)}</span>
-          <span className="max-sm:inline sm:hidden">{formatShortDateOnly(createdAt)}</span>
+          <span className="max-sm:hidden sm:inline">{formatShortDate(createdAt, appLocale)}</span>
+          <span className="max-sm:inline sm:hidden">{formatShortDateOnly(createdAt, appLocale)}</span>
         </span>
       )}
       {dueAt ? (
         <span className={dueSepClass || undefined}>
           {labels.due}{" "}
-          <span className="max-sm:hidden sm:inline">{formatShortDateTime(dueAt)}</span>
-          <span className="max-sm:inline sm:hidden">{formatShortDateOnly(dueAt)}</span>
+          <span className="max-sm:hidden sm:inline">{formatShortDateTime(dueAt, appLocale)}</span>
+          <span className="max-sm:inline sm:hidden">{formatShortDateOnly(dueAt, appLocale)}</span>
         </span>
       ) : null}
       {recurrenceHint ? (

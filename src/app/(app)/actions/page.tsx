@@ -131,20 +131,20 @@ export default async function ActionsPage() {
                         <span>
                           {t.tasks.added}{" "}
                           <span className="max-sm:hidden sm:inline">
-                            {formatShortDate(task.createdAt)}
+                            {formatShortDate(task.createdAt, locale)}
                           </span>
                           <span className="max-sm:inline sm:hidden">
-                            {formatShortDateOnly(task.createdAt)}
+                            {formatShortDateOnly(task.createdAt, locale)}
                           </span>
                         </span>
                         {task.dueAt && (
                           <span className="sm:before:content-['·'] sm:before:mr-1">
                             {t.tasks.due}{" "}
                             <span className="max-sm:hidden sm:inline">
-                              {formatShortDateTime(task.dueAt)}
+                              {formatShortDateTime(task.dueAt, locale)}
                             </span>
                             <span className="max-sm:inline sm:hidden">
-                              {formatShortDateOnly(task.dueAt)}
+                              {formatShortDateOnly(task.dueAt, locale)}
                             </span>
                           </span>
                         )}

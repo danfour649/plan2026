@@ -2,16 +2,29 @@
  * Shared date and UI formatting helpers for tasks and plans.
  */
 
-export function formatShortDate(d: Date): string {
-  return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+import type { Locale } from "@/lib/i18n";
+import { DEFAULT_LOCALE } from "@/lib/i18n";
+
+/** BCP 47 tag for Intl — must match between Node (SSR) and the browser to avoid hydration mismatches. */
+export function intlLocaleTagForAppLocale(locale: Locale): string {
+  if (locale === "fr") return "fr-FR";
+  if (locale === "pidgin") return "en-GB";
+  return "en-US";
 }
 
-export function formatShortDateOnly(d: Date): string {
-  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+export function formatShortDate(d: Date, appLocale: Locale = DEFAULT_LOCALE): string {
+  const tag = intlLocaleTagForAppLocale(appLocale);
+  return d.toLocaleDateString(tag, { month: "short", day: "numeric", year: "numeric" });
 }
 
-export function formatShortDateTime(d: Date): string {
-  return `${formatShortDate(d)} ${d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`;
+export function formatShortDateOnly(d: Date, appLocale: Locale = DEFAULT_LOCALE): string {
+  const tag = intlLocaleTagForAppLocale(appLocale);
+  return d.toLocaleDateString(tag, { month: "short", day: "numeric" });
+}
+
+export function formatShortDateTime(d: Date, appLocale: Locale = DEFAULT_LOCALE): string {
+  const tag = intlLocaleTagForAppLocale(appLocale);
+  return `${formatShortDate(d, appLocale)} ${d.toLocaleTimeString(tag, { hour: "numeric", minute: "2-digit" })}`;
 }
 
 /** Task urgency pill Tailwind classes (1–7). */
