@@ -81,9 +81,9 @@ export default async function SharePage({
             </p>
           ) : null}
           <p className="mt-2 text-xs text-zinc-500">
-            {plan.startAt ? formatShortDateOnly(plan.startAt) : ""}
+            {plan.startAt ? formatShortDateOnly(plan.startAt, locale) : ""}
             {plan.startAt && plan.endAt ? " – " : ""}
-            {plan.endAt ? formatShortDateOnly(plan.endAt) : ""}
+            {plan.endAt ? formatShortDateOnly(plan.endAt, locale) : ""}
           </p>
 
           <section className="mt-6" aria-label={t.sharePage.tasksLabel}>
