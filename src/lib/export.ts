@@ -116,6 +116,41 @@ export function buildTaskExportPayload(task: ExportedTask): ExportPayload {
   };
 }
 
+/** Clipboard / export row for a task shown on the plan detail page (calendar fields omitted). */
+export function planDetailTaskToExportedTask(
+  task: {
+    id: string;
+    title: string;
+    content: string;
+    dueAt: Date | null;
+    urgency: number;
+    status: string;
+    completedAt: Date | null;
+    recurrence: ExportedTask["recurrence"];
+    createdAt: Date;
+    updatedAt: Date;
+  },
+  planId: string,
+  planName: string,
+): ExportedTask {
+  return {
+    id: task.id,
+    title: task.title,
+    content: task.content,
+    dueAt: task.dueAt?.toISOString() ?? null,
+    urgency: task.urgency,
+    status: task.status,
+    completedAt: task.completedAt?.toISOString() ?? null,
+    recurrence: task.recurrence ?? null,
+    planId,
+    planName,
+    createdAt: task.createdAt.toISOString(),
+    updatedAt: task.updatedAt.toISOString(),
+    googleCalendarEventId: null,
+    googleCalendarEventUrl: null,
+  };
+}
+
 export function buildPlanExportPayload(plan: ExportedPlan): ExportPayload {
   return {
     exportedAt: new Date().toISOString(),

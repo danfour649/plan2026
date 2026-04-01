@@ -143,6 +143,7 @@ const messages = {
       recursWeekly: "Repeats weekly",
       recursMonthly: "Repeats monthly",
       markedDoneRecurring: "Next occurrence scheduled",
+      copyTaskDetails: "Copy task details",
     },
     plans: {
       noPlansToExport: "No plans to export",
@@ -265,6 +266,7 @@ const messages = {
       couldNotAddToCalendar: "Could not add to Google Calendar",
       addToCalendar: "Add to Google Calendar",
       updateInCalendar: "Update existing Google Calendar event",
+      taskCopiedToClipboard: "Task copied to clipboard",
     },
     toggle: {
       showActiveTasksOnly: "Show only active tasks (turn off to include completed)",
@@ -480,6 +482,7 @@ const messages = {
       recursWeekly: "Se répète chaque semaine",
       recursMonthly: "Se répète chaque mois",
       markedDoneRecurring: "Prochaine occurrence planifiée",
+      copyTaskDetails: "Copier les détails de la tâche",
     },
     plans: {
       noPlansToExport: "Aucun plan à exporter",
@@ -602,6 +605,7 @@ const messages = {
       couldNotAddToCalendar: "Erreur Google Agenda",
       addToCalendar: "Ajouter à Google Agenda",
       updateInCalendar: "Mettre à jour l'événement",
+      taskCopiedToClipboard: "Tâche copiée dans le presse-papiers",
     },
     toggle: {
       showActiveTasksOnly: "Tâches actives uniquement",
@@ -817,6 +821,7 @@ const messages = {
       recursWeekly: "E dey repeat every week",
       recursMonthly: "E dey repeat every month",
       markedDoneRecurring: "Next time don set",
+      copyTaskDetails: "Copy everything about dis work",
     },
     plans: {
       noPlansToExport: "No plans to carry out",
@@ -939,6 +944,7 @@ const messages = {
       couldNotAddToCalendar: "E no gree enter Google Calendar",
       addToCalendar: "Put for Google Calendar",
       updateInCalendar: "Update di Google Calendar event",
+      taskCopiedToClipboard: "Work don enter clipboard",
     },
     toggle: {
       showActiveTasksOnly: "Show only work wey I never finish",

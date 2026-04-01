@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 
 import { AddTaskDialog } from "@/components/AddTaskDialog";
 import { AddToCalendarButton } from "@/components/AddToCalendarButton";
+import { CopyTaskButton } from "@/components/CopyTaskButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { ExportTasksButton } from "@/components/ExportTasksButton";
 import { RefreshTasksButton } from "@/components/RefreshTasksButton";
@@ -16,7 +17,7 @@ import { useTranslations } from "@/components/TranslationsProvider";
 import { UrgencyPill } from "@/components/UrgencyPill";
 import type { CachedTasksPageTask } from "@/lib/data-cache";
 import { taskMatchesLocalSearch } from "@/lib/task-list-local-search";
-import { tasksPageSlicesToExportedTasks } from "@/lib/tasks-page-export-map";
+import { cachedTasksPageTaskToExportedTask, tasksPageSlicesToExportedTasks } from "@/lib/tasks-page-export-map";
 import { taskRecurrenceHint } from "@/lib/task-recurrence-ui";
 import { addTask as addTaskServer, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
 
@@ -217,6 +218,7 @@ export function TasksListWithLocalSearch({
                     taskId={task.id}
                     initiallyLinked={Boolean(task.googleCalendarEventId)}
                   />
+                  <CopyTaskButton task={cachedTasksPageTaskToExportedTask(task)} />
                   <EditTaskDialog
                     compactListTrigger
                     action={updateTask}
@@ -313,6 +315,7 @@ export function TasksListWithLocalSearch({
                     taskId={task.id}
                     initiallyLinked={Boolean(task.googleCalendarEventId)}
                   />
+                  <CopyTaskButton task={cachedTasksPageTaskToExportedTask(task)} />
                   <EditTaskDialog
                     compactListTrigger
                     action={updateTask}
