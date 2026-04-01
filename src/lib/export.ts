@@ -4,7 +4,7 @@
  * Payload includes source and schema hints for future tooling.
  */
 
-import type { Plan, Task } from "@/generated/prisma/client";
+import type { Plan, Task, TaskStatus } from "@/generated/prisma/client";
 
 /** Converts Date fields to ISO strings for JSON-serializable payloads. */
 type Serialized<T> = {
@@ -68,6 +68,7 @@ export type ExportedPlan = Serialized<
     | "notes"
     | "color"
     | "imageUrl"
+    | "logoAttachmentId"
     | "createdAt"
     | "updatedAt"
   >
@@ -113,6 +114,41 @@ export function buildTaskExportPayload(task: ExportedTask): ExportPayload {
     source: SOURCE,
     exportType: "task",
     data: { task },
+  };
+}
+
+/** Clipboard / export row for a task shown on the plan detail page (calendar fields omitted). */
+export function planDetailTaskToExportedTask(
+  task: {
+    id: string;
+    title: string;
+    content: string | null;
+    dueAt: Date | null;
+    urgency: number;
+    status: TaskStatus;
+    completedAt: Date | null;
+    recurrence: ExportedTask["recurrence"];
+    createdAt: Date;
+    updatedAt: Date;
+  },
+  planId: string,
+  planName: string,
+): ExportedTask {
+  return {
+    id: task.id,
+    title: task.title,
+    content: task.content,
+    dueAt: task.dueAt?.toISOString() ?? null,
+    urgency: task.urgency,
+    status: task.status,
+    completedAt: task.completedAt?.toISOString() ?? null,
+    recurrence: task.recurrence ?? null,
+    planId,
+    planName,
+    createdAt: task.createdAt.toISOString(),
+    updatedAt: task.updatedAt.toISOString(),
+    googleCalendarEventId: null,
+    googleCalendarEventUrl: null,
   };
 }
 

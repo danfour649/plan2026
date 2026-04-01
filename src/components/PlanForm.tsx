@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
 
+import { PlanAttachmentsPanel } from "@/components/PlanAttachmentsPanel";
 import { PlanFlag } from "@/components/PlanFlag";
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { PlanActionResult } from "@/lib/actions/plans";
@@ -169,6 +170,8 @@ export type PlanFormInitialValues = {
   notes?: string | null;
   color?: string | null;
   imageUrl?: string | null;
+  /** Uploaded plan logo (shown in list instead of imageUrl when set). */
+  logoAttachmentId?: string | null;
   taskIds: string[];
 };
 
@@ -529,7 +532,18 @@ export function PlanForm({
           onInput={markDirty}
           className="w-full min-w-0 rounded-xl border border-border bg-white/95 px-3 py-2 text-sm outline-none ring-ring transition text-zinc-900 placeholder:text-zinc-500 focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-400 dark:focus:border-blue-500"
         />
-        {initialValues?.imageUrl ? (
+        {initialValues?.planId && initialValues?.logoAttachmentId ? (
+          <div className="mt-1 flex justify-start">
+            <div
+              className="h-40 w-40 max-w-full rounded-lg border border-border bg-surface bg-contain bg-center bg-no-repeat"
+              style={{
+                backgroundImage: `url(/api/plans/${initialValues.planId}/attachments/${initialValues.logoAttachmentId})`,
+              }}
+              role="img"
+              aria-label=""
+            />
+          </div>
+        ) : initialValues?.imageUrl ? (
           <div className="mt-1 flex justify-start">
             <div
               className="h-40 w-40 max-w-full rounded-lg border border-border bg-surface bg-contain bg-center bg-no-repeat"
@@ -540,6 +554,13 @@ export function PlanForm({
           </div>
         ) : null}
       </div>
+
+      {isEdit && initialValues?.planId ? (
+        <PlanAttachmentsPanel
+          planId={initialValues.planId}
+          initialLogoAttachmentId={initialValues.logoAttachmentId}
+        />
+      ) : null}
 
       <div className="flex min-w-0 flex-col gap-3">
         <label className="text-sm font-medium text-blue-950 dark:text-zinc-100">{t.planForm.tasksInPlanLabel}</label>

@@ -53,6 +53,7 @@ function mapPlansToExport(
     notes: p.notes,
     color: p.color,
     imageUrl: p.imageUrl,
+    logoAttachmentId: p.logoAttachmentId,
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
     totalTaskCount: p.totalTaskCount,

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { del } from "@vercel/blob";
 
 import { getCurrentUserId } from "@/auth";
 import {
@@ -229,14 +230,29 @@ export async function deletePlan(formData: FormData): Promise<void> {
   const parsed = planIdSchema.safeParse({ planId: formData.get("planId") ?? "" });
   if (!parsed.success) throw new Error(parsed.error.flatten().formErrors[0] ?? "Invalid plan");
 
+  const planId = parsed.data.planId;
+
+  const planWithAttachments = await prisma.plan.findFirst({
+    where: { id: planId, userId },
+    select: {
+      attachments: { select: { url: true } },
+    },
+  });
+  if (!planWithAttachments) throw new Error("Plan not found");
+
+  if (process.env.BLOB_READ_WRITE_TOKEN && planWithAttachments.attachments.length > 0) {
+    const urls = planWithAttachments.attachments.map((a) => a.url).filter(Boolean);
+    if (urls.length > 0) await del(urls).catch(() => {});
+  }
+
   const result = await prisma.plan.deleteMany({
-    where: { id: parsed.data.planId, userId },
+    where: { id: planId, userId },
   });
 
   if (result.count === 0) throw new Error("Plan not found");
 
   revalidatePlansCaches(userId);
-  revalidatePlanDetail(parsed.data.planId);
+  revalidatePlanDetail(planId);
   revalidateNavCounts(userId);
   revalidateTasksCaches(userId);
   revalidatePath("/plans");

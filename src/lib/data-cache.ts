@@ -133,6 +133,7 @@ const plansPageListSelect = {
   notes: true,
   color: true,
   imageUrl: true,
+  logoAttachmentId: true,
   createdAt: true,
   updatedAt: true,
   _count: { select: { tasks: true } },

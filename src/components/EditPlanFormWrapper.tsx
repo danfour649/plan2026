@@ -80,7 +80,7 @@ export function EditPlanFormWrapper({
       <section className="min-w-0 overflow-x-hidden rounded-2xl border border-border bg-white/90 px-2 py-4 shadow-sm shadow-blue-100/40 backdrop-blur dark:bg-zinc-900/90 dark:shadow-zinc-950/40 sm:px-4 sm:py-6">
         {children ? <div className="mb-4 flex min-w-0 flex-col gap-3">{children}</div> : null}
         <PlanForm
-          key={`${initialValues.planId}:${initialValues.taskIds.join("\0")}`}
+          key={`${initialValues.planId}:${initialValues.taskIds.join("\0")}:${initialValues.logoAttachmentId ?? ""}`}
           action={action}
           initialValues={initialValues}
           linkableTasksScope="incomplete"

@@ -5,6 +5,7 @@ import { Suspense } from "react";
 
 import { getCurrentUserId } from "@/auth";
 import { AddTaskDialog } from "@/components/AddTaskDialog";
+import { CopyTaskButton } from "@/components/CopyTaskButton";
 import { DeletePlanButton } from "@/components/DeletePlanButton";
 import { EditPlanFormWrapper } from "@/components/EditPlanFormWrapper";
 import { PlanDetailBackToPlansButton } from "@/components/PlanDetailBackToPlansButton";
@@ -23,7 +24,7 @@ import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
 import { getCachedPlanDetail, getCachedPlansForDropdown } from "@/lib/data-cache";
 import { taskRecurrenceHint } from "@/lib/task-recurrence-ui";
-import type { ExportedPlan, ExportedPlanTask } from "@/lib/export";
+import { planDetailTaskToExportedTask, type ExportedPlan, type ExportedPlanTask } from "@/lib/export";
 import { deletePlan, updatePlan } from "@/lib/actions/plans";
 import { addTask, completeTask, deleteTask, restoreTask, updateTask } from "@/lib/actions/tasks";
 
@@ -117,6 +118,7 @@ async function PlanDetailRoot({
     notes: plan.notes ?? undefined,
     color: plan.color ?? undefined,
     imageUrl: plan.imageUrl ?? undefined,
+    logoAttachmentId: plan.logoAttachmentId ?? undefined,
     taskIds: exportTasks.map((t) => t.id),
   };
 
@@ -135,6 +137,7 @@ async function PlanDetailRoot({
     notes: plan.notes,
     color: plan.color,
     imageUrl: plan.imageUrl,
+    logoAttachmentId: plan.logoAttachmentId,
     createdAt: plan.createdAt.toISOString(),
     updatedAt: plan.updatedAt.toISOString(),
     tasks: exportTasks.map(
@@ -359,6 +362,7 @@ async function PlanDetailRoot({
                             successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
                             recurringSuccessMessage={t.tasks.markedDoneRecurring}
                           />
+                          <CopyTaskButton task={planDetailTaskToExportedTask(task, plan.id, plan.name)} />
                           <EditTaskDialog
                             compactListTrigger
                             compactListTriggerIconsOnly
@@ -514,6 +518,7 @@ async function PlanDetailRoot({
                             successMessage={task.status === "completed" ? t.tasks.taskRestored : t.tasks.markedDone}
                             recurringSuccessMessage={t.tasks.markedDoneRecurring}
                           />
+                          <CopyTaskButton task={planDetailTaskToExportedTask(task, plan.id, plan.name)} />
                           <EditTaskDialog
                             compactListTrigger
                             compactListTriggerIconsOnly
