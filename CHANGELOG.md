@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.3
+
+### Patch Changes
+
+- 24aa027: TECH-0080 Copy button to task list and other stuff
+
 ## 0.24.2
 
 ### Patch Changes
