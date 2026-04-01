@@ -118,6 +118,7 @@ async function PlanDetailRoot({
     notes: plan.notes ?? undefined,
     color: plan.color ?? undefined,
     imageUrl: plan.imageUrl ?? undefined,
+    logoAttachmentId: plan.logoAttachmentId ?? undefined,
     taskIds: exportTasks.map((t) => t.id),
   };
 
@@ -136,6 +137,7 @@ async function PlanDetailRoot({
     notes: plan.notes,
     color: plan.color,
     imageUrl: plan.imageUrl,
+    logoAttachmentId: plan.logoAttachmentId,
     createdAt: plan.createdAt.toISOString(),
     updatedAt: plan.updatedAt.toISOString(),
     tasks: exportTasks.map(

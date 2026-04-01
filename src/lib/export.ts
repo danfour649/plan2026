@@ -4,7 +4,7 @@
  * Payload includes source and schema hints for future tooling.
  */
 
-import type { Plan, Task } from "@/generated/prisma/client";
+import type { Plan, Task, TaskStatus } from "@/generated/prisma/client";
 
 /** Converts Date fields to ISO strings for JSON-serializable payloads. */
 type Serialized<T> = {
@@ -68,6 +68,7 @@ export type ExportedPlan = Serialized<
     | "notes"
     | "color"
     | "imageUrl"
+    | "logoAttachmentId"
     | "createdAt"
     | "updatedAt"
   >
@@ -121,10 +122,10 @@ export function planDetailTaskToExportedTask(
   task: {
     id: string;
     title: string;
-    content: string;
+    content: string | null;
     dueAt: Date | null;
     urgency: number;
-    status: string;
+    status: TaskStatus;
     completedAt: Date | null;
     recurrence: ExportedTask["recurrence"];
     createdAt: Date;

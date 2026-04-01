@@ -1,0 +1,30 @@
+---
+description: Defer full-repo typecheck and ESLint until task end; verify only changed files and their dependents
+alwaysApply: true
+---
+
+# Typecheck and ESLint — defer full repo, scope at the end
+
+## During the task
+
+- Do **not** run `pnpm run typecheck`, `pnpm run lint`, or `tsc --noEmit` on the whole project while iterating.
+- Rely on **`read_lints`** for paths you edited (or files currently in scope) instead of full-project checks.
+
+## When the requested work is finished
+
+1. **ESLint — only touched and related files**  
+   Run ESLint with explicit paths, not the whole repo:
+
+   ```bash
+   pnpm exec eslint "path/to/changed/file.ts" "path/to/other.tsx" --max-warnings 0
+   ```
+
+   If a change affects a shared module, include **direct consumers**: search for imports of that module (e.g. ripgrep for the file path or exported symbol) and add those files to the same `eslint` invocation.
+
+2. **TypeScript**  
+   - Prefer **`read_lints`** on all files you created or modified (and any files you added to the ESLint list above) for type/diagnostic feedback.  
+   - Run **at most one** full `pnpm run typecheck` at the very end **only if** scoped checks are insufficient (e.g. complex cross-package refactors) or the user explicitly asked for a full project check.
+
+## Avoid
+
+- Repeated full-repo `typecheck` / `lint` in the middle of multi-step work — it adds long waits without proportional value.

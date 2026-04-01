@@ -22,6 +22,13 @@ export const PLAN_PERCENT_MAX = 100;
 export const PLAN_STATUS_VALUES = ["draft", "started", "on_hold", "completed", "abandoned"] as const;
 export type PlanStatus = (typeof PLAN_STATUS_VALUES)[number];
 
+/** CUID format used by Prisma @default(cuid()). */
+const PLAN_CUID_REGEX = /^c[a-z0-9]{24}$/;
+
+export function isValidPlanId(value: string): boolean {
+  return typeof value === "string" && value.length === 25 && PLAN_CUID_REGEX.test(value);
+}
+
 const optionalDate = z
   .string()
   .optional()

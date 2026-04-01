@@ -26,6 +26,7 @@ model User {
   tasks               Task[]
   plans               Plan[]
   taskAttachments     TaskAttachment[]
+  planAttachments     PlanAttachment[]
   plansSharedWithMe   PlanShare[]
   supplyItems         SupplyItem[]
 }
@@ -127,34 +128,56 @@ model TaskAttachment {
 }
 
 model Plan {
-  id              String    @id @default(cuid())
-  userId          String
-  name            String
-  description     String?
-  goal            String?
-  startAt         DateTime
-  endAt           DateTime
-  actualStartAt   DateTime?
-  actualEndAt     DateTime?
-  status          String    @default("draft") // draft | started | on_hold | completed | abandoned
-  priority        Int       @default(4) // 1-7 like task urgency
-  percentCompleted Int      @default(0)
-  notes           String?
-  color           String?
-  imageUrl        String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id                 String    @id @default(cuid())
+  userId             String
+  name               String
+  description        String?
+  goal               String?
+  startAt            DateTime
+  endAt              DateTime
+  actualStartAt      DateTime?
+  actualEndAt        DateTime?
+  status             String    @default("draft") // draft | started | on_hold | completed | abandoned
+  priority           Int       @default(4) // 1-7 like task urgency
+  percentCompleted   Int       @default(0)
+  notes              String?
+  color              String?
+  imageUrl           String?
+  /** When set, this uploaded file is shown as the plan thumbnail instead of imageUrl. */
+  logoAttachmentId   String?   @unique
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
-  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tasks       Task[]
-  shares      PlanShare[]
-  shareLinks  PlanShareLink[]
-  invites     PlanInvite[]
-  supplyItems SupplyItem[]
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks          Task[]
+  shares         PlanShare[]
+  shareLinks     PlanShareLink[]
+  invites        PlanInvite[]
+  supplyItems    SupplyItem[]
+  attachments    PlanAttachment[]  @relation("PlanAttachments")
+  logoAttachment PlanAttachment?   @relation("PlanLogo", fields: [logoAttachmentId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([userId, priority])
   @@index([userId, status, priority(sort: Desc), createdAt(sort: Desc)])
+}
+
+model PlanAttachment {
+  id          String   @id @default(cuid())
+  planId      String
+  userId      String
+  url         String // Vercel Blob or other blob storage URL
+  filename    String
+  size        Int // bytes
+  contentType String   @default("application/octet-stream")
+  createdAt   DateTime @default(now())
+
+  plan      Plan  @relation("PlanAttachments", fields: [planId], references: [id], onDelete: Cascade)
+  user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logoForPlan Plan? @relation("PlanLogo")
+
+  @@index([planId])
+  @@index([userId])
 }
 
 model SupplyItem {

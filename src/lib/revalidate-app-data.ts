@@ -1,4 +1,4 @@
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 import {
   getNavCountsCacheTag,
@@ -24,6 +24,8 @@ export function revalidatePlansCaches(userId: string) {
   memo.memoPlansPageClearForUser(userId);
   memo.memoPlanListClear(userId);
   revalidateTag(getPlansCacheTag(userId), "max");
+  // Ensures /plans RSC payload refreshes (complements cacheTag invalidation for `use cache` + router.refresh).
+  revalidatePath("/plans");
 }
 
 export function revalidatePlanDetail(planId: string) {
