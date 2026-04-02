@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.4
+
+### Patch Changes
+
+- 0b3c269: TECH-0080 misc small features
+
 ## 0.24.3
 
 ### Patch Changes
