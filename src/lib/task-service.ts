@@ -1,5 +1,7 @@
 "use server";
 
+import { del } from "@vercel/blob";
+
 import type { Task } from "@/generated/prisma/client";
 
 import { prisma } from "@/lib/prisma";
@@ -79,4 +81,24 @@ export async function updateTaskForUser(
     },
   });
   return { count: result.count };
+}
+
+/**
+ * Deletes every task linked to a plan (same rows that would get `planId` cleared on plan delete).
+ * Removes task attachment blobs when configured. Caller must verify plan ownership.
+ */
+export async function deleteAllTasksForPlan(planId: string): Promise<string[]> {
+  const tasks = await prisma.task.findMany({
+    where: { planId },
+    select: { userId: true, attachments: { select: { url: true } } },
+  });
+  if (tasks.length === 0) return [];
+
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const urls = tasks.flatMap((t) => t.attachments.map((a) => a.url)).filter(Boolean);
+    if (urls.length > 0) await del(urls).catch(() => {});
+  }
+
+  await prisma.task.deleteMany({ where: { planId } });
+  return [...new Set(tasks.map((t) => t.userId))];
 }

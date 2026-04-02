@@ -63,23 +63,33 @@ export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonP
             <p className="mt-2 text-sm text-tertiary">
               {t.plans.deletePlanConfirmMessage.replace("{planName}", planName)}
             </p>
-            <div className="mt-5 flex flex-wrap justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setShowConfirm(false)}
-                className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
-              >
-                {t.common.cancel}
-              </button>
-              <form action={action} className="inline">
-                <input type="hidden" name="planId" value={planId} />
+            <p className="mt-2 text-sm text-tertiary">{t.plans.deletePlanConfirmTasksExplainer}</p>
+            <form action={action} className="mt-5">
+              <input type="hidden" name="planId" value={planId} />
+              <label className="flex cursor-pointer items-start gap-2 rounded-xl border border-border bg-zinc-50/80 px-3 py-2.5 text-sm text-blue-950 dark:bg-zinc-800/60 dark:text-zinc-200">
+                <input
+                  type="checkbox"
+                  name="deleteTasks"
+                  value="1"
+                  className="mt-0.5 size-4 shrink-0 rounded border-zinc-300 text-red-600 focus:ring-red-500 dark:border-zinc-600"
+                />
+                <span>{t.plans.deletePlanAlsoDeleteTasksLabel}</span>
+              </label>
+              <div className="mt-5 flex flex-wrap justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm(false)}
+                  className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+                >
+                  {t.common.cancel}
+                </button>
                 <FormSubmitButton
                   className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70 dark:border-red-700 dark:bg-red-600 dark:hover:bg-red-700"
                 >
                   {t.plans.deletePlan}
                 </FormSubmitButton>
-              </form>
-            </div>
+              </div>
+            </form>
           </div>
         </div>
       ) : null}
