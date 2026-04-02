@@ -1,0 +1,46 @@
+{
+  "id": "job-search",
+  "name": "Job search",
+  "goal": "Land aligned conversations and offers by running a disciplined search: clear target, sharp materials, warm outreach, and a repeatable interview loop.",
+  "description": "Roughly six weeks from “I need to move” to a steady pipeline of applications and interviews. Adjust dates and drop steps that do not apply (e.g. portfolio if you are not in a creative field).",
+  "startAt": "2026-04-01",
+  "endAt": "2026-05-13",
+  "tasks": [
+    {
+      "title": "Define target roles, industries, and compensation band",
+      "urgency": 6,
+      "dueAt": "2026-04-06",
+      "content": "Clarity beats volume. Write down what you are actually optimizing for.\n\nDecide:\n- Titles or role families you will say yes to vs never apply to\n- Company size, stage, and remote / hybrid / on-site constraints\n- Geographic or timezone limits\n- Compensation floor (base and total) and what would make you walk away\n- Non-negotiables: benefits, travel, ethics, tech stack, manager style\n\nOutput:\n- One-page “search brief” you can send to friends and recruiters\n- A list of 15–25 target employers (not only job postings)\n\nDone when:\n- You can explain your target in two sentences without hedging\n- Your brief is in a doc you will update weekly"
+    },
+    {
+      "title": "Align resume, profiles, and proof (portfolio or case sheet)",
+      "urgency": 6,
+      "dueAt": "2026-04-13",
+      "content": "Materials should match the brief, not your whole career.\n\nResume:\n- Lead with impact: metrics, scope, outcomes; trim older bullets\n- One master resume plus 2–3 variants tuned to role families (save as separate files)\n\nProfiles:\n- LinkedIn (or equivalent) headline and about aligned to target roles\n- Open-to-work or visibility settings as appropriate for your situation\n\nProof:\n- Portfolio, GitHub readme, or a one-page “greatest hits” case sheet for interviews\n\nDone when:\n- A trusted peer has read one variant and understood your positioning in under 60 seconds\n- You have a single folder or drive link for “everything a recruiter needs”"
+    },
+    {
+      "title": "Warm network: map, outreach, and informational conversations",
+      "urgency": 5,
+      "dueAt": "2026-04-20",
+      "content": "Most strong leads start with people who already trust you.\n\nMap:\n- List former managers, peers, clients, alumni, community contacts\n- Note who works at or near target employers\n\nOutreach:\n- Short, specific asks: advice, intro, or a 20-minute call—not “let me know if you hear of anything”\n- Track every touch in a spreadsheet or ATS column\n\nConversations:\n- Prepare 3 questions per chat; send a thank-you with one concrete follow-up\n\nDone when:\n- You have held at least five meaningful conversations or have five scheduled\n- Your tracker shows who owes you a reply and when to nudge"
+    },
+    {
+      "title": "Application pipeline: volume, tracking, and tailoring",
+      "urgency": 5,
+      "dueAt": "2026-04-29",
+      "content": "Treat applications like a funnel with quality gates.\n\nProcess:\n- Weekly target for new applications (pick a number you can sustain)\n- For each role: tailor summary or cover note to one real company problem\n- Log job URL, date applied, contact, and status\n\nQuality:\n- Skip roles that fail your brief unless you have a deliberate reason\n- After rejections, tag pattern: resume, experience gap, timing, unknown\n\nDone when:\n- Every active application has a next action and date\n- You can report your funnel numbers (applied → screen → onsite → offer) without guessing"
+    },
+    {
+      "title": "Interview prep: stories, questions, and practice",
+      "urgency": 5,
+      "dueAt": "2026-05-06",
+      "content": "Reuse prep across employers; refresh specifics the night before.\n\nStories:\n- 5–8 STAR (or equivalent) stories covering conflict, leadership, failure, impact, collaboration\n- Technical or domain deep-dives if relevant\n\nQuestions:\n- Your questions for them: team, success metrics, roadmap, manager style\n\nPractice:\n- At least one mock interview with feedback; record yourself for timing and filler\n\nDone when:\n- You can deliver your “why this role / why us” answer in under 90 seconds\n- You have a cheat sheet per common round (recruiter, hiring manager, panel, executive)"
+    },
+    {
+      "title": "Offers, references, and close-out",
+      "urgency": 4,
+      "dueAt": "2026-05-13",
+      "content": "End the search with clean decisions and relationships intact.\n\nReferences:\n- Confirm who is willing; brief them on role and 2–3 themes to reinforce\n\nOffers:\n- Compare total comp, growth, commute or travel, and manager fit—not only salary\n- Negotiate once with a clear ask and fallback; get material terms in writing\n\nClose-out:\n- Thank people who helped; withdraw gracefully from other processes\n- Short retro: what worked, what to do earlier next time\n\nDone when:\n- Signed offer or documented decision to pause search with criteria to resume\n- References and network contacts are thanked"
+    }
+  ]
+}

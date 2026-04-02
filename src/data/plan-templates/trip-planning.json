@@ -1,34 +1,34 @@
 {
   "id": "trip-planning",
   "name": "Trip planning",
-  "goal": "Lock when and where you're going, book the big pieces, and leave with a trip you can actually enjoy.",
-  "description": "Spread over about four weeks so you're not doing everything the night before: pick dates and place, book how you'll get there, book where you'll sleep, then sketch days so you have room to wander. Dates shift to start from the day you create this plan.",
+  "goal": "End up with booked transport and lodging, a realistic day-by-day spine, and the admin (money, health, documents) handled so the trip runs itself once you leave.",
+  "description": "Roughly four weeks from “we should go somewhere” to “we’re packed and the boring stuff is sorted.” Tasks assume you might be international, domestic, or driving—skip sections that don’t apply. All calendar dates shift to start from the day you create this plan.",
   "startAt": "2026-03-02",
   "endAt": "2026-03-30",
   "tasks": [
     {
-      "title": "Pick your dates and destination",
+      "title": "Lock the trip frame (where, when, who, budget)",
       "urgency": 6,
       "dueAt": "2026-03-06",
-      "content": "Nail down the window you're traveling and where you're headed (even if it's \"city A with a day trip to B\").\n\nCompare a few options:\n- Price and weather for 2-3 date ranges if you can flex\n- Any hard constraints: PTO, school breaks, weddings, work peaks\n\nDon't forget the boring stuff:\n- Passports valid long enough? Visas or entry rules?\n- Rough budget so the next steps don't give you sticker shock"
+      "content": "Decide the non-negotiables before you spend money.\n\nDecide now:\n- Who is traveling (solo / couple / group) and whether anyone has mobility, dietary, or scheduling constraints\n- Hard dates vs flexible window; note any blackout dates (work, school, events)\n- Total trip budget and a rough split: transport / lodging / food & fun / buffer for surprises\n- One sentence: what would make this trip a win?\n\nIf international:\n- Passport validity (many places want 6 months past return)\n- Visa or ETA rules, vaccination or entry forms if they apply\n\nIf driving:\n- Max hours per day you’re willing to drive; overnight stops if it’s multi-day\n\nDone when:\n- You can name destination(s) and exact or bounded dates\n- You have a written budget range and a shared notes doc or thread everyone agrees to use"
     },
     {
-      "title": "Book flights, trains, or your road trip",
+      "title": "Book how you get there and back",
       "urgency": 5,
       "dueAt": "2026-03-13",
-      "content": "Lock in how you're getting there and back (or your rental car if you're driving).\n\nTips:\n- If dates might move, favor flexible fares or note change fees before you pay\n- Set a fare alert if you're still watching prices\n\nAfter you book:\n- Stash confirmation numbers in one place (notes app, email folder, or trip doc)\n- Add departures and check-in windows to your calendar so they don't sneak up on you"
+      "content": "Price usually rises as inventory shrinks—book the longest-lead option first (often flights, sometimes ferries or trains).\n\nBefore you pay:\n- Compare 2–3 real itineraries, not just the cheapest (layover pain, bag fees, refund rules)\n- Read change and cancellation terms; note them in your trip doc\n- If renting a car: check age fees, one-way drop charges, and whether you need an IDP\n\nAfter you book:\n- One place for confirmations (folder, trip app, or pinned email)\n- Calendar holds for departures, arrivals, and check-in windows (airline apps often miss the mental load)\n- Set a reminder to check in / select seats if your carrier opens that early\n\nDone when:\n- Return journey is covered, not just outbound\n- Someone else could find every confirmation in under two minutes"
     },
     {
-      "title": "Reserve where you'll stay",
+      "title": "Reserve lodging that matches how you’ll actually move",
       "urgency": 5,
       "dueAt": "2026-03-20",
-      "content": "Choose lodging that matches how you'll move: walkable neighborhood, near transit, or next to the one thing you care about most.\n\nBefore you commit:\n- Skim recent reviews for noise, safety, Wi-Fi, and accuracy of photos\n- Check check-in and check-out times and whether you can store bags\n\nIf the rate is non-refundable, have a backup option in mind so you're not stuck if plans change"
+      "content": "Pick base location from how you’ll spend time: walking, transit, or parking—not just from pretty photos.\n\nShortlist 3–5 options, then filter:\n- Recent reviews mentioning noise, stairs, AC/heat, Wi‑Fi, and honest photos\n- Cancellation policy vs how sure your dates are\n- Check-in/out times and whether you can leave bags on arrival or departure day\n- Safety: read the neighborhood at the times you’ll be out (evening if you like late dinners)\n\nMoney abroad:\n- Note whether places expect cash; plan one ATM or card that works without huge fees\n- Inform your bank you’re traveling if they still want travel notices\n\nDone when:\n- Every night is covered (or consciously left open for a flexible leg)\n- You know how you get from each arrival hub (airport/station) to the door"
     },
     {
-      "title": "Sketch your days (and leave breathing room)",
+      "title": "Shape the days, book the bottlenecks, prep the trip kit",
       "urgency": 4,
       "dueAt": "2026-03-27",
-      "content": "You don't need a minute-by-minute spreadsheet. You need must-sees, a few reservations, and space to rest.\n\nWorth booking early:\n- Popular museums, tours, or restaurants that sell out\n\nShare the plan:\n- Send a simple outline to anyone you're traveling with\n\nOffline safety net:\n- Save offline maps and jot down emergency numbers and your hotel address in the local language if it helps"
+      "content": "You want a spine, not a spreadsheet—must-dos, a few timed bookings, and blank space.\n\nItinerary:\n- List 3–5 “if we do nothing else” items; cluster them by neighborhood to cut transit zigzags\n- Reserve what sells out: popular museums, guides, special restaurants, national-park entries\n- Build in one low-key day if the trip is longer than a long weekend\n\nShare & sync:\n- Send travel partners a one-page outline + lodging and transport links\n- Agree how you’ll split costs (one card, split app, or cash kitty)\n\nOffline & safety:\n- Offline maps for key areas; screenshot or write down lodging address in local script if useful\n- Photos of passports/IDs in a secure cloud note; emergency contacts\n- Travel insurance decision (health + trip cancellation) if the stakes warrant it\n\nDone when:\n- Bottlenecks are booked or consciously skipped\n- Packing list started; chargers/adapters/meds on it\n- Everyone knows the first 48 hours hour-by-hour"
     }
   ]
 }

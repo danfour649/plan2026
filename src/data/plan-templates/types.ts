@@ -13,6 +13,9 @@ export const PLAN_TEMPLATE_IDS = [
   "project-launch",
   "trip-planning",
   "gemini-ai-plan-generic",
+  "job-search",
+  "product-discovery",
+  "home-move",
 ] as const;
 
 export type PlanTemplateId = (typeof PLAN_TEMPLATE_IDS)[number];

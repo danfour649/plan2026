@@ -1,130 +1,76 @@
 {
   "id": "gemini-ai-plan-generic",
-  "name": "Automated AI Personality Launch 2026",
-  "goal": "Go live with a single coherent AI persona—look, voice, and behavior—plus automated publishing, safety checks, and room to scale engagement after launch.",
-  "description": "Playbook v3.0 (comprehensive implementation edition). Target launch: 2026-04-28. Phases: I. Core Identity & Assets · II. The Content Engine · III. Intelligence & Guardrails · IV. Launch & Real-Time Scale",
-  "startAt": "2026-03-21",
-  "endAt": "2026-05-10",
+  "name": "AI Persona & Automated Publishing Playbook",
+  "goal": "Ship a consistent, legally compliant character, a resilient automation loop with secure API integrations, strict human-in-the-loop checkpoints for high-risk content, and a credible public launch.",
+  "description": "Phased playbook: identity and policy → pipeline and scheduling → safety and QA → soft launch and scale. Expanded to include IP compliance, prompt injection defense, and data feedback loops. Dates dynamically shifted to start April 1, 2026.",
+  "startAt": "2026-04-01",
+  "endAt": "2026-05-21",
   "tasks": [
     {
-      "title": "Niche Validation & Logic Mapping",
-      "urgency": 4,
-      "content": "Phase: I. Core Identity & Assets\n\nSelect a niche (e.g., AI Ethics, Virtual Fashion, or 'Solana-Degenerate'). Use Perplexity to find underserved visual aesthetics in that niche. Map the 'Logic Tree' for how the AI responds to praise vs. criticism to ensure personality stability.\n\nResources:\n- https://perplexity.ai",
-      "dueAt": "2026-03-22"
+      "title": "Audience, boundaries, and positioning",
+      "urgency": 5,
+      "dueAt": "2026-04-04",
+      "content": "Phase: Identity & Policy\n\nDefine who this is for and what it will never pretend to be.\n\nDeliverables:\n- Primary audience definition and the core \"job to be done\" (entertain, educate, support).\n- Explicit out-of-bounds topics (health, finance, politics, minors).\n- Rules of engagement for handling mistakes, disagreements, and refusal protocols.\n- Competitive matrix noting tones to echo or actively avoid.\n\nDone when:\n- A one-page positioning memo is locked and approved by brand stakeholders."
     },
     {
-      "title": "Character Model Training (Ryla.ai)",
-      "urgency": 4,
-      "content": "Phase: I. Core Identity & Assets\n\nUpload 20-30 reference images to Ryla.ai to create a 'Master Identity.' Unlike 2024 tools, Ryla ensures 100% face-geometry consistency across different outfits and lighting. This serves as the visual 'source of truth' for all future media.\n\nResources:\n- https://ryla.ai",
-      "dueAt": "2026-03-25"
+      "title": "Visual and voice style guide",
+      "urgency": 5,
+      "dueAt": "2026-04-08",
+      "content": "Phase: Identity & Policy\n\nLock a reference set before generating at scale to ensure cross-platform consistency.\n\nDeliverables:\n- Visual mood board: 10–20 locked reference images detailing palette, framing, and wardrobe rules.\n- Output format requirements per channel (aspect ratios, resolution, length caps).\n- Voice specs: 3–5 \"golden\" sample scripts marking desired cadence, banned jargon, and sign-offs.\n- Audio architecture: Decision on synthetic vs. recorded human voice, establishing the minimum quality bar.\n\nDone when:\n- A comprehensive style guide document exists that a new contractor or AI agent could accurately prompt from."
     },
     {
-      "title": "ElevenLabs Voice Architecture",
-      "urgency": 4,
-      "content": "Phase: I. Core Identity & Assets\n\nClone a voice using ElevenLabs' Professional Voice Cloning (PVC). Adjust the 'Stability' and 'Style Exaggeration' sliders to create a signature verbal tick or cadence. High stability is better for 'expert' personas; low stability is better for 'chaotic' comedians.\n\nResources:\n- https://elevenlabs.io",
-      "dueAt": "2026-03-26"
+      "title": "Behavior spec and knowledge sources (RAG)",
+      "urgency": 5,
+      "dueAt": "2026-04-12",
+      "content": "Phase: Identity & Policy\n\nTurn personality into strict system instructions the LLM can follow consistently.\n\nDeliverables:\n- Master system prompt: Role, overarching goals, format defaults, and strict citation rules.\n- Few-shot examples library covering common interactions (replies, threads, video hooks, apologies).\n- Curated knowledge base: The exact files or retrieval (RAG) sources the persona is allowed to treat as ground truth.\n- Escalation tree: Trigger conditions for deferring to a human, citing external sources, or admitting \"I don't know.\"\n\nDone when:\n- You have run 20 manual edge-case prompts against the spec with zero critical hallucinations."
     },
     {
-      "title": "System Prompt Engineering",
-      "urgency": 4,
-      "content": "Phase: I. Core Identity & Assets\n\nConstruct a 2,000-word System Instruction for GPT-4o. Use 'Chain of Thought' prompting to force the AI to 'think' about its character motivation before writing any post. Include a 'Knowledge Base' file of the character's unique backstory.\n\nResources:\n- https://openai.com",
-      "dueAt": "2026-03-29"
+      "title": "Legal, compliance, and brand channels",
+      "urgency": 6,
+      "dueAt": "2026-04-15",
+      "content": "Phase: Identity & Policy\n\nSecure profiles and ensure legal viability before any automation goes live.\n\nDeliverables:\n- IP Check: Verify commercial use rights for chosen foundational models, voice clones, and image generators.\n- Profile Setup: Consistent handles, bios, and profile art across all target surfaces.\n- Disclosure Compliance: Draft clear bot-labeling and automation disclosures that meet platform-specific TOS.\n- Appeal Path: Documented contact routes for platform restriction appeals.\n\nDone when:\n- Profiles are complete with human-readable \"about this AI\" blurbs, and legal/IP risks are formally accepted."
     },
     {
-      "title": "Autonomous Account Registration",
-      "urgency": 4,
-      "content": "Phase: I. Core Identity & Assets\n\nRegister handles. For Farcaster, use the 'OpenClaw' agent to autonomously fund the FID ($1 USDC/ETH) and set up the profile. This allows the account to be categorized as a 'Verified Agent' rather than a 'Bot,' preventing shadowbans.\n\nResources:\n- https://farcaster.xyz\n- https://x.com",
-      "dueAt": "2026-03-30"
+      "title": "Automation map & API verification",
+      "urgency": 5,
+      "dueAt": "2026-04-19",
+      "content": "Phase: Pipeline & Ops\n\nDraw the architecture and verify access before wiring tools together.\n\nDeliverables:\n- Trigger definitions (schedule, RSS, manual approval webhook).\n- State management plan detailing where data lives (database, queue) and retry logic for failed steps.\n- Secret management: Secure storage plan for API keys and credentials.\n- Rate limit and cost cap documentation per vendor to prevent runaway billing.\n- Platform API access verification (ensuring you have the necessary read/write tiers for chosen social platforms).\n\nDone when:\n- Architecture diagram is reviewed by a third party to spot failure points, and all required API keys are active in a staging environment."
     },
     {
-      "title": "n8n Workflow Hub Integration",
-      "urgency": 4,
-      "content": "Phase: II. The Content Engine\n\nSet up a self-hosted n8n instance. This will be the 'General' that tells other APIs when to move. Create a 'Cron Trigger' that starts the content generation cycle every morning at 6:00 AM.\n\nResources:\n- https://n8n.io",
-      "dueAt": "2026-03-31"
+      "title": "Implement draft → asset → publish path",
+      "urgency": 5,
+      "dueAt": "2026-04-25",
+      "content": "Phase: Pipeline & Ops\n\nBuild the minimum viable pipeline that produces one real post type end-to-end.\n\nDeliverables:\n- Version control for prompts/templates allowing instant rollbacks.\n- Metadata storage tracking model version, generation seed, and timestamp for every output.\n- Scheduling mechanism with timezone awareness and per-channel optimization.\n\nDone when:\n- One complete cycle (ideation to staged draft) runs seamlessly without manual UI intervention, fully logged."
     },
     {
-      "title": "Trend Scraper & Intelligence",
-      "urgency": 4,
-      "content": "Phase: II. The Content Engine\n\nConnect a 'Perplexity Node' in n8n to scan for daily news in your niche. The AI will ingest these results and decide which 3 topics are worth 'commenting' on today, ensuring relevance to human current events.\n\nResources:\n- https://perplexity.ai/pro",
-      "dueAt": "2026-04-03"
+      "title": "Safety layer: moderation and blocklists",
+      "urgency": 6,
+      "dueAt": "2026-04-29",
+      "content": "Phase: Safety & QA\n\nDesign the defense mechanisms for when models inevitably drift or hallucinate.\n\nDeliverables:\n- Automated pre-publish checks: Classifiers, regex keyword blocklists, and banned URL filters.\n- Human review queue explicitly for the high-risk topics defined in Phase 1.\n- Kill switch protocol: A documented method to halt all automated publishing globally in under 5 minutes.\n- Data retention policy for generated media and moderation logs.\n\nDone when:\n- A tabletop exercise successfully simulates three severe output failures, testing the kill switch and deletion protocols."
     },
     {
-      "title": "Script-to-Video Pipeline (HeyGen)",
-      "urgency": 4,
-      "content": "Phase: II. The Content Engine\n\nAutomate the flow where GPT-4o writes a 60-second script, sends it to ElevenLabs for audio, then sends both to HeyGen's Streaming API to generate a high-res video with perfect lip-syncing and natural micro-expressions.\n\nResources:\n- https://heygen.com",
-      "dueAt": "2026-04-07"
+      "title": "Dry runs, red-teaming, and seed batch",
+      "urgency": 5,
+      "dueAt": "2026-05-04",
+      "content": "Phase: Safety & QA\n\nStress-test the system and build a buffer before the public cares.\n\nDeliverables:\n- Red-teaming: Actively attempt prompt injection or adversarial attacks to break the persona's boundaries.\n- End-to-end dry runs at 2x expected volume to monitor latency, cost, and API timeouts.\n- Media QA: Inspect outputs for visual artifacts, audio sync issues, or missing watermarks.\n- Generation of 10–20 varied, approved posts kept unpublished as a regression testing set.\n\nDone when:\n- All P1/P0 blockers are ticketed and resolved, or temporarily gated behind strict manual approval."
     },
     {
-      "title": "Multimodal Vision Metadata",
+      "title": "Soft launch and engagement playbook",
       "urgency": 4,
-      "content": "Phase: II. The Content Engine\n\nBefore posting, the video is sent to a GPT-Vision node. It 'watches' the video to ensure no glitches occurred and generates context-aware SEO captions and hashtags that actually describe the visual background.\n\nResources:\n- https://platform.openai.com",
-      "dueAt": "2026-04-08"
+      "dueAt": "2026-05-08",
+      "content": "Phase: Launch\n\nWarm up the accounts organically before leaning heavily on automation algorithms.\n\nDeliverables:\n- Initial human-driven activity plan (follows, non-automated replies, shares).\n- Teaser content deployment schedule with associated creative assets.\n- Engagement policy defining exact scenarios where the persona replies automatically versus when a human steps in.\n\nDone when:\n- The first week of public activity is fully scheduled, with human owners assigned to non-automated community management."
     },
     {
-      "title": "Enrich Labs Full-Stack Scheduler",
-      "urgency": 4,
-      "content": "Phase: II. The Content Engine\n\nUse Enrich Labs to manage the final distribution. Enrich's 2026 AI doesn't just 'schedule'; it adjusts the post time dynamically based on when your specific followers are most active on each platform.\n\nResources:\n- https://enrichlabs.ai",
-      "dueAt": "2026-04-11"
+      "title": "Go-live, monitoring, and analytics",
+      "urgency": 5,
+      "dueAt": "2026-05-15",
+      "content": "Phase: Launch\n\nTransition to steady state with active dashboard monitoring.\n\nDeliverables:\n- On-call rotation for the first 48 hours of live automation.\n- Live dashboard tracking core KPIs: reach, engagement rate, cost per post, and moderation queue volume.\n- Setup of a weekly 30-minute review cadence to analyze hits, misses, and prompt drift.\n- Changelog initialized for tracking adjustments to system prompts or automation logic.\n\nDone when:\n- Live mode is activated, dashboards are populating data, and the rollback path has been successfully tested in production."
     },
     {
-      "title": "Contextual Reply Logic",
-      "urgency": 4,
-      "content": "Phase: III. Intelligence & Guardrails\n\nBuild a workflow that monitors 'Mentions.' The AI will prioritize replies to high-follower accounts or genuine questions, while ignoring low-effort spam or hate. It uses 'Memory' to remember repeat commenters.",
-      "dueAt": "2026-04-15"
-    },
-    {
-      "title": "Human-in-the-Loop Webhooks",
-      "urgency": 4,
-      "content": "Phase: III. Intelligence & Guardrails\n\nConfigure a Discord bot to ping you with a 'Yes/No' button for any post the AI flags as 'High Risk' (e.g., discussing politics or health). This prevents 99% of potential PR disasters while remaining 90% automated.\n\nResources:\n- https://discord.com",
-      "dueAt": "2026-04-16"
-    },
-    {
-      "title": "The 'Seed Batch' Production",
-      "urgency": 4,
-      "content": "Phase: III. Intelligence & Guardrails\n\nGenerate 15 pieces of varied content (Reels, long-form 'Casts,' and static images). This creates a 'portfolio' that makes the account look established and trustworthy to new visitors on Day 1.",
-      "dueAt": "2026-04-19"
-    },
-    {
-      "title": "API Stress Testing",
-      "urgency": 4,
-      "content": "Phase: III. Intelligence & Guardrails\n\nRun the entire chain end-to-end to check for 'Uncanny Valley' errors (e.g., drifting lips, voice glitches). Verify that the n8n logic can handle API rate limits by implementing 'Wait' nodes between tasks.",
-      "dueAt": "2026-04-22"
-    },
-    {
-      "title": "Character Guardrail Refinement",
-      "urgency": 4,
-      "content": "Phase: III. Intelligence & Guardrails\n\nFinalize the 'Moderation Layer.' Use OpenAI's Moderation API to scan generated content for TOS violations. If a post fails, the workflow automatically regenerates a new version without human intervention.\n\nResources:\n- https://platform.openai.com/docs/guides/moderation",
-      "dueAt": "2026-04-24"
-    },
-    {
-      "title": "Shadow Launch & Warm-up",
-      "urgency": 4,
-      "content": "Phase: IV. Launch & Real-Time Scale\n\nUpload the 'identity' to Linktree and social bios. Have the AI interact (Like/Replying) with 50 niche-relevant accounts to trigger the platform's 'Interest' algorithms.\n\nResources:\n- https://linktr.ee",
-      "dueAt": "2026-04-25"
-    },
-    {
-      "title": "Automated Teaser Sequence",
-      "urgency": 4,
-      "content": "Phase: IV. Launch & Real-Time Scale\n\nDeploy a 48-hour 'Glitch' campaign: 30-second videos of the AI 'assembling' itself. This builds curiosity and provides a high-quality visual hook for early engagement.",
-      "dueAt": "2026-04-27"
-    },
-    {
-      "title": "GO-LIVE: Full Autonomy",
-      "urgency": 4,
-      "content": "Phase: IV. Launch & Real-Time Scale\n\nSwitch n8n to 'Live' mode. The AI begins its 3x daily posting schedule and 24/7 engagement cycle. Monitor the Discord 'Alerts' channel for the first 12 hours.",
-      "dueAt": "2026-04-28"
-    },
-    {
-      "title": "Sentiment & Strategy Audit",
-      "urgency": 4,
-      "content": "Phase: IV. Launch & Real-Time Scale\n\nThe AI pulls a weekly CSV of its performance data. It 'Self-Critiques' by analyzing which hooks led to the most shares and automatically updates its 'Best Practices' doc for the next week's scripts.",
-      "dueAt": "2026-05-05"
-    },
-    {
-      "title": "Live-Stream Integration (Sync Labs)",
-      "urgency": 4,
-      "content": "Phase: IV. Launch & Real-Time Scale\n\nImplement Sync Labs for real-time live-streaming. The AI reads the Twitch/YouTube chat, processes the text via LLM, and streams a 2K resolution talking-head response with less than 500ms latency.\n\nResources:\n- https://synclabs.so",
-      "dueAt": "2026-05-10"
+      "title": "Live formats & continuous optimization",
+      "urgency": 3,
+      "dueAt": "2026-05-21",
+      "content": "Phase: Scale\n\nExpand capabilities only after batch content processing proves highly stable.\n\nDeliverables:\n- Latency budget requirements for streaming or real-time text generation.\n- Fallback strategies for AV pipeline failures during live broadcasts.\n- Strict live-chat moderation tools (slow mode, automated profanity filters).\n- Feedback loop integration: mechanism to feed high-performing post data back into the \"few-shot\" examples library to continuously improve model outputs.\n\nDone when:\n- A pilot live stream is completed, followed by a formal postmortem deciding the go/no-go for regular live programming."
     }
   ]
 }

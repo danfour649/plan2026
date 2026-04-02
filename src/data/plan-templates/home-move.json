@@ -1,0 +1,40 @@
+{
+  "id": "home-move",
+  "name": "Home move",
+  "goal": "Complete a residential move with housing secured, utilities and mail handled, belongings packed safely, and the first week in the new place survivable.",
+  "description": "Four-week template from “we’re moving” to box drop-off. Skip tasks that do not apply (e.g. selling if you rent both ends). Adjust dates to your closing or lease start.",
+  "startAt": "2026-04-01",
+  "endAt": "2026-04-29",
+  "tasks": [
+    {
+      "title": "Lock dates, budget, and move type",
+      "urgency": 6,
+      "dueAt": "2026-04-06",
+      "content": "Decide the skeleton before you book trucks or cleaners.\n\nConfirm:\n- Move-out and move-in dates (include buffer for overlap or storage if needed)\n- Total budget: movers, boxes, travel, deposits, overlap rent, cleaning, tips\n- DIY vs hired movers vs hybrid; elevator or parking reservations if applicable\n\nAdmin:\n- If selling/buying: key handoff dates with agent or landlord\n- If renting: notice period, inspection expectations, deposit return process\n\nDone when:\n- Calendar holds exist for move day and any access windows\n- A one-page move doc lists dates, addresses, and who is responsible for what"
+    },
+    {
+      "title": "Housing transition: search, sale, or lease logistics",
+      "urgency": 6,
+      "dueAt": "2026-04-13",
+      "content": "Parallel path: secure the destination and unwind the origin.\n\nDestination:\n- Signed lease or closing checklist; utility account setup windows\n- Measurements for large furniture; photos of rooms for placement planning\n\nOrigin:\n- Listing or move-out checklist; repairs or paint if required\n- Donation or disposal plan for what is not moving\n\nDone when:\n- You know where you sleep on night one after the move\n- Keys, fobs, and access instructions are documented for both sides"
+    },
+    {
+      "title": "Utilities, address change, and services",
+      "urgency": 5,
+      "dueAt": "2026-04-20",
+      "content": "Avoid living without hot water or missing bills.\n\nUtilities:\n- Power, gas, water, trash—schedule start at new address and stop at old (overlap if needed)\n- Internet: install appointment often books weeks out\n\nAddress:\n- USPS forward; banks, payroll, insurance, subscriptions, voter registration if relevant\n- Vehicle registration / driver license updates if you changed state or country rules apply\n\nServices:\n- Cancel or transfer cleaning, lawn, security, HOA notices\n\nDone when:\n- A checklist with checkmarks lives in your move doc\n- Critical services have confirmation numbers or appointment times"
+    },
+    {
+      "title": "Packing plan, supplies, and valuables",
+      "urgency": 5,
+      "dueAt": "2026-04-25",
+      "content": "Pack by room and by “open first” priority, not by random box count.\n\nSupplies:\n- Boxes, tape, markers, bubble wrap, wardrobe boxes if worth it\n- Color labels or numbers mapped to a room legend\n\nStrategy:\n- One or two “first night” boxes: bedding, toiletries, chargers, basic kitchen, tools\n- Pack documents, jewelry, and backups separately; keep them with you\n- Photos of cable runs and furniture assembly before disassembly\n\nDone when:\n- Non-essential rooms are boxed; essentials are staged for last-day pack\n- Donation and trash runs are complete so you are not moving clutter"
+    },
+    {
+      "title": "Move week: execution, cleanout, and settle-in",
+      "urgency": 5,
+      "dueAt": "2026-04-29",
+      "content": "The goal is a safe move and a returnable old place.\n\nDay-of:\n- Confirm mover arrival; protect floors and doorframes; final meter readings if required\n- Inventory high-value items; tip and review if using pros\n\nOld home:\n- Final clean; return keys per checklist; photograph condition if disputes are possible\n\nNew home:\n- Beds and essentials first; smoke detectors and main water shutoff located\n- Change locks if policy allows; update delivery address on pending orders\n\nDone when:\n- Old keys returned; deposit or closing items submitted\n- You can cook a simple meal and sleep in the new place without hunting for basics"
+    }
+  ]
+}

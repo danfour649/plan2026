@@ -1,28 +1,34 @@
 {
   "id": "project-launch",
   "name": "Project launch",
-  "goal": "Align everyone, agree what you're building, and deliver something real people can react to.",
-  "description": "A simple three-week shape you can follow: kick off with the right people, write down scope so arguments stop, then ship a first slice. Calendar dates line up with the day you start this plan.",
+  "goal": "Leave the first month with aligned sponsors, a written scope everyone points at, a shippable slice in users’ or stakeholders’ hands, and a clear decision on what happens next.",
+  "description": "Four-week arc: align and assign ownership, nail scope and measures of success, build and demo something real, then close with feedback and a staged rollout or pause. Dates shift to start from the day you create this plan.",
   "startAt": "2026-01-06",
-  "endAt": "2026-01-27",
+  "endAt": "2026-02-03",
   "tasks": [
     {
-      "title": "Kick off with stakeholders",
-      "urgency": 5,
+      "title": "Kickoff: charter, audience, and who decides",
+      "urgency": 6,
       "dueAt": "2026-01-08",
-      "content": "Get the right people in the (virtual) room and make the why obvious.\n\nWhat to cover:\n- Why this project exists and what \"good\" looks like\n- Who decides what, and how you'll communicate\n- Known risks, assumptions, and open questions\n\nBefore the meeting:\n- Send a short agenda 24-48 hours ahead\n- Pick someone to take notes and share them the same day"
+      "content": "First working session should end with a one-page charter, not just slides.\n\nCover in the meeting:\n- Problem, intended audience or customer, and what “launched” means in plain language\n- Sponsor / product owner: who can say yes to scope and tradeoffs\n- Working team vs consulted-only; expected hours per week if people are partial\n- Communication: where decisions live (doc, ticket system, Slack channel) and meeting rhythm\n- Top five risks and assumptions—no more than one slide each\n\nBefore:\n- Agenda + pre-read 24–48 hours ahead; link to any existing research\n- Assign a notetaker; notes and actions same day\n\nDone when:\n- Charter draft exists with goal, sponsor, core team, and communication plan\n- Open questions are listed with owners and target answer dates"
     },
     {
-      "title": "Define scope and write it down",
+      "title": "Scope package: in/out, milestones, dependencies, success metrics",
       "urgency": 5,
       "dueAt": "2026-01-15",
-      "content": "Turn fuzzy ideas into a shared picture of what's in, what's out, and how you'll know you're done.\n\nAim for one page you can point at:\n- Problem you're solving and the outcome you want\n- Clear boundaries (nice-to-haves vs must-haves)\n- Dependencies on other teams, tools, or vendors\n\nClose the loop:\n- Get a clear yes from your sponsor or product owner so you're not re-litigating scope every week"
+      "content": "Turn opinions into a short spec people can disagree with constructively.\n\nWrite down:\n- Must-haves vs should-haves vs won’t-do (this version)\n- Milestones with dates: design lock, build complete, internal demo, external pilot or launch\n- Dependencies: other teams, data, legal, infra, vendors—with named contacts\n- How you’ll know it worked: 2–4 measurable signals (adoption, latency, support volume, revenue proxy—whatever fits)\n- Cut line: what you drop if the timeline slips two weeks\n\nProcess:\n- Walk the sponsor through the doc; capture edits in the same file\n- Explicit written approval (email or comment) so scope doesn’t drift by hallway chat\n\nDone when:\n- One canonical doc or epic description linked from the project home\n- Success metrics and milestone dates are visible to the whole core team"
     },
     {
-      "title": "Ship the first real milestone",
+      "title": "Build the thinnest vertical slice and test it internally",
       "urgency": 6,
-      "dueAt": "2026-01-27",
-      "content": "Deliver something tangible: a prototype, a doc set people can comment on, or a thin slice of the real product.\n\nBefore you build:\n- Write down what \"done\" means for this milestone\n\nWhen it's ready:\n- Walk stakeholders through it and capture feedback\n- Turn feedback into a short list of next steps\n- If scope moved, refresh dates so the plan still feels honest"
+      "dueAt": "2026-01-24",
+      "content": "Ship something that crosses the stack or workflow end-to-end, even if ugly—integration risk is the point.\n\nDefine “done” for this slice before coding:\n- User or stakeholder action that proves the path works\n- Quality bar: which bugs block demo vs can be noted as follow-ups\n\nExecution:\n- Daily or every-other-day sync for blockers only; longer updates async\n- Feature flag or environment so incomplete work doesn’t destabilize others\n\nInternal demo:\n- 20–30 minutes live walkthrough with Q&A\n- Capture feedback as tickets tagged launch / post-launch / out of scope\n\nDone when:\n- Demo happened with core stakeholders present\n- Feedback backlog exists; critical defects have owners and dates"
+    },
+    {
+      "title": "External touchpoint, launch decision, and next 30 days",
+      "urgency": 5,
+      "dueAt": "2026-02-03",
+      "content": "Either put the slice in front of real users / a pilot customer or run a structured stakeholder review—whichever matches your risk.\n\nChoose one path:\n- Pilot: narrow cohort, success criteria from your scope doc, feedback channel\n- Stakeholder sign-off: recorded demo + written go/no-go against metrics\n\nLaunch hygiene:\n- Runbook: rollback, on-call, who communicates externally\n- Support or CS briefed on what changed and known issues\n- Analytics or logging verified so you can see the metrics you promised\n\nCloseout:\n- Short retrospective: what to keep, stop, and try next\n- Updated roadmap or backlog for the next 30 days\n\nDone when:\n- Go/no-go is explicit; if go, date and owner for broader release are set\n- If no-go, documented reason and either revised scope or project pause"
     }
   ]
 }

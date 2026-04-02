@@ -9,7 +9,7 @@
  *   node scripts/squash-soft.mjs --onto <commit-ish>
  *   node scripts/squash-soft.mjs --dry-run
  *
- * After squash, runs `git push --force-with-lease`.
+ * After squash, runs `git push --force-with-lease --no-verify` (skips pre-push hooks).
  *
  * Default base: merge-base of HEAD with origin/main, main, origin/master, or master
  * (first ref that exists). Use --upstream to pick another branch for merge-base.
@@ -130,6 +130,8 @@ Options:
   --dry-run               show base, commit count, and message; do not reset or commit
   --force-one             allow squashing when only one commit sits on top of the base
   --help, -h              this text
+
+Push uses --no-verify so pre-push (e.g. eslint/tsc) does not run again after the squash.
 `);
 }
 
@@ -206,7 +208,7 @@ function main() {
 
   console.log("Done. Single commit on top of base with the first commit's message.");
 
-  execFileSync("git", ["push", "--force-with-lease"], { cwd: root, stdio: "inherit" });
+  execFileSync("git", ["push", "--force-with-lease", "--no-verify"], { cwd: root, stdio: "inherit" });
 }
 
 main();
