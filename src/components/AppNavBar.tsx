@@ -26,7 +26,7 @@ export function AppNavBar({ initialCounts, labels }: AppNavBarProps) {
           badge={activePlanCount}
           ariaLabel={labels.plans}
           prefetch={false}
-          className="-mx-1 shrink-0 gap-0 rounded-full px-0.5 py-0.5 text-[11px] sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
+          className="-mx-1 shrink-0 gap-0 rounded-full px-0.5 py-0.5 text-sm sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 md:text-base"
         >
           <span className="inline-flex mt-0.5 sm:mt-0 sm:hidden">
             <LightbulbIcon className="h-8 w-8" />
@@ -40,7 +40,7 @@ export function AppNavBar({ initialCounts, labels }: AppNavBarProps) {
             badge={remainingTaskCount}
             ariaLabel={labels.tasks}
             prefetch={false}
-            className="-mx-1 shrink-0 gap-0 rounded-full px-0.5 py-0.5 text-[11px] sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
+            className="-mx-1 shrink-0 gap-0 rounded-full px-0.5 py-0.5 text-sm sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 md:text-base"
           >
             <span className="inline-flex mt-0.5 sm:mt-0 sm:hidden">
               <CheckboxIcon className="h-8 w-8" />
@@ -53,7 +53,7 @@ export function AppNavBar({ initialCounts, labels }: AppNavBarProps) {
             badge={suppliesCount > 0 ? suppliesCount : undefined}
             ariaLabel={labels.supplies}
             prefetch={false}
-            className="-mx-1 shrink-0 gap-0 rounded-full px-0.5 py-0.5 text-[11px] sm:ml-0 sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm md:text-base"
+            className="-mx-1 shrink-0 gap-0 rounded-full px-0.5 py-0.5 text-sm sm:ml-0 sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 md:text-base"
           >
             <span className="inline-flex mt-0.5 sm:mt-0 sm:hidden">
               <CurrencyIcon className="h-8 w-8" />

@@ -36,7 +36,7 @@ export function SharePlanButton({ planId }: { planId: string }) {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 sm:justify-start"
+        className="inline-flex shrink-0 items-center justify-center rounded-xl border border-pink-100 bg-pink-50/90 px-3 py-2 text-sm text-pink-600 transition hover:bg-pink-100/80 dark:border-pink-900/35 dark:bg-pink-950/35 dark:text-pink-200 dark:hover:bg-pink-950/55 sm:justify-start"
         aria-label={t.sharePlan.title}
       >
         <span className="sm:hidden" aria-hidden>

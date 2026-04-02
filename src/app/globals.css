@@ -3,6 +3,17 @@
 /* Class-based dark mode for user preference (cookie); .dark and .theme-light override system preference */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Slightly larger type on narrow screens (all rem-based utilities scale together). */
+html {
+  font-size: 100%;
+}
+
+@media (max-width: 639px) {
+  html {
+    font-size: 106.25%;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -88,6 +99,8 @@ body {
     linear-gradient(180deg, #f8fbff 0%, #fff8f8 48%, var(--background) 100%);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .dark body,

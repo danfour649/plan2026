@@ -32,7 +32,7 @@ export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonP
       <button
         type="button"
         onClick={() => setShowConfirm(true)}
-        className="inline-flex shrink-0 items-center justify-center rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100 sm:justify-start sm:px-4"
+        className="inline-flex shrink-0 items-center justify-center rounded-xl border border-red-400/90 bg-red-200/80 px-3 py-2 text-sm font-medium text-red-950 transition hover:bg-red-300/90 sm:justify-start sm:px-4 dark:border-red-800 dark:bg-red-950/90 dark:text-red-100 dark:hover:bg-red-900"
         aria-label={t.plans.deletePlan}
       >
         <span className="sm:hidden" aria-hidden>
@@ -84,7 +84,7 @@ export function DeletePlanButton({ planId, planName, action }: DeletePlanButtonP
                   {t.common.cancel}
                 </button>
                 <FormSubmitButton
-                  className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70 dark:border-red-700 dark:bg-red-600 dark:hover:bg-red-700"
+                  className="rounded-xl border border-red-800 bg-red-800 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-900 disabled:cursor-not-allowed disabled:opacity-70 dark:border-red-900 dark:bg-red-800 dark:hover:bg-red-950"
                 >
                   {t.plans.deletePlan}
                 </FormSubmitButton>

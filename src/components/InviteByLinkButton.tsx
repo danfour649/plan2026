@@ -44,12 +44,12 @@ export function InviteByLinkButton({ planId, planName }: { planId: string; planN
         type="button"
         onClick={handleCreate}
         disabled={loading}
-        className="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 disabled:opacity-70 sm:justify-start"
+        className="inline-flex shrink-0 items-center justify-center rounded-xl border border-yellow-100 bg-yellow-50/90 px-3 py-2 text-sm text-yellow-700 transition hover:bg-yellow-100/80 disabled:opacity-70 dark:border-yellow-900/35 dark:bg-yellow-950/35 dark:text-yellow-200 dark:hover:bg-yellow-950/55 sm:justify-start"
         aria-label={t.common.inviteByLink}
       >
         {loading ? (
           <span className="sm:hidden" aria-hidden>
-            <span className="inline-block size-5 animate-pulse rounded-full bg-blue-300" />
+            <span className="inline-block size-5 animate-pulse rounded-full bg-yellow-300" />
           </span>
         ) : (
           <span className="sm:hidden" aria-hidden>
@@ -63,26 +63,26 @@ export function InviteByLinkButton({ planId, planName }: { planId: string; planN
         )}
       </button>
       {inviteUrl ? (
-        <div className="mt-2 rounded-xl border border-border bg-blue-50/50 px-3 py-2 text-xs text-zinc-600">
+        <div className="mt-2 rounded-xl border border-border bg-yellow-50/50 px-3 py-2 text-xs text-zinc-600 dark:bg-yellow-950/20">
           <div className="flex flex-wrap items-center gap-2">
             <a
               href={inviteUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="break-all text-accent-blue underline hover:text-blue-800"
+              className="break-all text-yellow-700 underline hover:text-yellow-800 dark:text-yellow-200 dark:hover:text-yellow-100"
             >
               {inviteUrl}
             </a>
             <button
               type="button"
               onClick={handleCopy}
-              className="shrink-0 rounded-lg border border-blue-200 bg-white px-2 py-1 text-xs font-medium text-blue-700 transition hover:bg-blue-100"
+              className="shrink-0 rounded-lg border border-yellow-100 bg-white px-2 py-1 text-xs font-medium text-yellow-700 transition hover:bg-yellow-50/90 dark:border-yellow-900/40 dark:bg-zinc-900 dark:text-yellow-200 dark:hover:bg-yellow-950/35"
             >
               {t.common.copy}
             </button>
             <a
               href={`mailto:?subject=${encodeURIComponent(t.invite.emailSubject.replace("{{planName}}", planName))}&body=${encodeURIComponent(t.invite.emailBody.replace("{{planName}}", planName).replace("{{url}}", inviteUrl))}`}
-              className="shrink-0 rounded-lg border border-blue-200 bg-white px-2 py-1 text-xs font-medium text-blue-700 transition hover:bg-blue-100"
+              className="shrink-0 rounded-lg border border-yellow-100 bg-white px-2 py-1 text-xs font-medium text-yellow-700 transition hover:bg-yellow-50/90 dark:border-yellow-900/40 dark:bg-zinc-900 dark:text-yellow-200 dark:hover:bg-yellow-950/35"
               aria-label={t.common.emailInvite}
             >
               {t.common.emailInvite}

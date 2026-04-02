@@ -189,7 +189,7 @@ async function PlanDetailRoot({
         <ExportPlanButton plan={planForExport} />
         <Link
           href={`/plans/${plan.id}/print`}
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-700 dark:text-blue-200 dark:hover:bg-zinc-600 sm:justify-start"
+          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-orange-200/90 bg-orange-50 px-3 py-2 text-sm text-orange-950 transition hover:bg-orange-100 dark:border-orange-800/70 dark:bg-orange-950/50 dark:text-orange-100 dark:hover:bg-orange-900/50 sm:justify-start"
           aria-label={t.plans.printChecklistAria}
         >
           <span className="sm:hidden" aria-hidden>
@@ -202,6 +202,7 @@ async function PlanDetailRoot({
             <SharePlanButton planId={plan.id} />
             <InviteByLinkButton planId={plan.id} planName={plan.name} />
             <ShareByPublicLinkButton planId={plan.id} />
+            <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
             <button
               type="submit"
               form={EDIT_PLAN_FORM_ID}
@@ -213,7 +214,6 @@ async function PlanDetailRoot({
               </span>
               <span className="hidden sm:inline">{t.common.savePlan}</span>
             </button>
-            <DeletePlanButton planId={plan.id} planName={plan.name} action={deletePlan} />
           </>
         ) : null}
       </div>

@@ -130,7 +130,7 @@ export function TasksListWithLocalSearch({
             ✓
           </p>
           <p className="mt-3 text-base font-medium text-blue-900 dark:text-zinc-100">{emptyTitle}</p>
-          <p className="mt-1 text-sm text-muted">{emptyDescription}</p>
+          <p className="mt-1 text-base text-muted sm:text-sm">{emptyDescription}</p>
         </div>
       ) : (
         <>
@@ -145,12 +145,12 @@ export function TasksListWithLocalSearch({
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t.tasksPage.searchTasksPlaceholder}
               autoComplete="off"
-              className="w-full max-w-md rounded-xl border border-border bg-white px-3 py-2 text-sm text-blue-950 shadow-inner placeholder:text-muted focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-900/50"
+              className="w-full max-w-md rounded-xl border border-border bg-white px-3 py-2 text-base text-blue-950 shadow-inner placeholder:text-muted focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 sm:text-sm dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-blue-500 dark:focus:ring-blue-900/50"
             />
           </div>
           <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
         {filterHidEverything ? (
-          <li className="px-6 py-10 text-center text-sm text-muted">{t.tasksPage.noTasksMatchSearch}</li>
+          <li className="px-6 py-10 text-center text-base text-muted sm:text-sm">{t.tasksPage.noTasksMatchSearch}</li>
         ) : null}
         {!filterHidEverything
           ? filteredRemaining.map((task) => (
