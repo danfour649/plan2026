@@ -1,0 +1,40 @@
+{
+  "id": "product-discovery",
+  "name": "Product discovery",
+  "goal": "Move from a fuzzy problem space to a validated direction: clear user insight, prioritized opportunities, and a small set of evidence-backed bets ready for delivery planning.",
+  "description": "Five-week discovery arc for a product trio or solo PM: frame the problem, learn from users, compare alternatives, size and de-risk, then hand off a crisp backlog slice. Dates are a template—shift to your kickoff.",
+  "startAt": "2026-04-01",
+  "endAt": "2026-05-06",
+  "tasks": [
+    {
+      "title": "Frame the problem, constraints, and success signals",
+      "urgency": 6,
+      "dueAt": "2026-04-08",
+      "content": "Discovery fails when nobody agrees what “good” means.\n\nDocument:\n- Problem statement in one paragraph: who struggles, when, and why it matters now\n- Business / strategy constraints: timeline, budget, compliance, platforms\n- Non-goals for this discovery phase (explicitly out of scope)\n- Success signals: what evidence would change your mind? (behavior, willingness to pay, retention proxy—pick what fits)\n\nAlign:\n- Review with sponsor or stakeholders; capture disagreements as hypotheses, not opinions\n\nDone when:\n- A one-pager or brief exists and is linked from the team home\n- You have 3–5 written hypotheses you could falsify with research"
+    },
+    {
+      "title": "User research: interviews, synthesis, and insight themes",
+      "urgency": 6,
+      "dueAt": "2026-04-15",
+      "content": "Bias toward talking to real people, not only analytics.\n\nPlan:\n- Recruit 8–12 participants across segments that matter (include edge cases if risk is high)\n- Semi-structured guide: context, recent behavior, workarounds, jobs-to-be-done\n\nRun:\n- Take notes or recordings with consent; debrief same day\n\nSynthesize:\n- Affinity map or tagging until themes stabilize\n- Separate observation vs inference; flag contradictions\n\nDone when:\n- A short readout: top themes, quotes, surprises, and “what we still do not know”\n- At least one theme directly challenges an earlier stakeholder assumption"
+    },
+    {
+      "title": "Competitive and alternative analysis",
+      "urgency": 4,
+      "dueAt": "2026-04-22",
+      "content": "Users always have another option, including spreadsheets and doing nothing.\n\nMap:\n- Direct competitors and substitutes (manual processes, other tools, status quo)\n- For each: core value prop, pricing model, gaps, and what users praise or hate\n\nImplications:\n- Where you can differentiate vs where you must reach parity\n- Risks of copying surface features without understanding the job\n\nDone when:\n- A simple comparison table or landscape diagram the team references in discussion\n- Clear statement of your intended wedge in one sentence"
+    },
+    {
+      "title": "Opportunity sizing, risks, and decision workshop",
+      "urgency": 5,
+      "dueAt": "2026-04-29",
+      "content": "Turn themes into choices with explicit tradeoffs.\n\nSizing (pick what fits):\n- TAM/SAM roughing, funnel math, or “how many users hit this pain weekly”\n\nRisks:\n- Technical, legal, adoption, cannibalization—each with a mitigation or spike plan\n\nWorkshop:\n- Facilitate prioritization (impact vs confidence vs effort, or RICE, or opportunity scoring)\n- Kill or park ideas that fail the success signals from week one\n\nDone when:\n- Ranked list of 3–5 opportunities with owner per next validation step\n- Written record of what was deprioritized and why"
+    },
+    {
+      "title": "Experiments, solution sketches, and delivery handoff",
+      "urgency": 5,
+      "dueAt": "2026-05-06",
+      "content": "Close discovery with artifacts engineering can actually use.\n\nExperiments:\n- For top bets: prototype, concierge test, pricing probe, or wizard-of-oz—whatever is cheapest for the learning goal\n- Define success/fail criteria before you run them\n\nSolution:\n- Low-fi flows or storyboards aligned to prioritized opportunities\n- Explicit open questions for build (data, integrations, edge cases)\n\nHandoff:\n- Slice into epics or milestones with measurable outcomes\n- Joint session with engineering/design to sanity-check scope and dependencies\n\nDone when:\n- Backlog top items have acceptance notes tied to user evidence\n- Discovery doc archived with links to research and experiment results"
+    }
+  ]
+}

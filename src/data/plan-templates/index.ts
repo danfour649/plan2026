@@ -1,5 +1,8 @@
 import geminiAiPlanGeneric from "./gemini-ai-plan-generic.json";
 import empty from "./empty.json";
+import homeMove from "./home-move.json";
+import jobSearch from "./job-search.json";
+import productDiscovery from "./product-discovery.json";
 import projectLaunch from "./project-launch.json";
 import tripPlanning from "./trip-planning.json";
 import { assertPlanTemplateRegistryIds } from "./types";
@@ -19,6 +22,9 @@ const _PLAN_TEMPLATE_DEFINITIONS: PlanTemplateDefinition[] = [
   parsePlanTemplate(projectLaunch),
   parsePlanTemplate(tripPlanning),
   parsePlanTemplate(geminiAiPlanGeneric),
+  parsePlanTemplate(jobSearch),
+  parsePlanTemplate(productDiscovery),
+  parsePlanTemplate(homeMove),
 ];
 
 assertPlanTemplateRegistryIds(_PLAN_TEMPLATE_DEFINITIONS);

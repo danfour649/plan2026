@@ -435,54 +435,61 @@ export function EditTaskDialog({
                     </FormSubmitButton>
                   </form>
                 ) : null}
-                <form action={deleteFormAction} className="flex items-center gap-3">
-                  <input type="hidden" name="taskId" value={task.id} />
-                  {task.planId ? <input type="hidden" name="planId" value={task.planId} /> : null}
-                  {!showDeleteConfirm ? (
-                    <button
-                      type="button"
-                      onClick={() => setShowDeleteConfirm(true)}
-                      className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200 dark:hover:bg-red-900/50 sm:px-4"
-                      aria-label={t.tasks.deleteTask}
-                    >
-                      <span className="sm:hidden" aria-hidden>
-                        <Trash2 className="size-5" />
-                      </span>
-                      <span className="hidden sm:inline">{t.tasks.deleteTask}</span>
-                    </button>
-                  ) : (
-                    <>
-                      <p className="text-sm text-tertiary">
-                        {t.tasks.deleteTaskConfirm}
-                      </p>
+                <div className="flex w-full max-w-full flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row sm:items-center sm:gap-3">
+                  <form action={deleteFormAction} className="flex flex-wrap items-center gap-3">
+                    <input type="hidden" name="taskId" value={task.id} />
+                    {task.planId ? <input type="hidden" name="planId" value={task.planId} /> : null}
+                    {!showDeleteConfirm ? (
                       <button
                         type="button"
-                        onClick={() => setShowDeleteConfirm(false)}
-                        className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+                        onClick={() => setShowDeleteConfirm(true)}
+                        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100 dark:border-red-800 dark:bg-red-900/30 dark:text-red-200 dark:hover:bg-red-900/50 sm:px-4"
+                        aria-label={t.tasks.deleteTask}
                       >
-                        {t.common.cancel}
+                        <span className="sm:hidden" aria-hidden>
+                          <Trash2 className="size-5" />
+                        </span>
+                        <span className="hidden sm:inline">{t.common.delete}</span>
                       </button>
-                      <FormSubmitButton
-                        className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70 dark:border-red-700 dark:bg-red-600 dark:hover:bg-red-700"
-                      >
-                        {t.tasks.deleteTask}
-                      </FormSubmitButton>
-                    </>
-                  )}
-                </form>
+                    ) : (
+                      <>
+                        <p className="text-sm text-tertiary">
+                          {t.tasks.deleteTaskConfirm}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setShowDeleteConfirm(false)}
+                          className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+                        >
+                          {t.common.cancel}
+                        </button>
+                        <FormSubmitButton
+                          className="rounded-xl border border-red-200 bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70 dark:border-red-700 dark:bg-red-600 dark:hover:bg-red-700"
+                        >
+                          <span className="sm:hidden">{t.tasks.deleteTask}</span>
+                          <span className="hidden sm:inline">{t.common.delete}</span>
+                        </FormSubmitButton>
+                      </>
+                    )}
+                  </form>
+                  <button
+                    type="submit"
+                    form={`edit-task-form-${task.id}`}
+                    disabled={saving}
+                    aria-busy={saving}
+                    className="w-full shrink-0 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-shadow transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-blue-500 dark:hover:bg-blue-600 sm:w-auto"
+                  >
+                    {saving ? (
+                      t.common.saving
+                    ) : (
+                      <>
+                        <span className="sm:hidden">{t.common.saveChanges}</span>
+                        <span className="hidden sm:inline">{t.common.savePlan}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
-            </div>
-
-            <div className="mt-6 border-t border-border pt-4">
-              <button
-                type="submit"
-                form={`edit-task-form-${task.id}`}
-                disabled={saving}
-                aria-busy={saving}
-                className="w-full rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm shadow-shadow transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-blue-500 dark:hover:bg-blue-600 sm:w-auto"
-              >
-                {saving ? t.common.saving : t.common.saveChanges}
-              </button>
             </div>
           </div>
         </div>,
