@@ -41,8 +41,8 @@ export function TaskMetadata({
   const dueSepClass = stackDueOnDesktop ? "" : "before:content-['·'] before:mr-1";
 
   const rootClass = stackDueOnDesktop
-    ? `mt-1 flex flex-col flex-nowrap items-start gap-y-0.5 break-words text-[0.8125rem] sm:text-xs text-muted ${className}`.trim()
-    : `mt-1 flex flex-row flex-wrap gap-x-1 gap-y-0.5 break-words text-[0.8125rem] sm:text-xs text-muted ${className}`.trim();
+    ? `mt-1 flex flex-col flex-nowrap items-start gap-y-0.5 break-words text-sm sm:text-xs text-muted ${className}`.trim()
+    : `mt-1 flex flex-row flex-wrap gap-x-1 gap-y-0.5 break-words text-sm sm:text-xs text-muted ${className}`.trim();
 
   return (
     <div className={rootClass}>
@@ -73,7 +73,7 @@ export function TaskMetadata({
         </span>
       ) : null}
       {recurrenceHint ? (
-        <span className="rounded-full bg-violet-100 px-2 py-0.5 text-[0.7rem] font-medium text-violet-800 dark:bg-violet-900/40 dark:text-violet-200">
+        <span className="rounded-full bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-800 dark:bg-violet-900/40 dark:text-violet-200">
           {recurrenceHint}
         </span>
       ) : null}

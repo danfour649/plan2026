@@ -11,7 +11,7 @@ type UrgencyPillProps = {
 export function UrgencyPill({ urgency, title, completed, status, onHoldLabel }: UrgencyPillProps) {
   return (
     <div
-      className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(urgency)}`}
+      className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-base font-semibold sm:text-sm ${getUrgencyPillClasses(urgency)}`}
     >
       <span className={completed ? "truncate line-through" : "truncate"}>{title}</span>
       {status === "on_hold" && onHoldLabel ? (

@@ -127,14 +127,14 @@ export function HeaderRightNav() {
 
   return (
     <div className="relative z-0 flex shrink-0 items-center justify-end gap-1 pl-2 sm:gap-3 sm:pl-0">
-      {/* Desktop: Help, About, Settings, Sign out */}
-      <div className="hidden items-center gap-1 md:flex md:gap-3">
+      {/* Large screens: Help, About, Settings, Sign out (hamburger below lg avoids overlap with main nav at md widths) */}
+      <div className="hidden items-center gap-1 lg:flex lg:gap-3">
         {navLinks}
         <SignOutButton />
       </div>
 
-      {/* Mobile: hamburger + dropdown */}
-      <div className="relative flex items-center gap-2 md:hidden" ref={menuRef}>
+      {/* Hamburger: default through < lg */}
+      <div className="relative flex items-center gap-2 lg:hidden" ref={menuRef}>
         <button
           type="button"
           onClick={() => setMenuOpen((o) => !o)}

@@ -36,7 +36,7 @@ export function TaskContentEditor({
     editorProps: {
       attributes: {
         class:
-          "min-h-[80px] w-full resize-y rounded-b-xl border border-t-0 border-border bg-white px-3 py-2 text-sm text-black outline-none ring-ring focus:ring-4 prose prose-sm max-w-none prose-p:text-black [&_a]:text-accent-blue [&_a]:underline dark:bg-zinc-800 dark:text-zinc-100 dark:prose-p:text-zinc-100",
+          "min-h-[80px] w-full resize-y rounded-b-xl border border-t-0 border-border bg-white px-3 py-2 text-base text-black outline-none ring-ring focus:ring-4 prose prose-sm max-sm:prose-base sm:prose-sm max-w-none sm:text-sm prose-p:text-black [&_a]:text-accent-blue [&_a]:underline dark:bg-zinc-800 dark:text-zinc-100 dark:prose-p:text-zinc-100",
       },
     },
   });

@@ -24,7 +24,7 @@ export function ExportPlanButton({ plan, className }: ExportPlanButtonProps) {
       onClick={handleClick}
       className={
         className ??
-        "rounded-xl border border-blue-200 bg-blue-50 p-2 text-blue-700 transition hover:bg-blue-100"
+        "rounded-xl border border-green-200/90 bg-green-50 p-2 text-green-900 transition hover:bg-green-100 dark:border-green-800/70 dark:bg-green-950/50 dark:text-green-100 dark:hover:bg-green-900/55"
       }
       title={t.plans.exportThisPlanToJson}
       aria-label={t.plans.exportThisPlanToJson}

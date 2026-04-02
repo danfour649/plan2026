@@ -7,12 +7,11 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "@/components/TranslationsProvider";
 
 import { PlanForm } from "@/components/PlanForm";
+import { EDIT_PLAN_FORM_ID } from "@/lib/edit-plan-form-id";
 import { clearEditPlanFormDirty, setEditPlanFormDirty } from "@/lib/editPlanDirty";
 import { registerPlanEditBackHandler } from "@/lib/planEditBackNav";
 import type { PlanActionResult } from "@/lib/actions/plans";
 import type { PlanFormInitialValues } from "@/components/PlanForm";
-
-const EDIT_PLAN_FORM_ID = "edit-plan-form";
 
 type EditPlanFormWrapperProps = {
   action: (formData: FormData) => Promise<PlanActionResult>;

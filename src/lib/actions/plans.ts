@@ -22,6 +22,7 @@ import {
   type PlanStatus,
 } from "@/lib/validations/plan";
 import { TASK_TITLE_MAX_LENGTH } from "@/lib/validations/task";
+import { deleteAllTasksForPlan } from "@/lib/task-service";
 
 export type PlanActionResult = { success: true } | { success: false; error: string };
 
@@ -231,6 +232,9 @@ export async function deletePlan(formData: FormData): Promise<void> {
   if (!parsed.success) throw new Error(parsed.error.flatten().formErrors[0] ?? "Invalid plan");
 
   const planId = parsed.data.planId;
+  const deleteTasksRaw = formData.get("deleteTasks");
+  const deleteAssociatedTasks =
+    deleteTasksRaw === "1" || deleteTasksRaw === "on" || deleteTasksRaw === "true";
 
   const planWithAttachments = await prisma.plan.findFirst({
     where: { id: planId, userId },
@@ -243,6 +247,15 @@ export async function deletePlan(formData: FormData): Promise<void> {
   if (process.env.BLOB_READ_WRITE_TOKEN && planWithAttachments.attachments.length > 0) {
     const urls = planWithAttachments.attachments.map((a) => a.url).filter(Boolean);
     if (urls.length > 0) await del(urls).catch(() => {});
+  }
+
+  if (deleteAssociatedTasks) {
+    const affectedUserIds = await deleteAllTasksForPlan(planId);
+    for (const uid of affectedUserIds) {
+      revalidateTasksCaches(uid);
+      revalidateNavCounts(uid);
+    }
+    if (affectedUserIds.length > 0) revalidatePath("/tasks");
   }
 
   const result = await prisma.plan.deleteMany({

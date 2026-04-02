@@ -8,7 +8,7 @@ export function TaskContent({ content }: TaskContentProps) {
   const safe = sanitizeTaskContentForDisplay(content);
   return (
     <div
-      className="mt-1 text-[0.9375rem] leading-relaxed sm:text-sm sm:leading-normal text-zinc-600 dark:text-zinc-200 prose prose-sm max-w-none [&_a]:text-accent-blue [&_a]:underline [&_a]:break-all"
+      className="mt-1 text-base leading-relaxed sm:text-sm sm:leading-normal text-zinc-600 dark:text-zinc-200 prose prose-sm max-sm:prose-base sm:prose-sm max-w-none [&_a]:text-accent-blue [&_a]:underline [&_a]:break-all"
       dangerouslySetInnerHTML={{ __html: safe }}
     />
   );

@@ -149,7 +149,7 @@ export default async function ActionsPage() {
                           </span>
                         )}
                         {recurHint ? (
-                          <span className="max-sm:mt-0.5 rounded-full bg-violet-100 px-2 py-0.5 text-[0.65rem] font-medium text-violet-800 dark:bg-violet-900/40 dark:text-violet-200 sm:ml-1">
+                          <span className="max-sm:mt-0.5 rounded-full bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-800 dark:bg-violet-900/40 dark:text-violet-200 sm:ml-1">
                             {recurHint}
                           </span>
                         ) : null}
