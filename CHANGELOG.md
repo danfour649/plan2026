@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.5
+
+### Patch Changes
+
+- c8ea13d: TECH-0082 Enhance predefined plans
+
 ## 0.24.4
 
 ### Patch Changes
