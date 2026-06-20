@@ -1,6 +1,6 @@
 # Plan 2026
 
-`plan2026` is a Next.js App Router task and plan app with Google sign-in, per-user task and plan storage in PostgreSQL, optional rich task notes, urgency levels, due dates, and Google Calendar event creation.
+Personal full-stack portfolio app: Next.js App Router task and plan management with Google sign-in, PostgreSQL/Prisma data modeling, JSON export APIs, server actions, optional rich task notes, urgency levels, due dates, and Google Calendar event creation.
 
 ## Features
 
