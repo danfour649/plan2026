@@ -89,7 +89,7 @@ The project uses [Vitest](https://vitest.dev/) for unit and integration tests. R
 - `pnpm test` – run tests once
 - `pnpm run test:watch` – run tests in watch mode
 - `pnpm run test:coverage` – run tests with coverage report
-- `pnpm run bulk:next -- <PR_NUMBER>` – merge that PR, update main, check out the next open PR’s branch and merge main into it; prints what to test (see AGENTS.md “Testing bulk-task PRs”).
+- `pnpm run bulk:next -- <PR_NUMBER>` – merge that PR, update main, check out the next open PR’s branch and merge main into it; prints what to test (see [danf-skills bulk-task-pr](https://github.com/danfour649/danf-skills/blob/main/skills/bulk-task-pr/SKILL.md) skill and `AGENTS.md`).
 
 Tests live next to source files (e.g. `src/lib/export.test.ts`). Good candidates for unit tests:
 

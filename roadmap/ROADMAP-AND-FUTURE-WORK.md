@@ -31,7 +31,7 @@ Ready to implement. Each has a **dedicated analysis doc** in this folder for imp
 | TECH-0067 | Put tasks on hold | [TECH-0067-put-tasks-on-hold.md](./TECH-0067-put-tasks-on-hold.md) |
 | TECH-0068 | Upgrade to Prisma 7 and Zod 4 | [TECH-0068-upgrade-prisma7-zod4.md](./TECH-0068-upgrade-prisma7-zod4.md) |
 
-When implementing: use branch `tech/<ID>-<kebab-description>`, add a changeset, and open a PR per task (see AGENTS.md).
+When implementing: use branch `tech/<ID>-<kebab-description>`, add a changeset, and open a PR per task (see `AGENTS.md` and danf-skills **create-pr** skill).
 
 ---
 
@@ -39,7 +39,7 @@ When implementing: use branch `tech/<ID>-<kebab-description>`, add a changeset, 
 
 Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 
-- Follow **AGENTS.md** “Bulk task → PR pipeline” and “Translations (i18n)” (all user-facing text in en, fr, pidgin).
+- Follow **AGENTS.md** and danf-skills skills **bulk-task-pr** and **create-pr**; plan2026 overlays in [danf-skills/overlays/plan2026/](https://github.com/danfour649/danf-skills/tree/main/overlays/plan2026) cover i18n (en, fr, pidgin), roadmap paths, and `bulk:next`.
 - **Before implementing,** do not implement any task listed under **On hold** (Section 1).
 
 **For each task in your batch:**
@@ -50,7 +50,7 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
    - Work through the **Summary checklist** (usually at the end) in order; complete every step unless the doc explicitly says otherwise. Do not skip steps.
    - Follow the doc’s **Recommendation** and **Recommended next steps** in each section where they appear (they specify approach, data shape, and order of work).
    - If the doc presents options/tables, implement according to the **recommended** option unless there is a stated reason to do otherwise.
-   - Add all new user-facing strings to `src/lib/i18n.ts` for **en**, **fr**, and **pidgin** (see AGENTS.md “Translations (i18n)”). This is mandatory unless the doc says otherwise.
+   - Add all new user-facing strings to `src/lib/i18n.ts` for **en**, **fr**, and **pidgin** (see danf-skills overlay `overlays/plan2026/agent-instructions/PROJECT.md`). This is mandatory unless the doc says otherwise.
    - If the doc says to update README or AI_PROJECT_CONTEXT, do it in the same PR.
 4. **Before considering the task done:** Confirm every checklist item is done, every “Recommended next steps” in the doc is addressed, and typecheck passes (`pnpm run typecheck` unless the user asked to skip).
 5. Add a **changeset** in `.changeset/` (short kebab-case filename, standard format).
@@ -61,10 +61,10 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 
 - Run `pnpm run typecheck` (and fix any errors) before considering each task done, unless the user asks to skip for speed.
 - When a task is implemented, leave the analysis doc in place and note “Implemented” at the top, or remove the doc if no longer needed.
-- After PRs are open, the user can test and merge using “Testing bulk-task PRs one at a time” in AGENTS.md if desired.
+- After PRs are open, the user can test and merge using the bulk PR sequencing steps in danf-skills **bulk-task-pr** skill (`pnpm run bulk:next -- <PR_NUMBER>` — see overlay `overlays/plan2026/bulk-task-pr/PROJECT.md`).
 
 **Copy-paste prompt for an agent:**  
-*“Bulk implement the tasks listed in the Active items (or the batch I’m providing). Follow AGENTS.md ‘Bulk task → PR pipeline’ and ‘Translations (i18n)’. Do not implement tasks marked On hold in roadmap/ROADMAP-AND-FUTURE-WORK.md. For each task: create a branch, read the full analysis doc in roadmap/ from top to bottom, then implement everything it requires—work through the Summary checklist in order, follow every Recommendation and Recommended next steps, add i18n for en/fr/pidgin for all new UI strings, and update README/AI_PROJECT_CONTEXT if the doc says so. Before marking done, confirm every checklist item and recommended step is addressed and typecheck passes. Then add a changeset, push, and open a PR.”*
+*“Bulk implement the tasks listed in the Active items (or the batch I’m providing). Follow AGENTS.md and danf-skills **bulk-task-pr** / **create-pr** skills (plan2026 overlays for i18n and roadmap paths). Do not implement tasks marked On hold in roadmap/ROADMAP-AND-FUTURE-WORK.md. For each task: create a branch, read the full analysis doc in roadmap/ from top to bottom, then implement everything it requires—work through the Summary checklist in order, follow every Recommendation and Recommended next steps, add i18n for en/fr/pidgin for all new UI strings, and update README/AI_PROJECT_CONTEXT if the doc says so. Before marking done, confirm every checklist item and recommended step is addressed and typecheck passes. Then add a changeset, push, and open a PR.”*
 
 ---
 
