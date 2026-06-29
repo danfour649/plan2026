@@ -1,8 +1,8 @@
 # TECH-0026: Get permanent website
 
-**Status:** On hold — not ready yet (need to determine domain name and provider). Do not implement until directed.
+**Status:** Done — **https://plan2026.ca** (2026-06).
 
-**Goal:** Switch from the default Vercel deployment URL (e.g. `plan2026-pi.vercel.app`) to a permanent custom domain.
+**Goal:** Switch from the default Vercel deployment URL (`plan2026-pi.vercel.app`) to a permanent custom domain.
 
 ---
 
@@ -10,22 +10,22 @@
 
 ### 1. Domain and DNS
 
-- **Register a domain** (e.g. via a registrar or Vercel Domains) for the desired permanent address (e.g. `plan2026.com` or a subdomain).
+- **Register a domain** (e.g. via a registrar or Vercel Domains) for the desired permanent address (e.g. `plan2026.ca` or a subdomain).
 - **DNS access** to add verification and routing records as required by Vercel.
 
 ### 2. Vercel configuration
 
 - In the Vercel project: **Settings → Domains** (or **Domains** in the dashboard).
-- **Add the custom domain** (e.g. `plan2026.com` and optionally `www.plan2026.com`).
+- **Add the custom domain** (e.g. `plan2026.ca` and optionally `www.plan2026.ca`).
 - Follow Vercel’s steps to **verify ownership** (often via TXT record or CNAME).
 - Add the **A record** or **CNAME** Vercel specifies so traffic routes to Vercel (exact records are shown in the Vercel UI).
 - Vercel will provision **SSL (HTTPS)** for the custom domain.
 
 ### 3. Application configuration
 
-- **`NEXTAUTH_URL`** in production must use the new permanent URL (e.g. `https://plan2026.com`). Update this in Vercel **Environment Variables** for the production environment.
+- **`NEXTAUTH_URL`** in production must use the new permanent URL (e.g. `https://plan2026.ca`). Update this in Vercel **Environment Variables** for the production environment.
 - If the app uses **absolute URLs** (e.g. for redirects, links, or API callbacks), ensure they use the same origin or a configurable base URL.
-- **Google OAuth:** In the Google Cloud Console, add the new domain to **Authorized redirect URIs** and **Authorized JavaScript origins** for the OAuth client (e.g. `https://plan2026.com`, `https://plan2026.com/api/auth/callback/google`).
+- **Google OAuth:** In the Google Cloud Console, add the new domain to **Authorized redirect URIs** and **Authorized JavaScript origins** for the OAuth client (e.g. `https://plan2026.ca`, `https://plan2026.ca/api/auth/callback/google`).
 
 ### 4. Optional app-side improvements
 
@@ -56,9 +56,9 @@ No code changes are strictly required if the app already uses `NEXTAUTH_URL` and
 
 ## Recommended next steps (order of operations)
 
-1. **Decide the domain** (e.g. `plan2026.com` or a subdomain) and confirm you have (or can get) DNS access at your registrar or Vercel Domains.
+1. **Decide the domain** (e.g. `plan2026.ca` or a subdomain) and confirm you have (or can get) DNS access at your registrar or Vercel Domains.
 2. **Register or transfer the domain** if needed; then in Vercel → project → **Settings → Domains**, add the domain and follow the verification steps (TXT/CNAME). Add the A or CNAME record Vercel shows so traffic routes to Vercel.
-3. **Set `NEXTAUTH_URL`** in Vercel environment variables to the permanent URL (e.g. `https://plan2026.com`) for the production environment.
+3. **Set `NEXTAUTH_URL`** in Vercel environment variables to the permanent URL (e.g. `https://plan2026.ca`) for the production environment.
 4. **Update Google OAuth:** In Google Cloud Console, add the new domain to Authorized redirect URIs and Authorized JavaScript origins; remove or keep the old `*.vercel.app` URL depending on whether you will redirect it.
 5. **Optional:** Add a redirect from the old Vercel URL to the new domain (Vercel supports this in Domains or via config) so existing links keep working.
 6. **Document** the production URL and any domain/OAuth steps in README, AI_PROJECT_CONTEXT, and any runbook.

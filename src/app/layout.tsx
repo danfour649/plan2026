@@ -20,7 +20,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXTAUTH_URL ?? "https://plan2026-pi.vercel.app"),
+  metadataBase: new URL(process.env.NEXTAUTH_URL ?? "https://plan2026.ca"),
   icons: {
     icon: [
       { url: "/pwa-192.png", sizes: "192x192", type: "image/png" },
