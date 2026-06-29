@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.9
+
+### Patch Changes
+
+- a740db9: Split Google OAuth scopes so sign-in requests profile only; calendar.events is requested incrementally when connecting Calendar or using Add to Calendar.
+
 ## 0.24.8
 
 ### Patch Changes
