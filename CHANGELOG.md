@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.14
+
+### Patch Changes
+
+- 587eb27: Hide Facebook login by default until Meta App Review is complete. Set `AUTH_FACEBOOK_ENABLED=true` in production to re-enable after approval.
+
 ## 0.24.13
 
 ### Patch Changes
