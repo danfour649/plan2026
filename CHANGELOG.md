@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.11
+
+### Patch Changes
+
+- 0dd0a75: Add a public home page at `/` with the Plan 2026 app name and purpose for Google OAuth branding verification.
+
 ## 0.24.10
 
 ### Patch Changes
