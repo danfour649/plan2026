@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.10
+
+### Patch Changes
+
+- 9d93d3c: Add a public Terms of Service page at `/terms` for Google OAuth branding, with login and footer links.
+
 ## 0.24.9
 
 ### Patch Changes
