@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.8
+
+### Patch Changes
+
+- 699f999: Allow language switching on public login and privacy pages, and add a prominent privacy policy link on the login page.
+
 ## 0.24.7
 
 ### Patch Changes
