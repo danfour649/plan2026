@@ -81,7 +81,9 @@ http://localhost:3000/api/auth/callback/google
 - [ ] App name, support email, and developer contact filled in.
 - [ ] **Application home page:** `https://plan2026-pi.vercel.app`
 - [ ] **Privacy policy URL:** `https://plan2026-pi.vercel.app/privacy`
-- [ ] Scopes include: `openid`, `email`, `profile`, `https://www.googleapis.com/auth/calendar.events`
+- [ ] Scopes include: `openid`, `email`, `profile` (sign-in), and optionally `https://www.googleapis.com/auth/calendar.events` (requested incrementally when the user connects Calendar or uses Add to Calendar).
+
+**Note:** Basic sign-in no longer requests the sensitive `calendar.events` scope, so the unverified-app warning should not appear on login. Calendar connect still requires Google verification (Path B) or test-user mode (Path A) when users grant that scope.
 
 ### Publishing (choose one path)
 
@@ -129,7 +131,7 @@ On `https://plan2026-pi.vercel.app`:
 | Google “redirect_uri_mismatch” | Callback URI not listed in Google Cloud, or typo |
 | Sign-in loops back to `/login` | Wrong `NEXTAUTH_URL`, missing `AUTH_SECRET`, or DB/session failure |
 | “Access blocked” / 403 from Google | App in Testing mode and user not in test users |
-| Calendar button fails | Calendar API off, or user signed in before Calendar scope was added (sign out/in) |
+| Calendar button fails | Calendar API off, calendar scope not granted (connect in Settings or via Add to Calendar), or app in Testing mode without test user |
 
 ---
 

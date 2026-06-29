@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { google } from "googleapis";
 
 import { getCurrentUserId } from "@/auth";
-import { GOOGLE_CALENDAR_SCOPE, hasGoogleCalendarScope } from "@/lib/google-oauth";
+import { CALENDAR_SCOPE_MISSING_CODE, GOOGLE_CALENDAR_SCOPE, hasGoogleCalendarScope } from "@/lib/google-oauth";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { isValidTaskId } from "@/lib/validations/task";
@@ -88,10 +88,11 @@ export async function POST(_req: Request, { params }: Params) {
       { status: 403 }
     );
   }
-  if (account.scope && !hasGoogleCalendarScope(account.scope)) {
+  if (!hasGoogleCalendarScope(account.scope)) {
     return NextResponse.json(
       {
         error: `Google account is missing ${GOOGLE_CALENDAR_SCOPE}. Reconnect Google Calendar to grant access again.`,
+        code: CALENDAR_SCOPE_MISSING_CODE,
       },
       { status: 403 },
     );
@@ -223,6 +224,7 @@ export async function POST(_req: Request, { params }: Params) {
       return NextResponse.json(
         {
           error: `Google account is missing ${GOOGLE_CALENDAR_SCOPE}. Reconnect Google Calendar to grant access again.`,
+          code: CALENDAR_SCOPE_MISSING_CODE,
         },
         { status: 403 },
       );

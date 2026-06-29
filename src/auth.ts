@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
 import { cache } from "react";
 
-import { GOOGLE_AUTHORIZATION_PARAMS } from "@/lib/google-oauth";
+import { GOOGLE_SIGN_IN_PARAMS } from "@/lib/google-oauth";
 import {
   memoAuthSessionClear,
   memoAuthSessionGet,
@@ -47,7 +47,7 @@ if (hasGoogleCredentials) {
       clientId: googleClientId!,
       clientSecret: googleClientSecret!,
       authorization: {
-        params: GOOGLE_AUTHORIZATION_PARAMS,
+        params: GOOGLE_SIGN_IN_PARAMS,
       },
     }),
   );

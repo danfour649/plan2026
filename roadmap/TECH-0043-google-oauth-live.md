@@ -1,6 +1,6 @@
 # TECH-0043: Google OAuth live (production)
 
-**Status:** In progress — privacy page and login disclosures added in app; production Google Cloud + Vercel config and verification still required. See **[GO-LIVE.md](../GO-LIVE.md)**.
+**Status:** In progress — privacy page and login disclosures added in app; OAuth scopes split so sign-in uses basic profile scopes only and `calendar.events` is requested incrementally; production Google Cloud + Vercel config and verification still required. See **[GO-LIVE.md](../GO-LIVE.md)**.
 
 **Goal:** Enable and verify Google OAuth in a production (live) environment so users can sign in with Google on the real deployment (e.g. permanent domain or production Vercel URL).
 
@@ -22,7 +22,7 @@
 | **OAuth client** | In Google Cloud Console → APIs & Services → Credentials, use an “OAuth 2.0 Client ID” (Web application). |
 | **Authorized redirect URIs** | Add the production callback URL, e.g. `https://<production-domain>/api/auth/callback/google`. Must match exactly (no trailing slash). |
 | **Authorized JavaScript origins** | Add the production origin, e.g. `https://<production-domain>`. |
-| **Consent screen** | Ensure OAuth consent screen is configured (e.g. app name, support email). For “External” user type, verification may be required for broad access. |
+| **Consent screen** | Ensure OAuth consent screen is configured (e.g. app name, support email). For “External” user type, verification may be required for broad access. Sign-in requests `openid`, `email`, and `profile` only; `calendar.events` is requested incrementally when the user connects Google Calendar or uses Add to Calendar (still a sensitive scope requiring verification for production). |
 
 ### 3. Environment variables (production)
 

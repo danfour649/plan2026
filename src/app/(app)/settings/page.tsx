@@ -6,6 +6,7 @@ import { DisconnectGoogleCalendarButton } from "@/components/DisconnectGoogleCal
 import { ReconnectGoogleCalendarButton } from "@/components/ReconnectGoogleCalendarButton";
 import { LanguageSelect } from "@/components/LanguageSelect";
 import { ThemeSelect } from "@/components/ThemeSelect";
+import { hasGoogleCalendarScope } from "@/lib/google-oauth";
 import { getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 
@@ -24,12 +25,11 @@ export default async function SettingsPage() {
   const account = await prisma.account.findFirst({
     where: { userId, provider: "google" },
     select: {
-      access_token: true,
-      refresh_token: true,
+      scope: true,
     },
   });
 
-  const isCalendarConnected = Boolean(account?.refresh_token || account?.access_token);
+  const isCalendarConnected = hasGoogleCalendarScope(account?.scope);
 
   return (
     <div className="space-y-8">
