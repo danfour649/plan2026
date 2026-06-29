@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.13
+
+### Patch Changes
+
+- b674a37: Add Google Search Console HTML file verification at `/google80f3c882e9acdbbb.html`.
+
 ## 0.24.12
 
 ### Patch Changes
