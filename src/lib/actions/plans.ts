@@ -350,7 +350,7 @@ export async function createPlanInvite(planId: string): Promise<CreateInviteResu
     },
   });
 
-  const baseUrl = process.env.NEXTAUTH_URL ?? "https://plan2026-pi.vercel.app";
+  const baseUrl = process.env.NEXTAUTH_URL ?? "https://plan2026.ca";
   const inviteUrl = `${baseUrl}/invite/${token}`;
   revalidatePlansCaches(userId);
   revalidatePlanDetail(plan.id);
@@ -389,7 +389,7 @@ export async function createPlanShareLink(planId: string): Promise<CreateShareLi
     },
   });
 
-  const baseUrl = process.env.NEXTAUTH_URL ?? "https://plan2026-pi.vercel.app";
+  const baseUrl = process.env.NEXTAUTH_URL ?? "https://plan2026.ca";
   const shareUrl = `${baseUrl}/share/${token}`;
   revalidatePlansCaches(userId);
   revalidatePlanDetail(plan.id);

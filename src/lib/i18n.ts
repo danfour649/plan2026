@@ -361,7 +361,7 @@ const messages = {
         {
           title: "Who operates this app",
           paragraphs: [
-            "Plan 2026 is a planning and task-management web app operated by Daniel Fitzgerald. The live demo is hosted at plan2026-pi.vercel.app.",
+            "Plan 2026 is a planning and task-management web app operated by Daniel Fitzgerald. The live demo is hosted at plan2026.ca.",
           ],
         },
         {
@@ -446,7 +446,7 @@ const messages = {
         {
           title: "Agreement",
           paragraphs: [
-            "These Terms of Service (“Terms”) govern your use of Plan 2026, a planning and task-management web app operated by Daniel Fitzgerald. The public demo is available at plan2026-pi.vercel.app.",
+            "These Terms of Service (“Terms”) govern your use of Plan 2026, a planning and task-management web app operated by Daniel Fitzgerald. The public demo is available at plan2026.ca.",
             "By signing in or using Plan 2026, you agree to these Terms. If you do not agree, do not use the app.",
           ],
         },
@@ -885,7 +885,7 @@ const messages = {
         {
           title: "Qui exploite cette application",
           paragraphs: [
-            "Plan 2026 est une application web de planification et de gestion des tâches exploitée par Daniel Fitzgerald. La démo en ligne est hébergée sur plan2026-pi.vercel.app.",
+            "Plan 2026 est une application web de planification et de gestion des tâches exploitée par Daniel Fitzgerald. La démo en ligne est hébergée sur plan2026.ca.",
           ],
         },
         {
@@ -970,7 +970,7 @@ const messages = {
         {
           title: "Accord",
           paragraphs: [
-            "Les présentes conditions d'utilisation régissent votre utilisation de Plan 2026, une application web de planification et de gestion des tâches exploitée par Daniel Fitzgerald. La démo publique est disponible sur plan2026-pi.vercel.app.",
+            "Les présentes conditions d'utilisation régissent votre utilisation de Plan 2026, une application web de planification et de gestion des tâches exploitée par Daniel Fitzgerald. La démo publique est disponible sur plan2026.ca.",
             "En vous connectant ou en utilisant Plan 2026, vous acceptez ces conditions. Dans le cas contraire, n'utilisez pas l'application.",
           ],
         },
@@ -1406,7 +1406,7 @@ const messages = {
         {
           title: "Who dey run dis app",
           paragraphs: [
-            "Plan 2026 na planning and task app wey Daniel Fitzgerald dey run. Di live demo dey for plan2026-pi.vercel.app.",
+            "Plan 2026 na planning and task app wey Daniel Fitzgerald dey run. Di live demo dey for plan2026.ca.",
           ],
         },
         {
@@ -1491,7 +1491,7 @@ const messages = {
         {
           title: "Agreement",
           paragraphs: [
-            "Dis Terms of Service cover how you fit use Plan 2026, one planning and task app wey Daniel Fitzgerald dey run. Di public demo dey for plan2026-pi.vercel.app.",
+            "Dis Terms of Service cover how you fit use Plan 2026, one planning and task app wey Daniel Fitzgerald dey run. Di public demo dey for plan2026.ca.",
             "If you sign in or use Plan 2026, you agree to dis Terms. If you no agree, no use di app.",
           ],
         },

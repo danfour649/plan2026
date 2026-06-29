@@ -2,6 +2,8 @@
 
 Personal full-stack portfolio app: Next.js App Router task and plan management with Google sign-in, PostgreSQL/Prisma data modeling, JSON export APIs, server actions, optional rich task notes, urgency levels, due dates, and Google Calendar event creation.
 
+**Production:** [https://plan2026.ca](https://plan2026.ca)
+
 ## Features
 
 - Google sign-in with NextAuth v4 and Prisma-backed database sessions
@@ -193,7 +195,7 @@ In short:
 
 1. Create a Vercel project.
 2. Provision PostgreSQL and set the required env vars.
-3. Configure Google OAuth with your production callback URL and Calendar API access. Before advertising a public demo, follow **[GO-LIVE.md](./GO-LIVE.md)** (privacy URL, Vercel env, Google verification).
+3. Configure Google OAuth with your production callback URL (`https://plan2026.ca/api/auth/callback/google`) and Calendar API access. Before advertising a public demo, follow **[GO-LIVE.md](./GO-LIVE.md)** (privacy URL, Vercel env, Google verification).
 4. Deploy; the build runs `prisma generate` and `next build`, and migrations are applied with `prisma migrate deploy`.
 
 The database story is intentionally the same in every environment: PostgreSQL for local work and PostgreSQL in production.

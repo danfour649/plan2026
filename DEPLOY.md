@@ -37,7 +37,7 @@ In Vercel, open **Project Settings** -> **Environment Variables** and add these 
 |------|-------|
 | `DATABASE_URL` | Production PostgreSQL connection string |
 | `AUTH_SECRET` | A long random secret |
-| `NEXTAUTH_URL` | Your production app URL, for example `https://plan2026-pi.vercel.app` |
+| `NEXTAUTH_URL` | Your production app URL, for example `https://plan2026.ca` |
 | `GOOGLE_CLIENT_ID` | Google OAuth client id |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
 
@@ -57,11 +57,11 @@ In Google Cloud Console:
 1. Enable the **Google Calendar API** for the project.
 2. Open your OAuth 2.0 client credentials.
 3. Add your production JavaScript origin:
-   - `https://plan2026-pi.vercel.app`
+   - `https://plan2026.ca`
 4. Add your production redirect URI:
-   - `https://plan2026-pi.vercel.app/api/auth/callback/google`
+   - `https://plan2026.ca/api/auth/callback/google`
 5. On the OAuth consent screen, set the **privacy policy URL** to:
-   - `https://plan2026-pi.vercel.app/privacy`
+   - `https://plan2026.ca/privacy`
 
 The app requests these Google scopes:
 

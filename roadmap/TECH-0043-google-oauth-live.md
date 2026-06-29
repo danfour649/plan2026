@@ -27,7 +27,7 @@
 ### 3. Environment variables (production)
 
 - **`AUTH_GOOGLE_ID`** and **`AUTH_GOOGLE_SECRET`**: Use the Client ID and Client Secret from the same OAuth client that has the production redirect/origins. Do not use development credentials in production unless they include the production URL.
-- **`NEXTAUTH_URL`**: Must be the production URL (e.g. `https://plan2026.com`). Set in Vercel (or your host) Environment Variables for the production environment.
+- **`NEXTAUTH_URL`**: Must be the production URL (`https://plan2026.ca`). Set in Vercel (or your host) Environment Variables for the production environment.
 - **`AUTH_SECRET`**: Must be set in production (NextAuth requirement). Generate a strong random value and store it securely.
 
 ### 4. Verification steps
