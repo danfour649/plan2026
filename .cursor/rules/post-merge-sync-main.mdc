@@ -1,0 +1,22 @@
+---
+description: After a plan2026 PR merges, immediately sync local main
+alwaysApply: true
+---
+
+# Post-merge — sync local main
+
+When a plan2026 PR is merged (you merged it, babysit finished, or the user asks if it merged), **immediately** sync local `main`. Do not wait for the user to request this.
+
+```powershell
+cd c:\Users\Admin\Desktop\vscode\plan2026
+git fetch origin
+git stash push -u -m "WIP before post-merge main pull"   # only if checkout blocked
+git checkout main
+git pull origin main
+git log -3 --oneline
+```
+
+- If you stashed WIP, tell the user (`git stash list`; `git stash pop` to resume).
+- Merged PRs with a changeset should show `chore: version packages [skip ci]` on `main` after pull.
+
+Full workflow: **create-pr** skill §10 and `AGENTS.md`.

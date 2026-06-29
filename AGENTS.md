@@ -25,6 +25,6 @@ Or from a danf-skills clone: `../danf-skills/overlays/plan2026/`
 - **Changeset package name:** `"plan2026"`
 - **Do not** run `pnpm run changeset:version` on feature branches — CI on `main` consumes changesets
 - **Never leave a pushed branch without a PR** unless the user asked not to
-- **After merge:** `git checkout main; git pull`
+- **After merge (mandatory):** immediately sync local `main` — `git fetch origin`, stash if checkout is blocked, `git checkout main`, `git pull origin main`. Do not wait for the user to ask. See **create-pr** skill §10.
 
 Full generic rules: [danf-skills/AGENTS.md](https://github.com/danfour649/danf-skills/blob/main/AGENTS.md)
