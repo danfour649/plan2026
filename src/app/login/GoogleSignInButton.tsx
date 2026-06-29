@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 
 import { AuthProviderButton } from "./AuthProviderButton";
-import { GOOGLE_AUTHORIZATION_PARAMS } from "@/lib/google-oauth";
+import { GOOGLE_SIGN_IN_PARAMS } from "@/lib/google-oauth";
 
 export function GoogleSignInButton({
   callbackUrl = "/tasks",
@@ -18,7 +18,7 @@ export function GoogleSignInButton({
   return (
     <AuthProviderButton
       disabled={disabled}
-      onClick={() => signIn("google", { callbackUrl }, GOOGLE_AUTHORIZATION_PARAMS)}
+      onClick={() => signIn("google", { callbackUrl }, GOOGLE_SIGN_IN_PARAMS)}
       label={label}
       icon={
         <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">

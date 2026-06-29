@@ -25,7 +25,7 @@ const messages = {
       disconnected: "Disconnected",
       calendarConnected: "Your account can currently create Google Calendar events from tasks.",
       calendarDisconnected:
-        "Google Calendar access has been disconnected. Reconnect with Google to grant Calendar permissions again.",
+        "Google Calendar is not connected. Connect it here or use Add to Calendar on a task to grant access.",
       pageDescription:
         "Manage your account, language, and Google Calendar connection. Language and theme are saved to your account and apply on any device when you sign in.",
       theme: "Theme",
@@ -342,7 +342,7 @@ const messages = {
       privacyNotice: "By continuing, you agree to our",
       privacyLink: "Privacy Policy",
       calendarNotice:
-        "Google sign-in requests access to create calendar events from tasks. You can disconnect Calendar access in Settings.",
+        "Sign-in uses your Google profile only. Calendar access is optional and is requested when you use Add to Calendar or connect in Settings.",
     },
     privacy: {
       title: "Privacy Policy",
@@ -467,7 +467,7 @@ const messages = {
       disconnected: "Déconnecté",
       calendarConnected: "Votre compte peut actuellement créer des événements Google Agenda à partir des tâches.",
       calendarDisconnected:
-        "L'accès à Google Agenda a été déconnecté. Reconnectez-vous avec Google pour accorder à nouveau les autorisations.",
+        "Google Agenda n'est pas connecté. Connectez-le ici ou utilisez Ajouter à l'agenda sur une tâche pour accorder l'accès.",
       pageDescription:
         "Gérez votre compte, la langue et la connexion Google Agenda. La langue et le thème sont enregistrés sur votre compte et s’appliquent sur chaque appareil lorsque vous êtes connecté.",
       theme: "Thème",
@@ -784,7 +784,7 @@ const messages = {
       privacyNotice: "En continuant, vous acceptez notre",
       privacyLink: "Politique de confidentialité",
       calendarNotice:
-        "La connexion Google demande l'accès pour créer des événements de calendrier à partir des tâches. Vous pouvez déconnecter l'accès au calendrier dans Paramètres.",
+        "La connexion utilise uniquement votre profil Google. L'accès à l'agenda est optionnel et demandé lorsque vous utilisez Ajouter à l'agenda ou la connexion dans Paramètres.",
     },
     privacy: {
       title: "Politique de confidentialité",
@@ -909,7 +909,7 @@ const messages = {
       disconnected: "E don cut",
       calendarConnected: "Your account fit create Google Calendar events from your work now.",
       calendarDisconnected:
-        "Google Calendar don cut. Connect am again make you fit get permission.",
+        "Google Calendar no connect. Connect am here or use Add to Calendar for task make you fit grant access.",
       pageDescription:
         "Arrange your account, language, and Google Calendar connection. Language and theme dey save for your account and go work for any device when you sign in.",
       theme: "How e look",
@@ -1226,7 +1226,7 @@ const messages = {
       privacyNotice: "If you continue, you agree to our",
       privacyLink: "Privacy Policy",
       calendarNotice:
-        "Google sign-in go ask permission to create calendar events from tasks. You fit disconnect Calendar for Settings.",
+        "Sign-in only need your Google profile. Calendar permission na optional — we go ask only when you use Add to Calendar or connect am for Settings.",
     },
     privacy: {
       title: "Privacy Policy",

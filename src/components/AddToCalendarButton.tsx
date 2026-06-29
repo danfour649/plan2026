@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { useTranslations } from "@/components/TranslationsProvider";
+import { connectGoogleCalendar } from "@/lib/connect-google-calendar-client";
+import { CALENDAR_SCOPE_MISSING_CODE } from "@/lib/google-oauth";
 
 type AddToCalendarButtonProps = {
   taskId: string;
@@ -26,9 +28,14 @@ export function AddToCalendarButton({
       const res = await fetch(`/api/tasks/${taskId}/calendar`, { method: "POST" });
       const data = (await res.json().catch(() => ({}))) as {
         error?: string;
+        code?: string;
         htmlLink?: string;
         created?: boolean;
       };
+      if (res.status === 403 && data.code === CALENDAR_SCOPE_MISSING_CODE) {
+        await connectGoogleCalendar();
+        return;
+      }
       if (!res.ok) {
         toast.error(data.error ?? t.toasts.couldNotAddToCalendar);
         return;
