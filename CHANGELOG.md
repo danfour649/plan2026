@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.12
+
+### Patch Changes
+
+- 9851f89: Add Google Search Console site verification meta tag for OAuth branding domain ownership.
+
 ## 0.24.11
 
 ### Patch Changes
