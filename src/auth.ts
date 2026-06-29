@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
 import { cache } from "react";
 
+import { isFacebookLoginEnabled } from "@/lib/facebook-login";
 import { GOOGLE_SIGN_IN_PARAMS } from "@/lib/google-oauth";
 import {
   memoAuthSessionClear,
@@ -38,7 +39,8 @@ function getAuthSecret(): string | undefined {
 }
 
 const hasGoogleCredentials = Boolean(googleClientId && googleClientSecret);
-const hasFacebookCredentials = Boolean(facebookClientId && facebookClientSecret);
+const hasFacebookCredentials =
+  isFacebookLoginEnabled() && Boolean(facebookClientId && facebookClientSecret);
 
 const providers: NextAuthOptions["providers"] = [];
 if (hasGoogleCredentials) {

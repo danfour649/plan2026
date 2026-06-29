@@ -5,6 +5,7 @@ import { getServerAuthSession } from "@/auth";
 import { Plan2026Logo } from "@/components/Plan2026Logo";
 import { PublicPageShell } from "@/components/PublicPageShell";
 import { getLocaleForRequest } from "@/lib/account-preferences";
+import { isFacebookLoginEnabled } from "@/lib/facebook-login";
 import { getTranslations } from "@/lib/i18n";
 import { FacebookSignInButton } from "./FacebookSignInButton";
 import { GoogleSignInButton } from "./GoogleSignInButton";
@@ -25,9 +26,7 @@ export default async function LoginPage({
   const hasGoogleCredentials = Boolean(
     process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
   );
-  const hasFacebookCredentials = Boolean(
-    process.env.AUTH_FACEBOOK_ID && process.env.AUTH_FACEBOOK_SECRET,
-  );
+  const hasFacebookCredentials = isFacebookLoginEnabled();
 
   return (
     <PublicPageShell locale={locale}>
