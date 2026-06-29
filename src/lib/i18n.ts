@@ -329,9 +329,17 @@ const messages = {
       noTasks: "No tasks",
       signInToManage: "Sign in to manage your own plans",
     },
+    home: {
+      appName: "Plan 2026",
+      tagline: "Plans and tasks, shared",
+      description:
+        "Plan 2026 is a planning and task-management web app. Sign in with Google to create tasks and plans, share with others, and optionally add due dates to Google Calendar.",
+      signIn: "Sign in",
+      operatedBy: "Operated by Daniel Fitzgerald (Fredericton, New Brunswick, Canada).",
+    },
     login: {
       title: "Sign in",
-      headline: "Plans and tasks, shared",
+      headline: "Plan 2026",
       description: "Use your Google account to access your tasks dashboard.",
       benefit1: "Plans and tasks in one place",
       benefit2: "Share plans with others",
@@ -845,9 +853,17 @@ const messages = {
       noTasks: "Aucune tâche",
       signInToManage: "Connectez-vous pour gérer vos plans",
     },
+    home: {
+      appName: "Plan 2026",
+      tagline: "Plans et tâches, partagés",
+      description:
+        "Plan 2026 est une application web de planification et de gestion des tâches. Connectez-vous avec Google pour créer des tâches et des plans, partager avec d'autres et ajouter optionnellement des échéances à Google Agenda.",
+      signIn: "Connexion",
+      operatedBy: "Exploité par Daniel Fitzgerald (Fredericton, Nouveau-Brunswick, Canada).",
+    },
     login: {
       title: "Connexion",
-      headline: "Plans et tâches, partagés",
+      headline: "Plan 2026",
       description: "Utilisez Google pour accéder à vos tâches.",
       benefit1: "Plans et tâches en un seul endroit",
       benefit2: "Partagez les plans avec d'autres",
@@ -1358,9 +1374,17 @@ const messages = {
       noTasks: "No work",
       signInToManage: "Sign in to manage your own plans",
     },
+    home: {
+      appName: "Plan 2026",
+      tagline: "Plans and work, we dey share am",
+      description:
+        "Plan 2026 na planning and task app. Sign in with Google to create tasks and plans, share with people, and optionally add due dates to Google Calendar.",
+      signIn: "Enter",
+      operatedBy: "Daniel Fitzgerald dey run am (Fredericton, New Brunswick, Canada).",
+    },
     login: {
       title: "Enter",
-      headline: "Plans and work, we dey share am",
+      headline: "Plan 2026",
       description: "Use your Google account enter your dashboard.",
       benefit1: "Plans and work for one place",
       benefit2: "Share plans with people",
