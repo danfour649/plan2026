@@ -55,6 +55,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: "_m33wLoUYxmnUvb5DRNQkaCfTXpY-EhpVz1P_wVXiBU",
+  },
 };
 
 function RootLayoutFallback() {
