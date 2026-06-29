@@ -43,12 +43,19 @@ export default async function LoginPage({
           </h1>
           <p className="mt-1.5 text-sm text-tertiary">{t.login.description}</p>
 
-          <p className="mt-4 text-center">
+          <p className="mt-4 text-center text-sm">
             <Link
               href="/privacy"
-              className="text-sm font-semibold text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300"
+              className="font-semibold text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300"
             >
               {t.login.privacyLink}
+            </Link>
+            <span className="text-tertiary"> · </span>
+            <Link
+              href="/terms"
+              className="font-semibold text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300"
+            >
+              {t.login.termsLink}
             </Link>
           </p>
 
@@ -85,6 +92,10 @@ export default async function LoginPage({
             {t.login.privacyNotice}{" "}
             <Link href="/privacy" className="font-medium text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300">
               {t.login.privacyLink}
+            </Link>{" "}
+            {t.login.termsNoticeAnd}{" "}
+            <Link href="/terms" className="font-medium text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300">
+              {t.login.termsLink}
             </Link>
             .
           </p>

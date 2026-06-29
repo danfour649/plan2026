@@ -4,6 +4,7 @@ Use this before advertising [plan2026-pi.vercel.app](https://plan2026-pi.vercel.
 
 **Production URL:** `https://plan2026-pi.vercel.app`  
 **Privacy policy (for Google OAuth consent screen):** `https://plan2026-pi.vercel.app/privacy`  
+**Terms of service (for Google OAuth consent screen):** `https://plan2026-pi.vercel.app/terms`  
 **Google OAuth callback:** `https://plan2026-pi.vercel.app/api/auth/callback/google`
 
 ---
@@ -81,6 +82,7 @@ http://localhost:3000/api/auth/callback/google
 - [ ] App name, support email, and developer contact filled in.
 - [ ] **Application home page:** `https://plan2026-pi.vercel.app`
 - [ ] **Privacy policy URL:** `https://plan2026-pi.vercel.app/privacy`
+- [ ] **Terms of service URL:** `https://plan2026-pi.vercel.app/terms`
 - [ ] Scopes include: `openid`, `email`, `profile` (sign-in), and optionally `https://www.googleapis.com/auth/calendar.events` (requested incrementally when the user connects Calendar or uses Add to Calendar).
 
 **Note:** Basic sign-in no longer requests the sensitive `calendar.events` scope, so the unverified-app warning should not appear on login. Calendar connect still requires Google verification (Path B) or test-user mode (Path A) when users grant that scope.
