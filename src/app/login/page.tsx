@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 import { getServerAuthSession } from "@/auth";
 import { Plan2026Logo } from "@/components/Plan2026Logo";
@@ -66,6 +67,16 @@ export default async function LoginPage({
             />
           ) : null}
         </div>
+
+        <p className="mt-4 text-xs text-tertiary">{t.login.calendarNotice}</p>
+
+        <p className="mt-4 text-xs text-tertiary">
+          {t.login.privacyNotice}{" "}
+          <Link href="/privacy" className="font-medium text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300">
+            {t.login.privacyLink}
+          </Link>
+          .
+        </p>
       </div>
     </main>
   );

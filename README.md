@@ -89,7 +89,7 @@ The project uses [Vitest](https://vitest.dev/) for unit and integration tests. R
 - `pnpm test` – run tests once
 - `pnpm run test:watch` – run tests in watch mode
 - `pnpm run test:coverage` – run tests with coverage report
-- `pnpm run bulk:next -- <PR_NUMBER>` – merge that PR, update main, check out the next open PR’s branch and merge main into it; prints what to test (see AGENTS.md “Testing bulk-task PRs”).
+- `pnpm run bulk:next -- <PR_NUMBER>` – merge that PR, update main, check out the next open PR’s branch and merge main into it; prints what to test (see [danf-skills bulk-task-pr](https://github.com/danfour649/danf-skills/blob/main/skills/bulk-task-pr/SKILL.md) skill and `AGENTS.md`).
 
 Tests live next to source files (e.g. `src/lib/export.test.ts`). Good candidates for unit tests:
 
@@ -193,7 +193,7 @@ In short:
 
 1. Create a Vercel project.
 2. Provision PostgreSQL and set the required env vars.
-3. Configure Google OAuth with your production callback URL and Calendar API access.
+3. Configure Google OAuth with your production callback URL and Calendar API access. Before advertising a public demo, follow **[GO-LIVE.md](./GO-LIVE.md)** (privacy URL, Vercel env, Google verification).
 4. Deploy; the build runs `prisma generate` and `next build`, and migrations are applied with `prisma migrate deploy`.
 
 The database story is intentionally the same in every environment: PostgreSQL for local work and PostgreSQL in production.

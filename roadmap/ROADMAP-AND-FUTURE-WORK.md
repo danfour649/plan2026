@@ -11,7 +11,6 @@ Single entry point for deferred work, active items, bulk-run workflow, and sessi
 | TECH-0026 | Get permanent website | Not ready — need to determine domain name and provider. |
 | TECH-0029 | Mobile app | Scope too large. |
 | TECH-0031 | AI advice on plans | Cost/misuse risk — API key theft or misuse could incur charges. |
-| TECH-0043 | Google OAuth live | Not ready — need privacy disclosures and Google checklist before leaving testing mode. |
 
 See each analysis doc in this folder for details.
 
@@ -23,6 +22,7 @@ Ready to implement. Each has a **dedicated analysis doc** in this folder for imp
 
 | ID | Title | Analysis doc |
 |----|--------|--------------|
+| TECH-0043 | Google OAuth live (demo launch) | [TECH-0043-google-oauth-live.md](./TECH-0043-google-oauth-live.md) — follow [GO-LIVE.md](../GO-LIVE.md) |
 | — | Allow mark as done in plan edit page | Already available via TaskActionButton on plan detail. |
 | — | Add calendar tab | [TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md) |
 | TECH-1005 | Data robustness and optimization | [TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md) |
@@ -31,7 +31,7 @@ Ready to implement. Each has a **dedicated analysis doc** in this folder for imp
 | TECH-0067 | Put tasks on hold | [TECH-0067-put-tasks-on-hold.md](./TECH-0067-put-tasks-on-hold.md) |
 | TECH-0068 | Upgrade to Prisma 7 and Zod 4 | [TECH-0068-upgrade-prisma7-zod4.md](./TECH-0068-upgrade-prisma7-zod4.md) |
 
-When implementing: use branch `tech/<ID>-<kebab-description>`, add a changeset, and open a PR per task (see AGENTS.md).
+When implementing: use branch `tech/<ID>-<kebab-description>`, add a changeset, and open a PR per task (see `AGENTS.md` and danf-skills **create-pr** skill).
 
 ---
 
@@ -39,7 +39,7 @@ When implementing: use branch `tech/<ID>-<kebab-description>`, add a changeset, 
 
 Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 
-- Follow **AGENTS.md** “Bulk task → PR pipeline” and “Translations (i18n)” (all user-facing text in en, fr, pidgin).
+- Follow **AGENTS.md** and danf-skills skills **bulk-task-pr** and **create-pr**; plan2026 overlays in [danf-skills/overlays/plan2026/](https://github.com/danfour649/danf-skills/tree/main/overlays/plan2026) cover i18n (en, fr, pidgin), roadmap paths, and `bulk:next`.
 - **Before implementing,** do not implement any task listed under **On hold** (Section 1).
 
 **For each task in your batch:**
@@ -50,7 +50,7 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
    - Work through the **Summary checklist** (usually at the end) in order; complete every step unless the doc explicitly says otherwise. Do not skip steps.
    - Follow the doc’s **Recommendation** and **Recommended next steps** in each section where they appear (they specify approach, data shape, and order of work).
    - If the doc presents options/tables, implement according to the **recommended** option unless there is a stated reason to do otherwise.
-   - Add all new user-facing strings to `src/lib/i18n.ts` for **en**, **fr**, and **pidgin** (see AGENTS.md “Translations (i18n)”). This is mandatory unless the doc says otherwise.
+   - Add all new user-facing strings to `src/lib/i18n.ts` for **en**, **fr**, and **pidgin** (see danf-skills overlay `overlays/plan2026/agent-instructions/PROJECT.md`). This is mandatory unless the doc says otherwise.
    - If the doc says to update README or AI_PROJECT_CONTEXT, do it in the same PR.
 4. **Before considering the task done:** Confirm every checklist item is done, every “Recommended next steps” in the doc is addressed, and typecheck passes (`pnpm run typecheck` unless the user asked to skip).
 5. Add a **changeset** in `.changeset/` (short kebab-case filename, standard format).
@@ -61,10 +61,10 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 
 - Run `pnpm run typecheck` (and fix any errors) before considering each task done, unless the user asks to skip for speed.
 - When a task is implemented, leave the analysis doc in place and note “Implemented” at the top, or remove the doc if no longer needed.
-- After PRs are open, the user can test and merge using “Testing bulk-task PRs one at a time” in AGENTS.md if desired.
+- After PRs are open, the user can test and merge using the bulk PR sequencing steps in danf-skills **bulk-task-pr** skill (`pnpm run bulk:next -- <PR_NUMBER>` — see overlay `overlays/plan2026/bulk-task-pr/PROJECT.md`).
 
 **Copy-paste prompt for an agent:**  
-*“Bulk implement the tasks listed in the Active items (or the batch I’m providing). Follow AGENTS.md ‘Bulk task → PR pipeline’ and ‘Translations (i18n)’. Do not implement tasks marked On hold in roadmap/ROADMAP-AND-FUTURE-WORK.md. For each task: create a branch, read the full analysis doc in roadmap/ from top to bottom, then implement everything it requires—work through the Summary checklist in order, follow every Recommendation and Recommended next steps, add i18n for en/fr/pidgin for all new UI strings, and update README/AI_PROJECT_CONTEXT if the doc says so. Before marking done, confirm every checklist item and recommended step is addressed and typecheck passes. Then add a changeset, push, and open a PR.”*
+*“Bulk implement the tasks listed in the Active items (or the batch I’m providing). Follow AGENTS.md and danf-skills **bulk-task-pr** / **create-pr** skills (plan2026 overlays for i18n and roadmap paths). Do not implement tasks marked On hold in roadmap/ROADMAP-AND-FUTURE-WORK.md. For each task: create a branch, read the full analysis doc in roadmap/ from top to bottom, then implement everything it requires—work through the Summary checklist in order, follow every Recommendation and Recommended next steps, add i18n for en/fr/pidgin for all new UI strings, and update README/AI_PROJECT_CONTEXT if the doc says so. Before marking done, confirm every checklist item and recommended step is addressed and typecheck passes. Then add a changeset, push, and open a PR.”*
 
 ---
 
@@ -84,7 +84,7 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 | [TECH-0029-mobile-app.md](./TECH-0029-mobile-app.md) | Android and iOS app using the existing site (PWA or Capacitor). | On hold — scope too large |
 | [TECH-0031-ai-advice-on-plans.md](./TECH-0031-ai-advice-on-plans.md) | AI advice bot that reviews a plan and tasks and suggests next steps. | On hold — cost/misuse risk |
 | [TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md) | Schedule/Calendar tab and page showing tasks and plans on a calendar. | Active |
-| [TECH-0043-google-oauth-live.md](./TECH-0043-google-oauth-live.md) | Production Google OAuth (config/deploy). | On hold — privacy/checklist |
+| [TECH-0043-google-oauth-live.md](./TECH-0043-google-oauth-live.md) | Production Google OAuth (config/deploy). | In progress — see GO-LIVE.md |
 | [TECH-DEBT-AND-OPTIMIZATIONS.md](./TECH-DEBT-AND-OPTIMIZATIONS.md) (TECH-1001) | Tech debt and optimizations (stale; many items implemented). | Superseded by TECH-1005 for new analysis |
 | [TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md) | Fresh analysis of data handling for robustness and scalability; audit then implement. | Active (future work) |
 | [TECH-0058-optimize-app-before-future-work.md](./TECH-0058-optimize-app-before-future-work.md) | Plan and apply optimizations before expanding the app (bundle, code quality, TECH-1005 alignment). | Partially implemented (bundle analysis, lazy load, dead code, unused deps) |
