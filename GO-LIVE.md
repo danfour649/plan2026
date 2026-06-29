@@ -28,12 +28,13 @@ In **Vercel → plan2026 → Settings → Environment Variables** (Production):
 | `GOOGLE_CLIENT_ID` | From Google Cloud OAuth client |
 | `GOOGLE_CLIENT_SECRET` | Same OAuth client |
 
-Optional (hide Facebook button on demo if unset):
+Optional Facebook Login (see **[GO-LIVE-FACEBOOK.md](./GO-LIVE-FACEBOOK.md)**):
 
 | Variable | Notes |
 |----------|--------|
-| `AUTH_FACEBOOK_ID` | Remove or leave unset unless Facebook is configured |
-| `AUTH_FACEBOOK_SECRET` | Same |
+| `AUTH_FACEBOOK_ID` | Meta App ID — set after App Review + Live mode |
+| `AUTH_FACEBOOK_SECRET` | Meta App Secret |
+| `AUTH_FACEBOOK_ENABLED` | Set to `true` to re-enable after approval (off by default in app) |
 
 After any env change: **Redeploy** Production.
 
@@ -120,7 +121,7 @@ On `https://plan2026.ca`:
 
 ## Phase 6 — Demo hygiene (recommended)
 
-- [ ] **Facebook:** If not configured for production, remove `AUTH_FACEBOOK_*` from Vercel so only Google shows.
+- [ ] **Facebook:** Follow **[GO-LIVE-FACEBOOK.md](./GO-LIVE-FACEBOOK.md)**. Login is disabled until Meta App Review; then set `AUTH_FACEBOOK_ENABLED=true` in Vercel.
 - [ ] Confirm no secrets are committed to git (`.env` stays local).
 - [ ] Update `DEPLOY.md` / roadmap when verification is complete.
 

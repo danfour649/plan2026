@@ -56,7 +56,8 @@ Set these in `.env` for local development:
 - `NEXTAUTH_URL` - usually `http://localhost:3000` locally
 - `BLOB_READ_WRITE_TOKEN` - (optional) Vercel Blob token for task file attachments; create a Blob store in the Vercel project and pull env with `vercel env pull`
 - `AUTH_FACEBOOK_ID` - (optional) Facebook app client ID for Facebook login
-- `AUTH_FACEBOOK_SECRET` - (optional) Facebook app client secret; when set with `AUTH_FACEBOOK_ID`, the login page shows "Continue with Facebook"
+- `AUTH_FACEBOOK_SECRET` - (optional) Facebook app client secret
+- `AUTH_FACEBOOK_ENABLED` - (optional) Set to `true` to show Facebook login (requires ID + secret). Off by default until Meta App Review is complete.
 
 ## Local development
 
@@ -139,8 +140,10 @@ To enable "Continue with Facebook" on the login page:
 
 1. Create an app at [developers.facebook.com](https://developers.facebook.com/) and add the **Facebook Login** product.
 2. In Facebook Login settings, add a **Valid OAuth Redirect URI**: `https://<your-domain>/api/auth/callback/facebook` (e.g. `http://localhost:3000/api/auth/callback/facebook` for local dev).
-3. Set `AUTH_FACEBOOK_ID` and `AUTH_FACEBOOK_SECRET` in your environment (from the app’s Settings → Basic).
-4. Request only the permissions you need (e.g. `email`, `public_profile`). App Review may be required for certain permissions.
+3. Set `AUTH_FACEBOOK_ID`, `AUTH_FACEBOOK_SECRET`, and `AUTH_FACEBOOK_ENABLED=true` in your environment.
+4. Request only the permissions you need (`email`, `public_profile`). App Review and business verification are required for Live mode with external users.
+
+**Production go-live:** follow **[GO-LIVE-FACEBOOK.md](./GO-LIVE-FACEBOOK.md)** (Meta App Review, Vercel env, screencast). Facebook login is off by default until `AUTH_FACEBOOK_ENABLED=true`.
 
 ## API
 
