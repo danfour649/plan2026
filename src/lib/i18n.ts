@@ -341,6 +341,8 @@ const messages = {
       continueWithFacebook: "Continue with Facebook",
       privacyNotice: "By continuing, you agree to our",
       privacyLink: "Privacy Policy",
+      termsNoticeAnd: "and",
+      termsLink: "Terms of Service",
       calendarNotice:
         "Sign-in uses your Google profile only. Calendar access is optional and is requested when you use Add to Calendar or connect in Settings.",
     },
@@ -427,6 +429,78 @@ const messages = {
       contactPhoneLabel: "Phone",
       contactPhone: "506-471-3031",
       contactGithubLabel: "GitHub",
+    },
+    terms: {
+      title: "Terms of Service",
+      lastUpdated: "Last updated: 29 June 2026",
+      privacyReference: "For how we collect and use personal data, see our",
+      sections: [
+        {
+          title: "Agreement",
+          paragraphs: [
+            "These Terms of Service (“Terms”) govern your use of Plan 2026, a planning and task-management web app operated by Daniel Fitzgerald. The public demo is available at plan2026-pi.vercel.app.",
+            "By signing in or using Plan 2026, you agree to these Terms. If you do not agree, do not use the app.",
+          ],
+        },
+        {
+          title: "The service",
+          paragraphs: [
+            "Plan 2026 is provided as a personal productivity tool. Features may change, and the demo may be unavailable from time to time for maintenance or updates.",
+            "The app is provided “as is” without warranties of any kind, to the fullest extent permitted by law.",
+          ],
+        },
+        {
+          title: "Accounts and sign-in",
+          paragraphs: [
+            "You sign in with a third-party identity provider (such as Google). You are responsible for activity under your account and for keeping access to that provider secure.",
+            "You must provide accurate information allowed by your sign-in provider and must be old enough to use online services under applicable law.",
+          ],
+        },
+        {
+          title: "Your content",
+          paragraphs: [
+            "You keep ownership of tasks, plans, and other content you create. You grant us permission to store, display, and process that content only as needed to run the app (including sharing you authorize).",
+            "Do not upload unlawful, harmful, or infringing content. Do not use Plan 2026 to harass others or attempt to access data that is not yours.",
+          ],
+        },
+        {
+          title: "Google Calendar (optional)",
+          paragraphs: [
+            "If you connect Google Calendar or use Add to Calendar, you authorize Plan 2026 to create calendar events you request. Calendar access is optional and is not required to sign in.",
+          ],
+        },
+        {
+          title: "Acceptable use",
+          paragraphs: [
+            "You may not misuse the service, probe or disrupt our systems, scrape the app in ways that harm performance, or use Plan 2026 in violation of law or third-party terms (including Google’s policies when you use Google sign-in or Calendar).",
+          ],
+        },
+        {
+          title: "Termination",
+          paragraphs: [
+            "You may stop using Plan 2026 at any time. We may suspend or end access if you violate these Terms or if we discontinue the demo.",
+            "You may request deletion of your stored data as described in our Privacy Policy.",
+          ],
+        },
+        {
+          title: "Limitation of liability",
+          paragraphs: [
+            "To the fullest extent permitted by law, Daniel Fitzgerald and Plan 2026 will not be liable for indirect, incidental, or consequential damages, or for loss of data or profits arising from your use of the app.",
+          ],
+        },
+        {
+          title: "Changes",
+          paragraphs: [
+            "We may update these Terms as the app changes. The “Last updated” date at the top will change when we do. Continued use after changes means you accept the updated Terms.",
+          ],
+        },
+        {
+          title: "Contact",
+          paragraphs: [
+            "Questions about these Terms: danfour@gmail.com (Daniel Fitzgerald, Fredericton, New Brunswick, Canada).",
+          ],
+        },
+      ],
     },
     invite: {
       invalidTitle: "Invalid or expired invite",
@@ -783,6 +857,8 @@ const messages = {
       continueWithFacebook: "Continuer avec Facebook",
       privacyNotice: "En continuant, vous acceptez notre",
       privacyLink: "Politique de confidentialité",
+      termsNoticeAnd: "et nos",
+      termsLink: "Conditions d'utilisation",
       calendarNotice:
         "La connexion utilise uniquement votre profil Google. L'accès à l'agenda est optionnel et demandé lorsque vous utilisez Ajouter à l'agenda ou la connexion dans Paramètres.",
     },
@@ -869,6 +945,75 @@ const messages = {
       contactPhoneLabel: "Téléphone",
       contactPhone: "506-471-3031",
       contactGithubLabel: "GitHub",
+    },
+    terms: {
+      title: "Conditions d'utilisation",
+      lastUpdated: "Dernière mise à jour : 29 juin 2026",
+      privacyReference: "Pour la collecte et l'utilisation des données personnelles, consultez notre",
+      sections: [
+        {
+          title: "Accord",
+          paragraphs: [
+            "Les présentes conditions d'utilisation régissent votre utilisation de Plan 2026, une application web de planification et de gestion des tâches exploitée par Daniel Fitzgerald. La démo publique est disponible sur plan2026-pi.vercel.app.",
+            "En vous connectant ou en utilisant Plan 2026, vous acceptez ces conditions. Dans le cas contraire, n'utilisez pas l'application.",
+          ],
+        },
+        {
+          title: "Le service",
+          paragraphs: [
+            "Plan 2026 est fourni comme outil de productivité personnelle. Les fonctionnalités peuvent changer et la démo peut être indisponible pour maintenance ou mises à jour.",
+            "L'application est fournie « telle quelle », sans garantie d'aucune sorte, dans la mesure permise par la loi.",
+          ],
+        },
+        {
+          title: "Comptes et connexion",
+          paragraphs: [
+            "Vous vous connectez avec un fournisseur d'identité tiers (comme Google). Vous êtes responsable de l'activité sous votre compte et de la sécurité de l'accès à ce fournisseur.",
+          ],
+        },
+        {
+          title: "Votre contenu",
+          paragraphs: [
+            "Vous conservez la propriété des tâches, plans et autres contenus que vous créez. Vous nous autorisez à stocker, afficher et traiter ce contenu uniquement pour faire fonctionner l'application (y compris le partage que vous autorisez).",
+            "N'importez pas de contenu illégal, nuisible ou contrefaisant. N'utilisez pas Plan 2026 pour harceler autrui ou accéder à des données qui ne vous appartiennent pas.",
+          ],
+        },
+        {
+          title: "Google Calendar (optionnel)",
+          paragraphs: [
+            "Si vous connectez Google Calendar ou utilisez Ajouter au calendrier, vous autorisez Plan 2026 à créer les événements que vous demandez. L'accès au calendrier est optionnel et n'est pas requis pour la connexion.",
+          ],
+        },
+        {
+          title: "Utilisation acceptable",
+          paragraphs: [
+            "Vous ne devez pas abuser du service, perturber nos systèmes, ni utiliser Plan 2026 en violation de la loi ou des conditions de tiers (y compris les politiques de Google lors de l'utilisation de la connexion Google ou du calendrier).",
+          ],
+        },
+        {
+          title: "Résiliation",
+          paragraphs: [
+            "Vous pouvez cesser d'utiliser Plan 2026 à tout moment. Nous pouvons suspendre ou mettre fin à l'accès en cas de violation de ces conditions ou si nous arrêtons la démo.",
+            "Vous pouvez demander la suppression de vos données comme décrit dans notre politique de confidentialité.",
+          ],
+        },
+        {
+          title: "Limitation de responsabilité",
+          paragraphs: [
+            "Dans la mesure permise par la loi, Daniel Fitzgerald et Plan 2026 ne seront pas responsables des dommages indirects, accessoires ou consécutifs, ni de la perte de données ou de profits liée à votre utilisation de l'application.",
+          ],
+        },
+        {
+          title: "Modifications",
+          paragraphs: [
+            "Nous pouvons mettre à jour ces conditions lorsque l'application évolue. La date en haut sera modifiée le cas échéant. L'utilisation continue vaut acceptation des conditions mises à jour.",
+          ],
+        },
+        {
+          title: "Contact",
+          paragraphs: ["Questions sur ces conditions : danfour@gmail.com (Daniel Fitzgerald, Fredericton, Nouveau-Brunswick, Canada)."],
+        },
+      ],
     },
     invite: {
       invalidTitle: "Invitation invalide",
@@ -1225,6 +1370,8 @@ const messages = {
       continueWithFacebook: "Enter with Facebook",
       privacyNotice: "If you continue, you agree to our",
       privacyLink: "Privacy Policy",
+      termsNoticeAnd: "and",
+      termsLink: "Terms of Service",
       calendarNotice:
         "Sign-in only need your Google profile. Calendar permission na optional — we go ask only when you use Add to Calendar or connect am for Settings.",
     },
@@ -1311,6 +1458,75 @@ const messages = {
       contactPhoneLabel: "Phone",
       contactPhone: "506-471-3031",
       contactGithubLabel: "GitHub",
+    },
+    terms: {
+      title: "Terms of Service",
+      lastUpdated: "Last update: 29 June 2026",
+      privacyReference: "For how we collect and use personal data, see our",
+      sections: [
+        {
+          title: "Agreement",
+          paragraphs: [
+            "Dis Terms of Service cover how you fit use Plan 2026, one planning and task app wey Daniel Fitzgerald dey run. Di public demo dey for plan2026-pi.vercel.app.",
+            "If you sign in or use Plan 2026, you agree to dis Terms. If you no agree, no use di app.",
+          ],
+        },
+        {
+          title: "Di service",
+          paragraphs: [
+            "Plan 2026 na personal productivity tool. Features fit change, and demo fit no dey available sometimes for maintenance.",
+            "We dey provide di app “as is” without warranty, as law allow.",
+          ],
+        },
+        {
+          title: "Accounts and sign-in",
+          paragraphs: [
+            "You sign in with third-party provider (like Google). You dey responsible for activity under your account and to keep dat provider access secure.",
+          ],
+        },
+        {
+          title: "Your content",
+          paragraphs: [
+            "You still own tasks, plans, and content wey you create. You give us permission to store and show am only to run di app (including sharing wey you allow).",
+            "No upload unlawful or harmful content. No use Plan 2026 harass people or access data wey no be yours.",
+          ],
+        },
+        {
+          title: "Google Calendar (optional)",
+          paragraphs: [
+            "If you connect Google Calendar or use Add to Calendar, you authorize Plan 2026 create events wey you request. Calendar access na optional — e no required for sign-in.",
+          ],
+        },
+        {
+          title: "Acceptable use",
+          paragraphs: [
+            "No misuse di service, disrupt our systems, or use Plan 2026 break law or third-party terms (including Google policies when you use Google sign-in or Calendar).",
+          ],
+        },
+        {
+          title: "Termination",
+          paragraphs: [
+            "You fit stop using Plan 2026 anytime. We fit suspend access if you break dis Terms or if we stop di demo.",
+            "You fit request delete your data as our Privacy Policy describe.",
+          ],
+        },
+        {
+          title: "Limitation of liability",
+          paragraphs: [
+            "As law allow, Daniel Fitzgerald and Plan 2026 no go liable for indirect or consequential damages or loss of data or profits from your use of di app.",
+          ],
+        },
+        {
+          title: "Changes",
+          paragraphs: [
+            "We fit update dis Terms when app change. Di “Last update” date for top go change. If you keep using after changes, you accept di new Terms.",
+          ],
+        },
+        {
+          title: "Contact",
+          paragraphs: ["Questions about dis Terms: danfour@gmail.com (Daniel Fitzgerald, Fredericton, New Brunswick, Canada)."],
+        },
+      ],
     },
     invite: {
       invalidTitle: "Invite link don die",
