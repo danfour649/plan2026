@@ -139,7 +139,9 @@ To enable "Continue with Facebook" on the login page:
 1. Create an app at [developers.facebook.com](https://developers.facebook.com/) and add the **Facebook Login** product.
 2. In Facebook Login settings, add a **Valid OAuth Redirect URI**: `https://<your-domain>/api/auth/callback/facebook` (e.g. `http://localhost:3000/api/auth/callback/facebook` for local dev).
 3. Set `AUTH_FACEBOOK_ID`, `AUTH_FACEBOOK_SECRET`, and `AUTH_FACEBOOK_ENABLED=true` in your environment.
-4. Request only the permissions you need (e.g. `email`, `public_profile`). App Review may be required for certain permissions.
+4. Request only the permissions you need (`email`, `public_profile`). App Review and business verification are required for Live mode with external users.
+
+**Production go-live:** follow **[GO-LIVE-FACEBOOK.md](./GO-LIVE-FACEBOOK.md)** (Meta App Review, Vercel env, screencast). Facebook login is off by default until `AUTH_FACEBOOK_ENABLED=true`.
 
 ## API
 

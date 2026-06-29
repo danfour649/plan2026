@@ -414,7 +414,7 @@ const messages = {
           title: "How to delete your data",
           paragraphs: [
             "You can request deletion of your Plan 2026 account and the personal data we store about you at any time. You do not need to keep using the app to make this request.",
-            "To request deletion, email us at danfour@gmail.com with the subject line “Plan 2026 data deletion request” and include the Google email address you used to sign in. You may also contact us by phone or GitHub using the details in the Contact section below.",
+            "To request deletion, email us at danfour@gmail.com with the subject line “Plan 2026 data deletion request” and include the email address you used to sign in (Google or Facebook). You may also contact us by phone or GitHub using the details in the Contact section below.",
             "When we process a deletion request, we delete your user profile, tasks, plans, plan shares you created, session records, OAuth tokens stored by the app (including Google Calendar access tokens), and file attachments linked to your account from our database and attached storage. Deletion is permanent and cannot be undone.",
             "If you only want to remove Google Calendar access but keep your account and tasks, sign in and use Settings to disconnect Google Calendar instead of requesting full account deletion.",
             "We aim to complete verified deletion requests within 30 days and will confirm by email when your data has been removed.",
@@ -429,7 +429,7 @@ const messages = {
       ],
       contactTitle: "Contact",
       contactBody:
-        "Plan 2026 is operated by Daniel Fitzgerald (Fredericton, New Brunswick, Canada). To request deletion of your account and stored data, email danfour@gmail.com with the subject “Plan 2026 data deletion request” and the Google address you used to sign in. You can also reach us by phone or GitHub:",
+        "Plan 2026 is operated by Daniel Fitzgerald (Fredericton, New Brunswick, Canada). To request deletion of your account and stored data, email danfour@gmail.com with the subject “Plan 2026 data deletion request” and the email address you used to sign in (Google or Facebook). You can also reach us by phone or GitHub:",
       contactDeletionLinkLabel: "Email a data deletion request",
       contactDeletionEmailSubject: "Plan 2026 data deletion request",
       contactEmailLabel: "Email",
@@ -938,7 +938,7 @@ const messages = {
           title: "Comment supprimer vos données",
           paragraphs: [
             "Vous pouvez demander la suppression de votre compte Plan 2026 et des données personnelles que nous stockons à votre sujet en tout temps. Vous n'avez pas besoin de continuer à utiliser l'application pour faire cette demande.",
-            "Pour demander une suppression, écrivez-nous à danfour@gmail.com avec l'objet « Plan 2026 data deletion request » et indiquez l'adresse Google utilisée pour vous connecter. Vous pouvez aussi nous joindre par téléphone ou GitHub (voir la section Contact ci-dessous).",
+            "Pour demander une suppression, écrivez-nous à danfour@gmail.com avec l'objet « Plan 2026 data deletion request » et indiquez l'adresse courriel utilisée pour vous connecter (Google ou Facebook). Vous pouvez aussi nous joindre par téléphone ou GitHub (voir la section Contact ci-dessous).",
             "Lorsque nous traitons une demande de suppression, nous effaçons votre profil, vos tâches, vos plans, les partages que vous avez créés, les sessions, les jetons OAuth stockés par l'application (y compris l'accès Google Calendar) et les pièces jointes liées à votre compte dans notre base de données et le stockage associé. La suppression est définitive et irréversible.",
             "Si vous souhaitez seulement retirer l'accès Google Calendar tout en conservant votre compte et vos tâches, connectez-vous et utilisez Paramètres pour déconnecter Google Calendar au lieu de demander la suppression complète du compte.",
             "Nous visons à traiter les demandes de suppression vérifiées dans un délai de 30 jours et confirmons par courriel lorsque vos données ont été supprimées.",
@@ -953,7 +953,7 @@ const messages = {
       ],
       contactTitle: "Contact",
       contactBody:
-        "Plan 2026 est exploité par Daniel Fitzgerald (Fredericton, Nouveau-Brunswick, Canada). Pour demander la suppression de votre compte et de vos données stockées, écrivez à danfour@gmail.com avec l'objet « Plan 2026 data deletion request » et l'adresse Google utilisée pour la connexion. Vous pouvez aussi nous joindre par téléphone ou GitHub :",
+        "Plan 2026 est exploité par Daniel Fitzgerald (Fredericton, Nouveau-Brunswick, Canada). Pour demander la suppression de votre compte et de vos données stockées, écrivez à danfour@gmail.com avec l'objet « Plan 2026 data deletion request » et l'adresse courriel utilisée pour la connexion (Google ou Facebook). Vous pouvez aussi nous joindre par téléphone ou GitHub :",
       contactDeletionLinkLabel: "Envoyer une demande de suppression par courriel",
       contactDeletionEmailSubject: "Plan 2026 data deletion request",
       contactEmailLabel: "Courriel",
@@ -1459,7 +1459,7 @@ const messages = {
           title: "How to delete your data",
           paragraphs: [
             "You fit ask us delete your Plan 2026 account and di personal data we store about you anytime. You no need keep using di app to make dis request.",
-            "To request deletion, email us for danfour@gmail.com with subject line “Plan 2026 data deletion request” and include di Google email wey you use sign in. You fit also contact us by phone or GitHub (see Contact section below).",
+            "To request deletion, email us for danfour@gmail.com with subject line “Plan 2026 data deletion request” and include di email address wey you use sign in (Google or Facebook). You fit also contact us by phone or GitHub (see Contact section below).",
             "When we process deletion request, we delete your profile, tasks, plans, plan shares wey you create, session records, OAuth tokens di app store (including Google Calendar access tokens), and file attachments linked to your account from our database and attached storage. Deletion permanent and e no fit undo.",
             "If you only want remove Google Calendar access but keep your account and tasks, sign in and use Settings disconnect Google Calendar instead of full account deletion.",
             "We aim to finish verified deletion requests within 30 days and we go confirm by email when your data don remove.",
@@ -1474,7 +1474,7 @@ const messages = {
       ],
       contactTitle: "Contact",
       contactBody:
-        "Daniel Fitzgerald dey run Plan 2026 (Fredericton, New Brunswick, Canada). To request delete your account and stored data, email danfour@gmail.com with subject “Plan 2026 data deletion request” and di Google address wey you use sign in. You fit also reach us by phone or GitHub:",
+        "Daniel Fitzgerald dey run Plan 2026 (Fredericton, New Brunswick, Canada). To request delete your account and stored data, email danfour@gmail.com with subject “Plan 2026 data deletion request” and di email address wey you use sign in (Google or Facebook). You fit also reach us by phone or GitHub:",
       contactDeletionLinkLabel: "Email data deletion request",
       contactDeletionEmailSubject: "Plan 2026 data deletion request",
       contactEmailLabel: "Email",

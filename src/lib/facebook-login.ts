@@ -4,6 +4,7 @@
  *
  * TODO(re-enable-facebook-login): After Meta business verification + App Review (public_profile,
  * email) and app switched to Live, set AUTH_FACEBOOK_ENABLED=true in Vercel Production and redeploy.
+ * See GO-LIVE-FACEBOOK.md.
  */
 export function isFacebookLoginEnabled(): boolean {
   const flag = process.env.AUTH_FACEBOOK_ENABLED;

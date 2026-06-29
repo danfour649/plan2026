@@ -40,13 +40,16 @@ In Vercel, open **Project Settings** -> **Environment Variables** and add these 
 | `NEXTAUTH_URL` | Your production app URL, for example `https://plan2026-pi.vercel.app` |
 | `GOOGLE_CLIENT_ID` | Google OAuth client id |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
+| `AUTH_FACEBOOK_ID` | (optional) Meta App ID for Facebook Login |
+| `AUTH_FACEBOOK_SECRET` | (optional) Meta App Secret |
+| `AUTH_FACEBOOK_ENABLED` | (optional) Set to `true` after Meta App Review to show Facebook login |
 
 Notes:
 
 - `NEXTAUTH_URL` is also used to build the Google OAuth callback URL for Calendar event creation.
 - If your final Vercel URL changes after the first deploy, update `NEXTAUTH_URL` and redeploy.
 
-For a step-by-step demo launch checklist (privacy URL, Google verification, verification tests), see **[GO-LIVE.md](./GO-LIVE.md)**.
+For step-by-step launch checklists, see **[GO-LIVE.md](./GO-LIVE.md)** (Google) and **[GO-LIVE-FACEBOOK.md](./GO-LIVE-FACEBOOK.md)** (Facebook Login).
 
 ---
 
