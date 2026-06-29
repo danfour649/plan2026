@@ -79,13 +79,14 @@ export async function disconnectGoogleCalendar(): Promise<ActionResult> {
 }
 
 export async function setLocale(formData: FormData): Promise<{ success: true } | { success: false; error: string }> {
-  const userId = await getCurrentUserId();
-  if (!userId) return { success: false, error: "Unauthorized" };
   const raw = formData.get("locale");
   const value = parseLocale(typeof raw === "string" ? raw : undefined);
   (await cookies()).set(LOCALE_COOKIE, value, { path: "/", maxAge: 60 * 60 * 24 * 365 });
-  await updateUserPreferredLocale(userId, value);
-  await revalidateAuthSessionCache();
+  const userId = await getCurrentUserId();
+  if (userId) {
+    await updateUserPreferredLocale(userId, value);
+    await revalidateAuthSessionCache();
+  }
   revalidatePath("/", "layout");
   return { success: true };
 }
