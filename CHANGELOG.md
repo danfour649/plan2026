@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.7
+
+### Patch Changes
+
+- 04b61c2: Expand the public privacy policy with operator contact details, an explicit data-deletion process for Google OAuth review, and a one-click deletion request mailto link.
+
 ## 0.24.6
 
 ### Patch Changes
