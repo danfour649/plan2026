@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.6
+
+### Patch Changes
+
+- 1429a31: Add a public privacy policy page, login calendar and privacy disclosures, and a GO-LIVE checklist so the production demo can meet Google OAuth requirements before public advertising.
+
 ## 0.24.5
 
 ### Patch Changes
