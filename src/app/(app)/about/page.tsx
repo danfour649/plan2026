@@ -29,6 +29,14 @@ export default async function AboutPage() {
           <p className="text-sm text-secondary">{t.about.contributorsIntro}</p>
           <p className="text-sm">
             <Link
+              href="/privacy"
+              className="font-medium text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300"
+            >
+              {t.about.privacyLink}
+            </Link>
+          </p>
+          <p className="text-sm">
+            <Link
               href="https://github.com/danfour649/plan2026"
               target="_blank"
               rel="noopener noreferrer"

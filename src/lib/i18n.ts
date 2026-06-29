@@ -339,6 +339,77 @@ const messages = {
       envRequired: "Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in your .env to enable Google sign-in.",
       continueWithGoogle: "Continue with Google",
       continueWithFacebook: "Continue with Facebook",
+      privacyNotice: "By continuing, you agree to our",
+      privacyLink: "Privacy Policy",
+      calendarNotice:
+        "Google sign-in requests access to create calendar events from tasks. You can disconnect Calendar access in Settings.",
+    },
+    privacy: {
+      title: "Privacy Policy",
+      lastUpdated: "Last updated: 28 June 2026",
+      sections: [
+        {
+          title: "Who operates this app",
+          paragraphs: [
+            "Plan 2026 is a planning and task-management web app operated by Daniel Fitzgerald. The live demo is hosted at plan2026-pi.vercel.app.",
+          ],
+        },
+        {
+          title: "Information we collect",
+          paragraphs: [
+            "When you sign in, we receive basic profile information from your identity provider (such as name, email address, and profile picture).",
+            "You may create tasks, plans, attachments, and sharing settings. We store that content in our database so the app can show it to you and to people you share with.",
+            "If you connect Google Calendar, we store OAuth tokens needed to create calendar events when you choose “Add to Calendar”.",
+          ],
+        },
+        {
+          title: "How we use information",
+          paragraphs: [
+            "We use your information only to run the app: sign-in, saving your tasks and plans, sharing plans you authorize, optional calendar event creation, and remembering your language and theme preferences.",
+            "We do not sell your personal information. We do not use your task or plan content to train AI models.",
+          ],
+        },
+        {
+          title: "Sign-in providers",
+          paragraphs: [
+            "Google sign-in is the primary way to access the app. Google’s privacy policy applies to how Google handles your Google account data during sign-in.",
+            "If Facebook sign-in is enabled on a deployment, Facebook’s policies apply to that sign-in flow. We receive similar profile fields (such as name and email) from the provider you choose.",
+          ],
+        },
+        {
+          title: "Sharing and public links",
+          paragraphs: [
+            "When you invite someone to a plan or create a share link, people with that link can view (and in some cases update) the content you shared. Do not share links with anyone you do not trust.",
+          ],
+        },
+        {
+          title: "Cookies and local storage",
+          paragraphs: [
+            "We use session cookies to keep you signed in, and cookies for language and theme preferences. These are required for normal use of the app.",
+          ],
+        },
+        {
+          title: "Hosting and service providers",
+          paragraphs: [
+            "The app is hosted on Vercel. Data is stored in PostgreSQL. File attachments may be stored with Vercel Blob when that feature is enabled. Google provides sign-in and optional Calendar API access.",
+          ],
+        },
+        {
+          title: "Retention and your choices",
+          paragraphs: [
+            "We keep your data while your account is active. You can disconnect Google Calendar access in Settings. To request deletion of your account and associated data, contact us using the link below.",
+          ],
+        },
+        {
+          title: "Changes",
+          paragraphs: [
+            "We may update this policy as the app changes. The “Last updated” date at the top will change when we do.",
+          ],
+        },
+      ],
+      contactTitle: "Contact",
+      contactBody:
+        "Privacy questions or data-deletion requests: open an issue on the Plan 2026 GitHub repository or contact the project maintainer through that repository.",
     },
     invite: {
       invalidTitle: "Invalid or expired invite",
@@ -365,6 +436,7 @@ const messages = {
       contributors: "Contributors",
       contributorsIntro: "Built by Daniel Fitzgerald.",
       recentUpdatesTitle: "Recent updates",
+      privacyLink: "Privacy Policy",
     },
   },
   fr: {
@@ -692,6 +764,77 @@ const messages = {
       envRequired: "Configurez Google Auth dans votre .env.",
       continueWithGoogle: "Continuer avec Google",
       continueWithFacebook: "Continuer avec Facebook",
+      privacyNotice: "En continuant, vous acceptez notre",
+      privacyLink: "Politique de confidentialité",
+      calendarNotice:
+        "La connexion Google demande l'accès pour créer des événements de calendrier à partir des tâches. Vous pouvez déconnecter l'accès au calendrier dans Paramètres.",
+    },
+    privacy: {
+      title: "Politique de confidentialité",
+      lastUpdated: "Dernière mise à jour : 28 juin 2026",
+      sections: [
+        {
+          title: "Qui exploite cette application",
+          paragraphs: [
+            "Plan 2026 est une application web de planification et de gestion des tâches exploitée par Daniel Fitzgerald. La démo en ligne est hébergée sur plan2026-pi.vercel.app.",
+          ],
+        },
+        {
+          title: "Informations que nous collectons",
+          paragraphs: [
+            "Lorsque vous vous connectez, nous recevons des informations de profil de base de votre fournisseur d'identité (nom, adresse e-mail, photo de profil).",
+            "Vous pouvez créer des tâches, des plans, des pièces jointes et des paramètres de partage. Nous stockons ce contenu dans notre base de données pour vous l'afficher et le montrer aux personnes avec qui vous partagez.",
+            "Si vous connectez Google Calendar, nous stockons les jetons OAuth nécessaires pour créer des événements lorsque vous choisissez « Ajouter au calendrier ».",
+          ],
+        },
+        {
+          title: "Comment nous utilisons les informations",
+          paragraphs: [
+            "Nous utilisons vos informations uniquement pour faire fonctionner l'application : connexion, enregistrement de vos tâches et plans, partage que vous autorisez, création optionnelle d'événements de calendrier, et mémorisation de la langue et du thème.",
+            "Nous ne vendons pas vos informations personnelles. Nous n'utilisons pas le contenu de vos tâches ou plans pour entraîner des modèles d'IA.",
+          ],
+        },
+        {
+          title: "Fournisseurs de connexion",
+          paragraphs: [
+            "La connexion Google est le principal moyen d'accéder à l'application. La politique de confidentialité de Google s'applique aux données de votre compte Google lors de la connexion.",
+            "Si la connexion Facebook est activée sur un déploiement, les politiques de Facebook s'appliquent à ce flux. Nous recevons des champs de profil similaires (nom, e-mail) du fournisseur que vous choisissez.",
+          ],
+        },
+        {
+          title: "Partage et liens publics",
+          paragraphs: [
+            "Lorsque vous invitez quelqu'un à un plan ou créez un lien de partage, les personnes disposant de ce lien peuvent consulter (et parfois mettre à jour) le contenu partagé. Ne partagez pas de liens avec des personnes en qui vous n'avez pas confiance.",
+          ],
+        },
+        {
+          title: "Cookies et stockage local",
+          paragraphs: [
+            "Nous utilisons des cookies de session pour vous maintenir connecté, et des cookies pour la langue et le thème. Ils sont nécessaires à l'utilisation normale de l'application.",
+          ],
+        },
+        {
+          title: "Hébergement et prestataires",
+          paragraphs: [
+            "L'application est hébergée sur Vercel. Les données sont stockées dans PostgreSQL. Les pièces jointes peuvent être stockées avec Vercel Blob lorsque cette fonctionnalité est activée. Google fournit la connexion et l'accès optionnel à l'API Calendar.",
+          ],
+        },
+        {
+          title: "Conservation et vos choix",
+          paragraphs: [
+            "Nous conservons vos données tant que votre compte est actif. Vous pouvez déconnecter l'accès Google Calendar dans Paramètres. Pour demander la suppression de votre compte et des données associées, contactez-nous via le lien ci-dessous.",
+          ],
+        },
+        {
+          title: "Modifications",
+          paragraphs: [
+            "Nous pouvons mettre à jour cette politique lorsque l'application évolue. La date « Dernière mise à jour » en haut sera modifiée le cas échéant.",
+          ],
+        },
+      ],
+      contactTitle: "Contact",
+      contactBody:
+        "Questions sur la confidentialité ou demandes de suppression de données : ouvrez une issue sur le dépôt GitHub Plan 2026 ou contactez le mainteneur via ce dépôt.",
     },
     invite: {
       invalidTitle: "Invitation invalide",
@@ -718,6 +861,7 @@ const messages = {
       contributors: "Contributeurs",
       contributorsIntro: "Développé par Daniel Fitzgerald.",
       recentUpdatesTitle: "Mises à jour récentes",
+      privacyLink: "Politique de confidentialité",
     },
   },
   pidgin: {
@@ -1045,6 +1189,77 @@ const messages = {
       envRequired: "You need to set up Google Auth for inside .env.",
       continueWithGoogle: "Enter with Google",
       continueWithFacebook: "Enter with Facebook",
+      privacyNotice: "If you continue, you agree to our",
+      privacyLink: "Privacy Policy",
+      calendarNotice:
+        "Google sign-in go ask permission to create calendar events from tasks. You fit disconnect Calendar for Settings.",
+    },
+    privacy: {
+      title: "Privacy Policy",
+      lastUpdated: "Last update: 28 June 2026",
+      sections: [
+        {
+          title: "Who dey run dis app",
+          paragraphs: [
+            "Plan 2026 na planning and task app wey Daniel Fitzgerald dey run. Di live demo dey for plan2026-pi.vercel.app.",
+          ],
+        },
+        {
+          title: "Information we dey collect",
+          paragraphs: [
+            "When you sign in, we go get basic profile info from your provider (name, email, profile picture).",
+            "You fit create tasks, plans, attachments, and sharing settings. We dey store am for database so app fit show you and people wey you share with.",
+            "If you connect Google Calendar, we dey store OAuth tokens wey we need to create calendar events when you click “Add to Calendar”.",
+          ],
+        },
+        {
+          title: "How we dey use information",
+          paragraphs: [
+            "We only use your info to run di app: sign-in, save tasks and plans, share wey you allow, optional calendar events, and remember language and theme.",
+            "We no dey sell your personal information. We no dey use your task or plan content train AI models.",
+          ],
+        },
+        {
+          title: "Sign-in providers",
+          paragraphs: [
+            "Google sign-in na di main way to enter di app. Google privacy policy cover how Google handle your account data during sign-in.",
+            "If Facebook sign-in dey enabled for one deployment, Facebook policies apply to dat flow. We get similar profile fields (name, email) from di provider wey you choose.",
+          ],
+        },
+        {
+          title: "Sharing and public links",
+          paragraphs: [
+            "When you invite person to plan or create share link, people wey get dat link fit view (and sometimes update) wetin you share. No share links with people wey you no trust.",
+          ],
+        },
+        {
+          title: "Cookies and local storage",
+          paragraphs: [
+            "We dey use session cookies keep you signed in, and cookies for language and theme. Dem dey required for normal app use.",
+          ],
+        },
+        {
+          title: "Hosting and service providers",
+          paragraphs: [
+            "App dey hosted on Vercel. Data dey stored for PostgreSQL. File attachments fit dey stored with Vercel Blob when dat feature dey on. Google provide sign-in and optional Calendar API access.",
+          ],
+        },
+        {
+          title: "Retention and your choices",
+          paragraphs: [
+            "We keep your data while your account dey active. You fit disconnect Google Calendar for Settings. To request delete your account and data, contact us through di link below.",
+          ],
+        },
+        {
+          title: "Changes",
+          paragraphs: [
+            "We fit update dis policy when app change. Di “Last update” date for top go change when we do.",
+          ],
+        },
+      ],
+      contactTitle: "Contact",
+      contactBody:
+        "Privacy questions or data-deletion requests: open issue for Plan 2026 GitHub repository or contact di maintainer through dat repository.",
     },
     invite: {
       invalidTitle: "Invite link don die",
@@ -1071,6 +1286,7 @@ const messages = {
       contributors: "Contributors",
       contributorsIntro: "Daniel Fitzgerald build am.",
       recentUpdatesTitle: "Recent updates",
+      privacyLink: "Privacy Policy",
     },
   },
 } satisfies Record<Locale, Record<string, unknown>>;

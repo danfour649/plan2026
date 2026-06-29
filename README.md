@@ -193,7 +193,7 @@ In short:
 
 1. Create a Vercel project.
 2. Provision PostgreSQL and set the required env vars.
-3. Configure Google OAuth with your production callback URL and Calendar API access.
+3. Configure Google OAuth with your production callback URL and Calendar API access. Before advertising a public demo, follow **[GO-LIVE.md](./GO-LIVE.md)** (privacy URL, Vercel env, Google verification).
 4. Deploy; the build runs `prisma generate` and `next build`, and migrations are applied with `prisma migrate deploy`.
 
 The database story is intentionally the same in every environment: PostgreSQL for local work and PostgreSQL in production.

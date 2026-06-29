@@ -1,0 +1,138 @@
+# Go live — Plan 2026 demo checklist
+
+Use this before advertising [plan2026-pi.vercel.app](https://plan2026-pi.vercel.app) as a public demo.
+
+**Production URL:** `https://plan2026-pi.vercel.app`  
+**Privacy policy (for Google OAuth consent screen):** `https://plan2026-pi.vercel.app/privacy`  
+**Google OAuth callback:** `https://plan2026-pi.vercel.app/api/auth/callback/google`
+
+---
+
+## Phase 1 — Deploy app changes (code)
+
+- [ ] Merge and deploy the branch that adds `/privacy` and login disclosures.
+- [ ] Confirm `/privacy` loads without signing in.
+
+---
+
+## Phase 2 — Vercel environment variables
+
+In **Vercel → plan2026 → Settings → Environment Variables** (Production):
+
+| Variable | Expected value |
+|----------|----------------|
+| `DATABASE_URL` | Production PostgreSQL connection string |
+| `AUTH_SECRET` | Long random string (`openssl rand -base64 32`) |
+| `NEXTAUTH_URL` | `https://plan2026-pi.vercel.app` (no trailing slash) |
+| `GOOGLE_CLIENT_ID` | From Google Cloud OAuth client |
+| `GOOGLE_CLIENT_SECRET` | Same OAuth client |
+
+Optional (hide Facebook button on demo if unset):
+
+| Variable | Notes |
+|----------|--------|
+| `AUTH_FACEBOOK_ID` | Remove or leave unset unless Facebook is configured |
+| `AUTH_FACEBOOK_SECRET` | Same |
+
+After any env change: **Redeploy** Production.
+
+---
+
+## Phase 3 — Production database
+
+From a machine with network access to production Postgres:
+
+```powershell
+cd c:\Users\Admin\Desktop\vscode\plan2026
+$env:DATABASE_URL = "<production-connection-string>"
+pnpm exec prisma migrate deploy
+```
+
+- [ ] Migrations applied with no errors.
+
+---
+
+## Phase 4 — Google Cloud Console
+
+Project: the one that owns your OAuth client (`GOOGLE_CLIENT_ID`).
+
+### APIs
+
+- [ ] **Google Calendar API** enabled (required for “Add to Calendar”).
+
+### OAuth client (Web application)
+
+**Authorized JavaScript origins:**
+
+```
+https://plan2026-pi.vercel.app
+http://localhost:3000
+```
+
+**Authorized redirect URIs:**
+
+```
+https://plan2026-pi.vercel.app/api/auth/callback/google
+http://localhost:3000/api/auth/callback/google
+```
+
+### OAuth consent screen
+
+- [ ] App name, support email, and developer contact filled in.
+- [ ] **Application home page:** `https://plan2026-pi.vercel.app`
+- [ ] **Privacy policy URL:** `https://plan2026-pi.vercel.app/privacy`
+- [ ] Scopes include: `openid`, `email`, `profile`, `https://www.googleapis.com/auth/calendar.events`
+
+### Publishing (choose one path)
+
+**Path A — Quick demo (Testing mode, limited audience)**
+
+- Leave app in **Testing**.
+- Add every demo user’s Google email under **Test users**.
+- Good for a controlled demo; **not** suitable for broad advertising.
+
+**Path B — Public live demo (recommended before advertising)**
+
+- Complete Google’s verification checklist for **sensitive scope** (`calendar.events`).
+- Move OAuth app to **Production**.
+- Anyone with a Google account can sign in.
+
+Google verification can take several days. Start Path B as soon as `/privacy` is deployed.
+
+---
+
+## Phase 5 — End-to-end verification
+
+On `https://plan2026-pi.vercel.app`:
+
+- [ ] Open `/login` — Google button enabled, privacy link works.
+- [ ] Sign in with Google — lands on `/tasks` with no error.
+- [ ] Create a task, mark done, restore, delete.
+- [ ] Optional: **Add to Calendar** on a task with a due date.
+- [ ] Sign out and sign in again (session persists).
+- [ ] Check Vercel **Functions / Logs** if sign-in fails (common: redirect URI mismatch, wrong `NEXTAUTH_URL`).
+
+---
+
+## Phase 6 — Demo hygiene (recommended)
+
+- [ ] **Facebook:** If not configured for production, remove `AUTH_FACEBOOK_*` from Vercel so only Google shows.
+- [ ] Confirm no secrets are committed to git (`.env` stays local).
+- [ ] Update `DEPLOY.md` / roadmap when verification is complete.
+
+---
+
+## Common failures
+
+| Symptom | Likely cause |
+|---------|----------------|
+| Google “redirect_uri_mismatch” | Callback URI not listed in Google Cloud, or typo |
+| Sign-in loops back to `/login` | Wrong `NEXTAUTH_URL`, missing `AUTH_SECRET`, or DB/session failure |
+| “Access blocked” / 403 from Google | App in Testing mode and user not in test users |
+| Calendar button fails | Calendar API off, or user signed in before Calendar scope was added (sign out/in) |
+
+---
+
+## After go-live
+
+When you add a custom domain (TECH-0026), repeat Phase 2 and Phase 4 for the new domain and update `NEXTAUTH_URL`.

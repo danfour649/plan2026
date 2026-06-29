@@ -281,7 +281,7 @@ Error conventions across task APIs:
 ## 6. Conventions and Constraints
 
 - **Canonical user identity:** prefer `getCurrentUserId()` for task/settings server actions and pages; `getServerAuthSession()` is still used in the authenticated app layout
-- **Protected app routes:** `/tasks`, `/settings`, `/plans`, `/help`, `/about`. **Public routes:** `/login`, `/invite/[token]`, `/share/[token]` (no auth required).
+- **Protected app routes:** `/tasks`, `/settings`, `/plans`, `/help`, `/about`. **Public routes:** `/login`, `/privacy`, `/invite/[token]`, `/share/[token]` (no auth required).
 - **Canonical task UI route:** `/tasks`; **Plans UI routes:** `/plans`, `/plans/new`, `/plans/[id]`; **Help:** `/help`; **About:** `/about`
 - **Prisma runtime:** task APIs explicitly use `runtime = "nodejs"`
 - **Database provider:** Prisma datasource is `postgresql`; there is no SQLite path anymore

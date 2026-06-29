@@ -11,7 +11,6 @@ Single entry point for deferred work, active items, bulk-run workflow, and sessi
 | TECH-0026 | Get permanent website | Not ready — need to determine domain name and provider. |
 | TECH-0029 | Mobile app | Scope too large. |
 | TECH-0031 | AI advice on plans | Cost/misuse risk — API key theft or misuse could incur charges. |
-| TECH-0043 | Google OAuth live | Not ready — need privacy disclosures and Google checklist before leaving testing mode. |
 
 See each analysis doc in this folder for details.
 
@@ -23,6 +22,7 @@ Ready to implement. Each has a **dedicated analysis doc** in this folder for imp
 
 | ID | Title | Analysis doc |
 |----|--------|--------------|
+| TECH-0043 | Google OAuth live (demo launch) | [TECH-0043-google-oauth-live.md](./TECH-0043-google-oauth-live.md) — follow [GO-LIVE.md](../GO-LIVE.md) |
 | — | Allow mark as done in plan edit page | Already available via TaskActionButton on plan detail. |
 | — | Add calendar tab | [TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md) |
 | TECH-1005 | Data robustness and optimization | [TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md) |
@@ -84,7 +84,7 @@ Use this for **future bulk runs** (e.g. new tasks from an exported plan).
 | [TECH-0029-mobile-app.md](./TECH-0029-mobile-app.md) | Android and iOS app using the existing site (PWA or Capacitor). | On hold — scope too large |
 | [TECH-0031-ai-advice-on-plans.md](./TECH-0031-ai-advice-on-plans.md) | AI advice bot that reviews a plan and tasks and suggests next steps. | On hold — cost/misuse risk |
 | [TECH-0032-schedule-calendar.md](./TECH-0032-schedule-calendar.md) | Schedule/Calendar tab and page showing tasks and plans on a calendar. | Active |
-| [TECH-0043-google-oauth-live.md](./TECH-0043-google-oauth-live.md) | Production Google OAuth (config/deploy). | On hold — privacy/checklist |
+| [TECH-0043-google-oauth-live.md](./TECH-0043-google-oauth-live.md) | Production Google OAuth (config/deploy). | In progress — see GO-LIVE.md |
 | [TECH-DEBT-AND-OPTIMIZATIONS.md](./TECH-DEBT-AND-OPTIMIZATIONS.md) (TECH-1001) | Tech debt and optimizations (stale; many items implemented). | Superseded by TECH-1005 for new analysis |
 | [TECH-1005-data-robustness-optimization.md](./TECH-1005-data-robustness-optimization.md) | Fresh analysis of data handling for robustness and scalability; audit then implement. | Active (future work) |
 | [TECH-0058-optimize-app-before-future-work.md](./TECH-0058-optimize-app-before-future-work.md) | Plan and apply optimizations before expanding the app (bundle, code quality, TECH-1005 alignment). | Partially implemented (bundle analysis, lazy load, dead code, unused deps) |
