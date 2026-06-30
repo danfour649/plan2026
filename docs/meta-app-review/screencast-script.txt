@@ -1,0 +1,26 @@
+Screencast script for Meta App Review (documents-web-1)
+========================================================
+Target length: under 2 minutes. Record as .mp4 or .mov (1080p, full browser window).
+
+Scene 1 — Open the app (5 sec)
+  Navigate to https://plan2026.ca/login
+  Pause so both "Continue with Google" and "Continue with Facebook" are visible.
+
+Scene 2 — Start Facebook Login (10 sec)
+  Click "Continue with Facebook".
+  Show redirect to facebook.com consent screen.
+
+Scene 3 — Consent (15 sec)
+  Show requested permissions: public profile and email.
+  Click Continue / OK to approve.
+
+Scene 4 — Signed in (20 sec)
+  Show redirect back to plan2026.ca/tasks.
+  Point out the user's name in the header (from public_profile).
+  Optionally open Settings to show account is active.
+
+Scene 5 — Optional sign-out / sign-in again (15 sec)
+  Sign out, return to /login, sign in with Facebook again to show repeat use.
+
+Upload this video in Meta App Review → documents-web-1 (Supporting documentation).
+You can also upload 01-login-page-with-facebook.png from this folder as a still image.

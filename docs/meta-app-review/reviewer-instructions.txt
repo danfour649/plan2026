@@ -1,0 +1,30 @@
+Plan 2026 — Facebook Login test instructions for Meta App Review
+================================================================
+
+App URL (production):
+  https://plan2026.ca/login
+
+How to access the app:
+  1. Open https://plan2026.ca/login in a desktop or mobile browser.
+  2. No separate Plan 2026 account is required.
+  3. Click the white "Continue with Facebook" button (below "Continue with Google").
+  4. Sign in with your Facebook account and approve the requested permissions (public_profile, email).
+  5. You will be redirected to https://plan2026.ca/tasks, signed in. Your name appears in the app header.
+
+How the app uses Meta APIs:
+  - We use Facebook Login (server-side OAuth via NextAuth) only for authentication.
+  - Permissions requested: public_profile, email.
+  - public_profile: display the user's name and profile picture in the app after sign-in.
+  - email: identify the user account and associate tasks/plans with that account.
+  - We do NOT post to Facebook, read friends, access Pages, or use any other Meta APIs.
+
+Privacy and data deletion:
+  - Privacy policy: https://plan2026.ca/privacy
+  - Terms of service: https://plan2026.ca/terms
+  - Users can request account/data deletion by email (details on the privacy page).
+
+OAuth redirect URI configured in Meta app:
+  https://plan2026.ca/api/auth/callback/facebook
+
+Contact:
+  Daniel Fitzgerald — danfour@gmail.com
