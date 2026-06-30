@@ -28,3 +28,13 @@ Or from a danf-skills clone: `../danf-skills/overlays/plan2026/`
 - **After merge (mandatory):** immediately sync local `main` — `git fetch origin`, stash if checkout is blocked, `git checkout main`, `git pull origin main`. Do not wait for the user to ask. See **create-pr** skill §10.
 
 Full generic rules: [danf-skills/AGENTS.md](https://github.com/danfour649/danf-skills/blob/main/AGENTS.md)
+
+## Cursor Cloud specific instructions
+
+Single Next.js 16 app (App Router) backed by **PostgreSQL via Prisma**. Standard commands live in `package.json` (`dev`, `lint`, `typecheck`, `test`, `build`) and `README.md`.
+
+- **PostgreSQL is required and is NOT auto-started on boot.** Start it before running the app/tests: `sudo pg_ctlcluster 16 main start`. A local DB `plan2026` (role `plan2026` / password `plan2026`) already exists with all migrations applied, and a gitignored `.env` holds `DATABASE_URL`, `AUTH_SECRET`, and `NEXTAUTH_URL`.
+- After pulling new migrations, apply them with `pnpm exec prisma migrate deploy` (the update script intentionally does not run migrations).
+- Run the app with `pnpm run dev` (port 3000, webpack). Lint/test/typecheck: see `package.json` scripts.
+- **Auth is Google OAuth.** `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` are provided as injected secrets (also mirrored into the gitignored `.env`), so the "Continue with Google" button is enabled and the OAuth redirect works. Completing a real Google login still requires a Google account in the browser. To exercise authenticated flows (`/tasks`, `/plans`, etc.) WITHOUT a real Google login, seed a DB user + session: `pnpm exec tsx -r dotenv/config scripts/seed-dev-session.ts`. It prints a `SESSION_TOKEN`; set it in the browser as cookie `next-auth.session-token` (e.g. DevTools console: `document.cookie = "next-auth.session-token=<token>; path=/"`), then load `/tasks`.
+- **Gotcha:** sessions are cached per-token with `cacheLife("max")` (`src/auth.ts`). A user with `null` `preferredLocale`/`preferredTheme` triggers a "revalidateTag during render" error on first authenticated render. The seed script sets those prefs to avoid it; if you change a user's prefs, use a fresh session token (new cache key) or restart the dev server to clear the in-process cache.
