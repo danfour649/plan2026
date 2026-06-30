@@ -2,9 +2,11 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 import { getServerAuthSession } from "@/auth";
+import { AuthErrorAlert } from "@/components/AuthErrorAlert";
 import { Plan2026Logo } from "@/components/Plan2026Logo";
 import { PublicPageShell } from "@/components/PublicPageShell";
 import { getLocaleForRequest } from "@/lib/account-preferences";
+import { getLoginAuthErrorMessage } from "@/lib/auth-errors";
 import { isFacebookLoginEnabled } from "@/lib/facebook-login";
 import { getTranslations } from "@/lib/i18n";
 import { FacebookSignInButton } from "./FacebookSignInButton";
@@ -13,15 +15,22 @@ import { GoogleSignInButton } from "./GoogleSignInButton";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ callbackUrl?: string }>;
+  searchParams?: Promise<{ callbackUrl?: string; error?: string }>;
 }) {
   const session = await getServerAuthSession();
-  const resolved = await searchParams?.catch((): { callbackUrl?: string } => ({}));
+  const resolved = await searchParams?.catch((): { callbackUrl?: string; error?: string } => ({}));
   const callbackUrl = resolved?.callbackUrl ?? "/tasks";
-  if (session?.user) redirect(callbackUrl);
+  const authError = resolved?.error;
+  if (session?.user) {
+    if (authError) {
+      redirect(`/settings?linkError=${encodeURIComponent(authError)}`);
+    }
+    redirect(callbackUrl);
+  }
 
   const locale = await getLocaleForRequest();
   const t = getTranslations(locale);
+  const authErrorMessage = getLoginAuthErrorMessage(t, authError);
 
   const hasGoogleCredentials = Boolean(
     process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
@@ -67,6 +76,29 @@ export default async function LoginPage({
           {!hasGoogleCredentials ? (
             <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
               {t.login.envRequired}
+            </div>
+          ) : null}
+
+          {authErrorMessage ? (
+            <div className="mt-6">
+              <AuthErrorAlert
+                message={
+                  authError === "OAuthAccountNotLinked" ? (
+                    <>
+                      {authErrorMessage}{" "}
+                      <Link
+                        href="/settings"
+                        className="font-semibold text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300"
+                      >
+                        {t.nav.settings}
+                      </Link>
+                      .
+                    </>
+                  ) : (
+                    authErrorMessage
+                  )
+                }
+              />
             </div>
           ) : null}
 
