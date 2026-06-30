@@ -41,6 +41,12 @@ const messages = {
       linkGoogleAccount: "Link Google account",
       linkFacebookAccount: "Link Facebook account",
       linkingAccount: "Linking…",
+      linkErrorAccountNotLinked:
+        "This sign-in account could not be linked. It may use a different email or already belong to another user.",
+      linkErrorAccessDenied: "Account linking was cancelled. Try again when you are ready.",
+      linkErrorConfiguration: "Account linking is temporarily unavailable. Please try again later.",
+      linkErrorVerification: "The sign-in link has expired or was already used.",
+      linkErrorGeneric: "Could not link this account. Please try again.",
     },
     tasksPage: {
       title: "Tasks",
@@ -363,6 +369,10 @@ const messages = {
         "Sign-in uses your Google or Facebook profile only. Calendar access is optional and is requested when you use Add to Calendar or connect in Settings.",
       accountNotLinked:
         "This email is already linked to another sign-in method. Sign in with the provider you used first, then link the other in Settings.",
+      authErrorAccessDenied: "Sign-in was cancelled or denied. Please try again.",
+      authErrorConfiguration: "Sign-in is temporarily unavailable due to a server configuration problem.",
+      authErrorVerification: "The sign-in link has expired or was already used.",
+      authErrorGeneric: "Sign-in failed. Please try again.",
     },
     privacy: {
       title: "Privacy Policy",
@@ -575,6 +585,12 @@ const messages = {
       linkGoogleAccount: "Lier le compte Google",
       linkFacebookAccount: "Lier le compte Facebook",
       linkingAccount: "Liaison…",
+      linkErrorAccountNotLinked:
+        "Ce compte de connexion n'a pas pu être lié. Il peut utiliser une autre adresse courriel ou appartenir à un autre utilisateur.",
+      linkErrorAccessDenied: "La liaison du compte a été annulée. Réessayez quand vous serez prêt.",
+      linkErrorConfiguration: "La liaison du compte est temporairement indisponible. Veuillez réessayer plus tard.",
+      linkErrorVerification: "Le lien de connexion a expiré ou a déjà été utilisé.",
+      linkErrorGeneric: "Impossible de lier ce compte. Veuillez réessayer.",
     },
     tasksPage: {
       title: "Tâches",
@@ -897,6 +913,11 @@ const messages = {
         "La connexion utilise uniquement votre profil Google ou Facebook. L'accès à l'agenda est optionnel et demandé lorsque vous utilisez Ajouter à l'agenda ou la connexion dans Paramètres.",
       accountNotLinked:
         "Cette adresse courriel est déjà liée à une autre méthode de connexion. Connectez-vous avec le fournisseur utilisé au départ, puis liez l'autre dans Paramètres.",
+      authErrorAccessDenied: "La connexion a été annulée ou refusée. Veuillez réessayer.",
+      authErrorConfiguration:
+        "La connexion est temporairement indisponible en raison d'un problème de configuration du serveur.",
+      authErrorVerification: "Le lien de connexion a expiré ou a déjà été utilisé.",
+      authErrorGeneric: "La connexion a échoué. Veuillez réessayer.",
     },
     privacy: {
       title: "Politique de confidentialité",
@@ -1106,6 +1127,12 @@ const messages = {
       linkGoogleAccount: "Link Google account",
       linkFacebookAccount: "Link Facebook account",
       linkingAccount: "Dey link…",
+      linkErrorAccountNotLinked:
+        "We no fit link dis sign-in account. E fit use different email or don belong to another person.",
+      linkErrorAccessDenied: "Account linking don cancel. Try again when you ready.",
+      linkErrorConfiguration: "Account linking no dey available for now. Try again later.",
+      linkErrorVerification: "Di sign-in link don expire or dem don use am already.",
+      linkErrorGeneric: "We no fit link dis account. Try again.",
     },
     tasksPage: {
       title: "Work",
@@ -1428,6 +1455,10 @@ const messages = {
         "Sign-in only need your Google or Facebook profile. Calendar permission na optional — we go ask only when you use Add to Calendar or connect am for Settings.",
       accountNotLinked:
         "Dis email don link to another sign-in method already. Enter with di provider wey you use first, then link di other one for Settings.",
+      authErrorAccessDenied: "Sign-in don cancel or dem reject am. Try again.",
+      authErrorConfiguration: "Sign-in no dey available for now because of server setup problem.",
+      authErrorVerification: "Di sign-in link don expire or dem don use am already.",
+      authErrorGeneric: "Sign-in fail. Try again.",
     },
     privacy: {
       title: "Privacy Policy",

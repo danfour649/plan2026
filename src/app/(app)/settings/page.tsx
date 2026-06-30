@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 
 import { getCurrentUserId } from "@/auth";
+import { AuthErrorAlert } from "@/components/AuthErrorAlert";
 import { getLocaleForRequest, getThemeForRequest } from "@/lib/account-preferences";
 import { DisconnectGoogleCalendarButton } from "@/components/DisconnectGoogleCalendarButton";
 import { LanguageSelect } from "@/components/LanguageSelect";
 import { LinkSignInProviderButton } from "@/components/LinkSignInProviderButton";
 import { ReconnectGoogleCalendarButton } from "@/components/ReconnectGoogleCalendarButton";
 import { ThemeSelect } from "@/components/ThemeSelect";
+import { getSettingsLinkErrorMessage } from "@/lib/auth-errors";
 import { isFacebookLoginEnabled } from "@/lib/facebook-login";
 import { hasGoogleCalendarScope } from "@/lib/google-oauth";
 import { getTranslations } from "@/lib/i18n";
@@ -34,13 +36,21 @@ function ConnectionBadge({ connected, connectedLabel, disconnectedLabel }: {
   );
 }
 
-export default async function SettingsPage() {
+export default async function SettingsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ linkError?: string }>;
+}) {
   const userId = await getCurrentUserId();
   if (!userId) return null;
+
+  const resolved = await searchParams?.catch((): { linkError?: string } => ({}));
+  const linkError = resolved?.linkError;
 
   const locale = await getLocaleForRequest();
   const theme = await getThemeForRequest();
   const t = getTranslations(locale);
+  const linkErrorMessage = getSettingsLinkErrorMessage(t, linkError);
 
   const linkedAccounts = await prisma.account.findMany({
     where: { userId, provider: { in: ["google", "facebook"] } },
@@ -78,6 +88,8 @@ export default async function SettingsPage() {
             <p className="text-sm text-tertiary">{t.settings.languageDescription}</p>
             <LanguageSelect currentLocale={locale} />
           </div>
+
+          {linkErrorMessage ? <AuthErrorAlert message={linkErrorMessage} /> : null}
 
           {showSignInMethods ? (
             <div className="flex flex-col gap-4 rounded-2xl border border-border bg-blue-50/40 p-5 dark:bg-zinc-800/50">
