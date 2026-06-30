@@ -27,12 +27,20 @@ const messages = {
       calendarDisconnected:
         "Google Calendar is not connected. Connect it here or use Add to Calendar on a task to grant access.",
       pageDescription:
-        "Manage your account, language, and Google Calendar connection. Language and theme are saved to your account and apply on any device when you sign in.",
+        "Manage sign-in methods, language, theme, and Google Calendar. Language and theme are saved to your account and apply on any device when you sign in.",
       theme: "Theme",
       themeLight: "Light",
       themeDark: "Dark",
       themeSystem: "System",
       themeDescription: "Choose light or dark appearance. System follows your device setting.",
+      signInMethods: "Sign-in methods",
+      signInMethodsDescription:
+        "Link Google and Facebook so you can sign in with either one. You must be signed in here first — use the provider you originally signed up with, then link the other.",
+      googleSignIn: "Google",
+      facebookSignIn: "Facebook",
+      linkGoogleAccount: "Link Google account",
+      linkFacebookAccount: "Link Facebook account",
+      linkingAccount: "Linking…",
     },
     tasksPage: {
       title: "Tasks",
@@ -353,6 +361,8 @@ const messages = {
       termsLink: "Terms of Service",
       calendarNotice:
         "Sign-in uses your Google or Facebook profile only. Calendar access is optional and is requested when you use Add to Calendar or connect in Settings.",
+      accountNotLinked:
+        "This email is already linked to another sign-in method. Sign in with the provider you used first, then link the other in Settings.",
     },
     privacy: {
       title: "Privacy Policy",
@@ -551,12 +561,20 @@ const messages = {
       calendarDisconnected:
         "Google Agenda n'est pas connecté. Connectez-le ici ou utilisez Ajouter à l'agenda sur une tâche pour accorder l'accès.",
       pageDescription:
-        "Gérez votre compte, la langue et la connexion Google Agenda. La langue et le thème sont enregistrés sur votre compte et s’appliquent sur chaque appareil lorsque vous êtes connecté.",
+        "Gérez les méthodes de connexion, la langue, le thème et Google Agenda. La langue et le thème sont enregistrés sur votre compte et s’appliquent sur chaque appareil lorsque vous êtes connecté.",
       theme: "Thème",
       themeLight: "Clair",
       themeDark: "Sombre",
       themeSystem: "Système",
       themeDescription: "Choisissez l'apparence claire ou sombre. Système suit le réglage de l'appareil.",
+      signInMethods: "Méthodes de connexion",
+      signInMethodsDescription:
+        "Liez Google et Facebook pour vous connecter avec l'un ou l'autre. Vous devez d'abord être connecté ici — utilisez le fournisseur avec lequel vous vous êtes inscrit, puis liez l'autre.",
+      googleSignIn: "Google",
+      facebookSignIn: "Facebook",
+      linkGoogleAccount: "Lier le compte Google",
+      linkFacebookAccount: "Lier le compte Facebook",
+      linkingAccount: "Liaison…",
     },
     tasksPage: {
       title: "Tâches",
@@ -877,6 +895,8 @@ const messages = {
       termsLink: "Conditions d'utilisation",
       calendarNotice:
         "La connexion utilise uniquement votre profil Google ou Facebook. L'accès à l'agenda est optionnel et demandé lorsque vous utilisez Ajouter à l'agenda ou la connexion dans Paramètres.",
+      accountNotLinked:
+        "Cette adresse courriel est déjà liée à une autre méthode de connexion. Connectez-vous avec le fournisseur utilisé au départ, puis liez l'autre dans Paramètres.",
     },
     privacy: {
       title: "Politique de confidentialité",
@@ -1072,12 +1092,20 @@ const messages = {
       calendarDisconnected:
         "Google Calendar no connect. Connect am here or use Add to Calendar for task make you fit grant access.",
       pageDescription:
-        "Arrange your account, language, and Google Calendar connection. Language and theme dey save for your account and go work for any device when you sign in.",
+        "Arrange sign-in methods, language, theme, and Google Calendar. Language and theme dey save for your account and go work for any device when you sign in.",
       theme: "How e look",
       themeLight: "Light",
       themeDark: "Dark",
       themeSystem: "System",
       themeDescription: "Pick light or dark. System follow your phone or computer setting.",
+      signInMethods: "How you dey enter",
+      signInMethodsDescription:
+        "Link Google and Facebook so you fit enter with any one. You must dey signed in here first — use di provider wey you first sign up with, then link di other one.",
+      googleSignIn: "Google",
+      facebookSignIn: "Facebook",
+      linkGoogleAccount: "Link Google account",
+      linkFacebookAccount: "Link Facebook account",
+      linkingAccount: "Dey link…",
     },
     tasksPage: {
       title: "Work",
@@ -1398,6 +1426,8 @@ const messages = {
       termsLink: "Terms of Service",
       calendarNotice:
         "Sign-in only need your Google or Facebook profile. Calendar permission na optional — we go ask only when you use Add to Calendar or connect am for Settings.",
+      accountNotLinked:
+        "Dis email don link to another sign-in method already. Enter with di provider wey you use first, then link di other one for Settings.",
     },
     privacy: {
       title: "Privacy Policy",

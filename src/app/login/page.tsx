@@ -13,11 +13,12 @@ import { GoogleSignInButton } from "./GoogleSignInButton";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ callbackUrl?: string }>;
+  searchParams?: Promise<{ callbackUrl?: string; error?: string }>;
 }) {
   const session = await getServerAuthSession();
-  const resolved = await searchParams?.catch((): { callbackUrl?: string } => ({}));
+  const resolved = await searchParams?.catch((): { callbackUrl?: string; error?: string } => ({}));
   const callbackUrl = resolved?.callbackUrl ?? "/tasks";
+  const authError = resolved?.error;
   if (session?.user) redirect(callbackUrl);
 
   const locale = await getLocaleForRequest();
@@ -67,6 +68,19 @@ export default async function LoginPage({
           {!hasGoogleCredentials ? (
             <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
               {t.login.envRequired}
+            </div>
+          ) : null}
+
+          {authError === "OAuthAccountNotLinked" ? (
+            <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100">
+              {t.login.accountNotLinked}{" "}
+              <Link
+                href="/settings"
+                className="font-semibold text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300"
+              >
+                {t.nav.settings}
+              </Link>
+              .
             </div>
           ) : null}
 

@@ -71,6 +71,10 @@ export const authOptions: NextAuthOptions = {
     return getAuthSecret();
   },
   session: { strategy: "database" },
+  pages: {
+    signIn: "/login",
+    error: "/login",
+  },
   callbacks: {
     session: async ({ session, user }) => {
       if (session.user) session.user.id = user.id;
