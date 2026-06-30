@@ -1,0 +1,9 @@
+Plan 2026 is a task and plan planner web app at https://plan2026.ca. Facebook Login lets users sign in with their Facebook account instead of Google.
+
+We request only public_profile and email:
+- public_profile — show the user's name and avatar in the signed-in app UI
+- email — create and identify the user's account in our database
+
+We use server-side OAuth (NextAuth). We do not use the Facebook JavaScript SDK, do not post on behalf of users, and do not access friends, Pages, or any other Facebook data.
+
+After sign-in, users manage personal tasks and shared plans. Profile data is stored in our PostgreSQL database for authentication and display only. It is not sold. Deletion instructions are at https://plan2026.ca/privacy.

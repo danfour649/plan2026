@@ -91,6 +91,8 @@ When Advanced Access shows **Verification required** or **Ready for testing**, s
 
 ### What to provide
 
+**Supporting documentation (documents-web-1):** Upload a screencast (`.mp4` / `.mov`, under ~2 minutes) plus optional screenshots. Ready-made copy and a login screenshot live in **[docs/meta-app-review/](./docs/meta-app-review/)** (includes `plan2026-meta-app-review.zip` for upload).
+
 **Use case (short):**  
 Plan 2026 is a task and plan planner. Facebook Login lets users sign in with their Facebook account. We only read `public_profile` and `email` to create a session and show their name and avatar in the app. We do not post to Facebook, read friends, or access other Facebook data.
 
@@ -124,9 +126,9 @@ In **Vercel → plan2026 → Settings → Environment Variables** (Production):
 |----------|--------|
 | `AUTH_FACEBOOK_ID` | App ID from Meta Settings → Basic |
 | `AUTH_FACEBOOK_SECRET` | App Secret (click Show) |
-| `AUTH_FACEBOOK_ENABLED` | Set to `true` after Meta App Review + Live mode (off by default) |
+| `AUTH_FACEBOOK_ENABLED` | Set to `true` (required for the login button; enabled for App Review submission) |
 
-**Re-enable after approval (TODO):** When business verification and App Review are complete and the Meta app is **Live**, set `AUTH_FACEBOOK_ENABLED=true` in Vercel Production (with `AUTH_FACEBOOK_ID` / `AUTH_FACEBOOK_SECRET` already set) and redeploy.
+**Re-enable / App Review:** Set `AUTH_FACEBOOK_ENABLED=true` in Vercel Production before submitting App Review so reviewers see **Continue with Facebook** on `/login`. After approval, switch the Meta app to **Live** so all Facebook users can sign in (not only test users).
 
 `NEXTAUTH_URL` must already be `https://plan2026.ca` (no trailing slash).
 

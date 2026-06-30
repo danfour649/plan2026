@@ -340,7 +340,7 @@ const messages = {
     login: {
       title: "Sign in",
       headline: "Plan 2026",
-      description: "Use your Google account to access your tasks dashboard.",
+      description: "Sign in with Google or Facebook to access your tasks dashboard.",
       benefit1: "Plans and tasks in one place",
       benefit2: "Share plans with others",
       benefit3: "Works in your language",
@@ -352,7 +352,7 @@ const messages = {
       termsNoticeAnd: "and",
       termsLink: "Terms of Service",
       calendarNotice:
-        "Sign-in uses your Google profile only. Calendar access is optional and is requested when you use Add to Calendar or connect in Settings.",
+        "Sign-in uses your Google or Facebook profile only. Calendar access is optional and is requested when you use Add to Calendar or connect in Settings.",
     },
     privacy: {
       title: "Privacy Policy",
@@ -864,7 +864,7 @@ const messages = {
     login: {
       title: "Connexion",
       headline: "Plan 2026",
-      description: "Utilisez Google pour accéder à vos tâches.",
+      description: "Connectez-vous avec Google ou Facebook pour accéder à vos tâches.",
       benefit1: "Plans et tâches en un seul endroit",
       benefit2: "Partagez les plans avec d'autres",
       benefit3: "Disponible dans votre langue",
@@ -876,7 +876,7 @@ const messages = {
       termsNoticeAnd: "et nos",
       termsLink: "Conditions d'utilisation",
       calendarNotice:
-        "La connexion utilise uniquement votre profil Google. L'accès à l'agenda est optionnel et demandé lorsque vous utilisez Ajouter à l'agenda ou la connexion dans Paramètres.",
+        "La connexion utilise uniquement votre profil Google ou Facebook. L'accès à l'agenda est optionnel et demandé lorsque vous utilisez Ajouter à l'agenda ou la connexion dans Paramètres.",
     },
     privacy: {
       title: "Politique de confidentialité",
@@ -1385,7 +1385,7 @@ const messages = {
     login: {
       title: "Enter",
       headline: "Plan 2026",
-      description: "Use your Google account enter your dashboard.",
+      description: "Use Google or Facebook enter your dashboard.",
       benefit1: "Plans and work for one place",
       benefit2: "Share plans with people",
       benefit3: "E dey work for your language",
@@ -1397,7 +1397,7 @@ const messages = {
       termsNoticeAnd: "and",
       termsLink: "Terms of Service",
       calendarNotice:
-        "Sign-in only need your Google profile. Calendar permission na optional — we go ask only when you use Add to Calendar or connect am for Settings.",
+        "Sign-in only need your Google or Facebook profile. Calendar permission na optional — we go ask only when you use Add to Calendar or connect am for Settings.",
     },
     privacy: {
       title: "Privacy Policy",
