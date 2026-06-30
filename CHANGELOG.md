@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.25.0
+
+### Minor Changes
+
+- 958d166: Add Settings sign-in method linking: link Google or Facebook while signed in, with clearer login error when providers are not yet linked.
+
 ## 0.24.15
 
 ### Patch Changes
