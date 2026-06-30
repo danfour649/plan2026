@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.24.15
+
+### Patch Changes
+
+- 57516a0: Re-enable Facebook login for Meta App Review: update login copy for Google and Facebook, add Meta submission docs, and document production env setup.
+
 ## 0.24.14
 
 ### Patch Changes
