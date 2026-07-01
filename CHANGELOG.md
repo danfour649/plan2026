@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.26.0
+
+### Minor Changes
+
+- 667e56e: Add standalone OpenAPI HTTP API (`apps/api`) deployable as a second Vercel project with shared PostgreSQL, personal API tokens (`p26_…`), and bearer authentication.
+
 ## 0.25.0
 
 ### Minor Changes
