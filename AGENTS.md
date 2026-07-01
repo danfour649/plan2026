@@ -9,6 +9,9 @@ Canonical agent guidance lives in **[danf-skills](https://github.com/danfour649/
 | **powershell** | All shell commands on Windows |
 | **create-pr** | Branches, changesets, `gh` PR workflow, babysit |
 | **bulk-task-pr** | Exported plan/task JSON → one PR per task |
+| **vercel-cli** | Vercel env vars, deploys, `NEXTAUTH_URL`, domains |
+| **gcp-cli** | gcloud APIs/project; Google OAuth console (not redirect URI CLI) |
+| **list-open-prs** | One-shot open PR list across GitHub repos |
 
 ## plan2026-specific rules
 
@@ -17,6 +20,8 @@ Read danf-skills overlays (same content, local path if cloned):
 - `overlays/plan2026/agent-instructions/PROJECT.md` — i18n, Next.js cache, typecheck, docs
 - `overlays/plan2026/create-pr/PROJECT.md` — `"plan2026"` changesets, prepush, `pnpm run pr`
 - `overlays/plan2026/bulk-task-pr/PROJECT.md` — roadmap paths, `bulk:next`, PostgreSQL null sort
+- `overlays/plan2026/vercel-cli/PROJECT.md` — plan2026 Vercel project, production URL, auth env vars
+- `overlays/plan2026/gcp-cli/PROJECT.md` — Google OAuth redirect URIs, Calendar API
 
 Or from a danf-skills clone: `../danf-skills/overlays/plan2026/`
 
