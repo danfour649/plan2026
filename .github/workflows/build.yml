@@ -34,5 +34,8 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
+      - name: Typecheck standalone API
+        run: pnpm run api:typecheck
+
       - name: Build
         run: pnpm run build
