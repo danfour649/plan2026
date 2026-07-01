@@ -1,5 +1,3 @@
-"use server";
-
 import { del } from "@vercel/blob";
 
 import type { Task } from "@/generated/prisma/client";
