@@ -169,7 +169,9 @@ Protected routes require:
 Authorization: Bearer <token>
 ```
 
-Create a personal API token locally or on a machine with `DATABASE_URL`:
+Users create their own tokens in the web app under **Settings → API access** — the raw `p26_…` token is shown once, and tokens can be revoked from the same screen.
+
+Alternatively, mint a token from a machine with `DATABASE_URL`:
 
 ```bash
 pnpm run api:create-token -- you@example.com "Production CLI"

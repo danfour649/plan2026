@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { getCurrentUserId } from "@/auth";
+import { ApiTokensSection } from "@/components/ApiTokensSection";
 import { AuthErrorAlert } from "@/components/AuthErrorAlert";
 import { getLocaleForRequest, getThemeForRequest } from "@/lib/account-preferences";
 import { DisconnectGoogleCalendarButton } from "@/components/DisconnectGoogleCalendarButton";
@@ -55,6 +56,12 @@ export default async function SettingsPage({
   const linkedAccounts = await prisma.account.findMany({
     where: { userId, provider: { in: ["google", "facebook"] } },
     select: { provider: true, scope: true },
+  });
+
+  const apiTokens = await prisma.apiToken.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+    select: { id: true, name: true, tokenPrefix: true, createdAt: true, lastUsedAt: true },
   });
 
   const googleAccount = linkedAccounts.find((account) => account.provider === "google");
@@ -164,6 +171,16 @@ export default async function SettingsPage({
               <ReconnectGoogleCalendarButton />
             )}
           </div>
+
+          <ApiTokensSection
+            tokens={apiTokens.map((token) => ({
+              id: token.id,
+              name: token.name,
+              tokenPrefix: token.tokenPrefix,
+              createdAt: token.createdAt.toISOString(),
+              lastUsedAt: token.lastUsedAt?.toISOString() ?? null,
+            }))}
+          />
         </div>
       </section>
     </div>
