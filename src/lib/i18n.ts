@@ -16,6 +16,34 @@ export type Messages = typeof messages.en;
 const messages = {
   en: {
     nav: { plans: "Plans", tasks: "Tasks", supplies: "Supplies", settings: "Settings", help: "Help", about: "About", menu: "Menu" },
+    upgradePage: {
+      title: "Upgrade",
+      pageDescription:
+        "Unlock anthony & omolola enterprises inc. Pro with a monthly, yearly, or lifetime plan. Purchases are processed securely by RevenueCat.",
+      statusTitle: "anthony & omolola enterprises inc. Pro",
+      proActive: "Active",
+      proInactive: "Not active",
+      proRenewsOn: "Your Pro access renews or expires on {date}.",
+      proLifetime: "You have lifetime Pro access. Thank you for your support!",
+      proInactiveDescription:
+        "You don't have Pro access yet. Choose a plan below to unlock all Pro features.",
+      manageSubscription: "Manage subscription",
+      refreshStatus: "Refresh status",
+      refreshing: "Refreshing…",
+      loading: "Loading subscription details…",
+      loadFailed: "Could not load subscription details. Please try again.",
+      retry: "Try again",
+      choosePlan: "Choose a plan",
+      choosePlanDescription:
+        "Pick the plan that suits you. You can manage or cancel your subscription at any time.",
+      noPlansAvailable: "No plans are available right now. Please check back later.",
+      buy: "Buy",
+      purchaseSuccess: "Purchase successful — Pro is now active!",
+      purchaseCancelled: "Purchase cancelled.",
+      purchaseAlreadyOwned: "You already own this plan.",
+      purchaseFailed: "The purchase could not be completed. Please try again.",
+      showPaywall: "View plans and pricing",
+    },
     settings: {
       title: "Settings",
       language: "Language",
@@ -560,6 +588,34 @@ const messages = {
   },
   fr: {
     nav: { plans: "Plans", tasks: "Tâches", supplies: "Fournitures", settings: "Paramètres", help: "Aide", about: "À propos", menu: "Menu" },
+    upgradePage: {
+      title: "Passer à Pro",
+      pageDescription:
+        "Débloquez anthony & omolola enterprises inc. Pro avec une formule mensuelle, annuelle ou à vie. Les paiements sont traités en toute sécurité par RevenueCat.",
+      statusTitle: "anthony & omolola enterprises inc. Pro",
+      proActive: "Actif",
+      proInactive: "Inactif",
+      proRenewsOn: "Votre accès Pro se renouvelle ou expire le {date}.",
+      proLifetime: "Vous avez un accès Pro à vie. Merci pour votre soutien !",
+      proInactiveDescription:
+        "Vous n'avez pas encore l'accès Pro. Choisissez une formule ci-dessous pour débloquer toutes les fonctionnalités Pro.",
+      manageSubscription: "Gérer l'abonnement",
+      refreshStatus: "Actualiser le statut",
+      refreshing: "Actualisation…",
+      loading: "Chargement des informations d'abonnement…",
+      loadFailed: "Impossible de charger les informations d'abonnement. Veuillez réessayer.",
+      retry: "Réessayer",
+      choosePlan: "Choisissez une formule",
+      choosePlanDescription:
+        "Choisissez la formule qui vous convient. Vous pouvez gérer ou annuler votre abonnement à tout moment.",
+      noPlansAvailable: "Aucune formule n'est disponible pour le moment. Veuillez revenir plus tard.",
+      buy: "Acheter",
+      purchaseSuccess: "Achat réussi — Pro est maintenant actif !",
+      purchaseCancelled: "Achat annulé.",
+      purchaseAlreadyOwned: "Vous possédez déjà cette formule.",
+      purchaseFailed: "L'achat n'a pas pu être finalisé. Veuillez réessayer.",
+      showPaywall: "Voir les formules et les tarifs",
+    },
     settings: {
       title: "Paramètres",
       language: "Langue",
@@ -1102,6 +1158,34 @@ const messages = {
   },
   pidgin: {
     nav: { plans: "Plans", tasks: "Work", supplies: "Supplies", settings: "Settings", help: "Help", about: "About", menu: "Menu" },
+    upgradePage: {
+      title: "Upgrade",
+      pageDescription:
+        "Unlock anthony & omolola enterprises inc. Pro with monthly, yearly, or lifetime plan. Na RevenueCat dey handle payment well well.",
+      statusTitle: "anthony & omolola enterprises inc. Pro",
+      proActive: "E dey active",
+      proInactive: "E no dey active",
+      proRenewsOn: "Your Pro access go renew or expire on {date}.",
+      proLifetime: "You get lifetime Pro access. Thank you well well!",
+      proInactiveDescription:
+        "You never get Pro access. Choose plan for down make you unlock all Pro features.",
+      manageSubscription: "Manage subscription",
+      refreshStatus: "Refresh status",
+      refreshing: "E dey refresh…",
+      loading: "E dey load subscription details…",
+      loadFailed: "We no fit load subscription details. Abeg try again.",
+      retry: "Try again",
+      choosePlan: "Choose plan",
+      choosePlanDescription:
+        "Pick plan wey fit you. You fit manage or cancel your subscription anytime.",
+      noPlansAvailable: "No plan dey available now. Abeg check back later.",
+      buy: "Buy",
+      purchaseSuccess: "Purchase don work — Pro don active!",
+      purchaseCancelled: "You cancel di purchase.",
+      purchaseAlreadyOwned: "You don already get dis plan.",
+      purchaseFailed: "Di purchase no work. Abeg try again.",
+      showPaywall: "See plans and prices",
+    },
     settings: {
       title: "How e go be",
       language: "Language",
