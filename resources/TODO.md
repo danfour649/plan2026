@@ -4,6 +4,22 @@ Operational notes, testing checklists, and follow-ups that do not belong in road
 
 ---
 
+## Billing — RevenueCat Web Billing next steps
+
+**Added:** 2026-07-10  
+**Context:** RevenueCat SDK integration (`@revenuecat/purchases-js`) — `/upgrade` page, Pro entitlement gating, paywall, and management link. Setup guide: [docs/revenuecat.md](../docs/revenuecat.md). Code: `src/lib/revenuecat.ts`, `src/components/UpgradePanel.tsx`.
+
+### Follow-ups
+
+- [ ] **Dashboard setup:** create the Web Billing app (connect Stripe), products `monthly` / `yearly` / `lifetime`, entitlement `anthony & omolola enterprises inc. Pro` with all three products attached, and the current offering with `$rc_monthly` / `$rc_annual` / `$rc_lifetime` packages (see docs/revenuecat.md §3)
+- [ ] **Paywall design:** attach a paywall to the current offering in the dashboard so the "View plans and pricing" button appears on `/upgrade`
+- [ ] **Production key:** set `NEXT_PUBLIC_REVENUECAT_API_KEY` in Vercel to the live `rcb_...` key (code falls back to the sandbox `test_...` key)
+- [ ] **Server-side entitlement checks:** client checks are UX-only — gate API routes/RSC via RevenueCat REST (`GET /v1/subscribers/{app_user_id}` with a secret key) or ingest webhooks into a `User.proUntil` column
+- [ ] **Navigation:** add an Upgrade link (nav or `/settings`) — `/upgrade` is currently only reachable by URL
+- [ ] **Sandbox test pass:** Stripe test card `4242 4242 4242 4242` through purchase, cancel, already-owned, and management-portal flows in en/fr/pidgin
+
+---
+
 ## Auth — Settings account linking (Google + Facebook)
 
 **Added:** 2026-06-30  
