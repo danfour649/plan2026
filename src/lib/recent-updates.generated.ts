@@ -3,6 +3,127 @@
 
 export const RECENT_UPDATES: { version: string; entries: string[] }[] = [
   {
+    "version": "0.27.1",
+    "entries": [
+      "Fix plan2026-api Git deploys via Vercel Build Output API, and add an API operations runbook."
+    ]
+  },
+  {
+    "version": "0.27.0",
+    "entries": [
+      "Add self-serve API token management in Settings: create personal `p26_…` tokens (shown once with copy-to-clipboard), see created/last-used dates, and revoke tokens. Token minting is shared between the Settings UI and `pnpm run api:create-token`; users are limited to 10 tokens."
+    ]
+  },
+  {
+    "version": "0.26.0",
+    "entries": [
+      "Add standalone OpenAPI HTTP API (`apps/api`) deployable as a second Vercel project with shared PostgreSQL, personal API tokens (`p26_…`), and bearer authentication."
+    ]
+  },
+  {
+    "version": "0.25.0",
+    "entries": [
+      "Add Settings sign-in method linking: link Google or Facebook while signed in, with clearer login error when providers are not yet linked."
+    ]
+  },
+  {
+    "version": "0.24.15",
+    "entries": [
+      "Re-enable Facebook login for Meta App Review: update login copy for Google and Facebook, add Meta submission docs, and document production env setup."
+    ]
+  },
+  {
+    "version": "0.24.14",
+    "entries": [
+      "Hide Facebook login by default until Meta App Review is complete. Set `AUTH_FACEBOOK_ENABLED=true` in production to re-enable after approval."
+    ]
+  },
+  {
+    "version": "0.24.13",
+    "entries": [
+      "Add Google Search Console HTML file verification at `/google80f3c882e9acdbbb.html`."
+    ]
+  },
+  {
+    "version": "0.24.12",
+    "entries": [
+      "Add Google Search Console site verification meta tag for OAuth branding domain ownership."
+    ]
+  },
+  {
+    "version": "0.24.11",
+    "entries": [
+      "Add a public home page at `/` with the Plan 2026 app name and purpose for Google OAuth branding verification."
+    ]
+  },
+  {
+    "version": "0.24.10",
+    "entries": [
+      "Add a public Terms of Service page at `/terms` for Google OAuth branding, with login and footer links."
+    ]
+  },
+  {
+    "version": "0.24.9",
+    "entries": [
+      "Split Google OAuth scopes so sign-in requests profile only; calendar.events is requested incrementally when connecting Calendar or using Add to Calendar."
+    ]
+  },
+  {
+    "version": "0.24.8",
+    "entries": [
+      "Allow language switching on public login and privacy pages, and add a prominent privacy policy link on the login page."
+    ]
+  },
+  {
+    "version": "0.24.7",
+    "entries": [
+      "Expand the public privacy policy with operator contact details, an explicit data-deletion process for Google OAuth review, and a one-click deletion request mailto link."
+    ]
+  },
+  {
+    "version": "0.24.6",
+    "entries": [
+      "Add a public privacy policy page, login calendar and privacy disclosures, and a GO-LIVE checklist so the production demo can meet Google OAuth requirements before public advertising."
+    ]
+  },
+  {
+    "version": "0.24.5",
+    "entries": [
+      "TECH-0082 Enhance predefined plans"
+    ]
+  },
+  {
+    "version": "0.24.4",
+    "entries": [
+      "TECH-0080 misc small features"
+    ]
+  },
+  {
+    "version": "0.24.3",
+    "entries": [
+      "TECH-0080 Copy button to task list and other stuff"
+    ]
+  },
+  {
+    "version": "0.24.2",
+    "entries": [
+      "TECH-0070 more fixes"
+    ]
+  },
+  {
+    "version": "0.24.1",
+    "entries": [
+      "TECH-0069 Fix text in dark mode, other fixes"
+    ]
+  },
+  {
+    "version": "0.24.0",
+    "entries": [
+      "Switch to pnpm, upgrade to Prisma ORM 7 with `prisma.config.ts` and the PostgreSQL driver adapter, and upgrade Zod to 4.",
+      "TECH-0068 Upgrade to pnpm, zod4, prisma7"
+    ]
+  },
+  {
     "version": "0.23.6",
     "entries": [
       "TECH-6005 cleanup, optimize misc"

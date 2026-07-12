@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense, type ReactNode } from "react";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/next";
 import { getThemeForRequest } from "@/lib/account-preferences";
 import "./globals.css";
 
@@ -93,6 +94,7 @@ export default function RootLayout({
         <Suspense fallback={<RootLayoutFallback />}>
           <RootLayoutBody>{children}</RootLayoutBody>
         </Suspense>
+        <Analytics />
       </body>
     </html>
   );
