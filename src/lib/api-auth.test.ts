@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { API_TOKEN_PREFIX, extractBearerToken, hashApiToken, safeEqualStrings } from "./api-auth-utils";
+import {
+  API_TOKEN_DISPLAY_PREFIX_LENGTH,
+  API_TOKEN_PREFIX,
+  extractBearerToken,
+  generateApiToken,
+  hashApiToken,
+  safeEqualStrings,
+} from "./api-auth-utils";
 
 describe("api-auth-utils", () => {
   it("extractBearerToken parses Authorization header", () => {
@@ -13,6 +20,14 @@ describe("api-auth-utils", () => {
     const token = `${API_TOKEN_PREFIX}test`;
     expect(hashApiToken(token)).toHaveLength(64);
     expect(hashApiToken(token)).toBe(hashApiToken(token));
+  });
+
+  it("generateApiToken produces a prefixed token with matching hash and display prefix", () => {
+    const { rawToken, tokenHash, tokenPrefix } = generateApiToken();
+    expect(rawToken.startsWith(API_TOKEN_PREFIX)).toBe(true);
+    expect(tokenHash).toBe(hashApiToken(rawToken));
+    expect(tokenPrefix).toBe(rawToken.slice(0, API_TOKEN_DISPLAY_PREFIX_LENGTH));
+    expect(generateApiToken().rawToken).not.toBe(rawToken);
   });
 
   it("safeEqualStrings compares in constant time", () => {

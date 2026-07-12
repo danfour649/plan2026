@@ -23,7 +23,7 @@ Authorization: Bearer p26_…
 
 Token types:
 
-1. **Personal API token** (recommended) — prefix `p26_`, created with:
+1. **Personal API token** (recommended) — prefix `p26_`. Users create and revoke their own tokens in the web app under **Settings → API access** (the raw token is shown once). Admins can also mint one from a machine with `DATABASE_URL`:
 
    ```bash
    pnpm run api:create-token -- you@example.com "My CLI"

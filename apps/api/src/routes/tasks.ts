@@ -9,7 +9,8 @@ import { requireBearerAuth } from "@api/middleware/auth";
 
 const app = new OpenAPIHono<{ Variables: ApiAuthVariables }>();
 
-app.use("/*", requireBearerAuth);
+app.use("/tasks", requireBearerAuth);
+app.use("/tasks/*", requireBearerAuth);
 
 const taskPlanSchema = z
   .object({
