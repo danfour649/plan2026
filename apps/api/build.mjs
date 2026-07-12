@@ -13,6 +13,7 @@ const shared = {
   format: "esm",
   alias: {
     "@": srcRoot,
+    "@api": resolve(root, "src"),
   },
   packages: "external",
   logLevel: "info",
@@ -29,7 +30,7 @@ async function bundleAll() {
     }),
     esbuild.build({
       ...shared,
-      entryPoints: [resolve(root, "api/index.ts")],
+      entryPoints: [resolve(root, "src/vercel-entry.ts")],
       outfile: resolve(root, "api/index.js"),
     }),
   ]);
@@ -63,7 +64,7 @@ if (watch) {
 
   const apiCtx = await esbuild.context({
     ...shared,
-    entryPoints: [resolve(root, "api/index.ts")],
+    entryPoints: [resolve(root, "src/vercel-entry.ts")],
     outfile: resolve(root, "api/index.js"),
   });
 
