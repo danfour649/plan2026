@@ -12,7 +12,7 @@ import {
   MAX_API_TOKENS_PER_USER,
 } from "@/lib/validations/api-token";
 
-export const API_TOKEN_PRO_REQUIRED_ERROR =
+const API_TOKEN_PRO_REQUIRED_ERROR =
   "Pro subscription required to create API tokens. Upgrade at /upgrade.";
 
 export type CreateApiTokenResult =
