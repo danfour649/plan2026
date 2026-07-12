@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.27.2
+
+### Patch Changes
+
+- c5c07ab: Document TECH-0085: populate Cursor Cloud Agent secrets for production API smoke tests.
+
 ## 0.27.1
 
 ### Patch Changes
