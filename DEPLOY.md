@@ -143,22 +143,25 @@ Keeping development and production on PostgreSQL avoids environment drift.
 
 ## 9. Standalone API (second Vercel project)
 
-The repo includes an OpenAPI-first HTTP API in **`apps/api`**. It shares the production PostgreSQL database with the web app but deploys as its own Vercel project (for example `https://api.plan2026.ca`).
+The repo includes an OpenAPI-first HTTP API in **`apps/api`**. It shares the production PostgreSQL database with the web app but deploys as its own Vercel project (production alias: `https://plan2026-api.vercel.app`; optional custom domain `https://api.plan2026.ca`).
+
+**Operations:** see **[apps/api/RUNBOOK.md](./apps/api/RUNBOOK.md)** (env vars, Git vs CLI deploy, smoke tests, troubleshooting).
 
 ### Create the API project
 
 1. In Vercel, **Add New Project** and import the same `plan2026` GitHub repository again.
 2. Set **Root Directory** to `apps/api`.
-3. Framework preset can remain **Other** (see `apps/api/vercel.json`).
+3. Framework preset can remain **Other** (see `apps/api/vercel.json` — build emits `.vercel/output`).
 4. Add environment variables:
 
 | Name | Value |
 |------|-------|
 | `DATABASE_URL` | Same production PostgreSQL connection string as the web app |
+| `NODEJS_HELPERS` | `0` (recommended) |
 
 Optional: `BLOB_READ_WRITE_TOKEN` if you add attachment routes to the standalone API later.
 
-5. Deploy. The build runs `prisma generate` from the repo root (see `apps/api/vercel.json`).
+5. Deploy. The build runs `prisma generate` from the repo root and writes the serverless function via the Build Output API.
 6. Apply migrations once against production (same as §5) — the `ApiToken` table and all other schema live in the shared database.
 
 ### API authentication
@@ -169,18 +172,20 @@ Protected routes require:
 Authorization: Bearer <token>
 ```
 
-Create a personal API token locally or on a machine with `DATABASE_URL`:
+Users create their own tokens in the web app under **Settings → API access** — the raw `p26_…` token is shown once, and tokens can be revoked from the same screen.
+
+Alternatively, mint a token from a machine with `DATABASE_URL`:
 
 ```bash
-pnpm run api:create-token -- you@example.com "Production CLI"
+pnpm exec tsx scripts/create-api-token.ts you@example.com "Production CLI"
 ```
 
 Store the printed `p26_…` token securely. It is shown only once.
 
 ### Verify the API
 
-1. Open `https://api.plan2026.ca/health` — expect `{ "ok": true, "service": "plan2026-api" }`.
-2. Open `https://api.plan2026.ca/docs` for Swagger UI.
+1. Open `https://plan2026-api.vercel.app/health` — expect `{ "ok": true, "service": "plan2026-api" }`.
+2. Open `https://plan2026-api.vercel.app/docs` for Swagger UI.
 3. Call `GET /tasks` with the bearer token.
 
 The web app at `plan2026.ca` continues to use server actions and its own `/api/*` routes. You can adopt the standalone API in the UI later; see `apps/api/README.md`.

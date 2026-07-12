@@ -1,8 +1,6 @@
-import { randomBytes } from "node:crypto";
-
 import "dotenv/config";
 
-import { API_TOKEN_PREFIX, hashApiToken } from "../src/lib/api-auth-utils";
+import { generateApiToken } from "../src/lib/api-auth-utils";
 import { createScriptPrisma } from "./lib/prisma-for-scripts";
 
 function usage(): never {
@@ -38,9 +36,7 @@ async function main() {
       process.exit(1);
     }
 
-    const rawToken = `${API_TOKEN_PREFIX}${randomBytes(32).toString("base64url")}`;
-    const tokenHash = hashApiToken(rawToken);
-    const tokenPrefix = rawToken.slice(0, 12);
+    const { rawToken, tokenHash, tokenPrefix } = generateApiToken();
 
     await prisma.apiToken.create({
       data: {

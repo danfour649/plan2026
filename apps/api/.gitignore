@@ -1,3 +1,4 @@
 dist/
 api/index.js
+.vercel/
 node_modules/

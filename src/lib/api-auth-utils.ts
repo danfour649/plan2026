@@ -1,10 +1,30 @@
-import { createHash, timingSafeEqual } from "node:crypto";
+import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 
-/** Prefix for personal API tokens created via `pnpm run api:create-token`. */
+/** Prefix for personal API tokens created in Settings or via `pnpm run api:create-token`. */
 export const API_TOKEN_PREFIX = "p26_";
+
+/** Leading characters of the raw token stored in plain text so users can recognize it later. */
+export const API_TOKEN_DISPLAY_PREFIX_LENGTH = 12;
 
 export function hashApiToken(token: string): string {
   return createHash("sha256").update(token, "utf8").digest("hex");
+}
+
+/**
+ * Generate a new personal API token. The raw token is shown to the user once;
+ * only its hash and display prefix are persisted.
+ */
+export function generateApiToken(): {
+  rawToken: string;
+  tokenHash: string;
+  tokenPrefix: string;
+} {
+  const rawToken = `${API_TOKEN_PREFIX}${randomBytes(32).toString("base64url")}`;
+  return {
+    rawToken,
+    tokenHash: hashApiToken(rawToken),
+    tokenPrefix: rawToken.slice(0, API_TOKEN_DISPLAY_PREFIX_LENGTH),
+  };
 }
 
 export function extractBearerToken(authorization: string | undefined): string | null {

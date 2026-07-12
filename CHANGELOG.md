@@ -1,5 +1,17 @@
 # plan2026
 
+## 0.27.1
+
+### Patch Changes
+
+- 6480609: Fix plan2026-api Git deploys via Vercel Build Output API, and add an API operations runbook.
+
+## 0.27.0
+
+### Minor Changes
+
+- 37df81c: Add self-serve API token management in Settings: create personal `p26_…` tokens (shown once with copy-to-clipboard), see created/last-used dates, and revoke tokens. Token minting is shared between the Settings UI and `pnpm run api:create-token`; users are limited to 10 tokens.
+
 ## 0.26.0
 
 ### Minor Changes

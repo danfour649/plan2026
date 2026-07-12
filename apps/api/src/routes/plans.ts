@@ -23,7 +23,8 @@ function parseLimit(value: string | undefined): number {
 
 const app = new OpenAPIHono<{ Variables: ApiAuthVariables }>();
 
-app.use("/*", requireBearerAuth);
+app.use("/plans", requireBearerAuth);
+app.use("/plans/*", requireBearerAuth);
 
 const planTaskSummarySchema = z.object({
   id: z.string(),
