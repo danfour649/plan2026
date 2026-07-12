@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.27.1
+
+### Patch Changes
+
+- 6480609: Fix plan2026-api Git deploys via Vercel Build Output API, and add an API operations runbook.
+
 ## 0.27.0
 
 ### Minor Changes
