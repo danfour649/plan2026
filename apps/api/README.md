@@ -62,13 +62,14 @@ Run `pnpm exec prisma generate` from the repo root after schema changes.
 
 ## Deploy on Vercel (second project)
 
-See **[DEPLOY.md](../../DEPLOY.md)** § “Standalone API (second Vercel project)”.
+See **[RUNBOOK.md](./RUNBOOK.md)** for day-to-day operations, and **[DEPLOY.md](../../DEPLOY.md)** § “Standalone API”.
 
 Summary:
 
 1. Create a new Vercel project from the same GitHub repo.
 2. Set **Root Directory** to `apps/api`.
-3. Copy production env vars (`DATABASE_URL`, optional `BLOB_READ_WRITE_TOKEN`).
-4. Assign a domain such as `api.plan2026.ca`.
+3. Copy production env vars (`DATABASE_URL`, `NODEJS_HELPERS=0`, optional `BLOB_READ_WRITE_TOKEN`).
+4. Deploy (build writes `.vercel/output` via Build Output API).
+5. Assign a domain such as `api.plan2026.ca` when ready.
 
 The web app at `plan2026.ca` can keep using server actions and `/api/*`. Point integrations at the standalone API when you want OpenAPI and bearer tokens.
