@@ -9,10 +9,12 @@ the code layout in this repo, and the practices the implementation follows.
 
 | File | Purpose |
 |------|---------|
-| `src/lib/revenuecat.ts` | SDK configuration, entitlement/product constants, purchase + error handling helpers |
+| `src/lib/revenuecat-constants.ts` | Shared entitlement / product id constants (client + server) |
+| `src/lib/revenuecat.ts` | Browser SDK configuration, purchase + error handling helpers |
+| `src/lib/revenuecat-server.ts` | Server Pro check via RevenueCat REST (`REVENUECAT_SECRET_API_KEY`) |
 | `src/components/UpgradePanel.tsx` | Client UI: Pro status, plan cards, RevenueCat Paywall, subscription management |
 | `src/app/(app)/upgrade/page.tsx` | Server page at `/upgrade` (sign-in required via the `(app)` layout) |
-| `src/lib/i18n.ts` | `upgradePage` strings (en / fr / pidgin) |
+| `src/lib/i18n.ts` | `upgradePage` + Settings Pro-gate strings (en / fr / pidgin) |
 
 ## 1. Install
 
@@ -38,6 +40,17 @@ Variables) to the live Web Billing key (`rcb_...`). Test keys (`test_...`) only 
 against RevenueCat's sandbox and never charge real money. Never put a **secret** API
 key (`sk_...`) in client code or `NEXT_PUBLIC_*` vars — those are for server-side
 REST calls only.
+
+### Secret key (server gating)
+
+Personal API tokens are enforced server-side. Set **`REVENUECAT_SECRET_API_KEY`**
+(`sk_...` from RevenueCat → Project settings → API keys) on:
+
+- the **plan2026** web app (Settings create-token + UI Pro status), and
+- the **plan2026-api** Vercel project (Bearer token auth rejects non-Pro users)
+
+Without the secret, Pro checks fail closed (no minting, existing tokens cannot
+authenticate).
 
 ## 3. Dashboard setup (one-time)
 
@@ -137,10 +150,11 @@ Customer Center ships for `purchases-js` later, swap the link for that call.
 - **Remote configuration**: plans, prices, and paywall design come from the current
   offering, so marketing changes need no deploy.
 - **Locale-aware checkout** via `selectedLocale` from the app's i18n.
-- **Server-side truth (recommended next step)**: for server-enforced gating (API
-  routes, RSC), verify entitlements server-side — either call RevenueCat's REST API
-  `GET /v1/subscribers/{app_user_id}` with a secret key, or ingest
+- **Server-side Pro for API tokens**: `userHasProEntitlement` in
+  `src/lib/revenuecat-server.ts` calls `GET /v1/subscribers/{app_user_id}` with
+  `REVENUECAT_SECRET_API_KEY`. Create-token and Bearer API auth both require an
+  active Pro entitlement (60s in-memory cache). Optional later: ingest
   [RevenueCat webhooks](https://www.revenuecat.com/docs/integrations/webhooks) into a
-  `User.proUntil` column. Client-side checks are for UX, not security.
+  `User.proUntil` column to avoid per-request REST.
 - **Testing**: with the `test_` key, use Stripe test cards (e.g. `4242 4242 4242 4242`)
   in the sandbox checkout; purchases appear in the RevenueCat sandbox dashboard.

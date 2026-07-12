@@ -11,6 +11,13 @@ import type {
   PurchaseResult,
 } from "@revenuecat/purchases-js";
 
+import {
+  PRO_ENTITLEMENT_ID,
+  REVENUECAT_PRODUCT_IDS,
+} from "@/lib/revenuecat-constants";
+
+export { PRO_ENTITLEMENT_ID, REVENUECAT_PRODUCT_IDS };
+
 /**
  * RevenueCat Web Billing integration (browser-only).
  *
@@ -20,16 +27,6 @@ import type {
  */
 export const REVENUECAT_API_KEY =
   process.env.NEXT_PUBLIC_REVENUECAT_API_KEY ?? "test_FWJQUTIfwdkqrGrUwjilmFoZnrR";
-
-/** Entitlement that unlocks all Pro features. Must match the RevenueCat dashboard. */
-export const PRO_ENTITLEMENT_ID = "anthony & omolola enterprises inc. Pro";
-
-/** Product identifiers configured in the RevenueCat dashboard. */
-export const REVENUECAT_PRODUCT_IDS = {
-  lifetime: "lifetime",
-  yearly: "yearly",
-  monthly: "monthly",
-} as const;
 
 /** Display order for packages on the paywall: cheapest commitment first. */
 const PACKAGE_DISPLAY_ORDER: readonly string[] = [

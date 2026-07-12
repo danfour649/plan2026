@@ -78,6 +78,9 @@ const messages = {
       apiAccess: "API access",
       apiAccessDescription:
         "Create personal API tokens to use the plan2026 API from scripts and integrations. Send a token as a Bearer header: Authorization: Bearer p26_…",
+      apiAccessProRequired:
+        "API tokens are a Pro feature. Upgrade to create and use personal API tokens.",
+      apiAccessUpgradeCta: "Upgrade to Pro",
       apiTokenName: "Token name",
       apiTokenNamePlaceholder: "e.g. CLI on my laptop",
       createApiToken: "Create token",
@@ -671,6 +674,9 @@ const messages = {
       apiAccess: "Accès API",
       apiAccessDescription:
         "Créez des jetons API personnels pour utiliser l'API plan2026 depuis des scripts et intégrations. Envoyez un jeton dans l'en-tête Bearer : Authorization: Bearer p26_…",
+      apiAccessProRequired:
+        "Les jetons API sont une fonctionnalité Pro. Passez à Pro pour créer et utiliser des jetons personnels.",
+      apiAccessUpgradeCta: "Passer à Pro",
       apiTokenName: "Nom du jeton",
       apiTokenNamePlaceholder: "p. ex. CLI sur mon portable",
       createApiToken: "Créer un jeton",
@@ -1263,6 +1269,9 @@ const messages = {
       apiAccess: "API access",
       apiAccessDescription:
         "Create personal API tokens make you fit use di plan2026 API from scripts and integrations. Send di token as Bearer header: Authorization: Bearer p26_…",
+      apiAccessProRequired:
+        "API tokens na Pro feature. Upgrade make you fit create and use personal API tokens.",
+      apiAccessUpgradeCta: "Upgrade to Pro",
       apiTokenName: "Token name",
       apiTokenNamePlaceholder: "e.g. CLI for my laptop",
       createApiToken: "Create token",

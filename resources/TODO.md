@@ -14,9 +14,11 @@ Operational notes, testing checklists, and follow-ups that do not belong in road
 - [ ] **Dashboard setup:** create the Web Billing app (connect Stripe), products `monthly` / `yearly` / `lifetime`, entitlement `anthony & omolola enterprises inc. Pro` with all three products attached, and the current offering with `$rc_monthly` / `$rc_annual` / `$rc_lifetime` packages (see docs/revenuecat.md §3)
 - [ ] **Paywall design:** attach a paywall to the current offering in the dashboard so the "View plans and pricing" button appears on `/upgrade`
 - [ ] **Production key:** set `NEXT_PUBLIC_REVENUECAT_API_KEY` in Vercel to the live `rcb_...` key (code falls back to the sandbox `test_...` key)
-- [ ] **Server-side entitlement checks:** client checks are UX-only — gate API routes/RSC via RevenueCat REST (`GET /v1/subscribers/{app_user_id}` with a secret key) or ingest webhooks into a `User.proUntil` column
-- [ ] **Navigation:** add an Upgrade link (nav or `/settings`) — `/upgrade` is currently only reachable by URL
+- [x] **Server-side entitlement checks (API tokens):** `src/lib/revenuecat-server.ts` gates create-token and Bearer API auth via RevenueCat REST + `REVENUECAT_SECRET_API_KEY` (set on web + `plan2026-api`)
+- [ ] **Optional:** ingest RevenueCat webhooks into a `User.proUntil` column to avoid per-request REST
+- [ ] **Navigation:** add an Upgrade link (nav or `/settings`) — `/upgrade` is currently only reachable by URL (Settings API section links when locked)
 - [ ] **Sandbox test pass:** Stripe test card `4242 4242 4242 4242` through purchase, cancel, already-owned, and management-portal flows in en/fr/pidgin
+- [ ] **Secret key on Vercel:** set `REVENUECAT_SECRET_API_KEY` on `plan2026` and `plan2026-api` (Production / Preview)
 
 ---
 

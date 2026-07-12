@@ -5,11 +5,15 @@ import { revalidatePath } from "next/cache";
 import { getCurrentUserId } from "@/auth";
 import { generateApiToken } from "@/lib/api-auth-utils";
 import { prisma } from "@/lib/prisma";
+import { userHasProEntitlement } from "@/lib/revenuecat-server";
 import {
   apiTokenIdSchema,
   createApiTokenSchema,
   MAX_API_TOKENS_PER_USER,
 } from "@/lib/validations/api-token";
+
+export const API_TOKEN_PRO_REQUIRED_ERROR =
+  "Pro subscription required to create API tokens. Upgrade at /upgrade.";
 
 export type CreateApiTokenResult =
   | { success: true; token: string; tokenPrefix: string; name: string }
@@ -20,6 +24,10 @@ export type RevokeApiTokenResult = { success: true } | { success: false; error: 
 export async function createApiToken(formData: FormData): Promise<CreateApiTokenResult> {
   const userId = await getCurrentUserId();
   if (!userId) return { success: false, error: "Unauthorized" };
+
+  if (!(await userHasProEntitlement(userId))) {
+    return { success: false, error: API_TOKEN_PRO_REQUIRED_ERROR };
+  }
 
   const parsed = createApiTokenSchema.safeParse({ name: formData.get("name") ?? "" });
   if (!parsed.success) {
