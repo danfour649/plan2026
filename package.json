@@ -33,6 +33,8 @@
     "api:dev": "pnpm --filter @plan2026/api dev",
     "api:typecheck": "pnpm --filter @plan2026/api typecheck",
     "api:create-token": "tsx scripts/create-api-token.ts",
+    "cli": "tsx apps/cli/src/index.ts",
+    "cli:typecheck": "pnpm --filter @plan2026/cli typecheck",
     "postinstall": "prisma generate && node scripts/sync-about-changelog.mjs",
     "pr": "gh pr create --fill --base main",
     "bulk:next": "node scripts/bulk-merge-and-next.mjs",

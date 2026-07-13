@@ -109,6 +109,16 @@ pnpm exec tsx scripts/create-api-token.ts you@example.com "laptop"
 
 Local smoke token (gitignored): `PLAN2026_API_TOKEN` in `.env`.
 
+**HTTP client CLI** (cross-platform, `apps/cli`):
+
+```powershell
+pnpm run cli -- health
+pnpm run cli -- tasks list --latest 15
+pnpm run cli -- plans list --limit 10
+```
+
+See [`apps/cli/README.md`](../cli/README.md).
+
 ---
 
 ## Smoke tests
