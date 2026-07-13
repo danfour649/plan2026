@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
@@ -138,7 +139,13 @@ function TokenRow({ token }: { token: ApiTokenListItem }) {
   );
 }
 
-export function ApiTokensSection({ tokens }: { tokens: ApiTokenListItem[] }) {
+export function ApiTokensSection({
+  tokens,
+  isPro,
+}: {
+  tokens: ApiTokenListItem[];
+  isPro: boolean;
+}) {
   const t = useTranslations();
   const [state, formAction] = useActionState(
     (_prev: CreateApiTokenResult | null, formData: FormData) => createApiToken(formData),
@@ -158,20 +165,34 @@ export function ApiTokensSection({ tokens }: { tokens: ApiTokenListItem[] }) {
         <p className="text-sm text-tertiary">{t.settings.apiAccessDescription}</p>
       </div>
 
+      {!isPro ? (
+        <div className="space-y-3 rounded-xl border border-border bg-white/70 p-4 dark:bg-zinc-900/50">
+          <p className="text-sm text-tertiary">{t.settings.apiAccessProRequired}</p>
+          <Link
+            href="/upgrade"
+            className="inline-flex rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+          >
+            {t.settings.apiAccessUpgradeCta}
+          </Link>
+        </div>
+      ) : null}
+
       {state?.success ? <NewTokenNotice token={state.token} name={state.name} /> : null}
 
-      <form action={formAction} className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <input
-          type="text"
-          name="name"
-          required
-          maxLength={API_TOKEN_NAME_MAX_LENGTH}
-          placeholder={t.settings.apiTokenNamePlaceholder}
-          aria-label={t.settings.apiTokenName}
-          className="min-w-0 flex-1 rounded-xl border border-border bg-white/80 px-3 py-2 text-sm text-blue-950 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-zinc-900/70 dark:text-zinc-100"
-        />
-        <CreateTokenButton />
-      </form>
+      {isPro ? (
+        <form action={formAction} className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <input
+            type="text"
+            name="name"
+            required
+            maxLength={API_TOKEN_NAME_MAX_LENGTH}
+            placeholder={t.settings.apiTokenNamePlaceholder}
+            aria-label={t.settings.apiTokenName}
+            className="min-w-0 flex-1 rounded-xl border border-border bg-white/80 px-3 py-2 text-sm text-blue-950 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-zinc-900/70 dark:text-zinc-100"
+          />
+          <CreateTokenButton />
+        </form>
+      ) : null}
 
       {tokens.length > 0 ? (
         <div className="space-y-3">

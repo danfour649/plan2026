@@ -4,6 +4,24 @@ Operational notes, testing checklists, and follow-ups that do not belong in road
 
 ---
 
+## Billing — RevenueCat Web Billing next steps
+
+**Added:** 2026-07-10  
+**Context:** RevenueCat SDK integration (`@revenuecat/purchases-js`) — `/upgrade` page, Pro entitlement gating, paywall, and management link. Setup guide: [docs/revenuecat.md](../docs/revenuecat.md). Code: `src/lib/revenuecat.ts`, `src/components/UpgradePanel.tsx`.
+
+### Follow-ups
+
+- [ ] **Dashboard setup:** create the Web Billing app (connect Stripe), products `monthly` / `yearly` / `lifetime`, entitlement `anthony & omolola enterprises inc. Pro` with all three products attached, and the current offering with `$rc_monthly` / `$rc_annual` / `$rc_lifetime` packages (see docs/revenuecat.md §3)
+- [ ] **Paywall design:** attach a paywall to the current offering in the dashboard so the "View plans and pricing" button appears on `/upgrade`
+- [ ] **Production key:** set `NEXT_PUBLIC_REVENUECAT_API_KEY` in Vercel to the live `rcb_...` key (code falls back to the sandbox `test_...` key)
+- [x] **Server-side entitlement checks (API tokens):** `src/lib/revenuecat-server.ts` gates create-token and Bearer API auth via RevenueCat REST + `REVENUECAT_SECRET_API_KEY` (set on web + `plan2026-api`)
+- [ ] **Optional:** ingest RevenueCat webhooks into a `User.proUntil` column to avoid per-request REST
+- [ ] **Navigation:** add an Upgrade link (nav or `/settings`) — `/upgrade` is currently only reachable by URL (Settings API section links when locked)
+- [ ] **Sandbox test pass:** Stripe test card `4242 4242 4242 4242` through purchase, cancel, already-owned, and management-portal flows in en/fr/pidgin
+- [ ] **Secret key on Vercel:** set `REVENUECAT_SECRET_API_KEY` on `plan2026` and `plan2026-api` (Production / Preview)
+
+---
+
 ## Auth — Settings account linking (Google + Facebook)
 
 **Added:** 2026-06-30  

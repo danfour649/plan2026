@@ -29,6 +29,7 @@ Protected: `GET|POST /tasks`, `GET /plans`
 | Variable | Required | Notes |
 |----------|----------|-------|
 | `DATABASE_URL` | Yes | Same production Postgres as `plan2026` |
+| `REVENUECAT_SECRET_API_KEY` | Yes (for Pro-gated tokens) | Secret `sk_…` key; Bearer API tokens require an active Pro entitlement. Fail-closed if missing. |
 | `NODEJS_HELPERS` | Recommended | Set to `0` (Node request helpers off; Hono node adapter) |
 | `BLOB_READ_WRITE_TOKEN` | Optional | Only if attachment routes use Blob |
 
