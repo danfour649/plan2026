@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.28.1
+
+### Patch Changes
+
+- d243f2a: Document same-email Google/Facebook Settings linking test path in GO-LIVE-FACEBOOK.md.
+
 ## 0.28.0
 
 ### Minor Changes
