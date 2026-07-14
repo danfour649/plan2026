@@ -172,6 +172,25 @@ On `https://plan2026.ca`:
 
 Then repeat on production with your own account before submitting App Review.
 
+### Testing with the same email on Gmail and Facebook
+
+When Google and Facebook share one email, **linking from Settings is the happy path** — not a cold second-provider sign-in on `/login`.
+
+1. Sign in with the first provider (e.g. Google).
+2. Open **Settings → Sign-in methods → Link Facebook account** (or Link Google).
+3. Complete OAuth; both providers show **Connected**.
+4. Sign out; sign in with **either** provider → same user and tasks.
+
+Cold sign-in with the second provider on `/login` when that email already exists → `OAuthAccountNotLinked` (by design). Use Settings to link instead.
+
+| Goal | Approach |
+|------|----------|
+| Test **linking** | Sign in with Google → Settings → Link Facebook (same email is fine). |
+| Test **Facebook-only** login | Meta **test user** with a different email, or remove orphan Facebook-only `User`/`Account` rows first. |
+| Local session without Google | `pnpm exec tsx -r dotenv/config scripts/seed-dev-session.ts` → set `next-auth.session-token` cookie → `/settings` → link a provider. |
+
+More detail and failure modes: [Resources/TODO.md](./Resources/TODO.md) (Auth — Settings account linking).
+
 ---
 
 ## Related docs

@@ -44,5 +44,5 @@ Cold sign-in with the second provider on `/login` when the email already exists 
 
 ### Follow-ups (optional)
 
-- [ ] Add “Testing with same email” subsection to `GO-LIVE-FACEBOOK.md` (or link here)
+- [x] Add “Testing with same email” subsection to `GO-LIVE-FACEBOOK.md` (or link here)
 - [ ] Script or admin note to list duplicate `User` rows by email for auth cleanup
