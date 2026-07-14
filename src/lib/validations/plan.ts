@@ -83,7 +83,7 @@ export type NewPlanTaskPayload = {
   urgency: number;
 };
 
-function asFormText(v: FormDataEntryValue | undefined): string {
+function asFormText(v: unknown): string {
   return typeof v === "string" ? v : "";
 }
 

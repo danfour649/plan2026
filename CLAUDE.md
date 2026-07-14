@@ -9,6 +9,7 @@
 | Any shell command on Windows | `powershell` |
 | Open / update / merge a PR | `create-pr` |
 | Open PRs across GitHub | `list-open-prs` |
+| plan2026 HTTP API (tasks/plans) | `plan2026-api` (`.cursor/skills/plan2026-api/`) |
 | Bulk tasks → PRs | `bulk-task-pr` |
 | Vercel env / deploys / domains | `vercel-cli` |
 | gcloud project / APIs / OAuth limits | `gcp-cli` |

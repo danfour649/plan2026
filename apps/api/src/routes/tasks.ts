@@ -1,8 +1,14 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 
-import { createTaskForUser } from "@/lib/task-service";
 import { prisma } from "@/lib/prisma";
-import { addTaskSchema } from "@/lib/validations/task";
+import { applyMarkTaskDone } from "@/lib/task-complete";
+import {
+  createTaskForUser,
+  deleteTaskForUser,
+  getTaskForUser,
+  updateTaskForUser,
+} from "@/lib/task-service";
+import { addTaskSchema, isValidTaskId, updateTaskSchema } from "@/lib/validations/task";
 
 import type { ApiAuthVariables } from "@api/middleware/auth";
 import { requireBearerAuth } from "@api/middleware/auth";
@@ -43,6 +49,8 @@ const taskSchema = z.object({
   attachments: z.array(taskAttachmentSchema).optional(),
 });
 
+const errorSchema = z.object({ error: z.string() });
+
 function serializeTask(task: {
   id: string;
   userId: string;
@@ -77,6 +85,17 @@ function serializeTask(task: {
   };
 }
 
+const authErrorResponses = {
+  401: {
+    content: { "application/json": { schema: errorSchema } },
+    description: "Missing or invalid bearer token",
+  },
+  429: {
+    content: { "application/json": { schema: errorSchema } },
+    description: "Rate limited",
+  },
+} as const;
+
 const listTasksRoute = createRoute({
   method: "get",
   path: "/tasks",
@@ -90,16 +109,9 @@ const listTasksRoute = createRoute({
           schema: z.object({ tasks: z.array(taskSchema) }),
         },
       },
-      description: "Task list",
+      description: "Task list (only tasks owned by the authenticated account)",
     },
-    401: {
-      content: { "application/json": { schema: z.object({ error: z.string() }) } },
-      description: "Missing or invalid bearer token",
-    },
-    429: {
-      content: { "application/json": { schema: z.object({ error: z.string() }) } },
-      description: "Rate limited",
-    },
+    ...authErrorResponses,
   },
 });
 
@@ -117,7 +129,7 @@ const createTaskRoute = createRoute({
   method: "post",
   path: "/tasks",
   tags: ["Tasks"],
-  summary: "Create a task",
+  summary: "Create a task owned by the authenticated user",
   security: [{ Bearer: [] }],
   request: {
     body: {
@@ -138,21 +150,151 @@ const createTaskRoute = createRoute({
       description: "Task created",
     },
     400: {
-      content: { "application/json": { schema: z.object({ error: z.string() }) } },
+      content: { "application/json": { schema: errorSchema } },
       description: "Validation error",
     },
-    401: {
-      content: { "application/json": { schema: z.object({ error: z.string() }) } },
-      description: "Unauthorized",
+    404: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Plan not found (or not owned by this account)",
+    },
+    ...authErrorResponses,
+  },
+});
+
+const taskIdParam = z.object({
+  id: z.string().min(1),
+});
+
+const getTaskRoute = createRoute({
+  method: "get",
+  path: "/tasks/{id}",
+  tags: ["Tasks"],
+  summary: "Get one task owned by the authenticated user",
+  security: [{ Bearer: [] }],
+  request: { params: taskIdParam },
+  responses: {
+    200: {
+      content: { "application/json": { schema: z.object({ task: taskSchema }) } },
+      description: "Task",
     },
     404: {
-      content: { "application/json": { schema: z.object({ error: z.string() }) } },
-      description: "Plan not found",
+      content: { "application/json": { schema: errorSchema } },
+      description: "Task not found for this account",
     },
-    429: {
-      content: { "application/json": { schema: z.object({ error: z.string() }) } },
-      description: "Rate limited",
+    ...authErrorResponses,
+  },
+});
+
+const updateTaskBodySchema = z.object({
+  title: z.string().min(1),
+  content: z.string().optional(),
+  dueAt: z.string().optional(),
+  urgency: z.number().int().min(1).max(7).optional(),
+  planId: z.string().nullable().optional(),
+  status: z.enum(["active", "on_hold"]).optional(),
+  recurrence: z.string().optional(),
+});
+
+const updateTaskRoute = createRoute({
+  method: "patch",
+  path: "/tasks/{id}",
+  tags: ["Tasks"],
+  summary: "Update a task owned by the authenticated user",
+  description:
+    "Owner-scoped. Completed tasks keep status/completedAt until restored via POST /tasks/{id}/restore.",
+  security: [{ Bearer: [] }],
+  request: {
+    params: taskIdParam,
+    body: {
+      content: {
+        "application/json": {
+          schema: updateTaskBodySchema,
+        },
+      },
     },
+  },
+  responses: {
+    200: {
+      content: { "application/json": { schema: z.object({ task: taskSchema }) } },
+      description: "Updated task",
+    },
+    400: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Validation error",
+    },
+    404: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Task or linked plan not found for this account",
+    },
+    ...authErrorResponses,
+  },
+});
+
+const deleteTaskRoute = createRoute({
+  method: "delete",
+  path: "/tasks/{id}",
+  tags: ["Tasks"],
+  summary: "Delete a task owned by the authenticated user",
+  security: [{ Bearer: [] }],
+  request: { params: taskIdParam },
+  responses: {
+    200: {
+      content: { "application/json": { schema: z.object({ ok: z.literal(true) }) } },
+      description: "Deleted",
+    },
+    404: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Task not found for this account",
+    },
+    ...authErrorResponses,
+  },
+});
+
+const completeTaskRoute = createRoute({
+  method: "post",
+  path: "/tasks/{id}/complete",
+  tags: ["Tasks"],
+  summary: "Mark a task done (owner only)",
+  description: "Recurring tasks advance dueAt; non-recurring become completed.",
+  security: [{ Bearer: [] }],
+  request: { params: taskIdParam },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            task: taskSchema,
+            recurringAdvanced: z.boolean(),
+          }),
+        },
+      },
+      description: "Task updated",
+    },
+    404: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Task not found for this account",
+    },
+    ...authErrorResponses,
+  },
+});
+
+const restoreTaskRoute = createRoute({
+  method: "post",
+  path: "/tasks/{id}/restore",
+  tags: ["Tasks"],
+  summary: "Restore a completed task to active (owner only)",
+  security: [{ Bearer: [] }],
+  request: { params: taskIdParam },
+  responses: {
+    200: {
+      content: { "application/json": { schema: z.object({ task: taskSchema }) } },
+      description: "Task restored",
+    },
+    404: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Task not found for this account",
+    },
+    ...authErrorResponses,
   },
 });
 
@@ -195,7 +337,101 @@ app.openapi(createTaskRoute, async (c) => {
     return c.json({ error: result.error }, 400);
   }
 
-  return c.json({ task: serializeTask(result.task) }, 201);
+  const task = await getTaskForUser(userId, result.task.id);
+  if (!task) return c.json({ error: "Task not found" }, 404);
+  return c.json({ task: serializeTask(task) }, 201);
+});
+
+app.openapi(getTaskRoute, async (c) => {
+  const userId = c.get("userId");
+  const { id } = c.req.valid("param");
+  if (!isValidTaskId(id)) return c.json({ error: "Task not found" }, 404);
+
+  const task = await getTaskForUser(userId, id);
+  if (!task) return c.json({ error: "Task not found" }, 404);
+  return c.json({ task: serializeTask(task) }, 200);
+});
+
+app.openapi(updateTaskRoute, async (c) => {
+  const userId = c.get("userId");
+  const { id } = c.req.valid("param");
+  if (!isValidTaskId(id)) return c.json({ error: "Task not found" }, 404);
+
+  const body = c.req.valid("json");
+  const parsed = updateTaskSchema.safeParse({
+    taskId: id,
+    title: body.title ?? "",
+    content: body.content,
+    dueAt: body.dueAt,
+    urgency: body.urgency ?? 4,
+    planId: body.planId === null ? undefined : body.planId,
+    status: body.status,
+    recurrence: body.recurrence,
+  });
+
+  if (!parsed.success) {
+    const msg = parsed.error.flatten().formErrors[0] ?? "Invalid input";
+    return c.json({ error: msg }, 400);
+  }
+
+  const result = await updateTaskForUser(userId, id, {
+    title: parsed.data.title,
+    content: parsed.data.content,
+    dueAt: parsed.data.dueAt,
+    recurrence: parsed.data.recurrence,
+    urgency: parsed.data.urgency,
+    planId: body.planId === undefined ? undefined : body.planId,
+    status: parsed.data.status,
+  });
+
+  if ("error" in result) {
+    if (result.error === "Plan not found") return c.json({ error: result.error }, 404);
+    return c.json({ error: result.error }, 400);
+  }
+  if (result.count === 0) return c.json({ error: "Task not found" }, 404);
+
+  const task = await getTaskForUser(userId, id);
+  if (!task) return c.json({ error: "Task not found" }, 404);
+  return c.json({ task: serializeTask(task) }, 200);
+});
+
+app.openapi(deleteTaskRoute, async (c) => {
+  const userId = c.get("userId");
+  const { id } = c.req.valid("param");
+  if (!isValidTaskId(id)) return c.json({ error: "Task not found" }, 404);
+
+  const result = await deleteTaskForUser(userId, id);
+  if ("error" in result) return c.json({ error: result.error }, 404);
+  return c.json({ ok: true as const }, 200);
+});
+
+app.openapi(completeTaskRoute, async (c) => {
+  const userId = c.get("userId");
+  const { id } = c.req.valid("param");
+  if (!isValidTaskId(id)) return c.json({ error: "Task not found" }, 404);
+
+  const { ok, recurringAdvanced } = await applyMarkTaskDone({ id, userId });
+  if (!ok) return c.json({ error: "Task not found" }, 404);
+
+  const task = await getTaskForUser(userId, id);
+  if (!task) return c.json({ error: "Task not found" }, 404);
+  return c.json({ task: serializeTask(task), recurringAdvanced }, 200);
+});
+
+app.openapi(restoreTaskRoute, async (c) => {
+  const userId = c.get("userId");
+  const { id } = c.req.valid("param");
+  if (!isValidTaskId(id)) return c.json({ error: "Task not found" }, 404);
+
+  const result = await prisma.task.updateMany({
+    where: { id, userId },
+    data: { status: "active", completedAt: null },
+  });
+  if (result.count === 0) return c.json({ error: "Task not found" }, 404);
+
+  const task = await getTaskForUser(userId, id);
+  if (!task) return c.json({ error: "Task not found" }, 404);
+  return c.json({ task: serializeTask(task) }, 200);
 });
 
 export { app as tasksApp };

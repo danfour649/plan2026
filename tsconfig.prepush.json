@@ -11,5 +11,5 @@
     "**/*.mts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "apps/api"]
+  "exclude": ["node_modules", "apps/api", "apps/cli"]
 }

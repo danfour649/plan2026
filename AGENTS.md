@@ -12,6 +12,7 @@ Canonical agent guidance lives in **[danf-skills](https://github.com/danfour649/
 | **vercel-cli** | Vercel env vars, deploys, `NEXTAUTH_URL`, domains |
 | **gcp-cli** | gcloud APIs/project; Google OAuth console (not redirect URI CLI) |
 | **list-open-prs** | One-shot open PR list across GitHub repos |
+| **plan2026-api** | HTTP API via `apps/cli` (`pnpm run cli -- …`) — see `.cursor/skills/plan2026-api/` |
 
 ## plan2026-specific rules
 

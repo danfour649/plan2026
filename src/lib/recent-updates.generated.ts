@@ -3,6 +3,12 @@
 
 export const RECENT_UPDATES: { version: string; entries: string[] }[] = [
   {
+    "version": "0.27.2",
+    "entries": [
+      "Document TECH-0085: populate Cursor Cloud Agent secrets for production API smoke tests."
+    ]
+  },
+  {
     "version": "0.27.1",
     "entries": [
       "Fix plan2026-api Git deploys via Vercel Build Output API, and add an API operations runbook."

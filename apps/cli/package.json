@@ -1,0 +1,21 @@
+{
+  "name": "@plan2026/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "plan2026-api": "./bin/plan2026-api.mjs"
+  },
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dotenv": "17.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "25.5.0",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3"
+  }
+}
