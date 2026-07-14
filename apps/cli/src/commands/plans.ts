@@ -9,6 +9,8 @@ type PlanRow = {
   priority: number;
   percentCompleted: number;
   updatedAt: string;
+  startAt?: string | null;
+  endAt?: string | null;
 };
 
 type PlansResponse = {
@@ -18,6 +20,24 @@ type PlansResponse = {
   limit: number;
   totalPages: number;
 };
+
+type PlanResponse = { plan: PlanRow };
+
+function printPlan(plan: PlanRow): void {
+  printTable(
+    ["id", "updated", "status", "pri", "%", "name"],
+    [
+      [
+        plan.id,
+        shortDate(plan.updatedAt),
+        plan.status,
+        String(plan.priority),
+        String(plan.percentCompleted),
+        plan.name,
+      ],
+    ],
+  );
+}
 
 export async function runPlansList(
   config: CliConfig,
@@ -56,4 +76,68 @@ export async function runPlansList(
       p.name,
     ]),
   );
+}
+
+export async function runPlansGet(
+  config: CliConfig,
+  id: string,
+  options: { json: boolean },
+): Promise<void> {
+  const body = (await apiFetch(config, `/plans/${id}`)) as PlanResponse;
+  if (options.json) {
+    printJson(body);
+    return;
+  }
+  printPlan(body.plan);
+}
+
+export async function runPlansCreate(
+  config: CliConfig,
+  payload: Record<string, unknown>,
+  options: { json: boolean },
+): Promise<void> {
+  const body = (await apiFetch(config, "/plans", {
+    method: "POST",
+    body: payload,
+  })) as PlanResponse;
+  if (options.json) {
+    printJson(body);
+    return;
+  }
+  process.stdout.write("created\n");
+  printPlan(body.plan);
+}
+
+export async function runPlansUpdate(
+  config: CliConfig,
+  id: string,
+  payload: Record<string, unknown>,
+  options: { json: boolean },
+): Promise<void> {
+  const body = (await apiFetch(config, `/plans/${id}`, {
+    method: "PATCH",
+    body: payload,
+  })) as PlanResponse;
+  if (options.json) {
+    printJson(body);
+    return;
+  }
+  process.stdout.write("updated\n");
+  printPlan(body.plan);
+}
+
+export async function runPlansDelete(
+  config: CliConfig,
+  id: string,
+  options: { json: boolean; deleteTasks: boolean },
+): Promise<void> {
+  const body = await apiFetch(config, `/plans/${id}`, {
+    method: "DELETE",
+    query: { deleteTasks: options.deleteTasks ? "1" : "0" },
+  });
+  if (options.json) {
+    printJson(body);
+    return;
+  }
+  process.stdout.write(`deleted  ${id}${options.deleteTasks ? " (tasks removed)" : ""}\n`);
 }

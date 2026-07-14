@@ -13,7 +13,12 @@ export class ApiError extends Error {
 export async function apiFetch(
   config: CliConfig,
   pathname: string,
-  options: { method?: string; query?: Record<string, string | undefined>; auth?: boolean } = {},
+  options: {
+    method?: string;
+    query?: Record<string, string | undefined>;
+    body?: unknown;
+    auth?: boolean;
+  } = {},
 ): Promise<unknown> {
   const url = new URL(pathname.replace(/^\//, ""), `${config.baseUrl}/`);
   if (options.query) {
@@ -35,9 +40,16 @@ export async function apiFetch(
     headers.Authorization = `Bearer ${config.token}`;
   }
 
+  let body: string | undefined;
+  if (options.body !== undefined) {
+    headers["Content-Type"] = "application/json";
+    body = JSON.stringify(options.body);
+  }
+
   const response = await fetch(url, {
     method: options.method ?? "GET",
     headers,
+    body,
   });
 
   const text = await response.text();

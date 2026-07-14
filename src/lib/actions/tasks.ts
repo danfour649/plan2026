@@ -99,7 +99,7 @@ export async function updateTask(
     dueAt: parsed.data.dueAt,
     recurrence: parsed.data.recurrence,
     urgency: parsed.data.urgency,
-    planId: planIdFromForm ?? undefined,
+    planId: planIdFromForm,
     status: parsed.data.status,
   });
   if ("error" in result) return { success: false, error: result.error };

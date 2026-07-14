@@ -2,4 +2,4 @@
 "plan2026": minor
 ---
 
-Add a cross-platform Node CLI (`apps/cli`) for the plan2026 HTTP API: health, tasks list, and plans list via `pnpm run cli`.
+Add account-scoped task and plan CRUD on the standalone HTTP API, plus matching `apps/cli` commands (`pnpm run cli`).

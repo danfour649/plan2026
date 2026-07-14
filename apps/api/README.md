@@ -9,9 +9,20 @@ OpenAPI-first HTTP API for plan2026, deployed as a **second Vercel project** fro
 | `GET` | `/health` | No | Health check |
 | `GET` | `/openapi.json` | No | OpenAPI 3.0 spec |
 | `GET` | `/docs` | No | Swagger UI |
-| `GET` | `/tasks` | Bearer | List tasks |
-| `POST` | `/tasks` | Bearer | Create task |
-| `GET` | `/plans` | Bearer | Paginated plans (`page`, `limit`, `showArchived=1`) |
+| `GET` | `/tasks` | Bearer | List tasks **owned by this account** |
+| `POST` | `/tasks` | Bearer | Create task (owner) |
+| `GET` | `/tasks/{id}` | Bearer | Get owned task |
+| `PATCH` | `/tasks/{id}` | Bearer | Update owned task |
+| `DELETE` | `/tasks/{id}` | Bearer | Delete owned task |
+| `POST` | `/tasks/{id}/complete` | Bearer | Mark done (owner) |
+| `POST` | `/tasks/{id}/restore` | Bearer | Restore completed (owner) |
+| `GET` | `/plans` | Bearer | List plans (owned + shared) |
+| `POST` | `/plans` | Bearer | Create plan (owner) |
+| `GET` | `/plans/{id}` | Bearer | Get plan (owner or sharee) |
+| `PATCH` | `/plans/{id}` | Bearer | Update plan (**owner only**) |
+| `DELETE` | `/plans/{id}` | Bearer | Delete plan (**owner only**; `?deleteTasks=1`) |
+
+Account security: every query/mutation is scoped by the authenticated `userId`. Cross-account IDs return **404** (not found). Sharees may read shared plans but receive **403** on mutate/delete.
 
 ## Authentication
 

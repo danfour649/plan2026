@@ -114,10 +114,11 @@ Local smoke token (gitignored): `PLAN2026_API_TOKEN` in `.env`.
 ```powershell
 pnpm run cli -- health
 pnpm run cli -- tasks list --latest 15
+pnpm run cli -- tasks create --title "Smoke create"
 pnpm run cli -- plans list --limit 10
 ```
 
-See [`apps/cli/README.md`](../cli/README.md).
+See [`apps/cli/README.md`](../cli/README.md) for full CRUD.
 
 ---
 
