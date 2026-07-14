@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.28.0
+
+### Minor Changes
+
+- f0a6684: Add account-scoped task and plan CRUD on the standalone HTTP API, plus matching `apps/cli` commands (`pnpm run cli`).
+
 ## 0.27.2
 
 ### Patch Changes
