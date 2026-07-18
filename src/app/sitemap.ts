@@ -1,12 +1,32 @@
 import type { MetadataRoute } from "next";
 
-const baseUrl = process.env.NEXTAUTH_URL ?? "https://plan2026.ca";
+import { CANONICAL_ORIGIN } from "@/lib/site-url";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    { url: baseUrl, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
-    { url: `${baseUrl}/login`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
-    { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
-    { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
+    {
+      url: CANONICAL_ORIGIN,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 1,
+    },
+    {
+      url: `${CANONICAL_ORIGIN}/login`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${CANONICAL_ORIGIN}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${CANONICAL_ORIGIN}/terms`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
   ];
 }

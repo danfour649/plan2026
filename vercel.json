@@ -1,0 +1,16 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.plan2026.ca" }],
+      "destination": "https://plan2026.ca/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "plan2026-pi.vercel.app" }],
+      "destination": "https://plan2026.ca/:path*",
+      "permanent": true
+    }
+  ]
+}

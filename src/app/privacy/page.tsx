@@ -7,6 +7,9 @@ import { getTranslations } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
+  alternates: {
+    canonical: "/privacy",
+  },
 };
 
 const GITHUB_PROFILE_URL = "https://github.com/danfour649";

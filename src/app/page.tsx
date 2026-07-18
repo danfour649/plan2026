@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: "Plan 2026",
   description:
     "Plan 2026 is a planning and task-management web app. Organize tasks and plans, share with others, and optionally add due dates to Google Calendar.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default async function HomePage() {

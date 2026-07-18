@@ -7,6 +7,9 @@ import { getTranslations } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
+  alternates: {
+    canonical: "/terms",
+  },
 };
 
 export default async function TermsPage() {

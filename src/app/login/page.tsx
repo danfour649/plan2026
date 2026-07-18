@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
@@ -11,6 +12,13 @@ import { isFacebookLoginEnabled } from "@/lib/facebook-login";
 import { getTranslations } from "@/lib/i18n";
 import { FacebookSignInButton } from "./FacebookSignInButton";
 import { GoogleSignInButton } from "./GoogleSignInButton";
+
+export const metadata: Metadata = {
+  title: "Sign in",
+  alternates: {
+    canonical: "/login",
+  },
+};
 
 export default async function LoginPage({
   searchParams,
