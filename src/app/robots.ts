@@ -23,6 +23,6 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: `${CANONICAL_ORIGIN}/sitemap.xml`,
-    host: CANONICAL_ORIGIN,
+    host: "plan2026.ca",
   };
 }
