@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { Suspense } from "react";
@@ -9,6 +10,14 @@ import { Plan2026Logo } from "@/components/Plan2026Logo";
 import { TranslationsProvider } from "@/components/TranslationsProvider";
 import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
+
+/** Authenticated app shell — keep out of the public index. */
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 function AppLayoutFallback() {
   return (

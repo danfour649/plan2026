@@ -4,6 +4,7 @@ import { Suspense, type ReactNode } from "react";
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/next";
 import { getThemeForRequest } from "@/lib/account-preferences";
+import { CANONICAL_ORIGIN } from "@/lib/site-url";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -21,7 +22,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXTAUTH_URL ?? "https://plan2026.ca"),
+  // Always the public production origin — never preview/deployment hosts.
+  metadataBase: new URL(CANONICAL_ORIGIN),
   icons: {
     icon: [
       { url: "/pwa-192.png", sizes: "192x192", type: "image/png" },
@@ -45,6 +47,8 @@ export const metadata: Metadata = {
     description:
       "Manage tasks and plans with Google sign-in. Set urgency, due dates, and export to Google Calendar.",
     type: "website",
+    url: CANONICAL_ORIGIN,
+    siteName: "Plan 2026",
   },
   twitter: {
     card: "summary_large_image",

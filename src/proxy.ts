@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+import { CANONICAL_ORIGIN, shouldRedirectToCanonicalHost } from "@/lib/site-url";
+
 // NextAuth v4 database strategy: session is in DB; cookie holds the token.
 // We only check cookie presence here to avoid layout flicker. Full session
 // validation remains in (app)/layout.tsx via getServerAuthSession().
@@ -13,7 +15,19 @@ function hasSessionCookie(request: NextRequest): boolean {
   return SESSION_COOKIE_NAMES.some((name) => request.cookies.has(name));
 }
 
+function canonicalHostRedirect(request: NextRequest): NextResponse | null {
+  if (!shouldRedirectToCanonicalHost(request.headers.get("host"))) {
+    return null;
+  }
+  const url = new URL(request.url);
+  const destination = new URL(`${url.pathname}${url.search}`, CANONICAL_ORIGIN);
+  return NextResponse.redirect(destination, 308);
+}
+
 export function proxy(request: NextRequest) {
+  const hostRedirect = canonicalHostRedirect(request);
+  if (hostRedirect) return hostRedirect;
+
   const { pathname } = request.nextUrl;
 
   // Protect app routes: require session cookie so we redirect before layout runs
@@ -38,5 +52,11 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/tasks/:path*", "/actions/:path*", "/settings/:path*", "/plans/:path*", "/help/:path*", "/about/:path*", "/supplies/:path*"],
+  matcher: [
+    /*
+     * Run on all app paths so production host aliases can 308 to plan2026.ca.
+     * Skip Next internals and common static file extensions.
+     */
+    "/((?!_next/static|_next/image|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|xml|webmanifest)$).*)",
+  ],
 };

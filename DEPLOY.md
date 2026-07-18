@@ -93,7 +93,30 @@ If you use Vercel build commands or CI automation, make sure `prisma migrate dep
 
 ---
 
-## 6. Verify production
+## 6. Canonical domain (SEO)
+
+Production canonical origin is **`https://plan2026.ca`** (no `www`).
+
+- `vercel.json` and `src/proxy.ts` permanently redirect (`308`) `www.plan2026.ca` and `plan2026-pi.vercel.app` to `https://plan2026.ca`.
+- Sitemap, robots, and `<link rel="canonical">` always use `https://plan2026.ca`.
+- In Vercel → Project → Settings → Domains, set **`plan2026.ca` as the primary domain** and redirect `www` to it (prefer permanent / 308).
+
+Smoke-test after deploy:
+
+```bash
+curl -sI https://www.plan2026.ca/login | rg -i 'HTTP|location'
+# expect: 308 and Location: https://plan2026.ca/login
+
+curl -sI https://plan2026-pi.vercel.app/privacy | rg -i 'HTTP|location'
+# expect: 308 and Location: https://plan2026.ca/privacy
+
+curl -sL https://plan2026.ca/privacy | rg -o 'rel="canonical" href="[^"]+"'
+# expect: rel="canonical" href="https://plan2026.ca/privacy"
+```
+
+Then in Google Search Console (both the `plan2026.ca` and `plan2026-pi.vercel.app` properties, if present): resubmit `https://plan2026.ca/sitemap.xml`, use URL Inspection → Request indexing on `/`, `/login`, `/privacy`, `/terms`, and leave “Page with redirect” / duplicate rows to clear on the next crawl.
+
+## 7. Verify production
 
 After deployment:
 
@@ -108,7 +131,7 @@ After deployment:
 
 ---
 
-## 7. Local development and production parity
+## 8. Local development and production parity
 
 This project is Postgres-only. For local development:
 
@@ -125,7 +148,7 @@ Keeping development and production on PostgreSQL avoids environment drift.
 
 ---
 
-## 8. Secret rotation
+## 9. Secret rotation
 
 ### AUTH_SECRET
 
@@ -141,7 +164,7 @@ Keeping development and production on PostgreSQL avoids environment drift.
 
 ---
 
-## 9. Standalone API (second Vercel project)
+## 10. Standalone API (second Vercel project)
 
 The repo includes an OpenAPI-first HTTP API in **`apps/api`**. It shares the production PostgreSQL database with the web app but deploys as its own Vercel project (production alias: `https://plan2026-api.vercel.app`; optional custom domain `https://api.plan2026.ca`).
 

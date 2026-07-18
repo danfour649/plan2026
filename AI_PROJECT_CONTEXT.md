@@ -29,7 +29,7 @@
 
 ```text
 src/
-  proxy.ts                              # Cookie-based guard for /tasks, /settings, /plans, /help, /about (not /login, /invite, /share)
+  proxy.ts                              # Production host 308 → plan2026.ca; cookie guard for /tasks, /settings, /plans, /help, /about, /supplies
   auth.ts                               # NextAuth config, Google scopes, getServerAuthSession, getCurrentUserId, getCurrentUserIdForListPrefs
   app/
     share/[token]/page.tsx              # Public share page: resolve token → plan + tasks; read-only view; token-based "Mark done" / "Restore" (no login). Invalid/expired show same message.

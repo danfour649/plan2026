@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const baseUrl = process.env.NEXTAUTH_URL ?? "https://plan2026.ca";
+import { CANONICAL_ORIGIN } from "@/lib/site-url";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -8,9 +8,21 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/tasks", "/plans", "/settings"],
+        disallow: [
+          "/api/",
+          "/tasks",
+          "/plans",
+          "/settings",
+          "/actions",
+          "/help",
+          "/about",
+          "/supplies",
+          "/invite",
+          "/share",
+        ],
       },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: `${CANONICAL_ORIGIN}/sitemap.xml`,
+    host: CANONICAL_ORIGIN,
   };
 }
