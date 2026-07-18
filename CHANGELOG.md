@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.28.2
+
+### Patch Changes
+
+- 41d0f48: Fix Google Search Console indexing: permanently redirect www and the Vercel production alias to https://plan2026.ca, emit consistent canonical tags/sitemap/robots, and noindex authenticated app routes.
+
 ## 0.28.1
 
 ### Patch Changes
