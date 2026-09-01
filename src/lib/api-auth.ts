@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { API_TOKEN_PREFIX, extractBearerToken, hashApiToken } from "@/lib/api-auth-utils";
+import { userHasProEntitlement } from "@/lib/revenuecat-server";
 
 export { API_TOKEN_PREFIX, extractBearerToken, hashApiToken, safeEqualStrings } from "@/lib/api-auth-utils";
 
@@ -12,6 +13,9 @@ async function resolveUserIdFromApiToken(token: string): Promise<string | null> 
   });
   if (!row) return null;
   if (row.expiresAt && row.expiresAt < new Date()) return null;
+
+  // Personal API tokens are a Pro feature — reject if entitlement lapsed.
+  if (!(await userHasProEntitlement(row.userId))) return null;
 
   void prisma.apiToken
     .update({

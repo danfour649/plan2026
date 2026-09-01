@@ -14,6 +14,7 @@ import { isFacebookLoginEnabled } from "@/lib/facebook-login";
 import { hasGoogleCalendarScope } from "@/lib/google-oauth";
 import { getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
+import { userHasProEntitlement } from "@/lib/revenuecat-server";
 
 export const metadata: Metadata = {
   title: "Settings",
@@ -58,11 +59,14 @@ export default async function SettingsPage({
     select: { provider: true, scope: true },
   });
 
-  const apiTokens = await prisma.apiToken.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
-    select: { id: true, name: true, tokenPrefix: true, createdAt: true, lastUsedAt: true },
-  });
+  const [apiTokens, isPro] = await Promise.all([
+    prisma.apiToken.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, name: true, tokenPrefix: true, createdAt: true, lastUsedAt: true },
+    }),
+    userHasProEntitlement(userId),
+  ]);
 
   const googleAccount = linkedAccounts.find((account) => account.provider === "google");
   const hasGoogleLinked = Boolean(googleAccount);
@@ -173,6 +177,7 @@ export default async function SettingsPage({
           </div>
 
           <ApiTokensSection
+            isPro={isPro}
             tokens={apiTokens.map((token) => ({
               id: token.id,
               name: token.name,
