@@ -42,11 +42,15 @@ After any env change: **Redeploy** Production.
 
 ## Phase 3 — Production database
 
-From a machine with network access to production Postgres:
+A Vercel **Production** deploy runs `prisma migrate deploy` against `DATABASE_URL` before `next build`. Preview deploys do not.
+
+If Production is already serving a build whose schema is ahead of the database, apply the pending migrations yourself. That is the faster fix: the live app picks up the new columns as soon as the command finishes.
+
+`DATABASE_URL` on the Vercel project **plan2026** (Production) is the production database URL.
 
 ```powershell
 cd c:\Users\Admin\Desktop\vscode\plan2026
-$env:DATABASE_URL = "<production-connection-string>"
+$env:DATABASE_URL = "<Production DATABASE_URL>"
 pnpm exec prisma migrate deploy
 ```
 

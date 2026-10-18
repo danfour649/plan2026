@@ -81,7 +81,7 @@ vercel link --yes --project plan2026
 2. **Root Directory:** `apps/api`  
 3. Framework: Other (config from `apps/api/vercel.json`)  
 4. Set env vars (table above)  
-5. Deploy; apply migrations once on the shared DB (`pnpm exec prisma migrate deploy` with production `DATABASE_URL`)
+5. Deploy. Schema migrations run from the **web** project's Production build (`plan2026`), not from this API build. Both apps share `DATABASE_URL`. To apply a pending migration immediately, use the command in [DEPLOY.md](../../DEPLOY.md).
 
 ---
 
@@ -153,7 +153,7 @@ curl.exe -sS -H "Authorization: Bearer $env:PLAN2026_API_TOKEN" "https://plan202
 | Deployment URL → **302** to `vercel.com/sso-api` | Deployment Protection on preview/deployment URLs | Use the production alias, or disable Protection for Production in project settings |
 | `FUNCTION_INVOCATION_FAILED` / `headers.get is not a function` | Wrong adapter (`hono/vercel` on Node) | Entry must use `@hono/node-server/vercel`; `NODEJS_HELPERS=0` |
 | `DATABASE_URL is not set` / DB errors | Missing env on `plan2026-api` | Copy `DATABASE_URL` from `plan2026`; redeploy |
-| `ApiToken` / table missing | Migration not applied on production | `pnpm exec prisma migrate deploy` with prod URL |
+| `ApiToken` / table missing, or Prisma `P2022` column missing | Migration not applied on production | `pnpm exec prisma migrate deploy` with production `DATABASE_URL` (see DEPLOY.md). The API build does not migrate. |
 | `/docs` returns **401** | Bearer middleware mounted on `/*` | Auth must be scoped to `/tasks` and `/plans` only |
 | CLI deploy works, Git deploy does not | Classic Vercel + generated `api/` mismatch | Build Output API path above; compare Deployments → Output |
 
@@ -184,5 +184,5 @@ pnpm run api:dev
 - [ ] Vercel **plan2026-api** Production deployment Ready  
 - [ ] `GET /health` on the production alias returns 200  
 - [ ] Bearer `GET /tasks` returns 200  
-- [ ] If schema changed: `prisma migrate deploy` on production  
+- [ ] If schema changed: Production web deploy runs `prisma migrate deploy`. If this API deploy is the only one, run `pnpm exec prisma migrate deploy` with production `DATABASE_URL`.  
 - [ ] Relink local CLI to `plan2026` if you linked `plan2026-api` for deploys  
