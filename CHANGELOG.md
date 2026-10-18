@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.29.5
+
+### Patch Changes
+
+- b5d9ba9: Apply pending Prisma migrations during the Vercel production build, before the new app is published. Preview builds, GitHub Actions, and local builds do not migrate.
+
 ## 0.29.4
 
 ### Patch Changes
