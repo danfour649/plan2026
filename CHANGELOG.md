@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.29.3
+
+### Patch Changes
+
+- ef66d2b: Fix task due times so a time entered in the user's time zone is stored as that instant, shown back unchanged, and added to Google Calendar in that time zone. Date-only dues stay on the civil date.
+
 ## 0.29.2
 
 ### Patch Changes
