@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.29.6
+
+### Patch Changes
+
+- a3c3a85: Skip Prisma migrate on GitHub Actions and other non-Vercel CI, and fail CI when the Prisma schema has no matching migration.
+
 ## 0.29.5
 
 ### Patch Changes
