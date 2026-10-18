@@ -47,6 +47,8 @@ export async function POST(req: Request) {
           title?: unknown;
           content?: unknown;
           dueAt?: unknown;
+          timeZone?: unknown;
+          dueAllDay?: unknown;
           urgency?: unknown;
           planId?: unknown;
           status?: unknown;
@@ -57,6 +59,8 @@ export async function POST(req: Request) {
     title: raw.title ?? "",
     content: raw.content ?? undefined,
     dueAt: raw.dueAt ?? undefined,
+    timeZone: raw.timeZone ?? undefined,
+    dueAllDay: raw.dueAllDay ?? undefined,
     urgency: raw.urgency ?? 4,
     planId: raw.planId ?? undefined,
     status: raw.status ?? undefined,

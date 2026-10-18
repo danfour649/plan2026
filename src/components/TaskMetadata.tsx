@@ -3,7 +3,8 @@
 import Link from "next/link";
 
 import { useAppLocale } from "@/components/TranslationsProvider";
-import { formatShortDate, formatShortDateOnly, formatShortDateTime } from "@/lib/format";
+import { formatShortDate, formatShortDateOnly } from "@/lib/format";
+import { formatTaskDueDateShort, formatTaskDuePrimary } from "@/lib/task-due";
 
 export type TaskMetadataLabels = {
   added: string;
@@ -16,6 +17,8 @@ type TaskMetadataProps = {
   createdAt: Date;
   completedAt?: Date | null;
   dueAt?: Date | null;
+  dueTimeZone?: string | null;
+  dueAllDay?: boolean | null;
   /** Short label when task has recurrence (e.g. "Repeats daily"). */
   recurrenceHint?: string | null;
   isCompleted?: boolean;
@@ -30,6 +33,8 @@ export function TaskMetadata({
   createdAt,
   completedAt,
   dueAt,
+  dueTimeZone,
+  dueAllDay,
   recurrenceHint,
   isCompleted,
   plan,
@@ -68,8 +73,12 @@ export function TaskMetadata({
       {dueAt ? (
         <span className={dueSepClass || undefined}>
           {labels.due}{" "}
-          <span className="max-sm:hidden sm:inline">{formatShortDateTime(dueAt, appLocale)}</span>
-          <span className="max-sm:inline sm:hidden">{formatShortDateOnly(dueAt, appLocale)}</span>
+          <span className="max-sm:hidden sm:inline">
+            {formatTaskDuePrimary({ dueAt, dueTimeZone, dueAllDay }, appLocale)}
+          </span>
+          <span className="max-sm:inline sm:hidden">
+            {formatTaskDueDateShort({ dueAt, dueTimeZone, dueAllDay }, appLocale)}
+          </span>
         </span>
       ) : null}
       {recurrenceHint ? (

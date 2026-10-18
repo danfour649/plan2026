@@ -169,6 +169,8 @@ export function TasksListWithLocalSearch({
                     title: task.title,
                     content: task.content,
                     dueAt: toIso(task.dueAt),
+                    dueTimeZone: task.dueTimeZone,
+                    dueAllDay: task.dueAllDay,
                     urgency: task.urgency,
                     recurrence: task.recurrence ?? null,
                     status: task.status,
@@ -198,6 +200,8 @@ export function TasksListWithLocalSearch({
                     <TaskMetadata
                       createdAt={coerceDate(task.createdAt)}
                       dueAt={task.dueAt ? coerceDate(task.dueAt) : null}
+                      dueTimeZone={task.dueTimeZone}
+                      dueAllDay={task.dueAllDay}
                       recurrenceHint={taskRecurrenceHint(task.recurrence, recurrenceLabels)}
                       plan={task.plan}
                       labels={metaLabels}
@@ -229,6 +233,8 @@ export function TasksListWithLocalSearch({
                       title: task.title,
                       content: task.content,
                       dueAt: toIso(task.dueAt),
+                    dueTimeZone: task.dueTimeZone,
+                    dueAllDay: task.dueAllDay,
                       urgency: task.urgency,
                       recurrence: task.recurrence ?? null,
                       status: task.status,
@@ -267,6 +273,8 @@ export function TasksListWithLocalSearch({
                     title: task.title,
                     content: task.content,
                     dueAt: toIso(task.dueAt),
+                    dueTimeZone: task.dueTimeZone,
+                    dueAllDay: task.dueAllDay,
                     urgency: task.urgency,
                     recurrence: task.recurrence ?? null,
                     status: task.status,
@@ -295,6 +303,8 @@ export function TasksListWithLocalSearch({
                         createdAt={coerceDate(task.createdAt)}
                         completedAt={task.completedAt ? coerceDate(task.completedAt) : null}
                         dueAt={task.dueAt ? coerceDate(task.dueAt) : null}
+                        dueTimeZone={task.dueTimeZone}
+                        dueAllDay={task.dueAllDay}
                         recurrenceHint={taskRecurrenceHint(task.recurrence, recurrenceLabels)}
                         plan={task.plan}
                         labels={metaLabels}
@@ -326,6 +336,8 @@ export function TasksListWithLocalSearch({
                       title: task.title,
                       content: task.content,
                       dueAt: toIso(task.dueAt),
+                    dueTimeZone: task.dueTimeZone,
+                    dueAllDay: task.dueAllDay,
                       urgency: task.urgency,
                       recurrence: task.recurrence ?? null,
                       status: task.status,

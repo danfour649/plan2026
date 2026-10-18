@@ -6,6 +6,7 @@ import { getCurrentUserId } from "@/auth";
 import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
+import { formatTaskDuePrimary } from "@/lib/task-due";
 import { PrintChecklistActions } from "@/components/PrintChecklistActions";
 
 function stripHtml(html: string): string {
@@ -55,6 +56,8 @@ async function PlanPrintRoot({ id }: { id: string }) {
           title: true,
           content: true,
           dueAt: true,
+          dueTimeZone: true,
+          dueAllDay: true,
           urgency: true,
           status: true,
           completedAt: true,
@@ -172,7 +175,19 @@ async function PlanPrintRoot({ id }: { id: string }) {
                       {t.plans.printTaskPriority}: {task.urgency}
                     </span>
                     {task.dueAt && (
-                      <span>{t.plans.printTaskDue.replace("{{date}}", formatDate(task.dueAt, locale))}</span>
+                      <span>
+                        {t.plans.printTaskDue.replace(
+                          "{{date}}",
+                          formatTaskDuePrimary(
+                            {
+                              dueAt: task.dueAt,
+                              dueTimeZone: task.dueTimeZone,
+                              dueAllDay: task.dueAllDay,
+                            },
+                            locale,
+                          ),
+                        )}
+                      </span>
                     )}
                   </div>
                   {task.content && stripHtml(task.content).length > 0 && (
@@ -213,7 +228,19 @@ async function PlanPrintRoot({ id }: { id: string }) {
                       )}
                     </span>
                     {task.dueAt && (
-                      <span>{t.plans.printTaskDue.replace("{{date}}", formatDate(task.dueAt, locale))}</span>
+                      <span>
+                        {t.plans.printTaskDue.replace(
+                          "{{date}}",
+                          formatTaskDuePrimary(
+                            {
+                              dueAt: task.dueAt,
+                              dueTimeZone: task.dueTimeZone,
+                              dueAllDay: task.dueAllDay,
+                            },
+                            locale,
+                          ),
+                        )}
+                      </span>
                     )}
                   </div>
                   {task.content && stripHtml(task.content).length > 0 && (

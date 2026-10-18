@@ -13,12 +13,15 @@ export async function applyMarkTaskDone(where: Prisma.TaskWhereInput): Promise<{
 }> {
   const task = await prisma.task.findFirst({
     where,
-    select: { id: true, recurrence: true, dueAt: true },
+    select: { id: true, recurrence: true, dueAt: true, dueTimeZone: true, dueAllDay: true },
   });
   if (!task) return { ok: false, recurringAdvanced: false };
 
   if (task.recurrence) {
-    const nextDue = advanceTaskDueDate(task.dueAt, task.recurrence);
+    const nextDue = advanceTaskDueDate(task.dueAt, task.recurrence, new Date(), {
+      timeZone: task.dueTimeZone,
+      allDay: task.dueAllDay,
+    });
     await prisma.task.update({
       where: { id: task.id },
       data: {

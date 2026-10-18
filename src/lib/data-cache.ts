@@ -244,6 +244,8 @@ export type CachedTasksPageTask = {
   title: string;
   content: string | null;
   dueAt: Date | null;
+  dueTimeZone: string | null;
+  dueAllDay: boolean;
   recurrence: TaskRecurrence | null;
   urgency: number;
   googleCalendarEventId: string | null;
@@ -480,6 +482,8 @@ const planDetailTaskSelect = {
   title: true,
   content: true,
   dueAt: true,
+  dueTimeZone: true,
+  dueAllDay: true,
   recurrence: true,
   urgency: true,
   status: true,
