@@ -13,7 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # `prisma generate` and prisma.config.ts require DATABASE_URL. This job does not start Postgres
-      # and does not run migrations; next build must not query the DB. Value is a valid-format dummy only.
+      # and does not run migrations: scripts/migrate-production.mjs no-ops unless VERCEL_ENV=production.
+      # Production migrations run in the Vercel production build. next build must not query the DB.
+      # Value is a valid-format dummy only.
       DATABASE_URL: postgresql://unused:unused@127.0.0.1:5432/unused
     steps:
       - name: Check out repository

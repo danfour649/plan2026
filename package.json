@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "pnpm exec next dev --webpack",
     "dev:kill": "pnpm exec kill-port 3000",
-    "build": "node scripts/sync-about-changelog.mjs && prisma generate && next build",
+    "build": "node scripts/migrate-production.mjs && node scripts/sync-about-changelog.mjs && prisma generate && next build",
     "build:next": "next build",
     "analyze": "cross-env ANALYZE=true next build --webpack",
     "start": "next start",

@@ -201,6 +201,6 @@ In short:
 1. Create a Vercel project.
 2. Provision PostgreSQL and set the required env vars.
 3. Configure Google OAuth with your production callback URL (`https://plan2026.ca/api/auth/callback/google`) and Calendar API access. Before advertising a public demo, follow **[GO-LIVE.md](./GO-LIVE.md)** (privacy URL, Vercel env, Google verification).
-4. Deploy; the build runs `prisma generate` and `next build`, and migrations are applied with `prisma migrate deploy`.
+4. Deploy. The Vercel **production** build runs `prisma migrate deploy` (using `DATABASE_URL`), then `prisma generate` and `next build`. Preview builds, GitHub Actions, and local `pnpm run build` do not migrate. See **[DEPLOY.md](./DEPLOY.md)** for the one-shot command that applies a pending migration to the live database.
 
 The database story is intentionally the same in every environment: PostgreSQL for local work and PostgreSQL in production.

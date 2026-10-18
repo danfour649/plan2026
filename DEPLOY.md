@@ -79,17 +79,29 @@ If users signed in before the Calendar scope was added, they may need to sign ou
 
 ## 5. Deploy
 
-1. Trigger the first deploy in Vercel.
-2. The app build runs:
+1. Push to `main`. Vercel deploys that commit to Production.
+2. The Production build runs `pnpm run build` (confirmed on deployment `dpl_3QNt41Maxd1yZAxvPgVEkSyfCDb6`):
+   - `prisma migrate deploy` when `VERCEL_ENV` is `production`
    - `prisma generate`
    - `next build`
-3. Apply migrations against production:
+3. Preview builds, GitHub Actions, and a local `pnpm run build` do not migrate. Preview and Production on the Vercel project `plan2026` use the same `DATABASE_URL`, so a preview of an unmerged migration must not alter the live database.
+4. A failed `prisma migrate deploy` fails the Production deployment. The previous deployment keeps serving.
 
-```bash
+`prisma.config.ts` reads **`DATABASE_URL`**. That is the variable that holds the production database URL (Vercel → plan2026 → Settings → Environment Variables → `DATABASE_URL`, Production).
+
+### Apply a pending migration immediately
+
+Use this when Production is already serving code that expects columns the database does not have (Prisma `P2022`). It updates the live database in place. No redeploy is required after it succeeds. `prisma migrate deploy` applies only migrations that are not yet in `_prisma_migrations`.
+
+From a machine that can reach production Postgres, with the repo checked out at a commit that contains the migration folders:
+
+```powershell
+cd c:\Users\Admin\Desktop\vscode\plan2026
+$env:DATABASE_URL = "<Production DATABASE_URL from the Vercel plan2026 project>"
 pnpm exec prisma migrate deploy
 ```
 
-If you use Vercel build commands or CI automation, make sure `prisma migrate deploy` runs before the app starts serving traffic.
+Copy the value from the Vercel dashboard. Do not commit it, and do not point this command at a different variable (`DATABASE_POSTGRES_URL` and `DATABASE_PRISMA_DATABASE_URL` are not what Prisma is configured to use).
 
 ---
 
