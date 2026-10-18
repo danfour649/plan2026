@@ -1,5 +1,11 @@
 # plan2026
 
+## 0.29.1
+
+### Patch Changes
+
+- 01c8107: State how Plan 2026 uses Google user data on the privacy policy, including the Limited Use disclosure, and label Settings as Connect Google Calendar until an existing calendar grant needs re-auth.
+
 ## 0.29.0
 
 ### Minor Changes
