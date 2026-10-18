@@ -3,6 +3,48 @@
 
 export const RECENT_UPDATES: { version: string; entries: string[] }[] = [
   {
+    "version": "0.29.3",
+    "entries": [
+      "Fix task due times so a time entered in the user's time zone is stored as that instant, shown back unchanged, and added to Google Calendar in that time zone. Date-only dues stay on the civil date."
+    ]
+  },
+  {
+    "version": "0.29.2",
+    "entries": [
+      "Facebook Login: pin Graph API v26.0 for the OAuth authorization/token/userinfo endpoints (NextAuth v4's built-in provider still uses the retired v11.0) and request exactly `public_profile email`. Make the Facebook profile mapping null-safe so a missing picture or a phone-number account with no email no longer breaks sign-in. Add Meta's Data Deletion Callback (`POST /api/facebook/data-deletion`, HMAC-verified) with a localized status page at `/privacy/deletion-status`, a stable `#data-deletion` anchor on the privacy page, and clearer Facebook data-use copy in the privacy policy (en/fr/pidgin)."
+    ]
+  },
+  {
+    "version": "0.29.1",
+    "entries": [
+      "State how Plan 2026 uses Google user data on the privacy policy, including the Limited Use disclosure, and label Settings as Connect Google Calendar until an existing calendar grant needs re-auth."
+    ]
+  },
+  {
+    "version": "0.29.0",
+    "entries": [
+      "Add RevenueCat Web Billing integration: new /upgrade page with anthony & omolola enterprises inc. Pro entitlement status, monthly/yearly/lifetime plan purchases, inline RevenueCat Paywall, subscription management link, and Pro-gated personal API tokens (server REST entitlement check on create + Bearer auth)."
+    ]
+  },
+  {
+    "version": "0.28.2",
+    "entries": [
+      "Fix Google Search Console indexing: permanently redirect www and the Vercel production alias to https://plan2026.ca, emit consistent canonical tags/sitemap/robots, and noindex authenticated app routes."
+    ]
+  },
+  {
+    "version": "0.28.1",
+    "entries": [
+      "Document same-email Google/Facebook Settings linking test path in GO-LIVE-FACEBOOK.md."
+    ]
+  },
+  {
+    "version": "0.28.0",
+    "entries": [
+      "Add account-scoped task and plan CRUD on the standalone HTTP API, plus matching `apps/cli` commands (`pnpm run cli`)."
+    ]
+  },
+  {
     "version": "0.27.2",
     "entries": [
       "Document TECH-0085: populate Cursor Cloud Agent secrets for production API smoke tests."

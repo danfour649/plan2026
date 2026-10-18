@@ -51,7 +51,7 @@ Cold sign-in with the second provider on `/login` when the email already exists 
 
 - **Duplicate users:** Facebook was used on `/login` before linking, creating a separate `User` for the same person. Linking then fails: account already associated with another user. Fix: delete the orphan Facebook-only user (and `Account` rows) in the DB, then link again from Settings.
 - **Session lost during OAuth:** Cookie blocked or private browsing → callback treats flow as cold sign-in → `OAuthAccountNotLinked`. Use a normal browser tab; allow cookies for the app domain.
-- **Facebook email permission:** App in Development without `email` approved, or user denied email → cold sign-in issues; linking while signed in should still work if session survives the round-trip.
+- **Facebook email permission:** As of 18 Oct 2026, `email` is Standard access with Verification required (`public_profile` already has Advanced access). A non-role user may sign in with no email until that finishes. Linking while signed in should still work if the session survives the round-trip. The production redirect list is only `https://plan2026.ca/api/auth/callback/facebook`.
 - **Button appears stuck on “Linking…”:** Check DevTools → Network for `POST /api/auth/signin/facebook`. Should return `{ url: "https://www.facebook.com/..." }` and redirect. If login with Facebook on `/login` works on the same URL, OAuth config is fine.
 
 ### References

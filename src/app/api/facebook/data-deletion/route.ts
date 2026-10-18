@@ -8,9 +8,11 @@ import { prisma } from "@/lib/prisma";
 import { absoluteCanonicalUrl } from "@/lib/site-url";
 
 /**
- * Meta Data Deletion Callback.
- * Configure in the Meta App Dashboard (Settings → Basic → User data deletion)
- * as: https://plan2026.ca/api/facebook/data-deletion
+ * Meta Data Deletion Callback (optional).
+ * The Meta dashboard currently uses the instructions URL
+ * https://plan2026.ca/privacy#data-deletion. Point User data deletion at
+ * https://plan2026.ca/api/facebook/data-deletion only if you want this
+ * callback instead of those instructions.
  *
  * Meta POSTs a form-encoded `signed_request`. We verify it with
  * AUTH_FACEBOOK_SECRET, delete the matching data (the Facebook Account row,

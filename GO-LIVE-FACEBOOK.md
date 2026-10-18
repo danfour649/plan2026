@@ -1,16 +1,45 @@
 # Go live — Facebook Login for Plan 2026
 
-Use this checklist after the app code is deployed to [plan2026.ca](https://plan2026.ca). Facebook Login is already implemented in the app; what remains is Meta Developer setup, App Review, and production env vars.
+Use this checklist for the Meta app **plan 2026**. Facebook Login is implemented and the production authorize URL already pins Graph API **v26.0** with scope `public_profile email`.
 
 **Production URL:** `https://plan2026.ca`  
 **Privacy policy:** `https://plan2026.ca/privacy`  
 **Terms of service:** `https://plan2026.ca/terms`  
 **Facebook OAuth callback:** `https://plan2026.ca/api/auth/callback/facebook`  
-**Local dev callback:** `http://localhost:3000/api/auth/callback/facebook`  
-**Data Deletion Callback:** `https://plan2026.ca/api/facebook/data-deletion` (status page: `https://plan2026.ca/privacy/deletion-status`)  
-**Deletion instructions URL:** `https://plan2026.ca/privacy#data-deletion`
+**Deletion instructions URL (configured in Meta):** `https://plan2026.ca/privacy#data-deletion`  
+**Optional Data Deletion Callback:** `https://plan2026.ca/api/facebook/data-deletion` (status page: `https://plan2026.ca/privacy/deletion-status`)
 
-**Code facts (Oct 2026):** the app pins Graph API **v26.0** for the authorization, token, and userinfo endpoints (`FACEBOOK_GRAPH_VERSION` in `src/lib/facebook-login.ts`) — NextAuth v4's built-in provider still points at the retired v11.0. Requested scopes are exactly `public_profile email`.
+**Code facts:** `FACEBOOK_GRAPH_VERSION` in `src/lib/facebook-login.ts` is **v26.0** (newest Graph API version listed in October 2026). NextAuth v4's built-in provider still points at the retired v11.0; `src/auth.ts` overrides authorization, token, and userinfo. Requested scopes are exactly `public_profile email`. Production `POST /api/auth/signin/facebook` returns `https://www.facebook.com/v26.0/dialog/oauth` with that scope and the production redirect URI.
+
+---
+
+## Dashboard snapshot — 18 October 2026, 2:50 PM Halifax (ADT)
+
+App **plan 2026**, App ID `1579063466974896`, belongs to the business **Anthony & Omolola Enterprises**, which is **Verified**. Data access renewal is complete.
+
+### Already set
+
+- [x] Privacy Policy URL `https://plan2026.ca/privacy`
+- [x] Terms of Service URL `https://plan2026.ca/terms`
+- [x] User data deletion **instructions** URL `https://plan2026.ca/privacy#data-deletion` (the live privacy page has `id="data-deletion"` on “How to delete your data”)
+- [x] Category: Productivity
+- [x] App icon (`public/meta-app-icon-1024.png`)
+- [x] `public_profile`: **Advanced access**
+- [x] Valid OAuth Redirect URI is only `https://plan2026.ca/api/auth/callback/facebook` (localhost was removed)
+- [x] Use Strict Mode for redirect URIs: ON
+- [x] Enforce HTTPS: ON
+- [x] Vercel Production already has `AUTH_FACEBOOK_ID`, `AUTH_FACEBOOK_SECRET`, and `AUTH_FACEBOOK_ENABLED`. Do not change them for this step.
+
+### Still to finish
+
+- [ ] **App domains:** `plan2026.ca` is being added under Settings → Basic. Confirm the field saved.
+- [ ] **`email` permission:** Standard access, status **Verification required**. Finish that Meta step so `email` can move to Advanced access. Until then, a Facebook account that is not an app role may sign in without an email. The app allows a null email (`User.email` is nullable).
+- [ ] **Go Live:** the app is being switched from **Development** to **Live** on 18 October 2026. Confirm the dashboard shows Live.
+- [ ] **End-to-end on https://plan2026.ca** with a Facebook account that is not an admin, developer, or tester: cold sign-in lands on `/tasks`; link Facebook from Settings while signed in with Google; sign out and back in with each provider; check Vercel function logs on any failure.
+
+Do not put `http://localhost:3000/api/auth/callback/facebook` back on the redirect list unless you are testing locally. Strict mode is on, so a URI that is not listed is rejected. Remove it again before relying on the production-only list.
+
+The Data Deletion Callback is optional. The dashboard uses the instructions URL. Leave it that way unless you switch User data deletion to `https://plan2026.ca/api/facebook/data-deletion`. The callback is implemented and covered by unit tests; it runs only when Meta posts a `signed_request`.
 
 ---
 
@@ -30,11 +59,11 @@ Use this checklist after the app code is deployed to [plan2026.ca](https://plan2
 | **App domains** | `plan2026.ca` |
 | **Privacy Policy URL** | `https://plan2026.ca/privacy` |
 | **Terms of Service URL** | `https://plan2026.ca/terms` |
-| **User data deletion** | Data Deletion Callback URL: `https://plan2026.ca/api/facebook/data-deletion` (implemented in the app — Meta POSTs a signed_request when a user removes the app, and the user can check the outcome at `https://plan2026.ca/privacy/deletion-status`). Alternatively, Data Deletion Instructions URL: `https://plan2026.ca/privacy#data-deletion` |
+| **User data deletion** | Instructions URL (already set): `https://plan2026.ca/privacy#data-deletion`. Optional callback, only if you replace the instructions URL: `https://plan2026.ca/api/facebook/data-deletion` |
 | **Category** | Productivity |
 | **App icon** | `public/meta-app-icon-1024.png` (1024×1024) |
 
-Copy **App ID** and **App Secret** — you will set these as `AUTH_FACEBOOK_ID` and `AUTH_FACEBOOK_SECRET` in Vercel.
+App ID `1579063466974896` and the App Secret are already `AUTH_FACEBOOK_ID` and `AUTH_FACEBOOK_SECRET` in Vercel Production. App domain `plan2026.ca` was still being saved on 18 Oct 2026 — confirm Settings → Basic shows it. Privacy, Terms, the deletion instructions URL, category, and icon are already set.
 
 ---
 
@@ -44,12 +73,11 @@ Copy **App ID** and **App Secret** — you will set these as `AUTH_FACEBOOK_ID` 
 
 | Setting | Value |
 |---------|--------|
-| **Valid OAuth Redirect URIs** | `https://plan2026.ca/api/auth/callback/facebook` |
-| | `http://localhost:3000/api/auth/callback/facebook` (for local testing) |
+| **Valid OAuth Redirect URIs** | `https://plan2026.ca/api/auth/callback/facebook` only (localhost removed, 18 Oct 2026) |
 | **Client OAuth login** | Yes |
 | **Web OAuth login** | Yes |
-| **Enforce HTTPS** | Yes (production) |
-| **Use Strict Mode for redirect URIs** | Yes |
+| **Enforce HTTPS** | ON (confirmed 18 Oct 2026) |
+| **Use Strict Mode for redirect URIs** | ON (confirmed 18 Oct 2026) |
 
 **Allowed domains for the JavaScript SDK** (if shown): `plan2026.ca`
 
@@ -68,24 +96,21 @@ Plan 2026 requests only:
 
 Do **not** request extra permissions (friends, pages, posting, etc.).
 
-In **App Review → Permissions and Features**, request **Advanced Access** for:
+In **App Review → Permissions and Features** (status on 18 Oct 2026):
 
-- [ ] `public_profile`
-- [ ] `email`
+- [x] `public_profile` — Advanced access
+- [ ] `email` — Standard access, **Verification required**. Complete Meta’s verification so this can move to Advanced access.
 
-Standard Access works only for app roles and test users in Development mode. Advanced Access + Live mode is required for any Facebook user to sign in.
+Standard access for `email` is enough for people with a role on the app. Any Facebook user needs Advanced access (and Live mode) before Meta reliably returns an email. Sign-in still completes when Graph omits `email`.
 
 ---
 
 ## Phase 5 — Business verification
 
-Meta typically requires **Business Verification** before granting Advanced Access for Live Facebook Login.
+- [x] The app belongs to **Anthony & Omolola Enterprises**, which is **Verified** (18 Oct 2026).
+- [x] Data access renewal is complete.
 
-1. Open **Business Settings** (business.facebook.com) for the Business Manager linked to your app.
-2. Complete **Security Center → Business verification** (legal business name, address, phone, documents).
-3. If you operate as an individual, you may need a registered business entity (e.g. sole proprietorship or corporation) with matching documentation — Meta’s requirements vary by region.
-
-Verification can take several days. You can still test in **Development** mode while waiting.
+Meta requires a verified business before Advanced Access for Live Facebook Login. That step is done for this app. The remaining permission gate is `email` (“Verification required”), not business verification.
 
 ---
 
@@ -110,15 +135,16 @@ Plan 2026 is a task and plan planner. Facebook Login lets users sign in with the
 
 Keep the video under ~2 minutes. No login/password needed for reviewers if they can use their own Facebook account on the production URL.
 
-**Test instructions for reviewers:**  
-“Open https://plan2026.ca/login and click Continue with Facebook. No separate app account is required.”
+**Test instructions for reviewers** (paste into Meta’s “Provide testing instructions” field):
+
+Open https://plan2026.ca/login in a desktop or mobile browser. No separate Plan 2026 account is required. Click Continue with Facebook, sign in with your Facebook account, and approve public_profile and email. You are redirected to https://plan2026.ca/tasks, signed in, with your name in the header. Plan 2026 uses those two permissions only to sign you in and to display your name and profile picture. It does not post to Facebook, read your friends, or access any other Facebook data. Privacy policy: https://plan2026.ca/privacy. Data deletion instructions: https://plan2026.ca/privacy#data-deletion.
 
 **Data handling:** Answer Meta’s data handling questions honestly: email and profile are stored in our PostgreSQL database for authentication and display; not sold; deletion via privacy policy contact.
 
-### After approval
+### After `email` is approved
 
-- [ ] Permissions show **Ready for live mode**
-- [ ] Switch app from **Development** to **Live** (top of App Dashboard)
+- [ ] `email` shows Advanced access (or Ready for live mode)
+- [ ] App mode is **Live** (switch started 18 Oct 2026 — confirm it finished)
 
 ---
 
@@ -128,15 +154,13 @@ In **Vercel → plan2026 → Settings → Environment Variables** (Production):
 
 | Variable | Value |
 |----------|--------|
-| `AUTH_FACEBOOK_ID` | App ID from Meta Settings → Basic |
-| `AUTH_FACEBOOK_SECRET` | App Secret (click Show) |
-| `AUTH_FACEBOOK_ENABLED` | Set to `true` (required for the login button; enabled for App Review submission) |
+| `AUTH_FACEBOOK_ID` | App ID `1579063466974896` — already set in Vercel Production |
+| `AUTH_FACEBOOK_SECRET` | App Secret — already set in Vercel Production. Do not commit it. |
+| `AUTH_FACEBOOK_ENABLED` | Already `true` in Vercel Production |
 
-**Re-enable / App Review:** Set `AUTH_FACEBOOK_ENABLED=true` in Vercel Production before submitting App Review so reviewers see **Continue with Facebook** on `/login`. After approval, switch the Meta app to **Live** so all Facebook users can sign in (not only test users).
+`NEXTAUTH_URL` must stay `https://plan2026.ca` (no trailing slash).
 
-`NEXTAUTH_URL` must already be `https://plan2026.ca` (no trailing slash).
-
-After saving: **Redeploy** Production.
+No Vercel change is required for the 18 Oct 2026 dashboard update. Redeploy Production after the privacy-copy PR merges so the live policy matches the instructions URL.
 
 ---
 
@@ -149,10 +173,10 @@ On `https://plan2026.ca`:
 - [ ] User lands on `/tasks` with a session.
 - [ ] Sign out and sign in again works.
 - [ ] Link Facebook from **Settings → Sign-in methods** while signed in with Google (same email), then sign in with either provider.
-- [ ] Data deletion: remove Plan 2026 in Facebook **Settings → Apps and Websites**, then open `https://plan2026.ca/privacy/deletion-status` with the confirmation code Facebook shows and confirm it reports completion.
+- [ ] Data deletion instructions: open `https://plan2026.ca/privacy#data-deletion` and confirm the “How to delete your data” section is in view. The dashboard uses that URL. The callback at `/api/facebook/data-deletion` is optional and is not what Meta calls today.
 - [ ] Check Vercel **Functions / Logs** on failure.
 
-**Development mode only:** Add Facebook accounts under **App roles → Test users** (or as Administrators/Developers) until the app is Live.
+Until the app shows **Live**, only Facebook accounts with an app role (Administrator, Developer, or Tester) can sign in.
 
 ---
 
@@ -162,21 +186,20 @@ On `https://plan2026.ca`:
 |---------|----------------|
 | Button missing on `/login` | `AUTH_FACEBOOK_ID` or `AUTH_FACEBOOK_SECRET` not set in Vercel, or Production not redeployed |
 | “URL blocked” / redirect error | Callback URI not listed exactly in Facebook Login settings |
-| “App not active” / login unavailable | App still in Development and user is not a test user or app role |
-| “App needs advanced access” | Submit App Review for `email` and `public_profile`; complete business verification |
+| “App not active” / login unavailable | App still in Development and the Facebook account has no app role |
+| “App needs advanced access” / email missing for non-role users | `email` is still Standard with Verification required. `public_profile` already has Advanced access. Business verification is done. |
 | Sign-in loops to `/login` | Wrong `NEXTAUTH_URL`, missing `AUTH_SECRET`, or database/session error |
 | Facebook account has no email | Phone-number Facebook accounts may return no email — sign-in still works and the Plan 2026 account is created without an email (handled in `mapFacebookProfile`). If emails are missing for everyone, check `email` Advanced Access |
 
 ---
 
-## Quick test before App Review (Development mode)
+## Local Facebook login
+
+The production Meta app does not list a localhost redirect URI. Local “Continue with Facebook” will fail with a redirect error until you temporarily add `http://localhost:3000/api/auth/callback/facebook`, test, and remove it again (Strict mode is on).
 
 1. Set `AUTH_FACEBOOK_*` in local `.env` (never commit).
 2. Run `pnpm dev`, open `http://localhost:3000/login`.
-3. Use a Facebook account listed as Developer/Administrator/Test user on the Meta app.
-4. Confirm redirect to `http://localhost:3000/api/auth/callback/facebook` works.
-
-Then repeat on production with your own account before submitting App Review.
+3. Use a Facebook account listed as Developer, Administrator, or Tester while the app is in Development.
 
 ### Testing with the same email on Gmail and Facebook
 

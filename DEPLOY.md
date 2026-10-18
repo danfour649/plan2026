@@ -42,7 +42,7 @@ In Vercel, open **Project Settings** -> **Environment Variables** and add these 
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
 | `AUTH_FACEBOOK_ID` | (optional) Meta App ID for Facebook Login |
 | `AUTH_FACEBOOK_SECRET` | (optional) Meta App Secret |
-| `AUTH_FACEBOOK_ENABLED` | (optional) Set to `true` after Meta App Review to show Facebook login |
+| `AUTH_FACEBOOK_ENABLED` | (optional) Set to `true` with the ID and secret to show Facebook login. Vercel Production already has this set. |
 
 Notes:
 
