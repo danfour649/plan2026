@@ -12,9 +12,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # `prisma generate` and prisma.config.ts require DATABASE_URL. This job does not start Postgres
-      # and does not run migrations: scripts/migrate-production.mjs no-ops unless VERCEL_ENV=production.
-      # Production migrations run in the Vercel production build. next build must not query the DB.
+      # `prisma generate` and prisma.config.ts require DATABASE_URL. This job does not start Postgres.
+      # scripts/migrate-production.mjs no-ops here: GITHUB_ACTIONS is set, and VERCEL_ENV is not
+      # production. The migrations job below uses a throwaway Postgres service, not production.
       # Value is a valid-format dummy only.
       DATABASE_URL: postgresql://unused:unused@127.0.0.1:5432/unused
     steps:
@@ -41,3 +41,51 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+  migrations:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: plan2026
+          POSTGRES_PASSWORD: plan2026
+          POSTGRES_DB: plan2026
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U plan2026 -d plan2026"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      # Throwaway database on the service container. Never the production URL.
+      DATABASE_URL: postgresql://plan2026:plan2026@localhost:5432/plan2026
+      SHADOW_DATABASE_URL: postgresql://plan2026:plan2026@localhost:5432/plan2026_shadow
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Apply migrations to an empty database
+        run: pnpm exec prisma migrate deploy
+
+      - name: Create shadow database
+        run: node scripts/create-shadow-database.mjs
+
+      - name: Fail if the schema and migrations differ
+        run: pnpm exec prisma migrate diff --from-migrations prisma/migrations --to-schema prisma/schema.prisma --exit-code
+
+      - name: Smoke-test Task queries against the migrated database
+        run: pnpm exec tsx scripts/smoke-task-find-many.ts

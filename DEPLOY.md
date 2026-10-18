@@ -103,6 +103,34 @@ pnpm exec prisma migrate deploy
 
 Copy the value from the Vercel dashboard. Do not commit it, and do not point this command at a different variable (`DATABASE_POSTGRES_URL` and `DATABASE_PRISMA_DATABASE_URL` are not what Prisma is configured to use).
 
+### Safety guards
+
+`scripts/migrate-production.mjs` is the first step of `pnpm run build`.
+
+- It runs `prisma migrate deploy` only when `VERCEL_ENV` is `production`.
+- Preview, development, and an unset `VERCEL_ENV` skip it. Preview and Production share one `DATABASE_URL`, so a preview build must not apply an unmerged migration.
+- GitHub Actions (`GITHUB_ACTIONS=true`) and any other CI host that is not Vercel skip it, even if `VERCEL_ENV` is `production`. Vercel production builds set `CI=1` together with `VERCEL=1`. That `CI` flag does not skip the migrate step.
+- The script does not print `DATABASE_URL`.
+- A non-zero `prisma migrate deploy` exit fails the build. Vercel does not publish that deployment. The previous production deployment keeps serving.
+- The GitHub Actions `migrations` job applies the migration history to an empty Postgres service container, then runs `prisma migrate diff --from-migrations prisma/migrations --to-schema prisma/schema.prisma --exit-code`. Prisma 7 replays migrations into the database named by `SHADOW_DATABASE_URL` (`prisma.config.ts` passes it through only when that variable is set). A schema change without a matching migration fails CI. The job then runs `prisma.task.findMany()` against the migrated database. Its `DATABASE_URL` is the container, not production.
+
+### Recover from a failed migration
+
+1. The failed build is not promoted. Traffic stays on the previous deployment.
+2. Read the Vercel build log for the `prisma migrate deploy` error.
+3. On Postgres, Prisma runs each migration in a transaction. A failure rolls the SQL back and records the migration as failed in `_prisma_migrations`. The next deploy stops with P3009 until that record is resolved.
+4. From a machine that can reach production, with `DATABASE_URL` set to the Production value:
+
+```powershell
+$env:DATABASE_URL = "<Production DATABASE_URL>"
+pnpm exec prisma migrate resolve --rolled-back <migration_folder_name>
+pnpm exec prisma migrate deploy
+```
+
+Use the folder name under `prisma/migrations`, for example `20261018120000_task_due_timezone`. If the SQL was wrong, fix it in a new commit before deploying again. Do not run `prisma migrate reset` against production.
+
+If production is already serving code that expects columns the database does not have (Prisma `P2022`), use **Apply a pending migration immediately** above. That applies migrations that have not been recorded yet. It is separate from resolving a migration that failed mid-run.
+
 ---
 
 ## 6. Canonical domain (SEO)
