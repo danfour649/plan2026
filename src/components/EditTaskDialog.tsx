@@ -23,6 +23,8 @@ type EditTaskDialogProps = {
     title: string;
     content: string | null;
     dueAt: string | null;
+    dueTimeZone?: string | null;
+    dueAllDay?: boolean | null;
     urgency: number;
     recurrence?: "daily" | "weekly" | "monthly" | null;
     status?: "active" | "on_hold" | "completed";
@@ -312,6 +314,8 @@ export function EditTaskDialog({
                 title: task.title,
                 content: task.content ?? undefined,
                 dueAt: task.dueAt,
+                dueTimeZone: task.dueTimeZone,
+                dueAllDay: task.dueAllDay,
                 urgency: task.urgency,
                 planId: task.planId ?? undefined,
                 status: task.status === "completed" ? "active" : task.status ?? "active",

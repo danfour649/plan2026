@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { sanitizeTaskContent } from "@/lib/sanitize";
+import { parseTaskDueInput } from "@/lib/task-due";
 
 /** Max length for task title (DB-safe, prevents huge payloads). */
 export const TASK_TITLE_MAX_LENGTH = 500;
@@ -17,7 +18,7 @@ export type TaskStatusActiveOrOnHold = (typeof TASK_STATUS_ACTIVE_OR_ON_HOLD)[nu
 export const TASK_RECURRENCE_VALUES = ["daily", "weekly", "monthly"] as const;
 export type TaskRecurrenceFormValue = (typeof TASK_RECURRENCE_VALUES)[number];
 
-export const addTaskSchema = z.object({
+const taskBodySchema = z.object({
   title: z
     .string()
     .min(1, "Title is required")
@@ -35,11 +36,21 @@ export const addTaskSchema = z.object({
   dueAt: z
     .string()
     .optional()
+    .nullable()
     .transform((s) => {
       if (s == null || s.trim() === "") return undefined;
-      const d = new Date(s);
-      return Number.isNaN(d.getTime()) ? undefined : d;
+      return s.trim();
     }),
+  /** IANA zone from the browser (`Intl` resolved time zone). */
+  timeZone: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((s) => {
+      if (s == null || s.trim() === "") return undefined;
+      return s.trim();
+    }),
+  dueAllDay: z.union([z.boolean(), z.string()]).optional().nullable(),
   urgency: z.coerce
     .number()
     .int()
@@ -80,4 +91,25 @@ export const taskIdSchema = z.object({
     .refine((s) => CUID_REGEX.test(s), "Invalid task ID format"),
 });
 
-export const updateTaskSchema = addTaskSchema.merge(taskIdSchema);
+function withParsedDue<
+  T extends {
+    dueAt?: string;
+    timeZone?: string;
+    dueAllDay?: boolean | string | null;
+  },
+>(data: T) {
+  const parsed = parseTaskDueInput(data.dueAt, {
+    timeZone: data.timeZone,
+    allDay: data.dueAllDay,
+  });
+  const { timeZone: _timeZone, ...rest } = data;
+  return {
+    ...rest,
+    dueAt: parsed?.dueAt,
+    dueTimeZone: parsed?.dueTimeZone ?? null,
+    dueAllDay: parsed?.dueAllDay ?? false,
+  };
+}
+
+export const addTaskSchema = taskBodySchema.transform(withParsedDue);
+export const updateTaskSchema = taskBodySchema.merge(taskIdSchema).transform(withParsedDue);

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { AlertTriangle } from "lucide-react";
 
 import { getCurrentUserId } from "@/auth";
 import { AddTaskDialog } from "@/components/AddTaskDialog";
@@ -7,12 +6,13 @@ import { AddToCalendarButton } from "@/components/AddToCalendarButton";
 import { EditTaskDialog } from "@/components/EditTaskDialog";
 import { TaskActionButton } from "@/components/TaskActionButton";
 import { TaskContent } from "@/components/TaskContent";
+import { TaskOverdueIcon } from "@/components/TaskOverdueIcon";
 import {
   formatShortDate,
   formatShortDateOnly,
-  formatShortDateTime,
   getUrgencyPillClasses,
 } from "@/lib/format";
+import { formatTaskDueDateShort, formatTaskDuePrimary } from "@/lib/task-due";
 import { getLocaleForRequest } from "@/lib/account-preferences";
 import { getTranslations } from "@/lib/i18n";
 import { getCachedActionsPage } from "@/lib/data-cache";
@@ -31,8 +31,6 @@ export default async function ActionsPage() {
     weekly: t.tasks.recursWeekly,
     monthly: t.tasks.recursMonthly,
   };
-
-  const now = new Date();
 
   return (
     <div className="space-y-8">
@@ -68,7 +66,11 @@ export default async function ActionsPage() {
         ) : (
           <ul className="divide-y divide-blue-100 dark:divide-zinc-700">
             {tasks.map((task) => {
-              const isOverdue = task.dueAt !== null && task.dueAt < now;
+              const dueFields = {
+                dueAt: task.dueAt,
+                dueTimeZone: task.dueTimeZone,
+                dueAllDay: task.dueAllDay,
+              };
               const recurHint = taskRecurrenceHint(task.recurrence, recurrenceLabels);
               return (
                 <li
@@ -86,6 +88,8 @@ export default async function ActionsPage() {
                       title: task.title,
                       content: task.content,
                       dueAt: task.dueAt?.toISOString() ?? null,
+                      dueTimeZone: task.dueTimeZone,
+                      dueAllDay: task.dueAllDay,
                       urgency: task.urgency,
                       recurrence: task.recurrence ?? null,
                       status: task.status,
@@ -104,15 +108,12 @@ export default async function ActionsPage() {
                   >
                     <div className="min-w-0 flex-1 overflow-visible">
                       <div className="pt-0.5 pl-0.5 flex items-center gap-2">
-                        {isOverdue && (
-                          <span
-                            className="shrink-0 text-amber-600 dark:text-amber-400"
-                            title={t.tasks.overdue}
-                            aria-label={t.tasks.overdue}
-                          >
-                            <AlertTriangle className="h-5 w-5" />
-                          </span>
-                        )}
+                        <TaskOverdueIcon
+                          dueAt={task.dueAt?.toISOString() ?? null}
+                          dueTimeZone={task.dueTimeZone}
+                          dueAllDay={task.dueAllDay}
+                          label={t.tasks.overdue}
+                        />
                         <div
                           className={`inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold ${getUrgencyPillClasses(
                             task.urgency,
@@ -141,10 +142,10 @@ export default async function ActionsPage() {
                           <span className="sm:before:content-['·'] sm:before:mr-1">
                             {t.tasks.due}{" "}
                             <span className="max-sm:hidden sm:inline">
-                              {formatShortDateTime(task.dueAt, locale)}
+                              {formatTaskDuePrimary(dueFields, locale)}
                             </span>
                             <span className="max-sm:inline sm:hidden">
-                              {formatShortDateOnly(task.dueAt, locale)}
+                              {formatTaskDueDateShort(dueFields, locale)}
                             </span>
                           </span>
                         )}
@@ -186,6 +187,8 @@ export default async function ActionsPage() {
                         title: task.title,
                         content: task.content,
                         dueAt: task.dueAt?.toISOString() ?? null,
+                      dueTimeZone: task.dueTimeZone,
+                      dueAllDay: task.dueAllDay,
                         urgency: task.urgency,
                         recurrence: task.recurrence ?? null,
                         status: task.status,

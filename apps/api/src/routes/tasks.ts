@@ -38,6 +38,8 @@ const taskSchema = z.object({
   title: z.string(),
   content: z.string().nullable(),
   dueAt: z.string().datetime().nullable(),
+  dueTimeZone: z.string().nullable(),
+  dueAllDay: z.boolean(),
   urgency: z.number().int(),
   status: z.enum(["active", "on_hold", "completed"]),
   completedAt: z.string().datetime().nullable(),
@@ -57,6 +59,8 @@ function serializeTask(task: {
   title: string;
   content: string | null;
   dueAt: Date | null;
+  dueTimeZone: string | null;
+  dueAllDay: boolean;
   urgency: number;
   status: "active" | "on_hold" | "completed";
   completedAt: Date | null;
@@ -73,6 +77,8 @@ function serializeTask(task: {
     title: task.title,
     content: task.content,
     dueAt: task.dueAt?.toISOString() ?? null,
+    dueTimeZone: task.dueTimeZone,
+    dueAllDay: task.dueAllDay,
     urgency: task.urgency,
     status: task.status,
     completedAt: task.completedAt?.toISOString() ?? null,
@@ -119,6 +125,8 @@ const createTaskBodySchema = z.object({
   title: z.string().min(1),
   content: z.string().optional(),
   dueAt: z.string().optional(),
+  timeZone: z.string().optional(),
+  dueAllDay: z.union([z.boolean(), z.string()]).optional(),
   urgency: z.number().int().min(1).max(7).optional(),
   planId: z.string().optional(),
   status: z.enum(["active", "on_hold"]).optional(),
@@ -189,6 +197,8 @@ const updateTaskBodySchema = z.object({
   title: z.string().min(1),
   content: z.string().optional(),
   dueAt: z.string().optional(),
+  timeZone: z.string().optional(),
+  dueAllDay: z.union([z.boolean(), z.string()]).optional(),
   urgency: z.number().int().min(1).max(7).optional(),
   planId: z.string().nullable().optional(),
   status: z.enum(["active", "on_hold"]).optional(),
@@ -318,6 +328,8 @@ app.openapi(createTaskRoute, async (c) => {
     title: body.title ?? "",
     content: body.content,
     dueAt: body.dueAt,
+    timeZone: body.timeZone,
+    dueAllDay: body.dueAllDay,
     urgency: body.urgency ?? 4,
     planId: body.planId,
     status: body.status,
@@ -363,6 +375,8 @@ app.openapi(updateTaskRoute, async (c) => {
     title: body.title ?? "",
     content: body.content,
     dueAt: body.dueAt,
+    timeZone: body.timeZone,
+    dueAllDay: body.dueAllDay,
     urgency: body.urgency ?? 4,
     planId: body.planId === null ? undefined : body.planId,
     status: body.status,
@@ -378,6 +392,8 @@ app.openapi(updateTaskRoute, async (c) => {
     title: parsed.data.title,
     content: parsed.data.content,
     dueAt: parsed.data.dueAt,
+    dueTimeZone: parsed.data.dueTimeZone,
+    dueAllDay: parsed.data.dueAllDay,
     recurrence: parsed.data.recurrence,
     urgency: parsed.data.urgency,
     planId: body.planId === undefined ? undefined : body.planId,

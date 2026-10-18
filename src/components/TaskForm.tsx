@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useActionState, useEffect, useMemo, useRef } from "react";
+import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { FormSubmitButton } from "@/components/FormSubmitButton";
@@ -13,6 +13,7 @@ const TaskContentEditor = dynamic(
   { ssr: false },
 );
 import type { ActionResult } from "@/lib/actions/tasks";
+import { readBrowserTimeZone, taskDueInputValue } from "@/lib/task-due";
 
 /** useActionState passes (prevState, formData); server actions must accept both. */
 type TaskFormAction = (prevState: ActionResult | null, formData: FormData) => Promise<ActionResult>;
@@ -27,6 +28,8 @@ type TaskFormProps = {
     title?: string;
     content?: string;
     dueAt?: string | null;
+    dueTimeZone?: string | null;
+    dueAllDay?: boolean | null;
     urgency?: number;
     planId?: string | null;
     status?: "active" | "on_hold";
@@ -54,26 +57,6 @@ const URGENCY_OPTIONS = [
   { value: 1, label: "1 - Lowest", shortLabel: "1", className: "bg-blue-100 text-blue-700" },
 ];
 
-function formatDateTimeLocal(value: Date): string {
-  const year = value.getFullYear();
-  const month = String(value.getMonth() + 1).padStart(2, "0");
-  const day = String(value.getDate()).padStart(2, "0");
-  const hours = String(value.getHours()).padStart(2, "0");
-  const minutes = String(value.getMinutes()).padStart(2, "0");
-
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
-}
-
-function getDefaultDueAtValue(initialDueAt?: string | null) {
-  if (initialDueAt) {
-    const parsed = new Date(initialDueAt);
-    if (!Number.isNaN(parsed.getTime())) {
-      return formatDateTimeLocal(parsed);
-    }
-  }
-  return "";
-}
-
 export function TaskForm({
   action,
   onSuccess,
@@ -88,14 +71,29 @@ export function TaskForm({
 }: TaskFormProps) {
   const t = useTranslations();
   const [state, formAction] = useActionState(action, null as ActionResult | null);
-  const defaultDueAtValue = useMemo(
-    () => getDefaultDueAtValue(initialValues?.dueAt),
-    [initialValues?.dueAt],
+  const initialDue = useMemo(
+    () =>
+      taskDueInputValue(initialValues?.dueAt, {
+        dueTimeZone: initialValues?.dueTimeZone,
+        dueAllDay: initialValues?.dueAllDay,
+      }),
+    [initialValues?.dueAllDay, initialValues?.dueAt, initialValues?.dueTimeZone],
   );
+  const [allDay, setAllDay] = useState(initialDue.allDay);
+  const [dueValue, setDueValue] = useState(initialDue.value);
+  const savedTimeRef = useRef(initialDue.value.split("T")[1] || "09:00");
   const defaultUrgency = initialValues?.urgency ?? 4;
   const defaultStatus = initialValues?.status ?? "active";
   const defaultRecurrence = initialValues?.recurrence ?? "";
-  const dueAtInputRef = useRef<HTMLInputElement>(null);
+  const timeZoneRef = useRef<HTMLInputElement>(null);
+
+  function stampTimeZone() {
+    if (timeZoneRef.current) timeZoneRef.current.value = readBrowserTimeZone();
+  }
+
+  useEffect(() => {
+    stampTimeZone();
+  }, []);
 
   useEffect(() => {
     if (!state) return;
@@ -114,10 +112,14 @@ export function TaskForm({
     <form
       id={formId}
       action={formAction}
-      onSubmit={() => onSubmit?.()}
+      onSubmit={() => {
+        stampTimeZone();
+        onSubmit?.();
+      }}
       className="flex w-full flex-col gap-3"
     >
       {initialValues?.taskId ? <input type="hidden" name="taskId" value={initialValues.taskId} /> : null}
+      <input ref={timeZoneRef} type="hidden" name="timeZone" defaultValue="" />
       <div className="flex w-full flex-col gap-2">
         <input
           name="title"
@@ -217,25 +219,53 @@ export function TaskForm({
           </select>
         </div>
         <div className="flex w-full flex-col gap-1.5">
-          <label className="text-xs whitespace-nowrap text-blue-700 dark:text-blue-300">Due (optional)</label>
+          <label className="text-xs whitespace-nowrap text-blue-700 dark:text-blue-300">{t.tasks.dueOptional}</label>
           <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center">
             <input
-              ref={dueAtInputRef}
               name="dueAt"
-              type="datetime-local"
-              defaultValue={defaultDueAtValue}
+              type={allDay ? "date" : "datetime-local"}
+              value={dueValue}
+              onChange={(event) => {
+                const next = event.target.value;
+                if (!allDay && next.includes("T")) {
+                  savedTimeRef.current = next.split("T")[1] || savedTimeRef.current;
+                }
+                setDueValue(next);
+              }}
               className="w-full rounded-xl border border-border bg-white/95 px-3 py-2 text-sm text-black outline-none ring-ring transition focus:border-blue-300 focus:ring-4 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-blue-500"
             />
             <button
               type="button"
-              onClick={() => {
-                if (dueAtInputRef.current) dueAtInputRef.current.value = "";
-              }}
+              onClick={() => setDueValue("")}
               className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-700 transition hover:bg-blue-100 dark:border-zinc-600 dark:bg-zinc-800 dark:text-blue-200 dark:hover:bg-zinc-700 sm:self-stretch"
             >
               {t.common.clear}
             </button>
           </div>
+          <label className="inline-flex w-fit cursor-pointer items-center gap-2 text-sm text-blue-950 dark:text-zinc-100">
+            <input
+              type="checkbox"
+              name="dueAllDay"
+              value="1"
+              checked={allDay}
+              onChange={(event) => {
+                const next = event.target.checked;
+                setAllDay(next);
+                setDueValue((current) => {
+                  if (!current) return "";
+                  if (next) {
+                    const [date, time] = current.split("T");
+                    if (time) savedTimeRef.current = time.slice(0, 5);
+                    return date;
+                  }
+                  if (current.includes("T")) return current;
+                  return `${current}T${savedTimeRef.current || "09:00"}`;
+                });
+              }}
+              className="h-4 w-4 rounded border-blue-200 dark:border-zinc-500"
+            />
+            {t.tasks.allDay}
+          </label>
         </div>
       </div>
       <div className="w-full">

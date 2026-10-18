@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useTranslations } from "@/components/TranslationsProvider";
 import { connectGoogleCalendar } from "@/lib/connect-google-calendar-client";
 import { CALENDAR_SCOPE_MISSING_CODE } from "@/lib/google-oauth";
+import { readBrowserTimeZone } from "@/lib/task-due";
 
 type AddToCalendarButtonProps = {
   taskId: string;
@@ -25,7 +26,11 @@ export function AddToCalendarButton({
   async function handleClick() {
     setLoading(true);
     try {
-      const res = await fetch(`/api/tasks/${taskId}/calendar`, { method: "POST" });
+      const res = await fetch(`/api/tasks/${taskId}/calendar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ timeZone: readBrowserTimeZone() }),
+      });
       const data = (await res.json().catch(() => ({}))) as {
         error?: string;
         code?: string;

@@ -329,6 +329,8 @@ async function PlanDetailRoot({
                             title: task.title,
                             content: task.content,
                             dueAt: task.dueAt?.toISOString() ?? null,
+                            dueTimeZone: task.dueTimeZone,
+                            dueAllDay: task.dueAllDay,
                             urgency: task.urgency,
                             recurrence: task.recurrence ?? null,
                             status: task.status,
@@ -357,6 +359,8 @@ async function PlanDetailRoot({
                           createdAt={task.createdAt}
                           completedAt={task.completedAt ? new Date(task.completedAt) : null}
                           dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                          dueTimeZone={task.dueTimeZone}
+                          dueAllDay={task.dueAllDay}
                           recurrenceHint={taskRecurrenceHint(task.recurrence, recurrenceLabels)}
                           labels={metaLabels}
                           stackDueOnDesktop
@@ -389,6 +393,8 @@ async function PlanDetailRoot({
                               title: task.title,
                               content: task.content,
                               dueAt: task.dueAt?.toISOString() ?? null,
+                            dueTimeZone: task.dueTimeZone,
+                            dueAllDay: task.dueAllDay,
                               urgency: task.urgency,
                               recurrence: task.recurrence ?? null,
                               status: task.status,
@@ -417,6 +423,8 @@ async function PlanDetailRoot({
                         createdAt={task.createdAt}
                         completedAt={task.completedAt ? new Date(task.completedAt) : null}
                         dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                        dueTimeZone={task.dueTimeZone}
+                        dueAllDay={task.dueAllDay}
                         recurrenceHint={taskRecurrenceHint(task.recurrence, recurrenceLabels)}
                         labels={metaLabels}
                       />
@@ -485,6 +493,8 @@ async function PlanDetailRoot({
                             title: task.title,
                             content: task.content,
                             dueAt: task.dueAt?.toISOString() ?? null,
+                            dueTimeZone: task.dueTimeZone,
+                            dueAllDay: task.dueAllDay,
                             urgency: task.urgency,
                             recurrence: task.recurrence ?? null,
                             status: task.status,
@@ -513,6 +523,8 @@ async function PlanDetailRoot({
                           createdAt={task.createdAt}
                           completedAt={task.completedAt ? new Date(task.completedAt) : null}
                           dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                          dueTimeZone={task.dueTimeZone}
+                          dueAllDay={task.dueAllDay}
                           recurrenceHint={taskRecurrenceHint(task.recurrence, recurrenceLabels)}
                           labels={metaLabels}
                           stackDueOnDesktop
@@ -545,6 +557,8 @@ async function PlanDetailRoot({
                               title: task.title,
                               content: task.content,
                               dueAt: task.dueAt?.toISOString() ?? null,
+                            dueTimeZone: task.dueTimeZone,
+                            dueAllDay: task.dueAllDay,
                               urgency: task.urgency,
                               recurrence: task.recurrence ?? null,
                               status: task.status,
@@ -573,6 +587,8 @@ async function PlanDetailRoot({
                         createdAt={task.createdAt}
                         completedAt={task.completedAt ? new Date(task.completedAt) : null}
                         dueAt={task.dueAt ? new Date(task.dueAt) : null}
+                        dueTimeZone={task.dueTimeZone}
+                        dueAllDay={task.dueAllDay}
                         recurrenceHint={taskRecurrenceHint(task.recurrence, recurrenceLabels)}
                         labels={metaLabels}
                       />

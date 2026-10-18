@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Task" ADD COLUMN "dueTimeZone" TEXT;
+ALTER TABLE "Task" ADD COLUMN "dueAllDay" BOOLEAN NOT NULL DEFAULT false;

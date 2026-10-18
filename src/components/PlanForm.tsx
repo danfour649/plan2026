@@ -14,6 +14,7 @@ import { PlanFlag } from "@/components/PlanFlag";
 import { useTranslations } from "@/components/TranslationsProvider";
 import type { PlanActionResult } from "@/lib/actions/plans";
 import { clearNewPlanFormDirty, getNewPlanFormDirty } from "@/lib/newPlanDirty";
+import { readBrowserTimeZone } from "@/lib/task-due";
 import { PLAN_STATUS_VALUES } from "@/lib/validations/plan";
 
 type PlanFormAction = (formData: FormData) => Promise<PlanActionResult>;
@@ -230,6 +231,13 @@ export function PlanForm({
 }: PlanFormProps) {
   const t = useTranslations();
   const router = useRouter();
+  const timeZoneRef = useRef<HTMLInputElement>(null);
+  function stampTimeZone() {
+    if (timeZoneRef.current) timeZoneRef.current.value = readBrowserTimeZone();
+  }
+  useEffect(() => {
+    stampTimeZone();
+  }, []);
   const markDirty = () => onDirtyChange?.();
   const [state, formAction] = useActionState(wrap(action), null as PlanActionResult | null);
   type NewTaskDraftRow = { title: string; content: string; dueAt: string; urgency: number };
@@ -337,8 +345,10 @@ export function PlanForm({
     <form
       id={formElementId}
       action={formAction}
+      onSubmit={stampTimeZone}
       className="flex min-w-0 max-w-full flex-col gap-4 overflow-x-hidden sm:gap-6"
     >
+      <input ref={timeZoneRef} type="hidden" name="timeZone" defaultValue="" />
       {isEdit && initialValues?.planId ? (
         <input type="hidden" name="planId" value={initialValues.planId} />
       ) : null}

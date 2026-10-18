@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { sanitizeTaskContent } from "@/lib/sanitize";
+import { parseTaskDueInput } from "@/lib/task-due";
 import {
   TASK_CONTENT_MAX_LENGTH,
   TASK_TITLE_MAX_LENGTH,
@@ -80,6 +81,8 @@ export type NewPlanTaskPayload = {
   title: string;
   content?: string;
   dueAt?: Date;
+  dueTimeZone?: string | null;
+  dueAllDay?: boolean;
   urgency: number;
 };
 
@@ -93,6 +96,7 @@ export function buildNewPlanTasksFromFormData(formData: FormData): NewPlanTaskPa
   const contents = formData.getAll("newTaskContent");
   const dueAts = formData.getAll("newTaskDueAt");
   const urgencies = formData.getAll("newTaskUrgency");
+  const timeZone = asFormText(formData.get("timeZone")).trim();
   const len = Math.max(titles.length, contents.length, dueAts.length, urgencies.length);
   const out: NewPlanTaskPayload[] = [];
   for (let i = 0; i < len; i++) {
@@ -109,15 +113,13 @@ export function buildNewPlanTasksFromFormData(formData: FormData): NewPlanTaskPa
       urgency = u;
     }
     urgency = Math.min(TASK_URGENCY_MAX, Math.max(TASK_URGENCY_MIN, Math.round(urgency)));
-    let dueAt: Date | undefined;
-    if (rawDue) {
-      const d = new Date(rawDue);
-      if (!Number.isNaN(d.getTime())) dueAt = d;
-    }
+    const parsedDue = rawDue ? parseTaskDueInput(rawDue, { timeZone: timeZone || null }) : null;
     out.push({
       title,
       content: taskContentFromPlainOrHtml(contentRaw || undefined),
-      dueAt,
+      dueAt: parsedDue?.dueAt,
+      dueTimeZone: parsedDue?.dueTimeZone ?? null,
+      dueAllDay: parsedDue?.dueAllDay ?? false,
       urgency,
     });
   }
@@ -135,6 +137,8 @@ const newPlanTaskSchema = z.object({
     .optional()
     .refine((v) => v === undefined || v.length <= TASK_CONTENT_MAX_LENGTH, "Task content too long"),
   dueAt: z.date().optional(),
+  dueTimeZone: z.string().nullable().optional(),
+  dueAllDay: z.boolean().optional(),
   urgency: z
     .number()
     .int()

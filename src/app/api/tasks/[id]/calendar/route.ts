@@ -5,6 +5,7 @@ import { getCurrentUserId } from "@/auth";
 import { CALENDAR_SCOPE_MISSING_CODE, GOOGLE_CALENDAR_SCOPE, hasGoogleCalendarScope } from "@/lib/google-oauth";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { buildCalendarEventWhen, normalizeTimeZone } from "@/lib/task-due";
 import { isValidTaskId } from "@/lib/validations/task";
 
 type Params = { params: Promise<{ id: string }> };
@@ -12,13 +13,6 @@ type Params = { params: Promise<{ id: string }> };
 /** Strip HTML tags for plain-text description. */
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function formatDateOnly(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
 }
 
 function isGoogleNotFoundError(err: unknown): boolean {
@@ -54,7 +48,7 @@ function isGoogleInsufficientScopeError(err: unknown): boolean {
   );
 }
 
-export async function POST(_req: Request, { params }: Params) {
+export async function POST(req: Request, { params }: Params) {
   const userId = await getCurrentUserId();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -150,26 +144,16 @@ export async function POST(_req: Request, { params }: Params) {
 
   const calendar = google.calendar({ version: "v3", auth: oauth2Client });
 
-  const dueAt = task.dueAt;
   const description = task.content ? stripHtml(task.content) : undefined;
-
-  let start: { date?: string; dateTime?: string };
-  let end: { date?: string; dateTime?: string };
-
-  if (dueAt) {
-    const startDate = new Date(dueAt);
-    const endDate = new Date(dueAt);
-    endDate.setHours(endDate.getHours() + 1);
-    start = { dateTime: startDate.toISOString() };
-    end = { dateTime: endDate.toISOString() };
-  } else {
-    const today = new Date();
-    const nextDay = new Date(today);
-    nextDay.setDate(nextDay.getDate() + 1);
-    start = { date: formatDateOnly(today) };
-    // Google Calendar expects all-day event end dates to be exclusive.
-    end = { date: formatDateOnly(nextDay) };
-  }
+  const body = (await req.json().catch(() => null)) as { timeZone?: unknown } | null;
+  const viewerTimeZone =
+    body && typeof body.timeZone === "string" ? normalizeTimeZone(body.timeZone) : null;
+  const { start, end } = buildCalendarEventWhen({
+    dueAt: task.dueAt,
+    dueTimeZone: task.dueTimeZone,
+    dueAllDay: task.dueAllDay,
+    viewerTimeZone,
+  });
 
   const requestBody = {
     summary: task.title,

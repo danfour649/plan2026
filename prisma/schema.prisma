@@ -103,7 +103,11 @@ model Task {
   userId                String
   title                 String
   content               String?    // optional rich text (sanitized HTML)
-  dueAt                 DateTime?  // optional due date for Google Calendar
+  dueAt                 DateTime?  // absolute instant; all-day rows use UTC midnight of the civil date
+  /** IANA zone the due time was entered in. Null on legacy rows (UTC clock digits are the entered time). */
+  dueTimeZone           String?
+  /** Date-only due. The civil date is the UTC calendar date of dueAt, not the viewer's offset. */
+  dueAllDay             Boolean    @default(false)
   /** When set, "Mark done" advances dueAt by one period and keeps the task active (single row). */
   recurrence            TaskRecurrence?
   urgency               Int        @default(4)
