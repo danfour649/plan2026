@@ -17,6 +17,12 @@ In **App Review → Permissions and Features** (for `public_profile` and `email`
 - **Use case / description:** [use-case-description.txt](./use-case-description.txt)
 - **Test instructions for reviewers:** [reviewer-instructions.txt](./reviewer-instructions.txt)
 
+## Implementation facts (Oct 2026)
+
+- OAuth endpoints pin Graph API **v26.0** (`FACEBOOK_GRAPH_VERSION` in `src/lib/facebook-login.ts`); scopes requested are exactly `public_profile email`.
+- Profile mapping is null-safe (missing picture or no-email Facebook accounts sign in cleanly).
+- **Data deletion:** Meta Data Deletion Callback implemented at `POST /api/facebook/data-deletion` (HMAC-verified); users check status at https://plan2026.ca/privacy/deletion-status. Instructions URL: https://plan2026.ca/privacy#data-deletion
+
 ## Production checklist (done)
 
 - [x] `AUTH_FACEBOOK_ID` and `AUTH_FACEBOOK_SECRET` in Vercel Production

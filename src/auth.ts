@@ -8,7 +8,15 @@ import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
 import { cache } from "react";
 
-import { isFacebookLoginEnabled } from "@/lib/facebook-login";
+import {
+  FACEBOOK_OAUTH_SCOPE,
+  FACEBOOK_USERINFO_FIELDS,
+  facebookAuthorizationUrl,
+  facebookTokenUrl,
+  facebookUserinfoUrl,
+  isFacebookLoginEnabled,
+  mapFacebookProfile,
+} from "@/lib/facebook-login";
 import { GOOGLE_SIGN_IN_PARAMS } from "@/lib/google-oauth";
 import {
   memoAuthSessionClear,
@@ -59,6 +67,23 @@ if (hasFacebookCredentials) {
     FacebookProvider({
       clientId: facebookClientId!,
       clientSecret: facebookClientSecret!,
+      // NextAuth v4's built-in Facebook provider hard-codes the retired Graph
+      // API v11.0 authorize URL and unversioned endpoints. Pin the current
+      // Graph version (FACEBOOK_GRAPH_VERSION in src/lib/facebook-login.ts)
+      // and request exactly the App Review scopes: public_profile + email.
+      authorization: {
+        url: facebookAuthorizationUrl(),
+        params: { scope: FACEBOOK_OAUTH_SCOPE },
+      },
+      token: facebookTokenUrl(),
+      userinfo: {
+        url: facebookUserinfoUrl(),
+        params: { fields: FACEBOOK_USERINFO_FIELDS },
+      },
+      // Null-safe mapping: the default throws when `picture` is missing, and a
+      // Facebook account may have no email (phone-number signups). User.email
+      // is nullable in Prisma, so a null email creates the account cleanly.
+      profile: (profile) => mapFacebookProfile(profile),
     }),
   );
 }

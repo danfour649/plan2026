@@ -427,7 +427,7 @@ const messages = {
       calendarNotice:
         "Sign-in uses your Google or Facebook profile only. Calendar access is optional and is requested when you use Add to Calendar or connect in Settings.",
       accountNotLinked:
-        "This email is already linked to another sign-in method. Sign in with the provider you used first, then link the other in Settings.",
+        "That email already belongs to an account that signs in a different way (for example, with Google). Sign in with Google, then link Facebook in Settings → Sign-in methods.",
       authErrorAccessDenied: "Sign-in was cancelled or denied. Please try again.",
       authErrorConfiguration: "Sign-in is temporarily unavailable due to a server configuration problem.",
       authErrorVerification: "The sign-in link has expired or was already used.",
@@ -461,8 +461,10 @@ const messages = {
         {
           title: "Sign-in providers",
           paragraphs: [
-            "Google sign-in is the primary way to access the app. Google’s privacy policy applies to how Google handles your Google account data during sign-in.",
-            "If Facebook sign-in is enabled on a deployment, Facebook’s policies apply to that sign-in flow. We receive similar profile fields (such as name and email) from the provider you choose.",
+            "You can sign in with Google or Facebook. Each provider’s privacy policy applies to how that provider handles your account data during sign-in.",
+            "Facebook sign-in is available. When you sign in with Facebook, we receive only your public_profile (your name and profile picture) and your email address.",
+            "We use your name, email address, and profile picture only to sign you in and to display your account in the app. We never post to Facebook, read your friends list, or access any other Facebook data.",
+            "You can remove Plan 2026 from your Facebook account at any time in Facebook Settings → Apps and Websites. Removing the app stops future Facebook sign-ins; to also delete the data we store about you, see “How to delete your data” below.",
           ],
         },
         {
@@ -490,11 +492,13 @@ const messages = {
           ],
         },
         {
+          id: "data-deletion",
           title: "How to delete your data",
           paragraphs: [
             "You can request deletion of your Plan 2026 account and the personal data we store about you at any time. You do not need to keep using the app to make this request.",
             "To request deletion, email us at danfour@gmail.com with the subject line “Plan 2026 data deletion request” and include the email address you used to sign in (Google or Facebook). You may also contact us by phone or GitHub using the details in the Contact section below.",
             "When we process a deletion request, we delete your user profile, tasks, plans, plan shares you created, session records, OAuth tokens stored by the app (including Google Calendar access tokens), and file attachments linked to your account from our database and attached storage. Deletion is permanent and cannot be undone.",
+            "If you signed in with Facebook, you can also remove Plan 2026 in Facebook Settings → Apps and Websites. Facebook then notifies us automatically: we delete your Facebook sign-in link (and your whole Plan 2026 account, if Facebook was your only sign-in method), and you can check the result at /privacy/deletion-status with the confirmation code Facebook shows you.",
             "If you only want to remove Google Calendar access but keep your account and tasks, sign in and use Settings to disconnect Google Calendar instead of requesting full account deletion.",
             "We aim to complete verified deletion requests within 30 days and will confirm by email when your data has been removed.",
           ],
@@ -516,6 +520,19 @@ const messages = {
       contactPhoneLabel: "Phone",
       contactPhone: "506-471-3031",
       contactGithubLabel: "GitHub",
+      deletionStatus: {
+        title: "Data deletion status",
+        codeLabel: "Confirmation code",
+        missingCode:
+          "No confirmation code was provided. Use the status link Facebook gave you after removing the app, or contact us using the details on the privacy page.",
+        notFound:
+          "We could not find a deletion request with that confirmation code. Check the code and try again, or contact us using the details on the privacy page.",
+        completed:
+          "Your data deletion request is complete. Your Facebook sign-in link has been removed — and if Facebook was your only sign-in method, your Plan 2026 account and its data have been deleted too.",
+        noAccount:
+          "We received your deletion request, but no Plan 2026 account was linked to that Facebook account, so there was nothing to delete.",
+        backToPrivacy: "Back to the privacy policy",
+      },
       googleUserData: {
         insertAfterTitle: "How we use information",
         title: "Google user data",
@@ -1059,7 +1076,7 @@ const messages = {
       calendarNotice:
         "La connexion utilise uniquement votre profil Google ou Facebook. L'accès à l'agenda est optionnel et demandé lorsque vous utilisez Ajouter à l'agenda ou la connexion dans Paramètres.",
       accountNotLinked:
-        "Cette adresse courriel est déjà liée à une autre méthode de connexion. Connectez-vous avec le fournisseur utilisé au départ, puis liez l'autre dans Paramètres.",
+        "Cette adresse courriel appartient déjà à un compte qui se connecte autrement (par exemple avec Google). Connectez-vous avec Google, puis liez Facebook dans Paramètres → Méthodes de connexion.",
       authErrorAccessDenied: "La connexion a été annulée ou refusée. Veuillez réessayer.",
       authErrorConfiguration:
         "La connexion est temporairement indisponible en raison d'un problème de configuration du serveur.",
@@ -1094,8 +1111,10 @@ const messages = {
         {
           title: "Fournisseurs de connexion",
           paragraphs: [
-            "La connexion Google est le principal moyen d'accéder à l'application. La politique de confidentialité de Google s'applique aux données de votre compte Google lors de la connexion.",
-            "Si la connexion Facebook est activée sur un déploiement, les politiques de Facebook s'appliquent à ce flux. Nous recevons des champs de profil similaires (nom, e-mail) du fournisseur que vous choisissez.",
+            "Vous pouvez vous connecter avec Google ou Facebook. La politique de confidentialité de chaque fournisseur s'applique à la façon dont il traite les données de votre compte lors de la connexion.",
+            "La connexion Facebook est disponible. Lorsque vous vous connectez avec Facebook, nous recevons uniquement votre profil public (public_profile : votre nom et votre photo de profil) et votre adresse courriel.",
+            "Nous utilisons votre nom, votre adresse courriel et votre photo de profil uniquement pour vous connecter et afficher votre compte dans l'application. Nous ne publions jamais sur Facebook, ne lisons pas votre liste d'amis et n'accédons à aucune autre donnée Facebook.",
+            "Vous pouvez retirer Plan 2026 de votre compte Facebook en tout temps dans Paramètres Facebook → Applications et sites web. Le retrait empêche les futures connexions Facebook; pour supprimer aussi les données que nous conservons, voir « Comment supprimer vos données » ci-dessous.",
           ],
         },
         {
@@ -1123,11 +1142,13 @@ const messages = {
           ],
         },
         {
+          id: "data-deletion",
           title: "Comment supprimer vos données",
           paragraphs: [
             "Vous pouvez demander la suppression de votre compte Plan 2026 et des données personnelles que nous stockons à votre sujet en tout temps. Vous n'avez pas besoin de continuer à utiliser l'application pour faire cette demande.",
             "Pour demander une suppression, écrivez-nous à danfour@gmail.com avec l'objet « Plan 2026 data deletion request » et indiquez l'adresse courriel utilisée pour vous connecter (Google ou Facebook). Vous pouvez aussi nous joindre par téléphone ou GitHub (voir la section Contact ci-dessous).",
             "Lorsque nous traitons une demande de suppression, nous effaçons votre profil, vos tâches, vos plans, les partages que vous avez créés, les sessions, les jetons OAuth stockés par l'application (y compris l'accès Google Calendar) et les pièces jointes liées à votre compte dans notre base de données et le stockage associé. La suppression est définitive et irréversible.",
+            "Si vous vous êtes connecté avec Facebook, vous pouvez aussi retirer Plan 2026 dans Paramètres Facebook → Applications et sites web. Facebook nous en avise alors automatiquement : nous supprimons votre lien de connexion Facebook (et tout votre compte Plan 2026, si Facebook était votre seule méthode de connexion), et vous pouvez vérifier le résultat à /privacy/deletion-status avec le code de confirmation que Facebook vous montre.",
             "Si vous souhaitez seulement retirer l'accès Google Calendar tout en conservant votre compte et vos tâches, connectez-vous et utilisez Paramètres pour déconnecter Google Calendar au lieu de demander la suppression complète du compte.",
             "Nous visons à traiter les demandes de suppression vérifiées dans un délai de 30 jours et confirmons par courriel lorsque vos données ont été supprimées.",
           ],
@@ -1149,6 +1170,19 @@ const messages = {
       contactPhoneLabel: "Téléphone",
       contactPhone: "506-471-3031",
       contactGithubLabel: "GitHub",
+      deletionStatus: {
+        title: "État de la demande de suppression",
+        codeLabel: "Code de confirmation",
+        missingCode:
+          "Aucun code de confirmation n'a été fourni. Utilisez le lien d'état que Facebook vous a donné après le retrait de l'application, ou contactez-nous via les coordonnées sur la page de confidentialité.",
+        notFound:
+          "Nous n'avons trouvé aucune demande de suppression avec ce code de confirmation. Vérifiez le code et réessayez, ou contactez-nous via les coordonnées sur la page de confidentialité.",
+        completed:
+          "Votre demande de suppression est terminée. Votre lien de connexion Facebook a été retiré — et si Facebook était votre seule méthode de connexion, votre compte Plan 2026 et ses données ont aussi été supprimés.",
+        noAccount:
+          "Nous avons reçu votre demande de suppression, mais aucun compte Plan 2026 n'était lié à ce compte Facebook; il n'y avait donc rien à supprimer.",
+        backToPrivacy: "Retour à la politique de confidentialité",
+      },
       googleUserData: {
         insertAfterTitle: "Comment nous utilisons les informations",
         title: "Données utilisateur Google",
@@ -1688,7 +1722,7 @@ const messages = {
       calendarNotice:
         "Sign-in only need your Google or Facebook profile. Calendar permission na optional — we go ask only when you use Add to Calendar or connect am for Settings.",
       accountNotLinked:
-        "Dis email don link to another sign-in method already. Enter with di provider wey you use first, then link di other one for Settings.",
+        "Dat email don already belong to account wey dey sign in another way (like with Google). Sign in with Google first, then link Facebook for Settings → Sign-in methods.",
       authErrorAccessDenied: "Sign-in don cancel or dem reject am. Try again.",
       authErrorConfiguration: "Sign-in no dey available for now because of server setup problem.",
       authErrorVerification: "Di sign-in link don expire or dem don use am already.",
@@ -1722,8 +1756,10 @@ const messages = {
         {
           title: "Sign-in providers",
           paragraphs: [
-            "Google sign-in na di main way to enter di app. Google privacy policy cover how Google handle your account data during sign-in.",
-            "If Facebook sign-in dey enabled for one deployment, Facebook policies apply to dat flow. We get similar profile fields (name, email) from di provider wey you choose.",
+            "You fit sign in with Google or Facebook. Each provider privacy policy cover how dat provider handle your account data during sign-in.",
+            "Facebook sign-in dey available. When you sign in with Facebook, we receive only your public_profile (your name and profile picture) and your email address.",
+            "We use your name, email address, and profile picture only to sign you in and show your account for di app. We no dey post to Facebook, read your friends list, or touch any other Facebook data.",
+            "You fit remove Plan 2026 from your Facebook account anytime for Facebook Settings → Apps and Websites. If you remove di app, Facebook sign-in go stop; to delete di data wey we store join, see “How to delete your data” below.",
           ],
         },
         {
@@ -1751,11 +1787,13 @@ const messages = {
           ],
         },
         {
+          id: "data-deletion",
           title: "How to delete your data",
           paragraphs: [
             "You fit ask us delete your Plan 2026 account and di personal data we store about you anytime. You no need keep using di app to make dis request.",
             "To request deletion, email us for danfour@gmail.com with subject line “Plan 2026 data deletion request” and include di email address wey you use sign in (Google or Facebook). You fit also contact us by phone or GitHub (see Contact section below).",
             "When we process deletion request, we delete your profile, tasks, plans, plan shares wey you create, session records, OAuth tokens di app store (including Google Calendar access tokens), and file attachments linked to your account from our database and attached storage. Deletion permanent and e no fit undo.",
+            "If na Facebook you use sign in, you fit also remove Plan 2026 for Facebook Settings → Apps and Websites. Facebook go notify us by imself: we go delete your Facebook sign-in link (and your whole Plan 2026 account, if Facebook na your only sign-in method), and you fit check di result for /privacy/deletion-status with di confirmation code wey Facebook show you.",
             "If you only want remove Google Calendar access but keep your account and tasks, sign in and use Settings disconnect Google Calendar instead of full account deletion.",
             "We aim to finish verified deletion requests within 30 days and we go confirm by email when your data don remove.",
           ],
@@ -1777,6 +1815,19 @@ const messages = {
       contactPhoneLabel: "Phone",
       contactPhone: "506-471-3031",
       contactGithubLabel: "GitHub",
+      deletionStatus: {
+        title: "Data deletion status",
+        codeLabel: "Confirmation code",
+        missingCode:
+          "No confirmation code dey dis link. Use di status link wey Facebook give you after you remove di app, or contact us with di details for di privacy page.",
+        notFound:
+          "We no find any deletion request with dat confirmation code. Check di code and try again, or contact us with di details for di privacy page.",
+        completed:
+          "Your deletion request don complete. Your Facebook sign-in link don remove — and if Facebook na your only sign-in method, your Plan 2026 account and im data don delete join.",
+        noAccount:
+          "We receive your deletion request, but no Plan 2026 account bin link to dat Facebook account, so nothing dey to delete.",
+        backToPrivacy: "Go back to privacy policy",
+      },
       googleUserData: {
         insertAfterTitle: "How we dey use information",
         title: "Google user data",

@@ -143,6 +143,8 @@ To enable "Continue with Facebook" on the login page:
 3. Set `AUTH_FACEBOOK_ID`, `AUTH_FACEBOOK_SECRET`, and `AUTH_FACEBOOK_ENABLED=true` in your environment.
 4. Request only the permissions you need (`email`, `public_profile`). App Review and business verification are required for Live mode with external users.
 
+The OAuth endpoints pin Graph API **v26.0** (`FACEBOOK_GRAPH_VERSION` in `src/lib/facebook-login.ts`; NextAuth v4's default still points at the retired v11.0). Meta's Data Deletion Callback is implemented at `POST /api/facebook/data-deletion`, with a user-facing status page at `/privacy/deletion-status` and instructions at `/privacy#data-deletion`.
+
 **Production go-live:** follow **[GO-LIVE-FACEBOOK.md](./GO-LIVE-FACEBOOK.md)** (Meta App Review, Vercel env, screencast). Facebook login is off by default until `AUTH_FACEBOOK_ENABLED=true`.
 
 ## API
