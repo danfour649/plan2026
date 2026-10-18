@@ -23,6 +23,15 @@ export function PublicPageFooter() {
           {t.login.termsLink}
         </Link>
       </div>
+      <p className="mx-auto mt-3 max-w-xl text-xs leading-relaxed text-tertiary">
+        {t.home.googleLimitedUse}{" "}
+        <Link
+          href="/privacy#google-user-data"
+          className="font-medium text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300"
+        >
+          {t.home.googleLimitedUseDetails}
+        </Link>
+      </p>
     </footer>
   );
 }
