@@ -21,7 +21,10 @@ How the app uses Meta APIs:
 Privacy and data deletion:
   - Privacy policy: https://plan2026.ca/privacy
   - Terms of service: https://plan2026.ca/terms
-  - Users can request account/data deletion by email (details on the privacy page).
+  - Users can request account/data deletion by email (details at https://plan2026.ca/privacy#data-deletion).
+  - Removing the app in Facebook Settings → Apps and Websites also triggers our automatic
+    Data Deletion Callback; the confirmation code Facebook shows can be checked at
+    https://plan2026.ca/privacy/deletion-status.
 
 OAuth redirect URI configured in Meta app:
   https://plan2026.ca/api/auth/callback/facebook

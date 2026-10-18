@@ -86,6 +86,23 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+/**
+ * Record of a provider data-deletion callback (e.g. Meta), so the user can
+ * check the outcome at /privacy/deletion-status?code=<confirmationCode>.
+ * Stores no user FK on purpose: the referenced user may have been deleted.
+ */
+model DataDeletionRequest {
+  id                String   @id @default(cuid())
+  confirmationCode  String   @unique
+  provider          String
+  providerAccountId String
+  /** completed | no_account_found */
+  status            String
+  createdAt         DateTime @default(now())
+
+  @@index([provider, providerAccountId])
+}
+
 enum TaskStatus {
   active
   on_hold

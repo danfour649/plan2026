@@ -6,7 +6,11 @@ Use this checklist after the app code is deployed to [plan2026.ca](https://plan2
 **Privacy policy:** `https://plan2026.ca/privacy`  
 **Terms of service:** `https://plan2026.ca/terms`  
 **Facebook OAuth callback:** `https://plan2026.ca/api/auth/callback/facebook`  
-**Local dev callback:** `http://localhost:3000/api/auth/callback/facebook`
+**Local dev callback:** `http://localhost:3000/api/auth/callback/facebook`  
+**Data Deletion Callback:** `https://plan2026.ca/api/facebook/data-deletion` (status page: `https://plan2026.ca/privacy/deletion-status`)  
+**Deletion instructions URL:** `https://plan2026.ca/privacy#data-deletion`
+
+**Code facts (Oct 2026):** the app pins Graph API **v26.0** for the authorization, token, and userinfo endpoints (`FACEBOOK_GRAPH_VERSION` in `src/lib/facebook-login.ts`) — NextAuth v4's built-in provider still points at the retired v11.0. Requested scopes are exactly `public_profile email`.
 
 ---
 
@@ -26,9 +30,9 @@ Use this checklist after the app code is deployed to [plan2026.ca](https://plan2
 | **App domains** | `plan2026.ca` |
 | **Privacy Policy URL** | `https://plan2026.ca/privacy` |
 | **Terms of Service URL** | `https://plan2026.ca/terms` |
-| **User data deletion** | Data deletion instructions URL: `https://plan2026.ca/privacy` (or same page; deletion contact is on that page) |
-| **Category** | Productivity or Utilities |
-| **App icon** | Plan 2026 logo (1024×1024 if possible) |
+| **User data deletion** | Data Deletion Callback URL: `https://plan2026.ca/api/facebook/data-deletion` (implemented in the app — Meta POSTs a signed_request when a user removes the app, and the user can check the outcome at `https://plan2026.ca/privacy/deletion-status`). Alternatively, Data Deletion Instructions URL: `https://plan2026.ca/privacy#data-deletion` |
+| **Category** | Productivity |
+| **App icon** | `public/meta-app-icon-1024.png` (1024×1024) |
 
 Copy **App ID** and **App Secret** — you will set these as `AUTH_FACEBOOK_ID` and `AUTH_FACEBOOK_SECRET` in Vercel.
 
@@ -144,6 +148,8 @@ On `https://plan2026.ca`:
 - [ ] Facebook sign-in completes without “redirect URI” errors.
 - [ ] User lands on `/tasks` with a session.
 - [ ] Sign out and sign in again works.
+- [ ] Link Facebook from **Settings → Sign-in methods** while signed in with Google (same email), then sign in with either provider.
+- [ ] Data deletion: remove Plan 2026 in Facebook **Settings → Apps and Websites**, then open `https://plan2026.ca/privacy/deletion-status` with the confirmation code Facebook shows and confirm it reports completion.
 - [ ] Check Vercel **Functions / Logs** on failure.
 
 **Development mode only:** Add Facebook accounts under **App roles → Test users** (or as Administrators/Developers) until the app is Live.
@@ -159,7 +165,7 @@ On `https://plan2026.ca`:
 | “App not active” / login unavailable | App still in Development and user is not a test user or app role |
 | “App needs advanced access” | Submit App Review for `email` and `public_profile`; complete business verification |
 | Sign-in loops to `/login` | Wrong `NEXTAUTH_URL`, missing `AUTH_SECRET`, or database/session error |
-| No email from Facebook | User’s Facebook account has no email, or `email` permission not approved |
+| Facebook account has no email | Phone-number Facebook accounts may return no email — sign-in still works and the Plan 2026 account is created without an email (handled in `mapFacebookProfile`). If emails are missing for everyone, check `email` Advanced Access |
 
 ---
 

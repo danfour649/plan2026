@@ -75,8 +75,11 @@ export default async function PrivacyPage() {
 
           <div className="space-y-8 px-6 py-6 sm:px-8">
             {t.privacy.sections.map((section) => (
-              <Fragment key={section.title}>
-                <section>
+<Fragment key={section.title}>
+                <section
+                  id={(section as { id?: string }).id}
+                  className="scroll-mt-24"
+                >
                   <h2 className="text-sm font-semibold text-blue-950 dark:text-zinc-100">{section.title}</h2>
                   <div className="mt-2 space-y-2">
                     {section.paragraphs.map((paragraph) => (
