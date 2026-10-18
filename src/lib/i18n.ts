@@ -54,6 +54,8 @@ const messages = {
       calendarConnected: "Your account can currently create Google Calendar events from tasks.",
       calendarDisconnected:
         "Google Calendar is not connected. Connect it here or use Add to Calendar on a task to grant access.",
+      calendarNeedsReauth:
+        "Google Calendar was connected, but the saved access has expired or is missing a token. Reconnect it before Plan 2026 can create events again.",
       pageDescription:
         "Manage sign-in methods, language, theme, and Google Calendar. Language and theme are saved to your account and apply on any device when you sign in.",
       theme: "Theme",
@@ -367,6 +369,8 @@ const messages = {
       silver: "Silver",
     },
     calendar: {
+      connectGoogleCalendar: "Connect Google Calendar",
+      connecting: "Connecting...",
       reconnectGoogleCalendar: "Reconnect Google Calendar",
       reconnecting: "Reconnecting...",
       disconnectGoogleCalendar: "Disconnect Google Calendar",
@@ -402,6 +406,9 @@ const messages = {
         "Plan 2026 is a planning and task-management web app. Sign in with Google to create tasks and plans, share with others, and optionally add due dates to Google Calendar.",
       signIn: "Sign in",
       operatedBy: "Operated by Daniel Fitzgerald (Fredericton, New Brunswick, Canada).",
+      googleLimitedUse:
+        "Plan 2026's use of information received from Google APIs follows the Google API Services User Data Policy, including the Limited Use requirements.",
+      googleLimitedUseDetails: "Google user data",
     },
     login: {
       title: "Sign in",
@@ -428,7 +435,7 @@ const messages = {
     },
     privacy: {
       title: "Privacy Policy",
-      lastUpdated: "Last updated: 29 June 2026",
+      lastUpdated: "Last updated: 18 October 2026",
       sections: [
         {
           title: "Who operates this app",
@@ -441,14 +448,14 @@ const messages = {
           paragraphs: [
             "When you sign in, we receive basic profile information from your identity provider (such as name, email address, and profile picture).",
             "You may create tasks, plans, attachments, and sharing settings. We store that content in our database so the app can show it to you and to people you share with.",
-            "If you connect Google Calendar, we store OAuth tokens needed to create calendar events when you choose “Add to Calendar”.",
+            "If you connect Google Calendar, we store OAuth tokens needed to create or update the events you ask for. Which Google data we access, and the limits on that data, are described in Google user data below.",
           ],
         },
         {
           title: "How we use information",
           paragraphs: [
             "We use your information only to run the app: sign-in, saving your tasks and plans, sharing plans you authorize, optional calendar event creation, and remembering your language and theme preferences.",
-            "We do not sell your personal information. We do not use your task or plan content to train AI models.",
+            "We do not sell your personal information. We do not use your task or plan content to train AI models. Further limits on Google user data are in the Google user data section below.",
           ],
         },
         {
@@ -509,6 +516,34 @@ const messages = {
       contactPhoneLabel: "Phone",
       contactPhone: "506-471-3031",
       contactGithubLabel: "GitHub",
+      googleUserData: {
+        insertAfterTitle: "How we use information",
+        title: "Google user data",
+        anchorId: "google-user-data",
+        paragraphs: [
+          "Plan 2026 requests Google user data only for the features described here. You can sign in and use tasks and plans without connecting Google Calendar.",
+          "What we access for sign-in: basic Google profile information — your name, email address, and profile picture. We use it to create your account, keep you signed in, and show your name in the app. Sign-in does not request Calendar access.",
+          "What we access for Calendar: only if you choose Add to Calendar on a task, or connect Google Calendar in Settings, we request the scope https://www.googleapis.com/auth/calendar.events. We use that scope only to create or update the events you ask for (the task title, description, and due date you entered). We do not use it to read or change the rest of your calendar.",
+          "How we store and protect it: your Google profile fields are stored on your Plan 2026 account. OAuth tokens Google issues (access token, refresh token, expiry, and granted scopes) are stored on the linked account record in our database. For events we create, we also store the event id and link so a later Add to Calendar updates that event instead of creating a duplicate. Tokens are sent only to Google over HTTPS to perform the action you requested. They are not shown in the app.",
+          "We do not sell Google user data. We do not share it with third parties except as needed to provide the feature: with Google, to complete sign-in and the calendar actions you request, and with the hosting and database providers described under Hosting and service providers, which process it only to operate Plan 2026. We do not share Google user data for advertising.",
+          "People do not read Google user data unless you consent (for example you ask us for help with your account), access is needed for security, or the law requires it.",
+        ],
+        deletionStatement:
+          "How to delete this data: disconnecting Google Calendar removes the OAuth tokens we store for Calendar. To delete your account, Google profile data, and the other personal data we hold, use How to delete your data below. We aim to complete verified deletion requests within 30 days.",
+        aiStatement:
+          "Plan 2026 does not use Google user data, including Calendar data, to develop, improve, or train generalized AI or machine-learning models.",
+        revokeBefore:
+          "How to revoke access: in Settings, choose Disconnect Google Calendar to remove the Calendar access stored by the app. You can also revoke Plan 2026 at any time under your ",
+        revokeLinkLabel: "Google Account permissions",
+        revokeAfter:
+          ". Until you connect again, Plan 2026 cannot create or update calendar events.",
+        revokeUrl: "https://myaccount.google.com/permissions",
+        limitedUseBefore:
+          "Plan 2026's use and transfer of information received from Google APIs will adhere to the ",
+        limitedUseLinkLabel: "Google API Services User Data Policy",
+        limitedUseAfter: ", including the Limited Use requirements.",
+        policyUrl: "https://developers.google.com/terms/api-services-user-data-policy",
+      },
     },
     terms: {
       title: "Terms of Service",
@@ -650,6 +685,8 @@ const messages = {
       calendarConnected: "Votre compte peut actuellement créer des événements Google Agenda à partir des tâches.",
       calendarDisconnected:
         "Google Agenda n'est pas connecté. Connectez-le ici ou utilisez Ajouter à l'agenda sur une tâche pour accorder l'accès.",
+      calendarNeedsReauth:
+        "Google Agenda était connecté, mais l'accès enregistré a expiré ou il manque un jeton. Reconnectez-le avant que Plan 2026 puisse à nouveau créer des événements.",
       pageDescription:
         "Gérez les méthodes de connexion, la langue, le thème et Google Agenda. La langue et le thème sont enregistrés sur votre compte et s’appliquent sur chaque appareil lorsque vous êtes connecté.",
       theme: "Thème",
@@ -964,6 +1001,8 @@ const messages = {
       silver: "Argent",
     },
     calendar: {
+      connectGoogleCalendar: "Connecter Google Agenda",
+      connecting: "Connexion…",
       reconnectGoogleCalendar: "Reconnecter Google Agenda",
       reconnecting: "Reconnexion…",
       disconnectGoogleCalendar: "Déconnecter Google Agenda",
@@ -999,6 +1038,9 @@ const messages = {
         "Plan 2026 est une application web de planification et de gestion des tâches. Connectez-vous avec Google pour créer des tâches et des plans, partager avec d'autres et ajouter optionnellement des échéances à Google Agenda.",
       signIn: "Connexion",
       operatedBy: "Exploité par Daniel Fitzgerald (Fredericton, Nouveau-Brunswick, Canada).",
+      googleLimitedUse:
+        "L'utilisation par Plan 2026 des informations reçues des API Google respecte la Google API Services User Data Policy, y compris les exigences Limited Use.",
+      googleLimitedUseDetails: "Données utilisateur Google",
     },
     login: {
       title: "Connexion",
@@ -1026,7 +1068,7 @@ const messages = {
     },
     privacy: {
       title: "Politique de confidentialité",
-      lastUpdated: "Dernière mise à jour : 29 juin 2026",
+      lastUpdated: "Dernière mise à jour : 18 octobre 2026",
       sections: [
         {
           title: "Qui exploite cette application",
@@ -1039,14 +1081,14 @@ const messages = {
           paragraphs: [
             "Lorsque vous vous connectez, nous recevons des informations de profil de base de votre fournisseur d'identité (nom, adresse e-mail, photo de profil).",
             "Vous pouvez créer des tâches, des plans, des pièces jointes et des paramètres de partage. Nous stockons ce contenu dans notre base de données pour vous l'afficher et le montrer aux personnes avec qui vous partagez.",
-            "Si vous connectez Google Calendar, nous stockons les jetons OAuth nécessaires pour créer des événements lorsque vous choisissez « Ajouter au calendrier ».",
+            "Si vous connectez Google Calendar, nous stockons les jetons OAuth nécessaires pour créer ou mettre à jour les événements que vous demandez. Les données Google auxquelles nous accédons, et les limites qui s'appliquent, sont décrites dans Données utilisateur Google ci-dessous.",
           ],
         },
         {
           title: "Comment nous utilisons les informations",
           paragraphs: [
             "Nous utilisons vos informations uniquement pour faire fonctionner l'application : connexion, enregistrement de vos tâches et plans, partage que vous autorisez, création optionnelle d'événements de calendrier, et mémorisation de la langue et du thème.",
-            "Nous ne vendons pas vos informations personnelles. Nous n'utilisons pas le contenu de vos tâches ou plans pour entraîner des modèles d'IA.",
+            "Nous ne vendons pas vos informations personnelles. Nous n'utilisons pas le contenu de vos tâches ou plans pour entraîner des modèles d'IA. D'autres limites sur les données utilisateur Google figurent dans la section Données utilisateur Google ci-dessous.",
           ],
         },
         {
@@ -1107,6 +1149,34 @@ const messages = {
       contactPhoneLabel: "Téléphone",
       contactPhone: "506-471-3031",
       contactGithubLabel: "GitHub",
+      googleUserData: {
+        insertAfterTitle: "Comment nous utilisons les informations",
+        title: "Données utilisateur Google",
+        anchorId: "google-user-data",
+        paragraphs: [
+          "Plan 2026 ne demande des données utilisateur Google que pour les fonctions décrites ici. Vous pouvez vous connecter et utiliser les tâches et les plans sans connecter Google Calendar.",
+          "Données utilisées pour la connexion : les informations de profil Google de base — votre nom, votre adresse e-mail et votre photo de profil. Nous les utilisons pour créer votre compte, maintenir votre session et afficher votre nom. La connexion ne demande pas l'accès à l'agenda.",
+          "Données utilisées pour l'agenda : seulement si vous choisissez Ajouter au calendrier sur une tâche, ou si vous connectez Google Calendar dans Paramètres, nous demandons le scope https://www.googleapis.com/auth/calendar.events. Nous utilisons ce scope uniquement pour créer ou mettre à jour les événements que vous demandez (titre, description et échéance de la tâche). Nous ne l'utilisons pas pour lire ou modifier le reste de votre agenda.",
+          "Conservation et protection : les champs de profil Google sont stockés sur votre compte Plan 2026. Les jetons OAuth émis par Google (jeton d'accès, jeton d'actualisation, expiration et scopes accordés) sont stockés sur le compte lié dans notre base de données. Pour les événements que nous créons, nous stockons aussi l'identifiant et le lien de l'événement afin qu'un ajout ultérieur mette à jour cet événement au lieu d'en créer un doublon. Les jetons sont envoyés uniquement à Google, via HTTPS, pour effectuer l'action demandée. Ils ne sont pas affichés dans l'application.",
+          "Nous ne vendons pas les données utilisateur Google. Nous ne les partageons pas avec des tiers, sauf dans la mesure nécessaire pour fournir la fonction : avec Google, pour la connexion et les actions d'agenda que vous demandez, et avec les hébergeurs et la base de données décrits dans Hébergement et prestataires, qui les traitent uniquement pour faire fonctionner Plan 2026. Nous ne partageons pas ces données à des fins publicitaires.",
+          "Des personnes ne lisent pas les données utilisateur Google, sauf si vous y consentez (par exemple vous nous demandez de l'aide pour votre compte), si l'accès est nécessaire pour la sécurité, ou si la loi l'exige.",
+        ],
+        deletionStatement:
+          "Comment supprimer ces données : déconnecter Google Calendar supprime les jetons OAuth d'agenda que nous stockons. Pour supprimer votre compte, les données de profil Google et les autres données personnelles que nous détenons, suivez Comment supprimer vos données ci-dessous. Nous visons à traiter les demandes de suppression vérifiées dans un délai de 30 jours.",
+        aiStatement:
+          "Plan 2026 n'utilise pas les données utilisateur Google, y compris les données d'agenda, pour développer, améliorer ou entraîner des modèles d'IA ou d'apprentissage automatique généralisés.",
+        revokeBefore:
+          "Comment révoquer l'accès : dans Paramètres, choisissez déconnecter Google Calendar pour retirer l'accès à l'agenda stocké par l'application. Vous pouvez aussi révoquer Plan 2026 à tout moment dans les ",
+        revokeLinkLabel: "autorisations de votre compte Google",
+        revokeAfter:
+          ". Tant que vous ne le reconnectez pas, Plan 2026 ne peut pas créer ni mettre à jour d'événements d'agenda.",
+        revokeUrl: "https://myaccount.google.com/permissions",
+        limitedUseBefore:
+          "L'utilisation et le transfert par Plan 2026 des informations reçues des API Google respecteront la ",
+        limitedUseLinkLabel: "Google API Services User Data Policy",
+        limitedUseAfter: ", y compris les exigences Limited Use.",
+        policyUrl: "https://developers.google.com/terms/api-services-user-data-policy",
+      },
     },
     terms: {
       title: "Conditions d'utilisation",
@@ -1245,6 +1315,8 @@ const messages = {
       calendarConnected: "Your account fit create Google Calendar events from your work now.",
       calendarDisconnected:
         "Google Calendar no connect. Connect am here or use Add to Calendar for task make you fit grant access.",
+      calendarNeedsReauth:
+        "Google Calendar don connect before, but di access wey we save don expire or token no dey. Connect am again before Plan 2026 fit create events.",
       pageDescription:
         "Arrange sign-in methods, language, theme, and Google Calendar. Language and theme dey save for your account and go work for any device when you sign in.",
       theme: "How e look",
@@ -1558,6 +1630,8 @@ const messages = {
       silver: "Silver",
     },
     calendar: {
+      connectGoogleCalendar: "Connect Google Calendar",
+      connecting: "E dey connect...",
       reconnectGoogleCalendar: "Connect Google Calendar again",
       reconnecting: "E dey connect again...",
       disconnectGoogleCalendar: "Cut Google Calendar",
@@ -1593,6 +1667,9 @@ const messages = {
         "Plan 2026 na planning and task app. Sign in with Google to create tasks and plans, share with people, and optionally add due dates to Google Calendar.",
       signIn: "Enter",
       operatedBy: "Daniel Fitzgerald dey run am (Fredericton, New Brunswick, Canada).",
+      googleLimitedUse:
+        "How Plan 2026 dey use information wey come from Google APIs follow the Google API Services User Data Policy, including the Limited Use requirements.",
+      googleLimitedUseDetails: "Google user data",
     },
     login: {
       title: "Enter",
@@ -1619,7 +1696,7 @@ const messages = {
     },
     privacy: {
       title: "Privacy Policy",
-      lastUpdated: "Last update: 29 June 2026",
+      lastUpdated: "Last update: 18 October 2026",
       sections: [
         {
           title: "Who dey run dis app",
@@ -1632,14 +1709,14 @@ const messages = {
           paragraphs: [
             "When you sign in, we go get basic profile info from your provider (name, email, profile picture).",
             "You fit create tasks, plans, attachments, and sharing settings. We dey store am for database so app fit show you and people wey you share with.",
-            "If you connect Google Calendar, we dey store OAuth tokens wey we need to create calendar events when you click “Add to Calendar”.",
+            "If you connect Google Calendar, we dey store OAuth tokens wey we need to create or update the events wey you ask for. Which Google data we dey access, and the limits, dey for Google user data below.",
           ],
         },
         {
           title: "How we dey use information",
           paragraphs: [
             "We only use your info to run di app: sign-in, save tasks and plans, share wey you allow, optional calendar events, and remember language and theme.",
-            "We no dey sell your personal information. We no dey use your task or plan content train AI models.",
+            "We no dey sell your personal information. We no dey use your task or plan content train AI models. More limits for Google user data dey for the Google user data section below.",
           ],
         },
         {
@@ -1700,6 +1777,33 @@ const messages = {
       contactPhoneLabel: "Phone",
       contactPhone: "506-471-3031",
       contactGithubLabel: "GitHub",
+      googleUserData: {
+        insertAfterTitle: "How we dey use information",
+        title: "Google user data",
+        anchorId: "google-user-data",
+        paragraphs: [
+          "Plan 2026 only dey ask for Google user data for the things we describe here. You fit sign in and use tasks and plans without connecting Google Calendar.",
+          "Wetin we dey access for sign-in: basic Google profile — your name, email address, and profile picture. We dey use am to create your account, keep you signed in, and show your name. Sign-in no dey ask for Calendar access.",
+          "Wetin we dey access for Calendar: only if you choose Add to Calendar for a task, or you connect Google Calendar for Settings, we go request the scope https://www.googleapis.com/auth/calendar.events. We dey use dat scope only to create or update the events wey you ask for (the task title, description, and due date wey you enter). We no dey use am to read or change the rest of your calendar.",
+          "How we dey store and protect am: your Google profile fields dey on your Plan 2026 account. OAuth tokens wey Google give (access token, refresh token, expiry, and scopes wey you grant) dey stored on the linked account for our database. For events wey we create, we also store the event id and link so later Add to Calendar go update dat same event instead of creating duplicate. We dey send tokens only to Google over HTTPS to do the action wey you request. Dem no dey show for inside the app.",
+          "We no dey sell Google user data. We no dey share am with third parties except as we need am to provide the feature: with Google, to finish sign-in and the calendar actions wey you request, and with the hosting and database providers wey we describe for Hosting and service providers, wey dey process am only to run Plan 2026. We no dey share Google user data for advertising.",
+          "People no dey read Google user data unless you consent (for example you ask us for help with your account), access dey needed for security, or the law require am.",
+        ],
+        deletionStatement:
+          "How to delete dis data: if you disconnect Google Calendar, we remove the Calendar OAuth tokens we store. To delete your account, Google profile data, and other personal data we hold, follow How to delete your data below. We aim to finish verified deletion requests within 30 days.",
+        aiStatement:
+          "Plan 2026 no dey use Google user data, including Calendar data, to develop, improve, or train generalized AI or machine-learning models.",
+        revokeBefore:
+          "How to revoke access: for Settings, choose Disconnect Google Calendar to remove the Calendar access wey the app store. You fit also revoke Plan 2026 anytime for your ",
+        revokeLinkLabel: "Google Account permissions",
+        revokeAfter: ". Until you connect again, Plan 2026 no fit create or update calendar events.",
+        revokeUrl: "https://myaccount.google.com/permissions",
+        limitedUseBefore:
+          "Plan 2026 go use and transfer information wey we receive from Google APIs according to the ",
+        limitedUseLinkLabel: "Google API Services User Data Policy",
+        limitedUseAfter: ", including the Limited Use requirements.",
+        policyUrl: "https://developers.google.com/terms/api-services-user-data-policy",
+      },
     },
     terms: {
       title: "Terms of Service",

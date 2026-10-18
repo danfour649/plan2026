@@ -11,7 +11,7 @@ import { ReconnectGoogleCalendarButton } from "@/components/ReconnectGoogleCalen
 import { ThemeSelect } from "@/components/ThemeSelect";
 import { getSettingsLinkErrorMessage } from "@/lib/auth-errors";
 import { isFacebookLoginEnabled } from "@/lib/facebook-login";
-import { hasGoogleCalendarScope } from "@/lib/google-oauth";
+import { getGoogleCalendarLinkState } from "@/lib/google-oauth";
 import { getTranslations } from "@/lib/i18n";
 import { prisma } from "@/lib/prisma";
 import { userHasProEntitlement } from "@/lib/revenuecat-server";
@@ -56,7 +56,13 @@ export default async function SettingsPage({
 
   const linkedAccounts = await prisma.account.findMany({
     where: { userId, provider: { in: ["google", "facebook"] } },
-    select: { provider: true, scope: true },
+    select: {
+      provider: true,
+      scope: true,
+      access_token: true,
+      refresh_token: true,
+      expires_at: true,
+    },
   });
 
   const [apiTokens, isPro] = await Promise.all([
@@ -71,7 +77,8 @@ export default async function SettingsPage({
   const googleAccount = linkedAccounts.find((account) => account.provider === "google");
   const hasGoogleLinked = Boolean(googleAccount);
   const hasFacebookLinked = linkedAccounts.some((account) => account.provider === "facebook");
-  const isCalendarConnected = hasGoogleCalendarScope(googleAccount?.scope);
+  const calendarLinkState = getGoogleCalendarLinkState(googleAccount);
+  const isCalendarConnected = calendarLinkState === "connected";
 
   const hasGoogleCredentials = Boolean(
     process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
@@ -163,16 +170,18 @@ export default async function SettingsPage({
               </div>
 
               <p className="text-sm text-tertiary">
-                {isCalendarConnected
+                {calendarLinkState === "connected"
                   ? t.settings.calendarConnected
-                  : t.settings.calendarDisconnected}
+                  : calendarLinkState === "reconnect"
+                    ? t.settings.calendarNeedsReauth
+                    : t.settings.calendarDisconnected}
               </p>
             </div>
 
-            {isCalendarConnected ? (
+            {calendarLinkState === "connected" ? (
               <DisconnectGoogleCalendarButton />
             ) : (
-              <ReconnectGoogleCalendarButton />
+              <ReconnectGoogleCalendarButton mode={calendarLinkState} />
             )}
           </div>
 

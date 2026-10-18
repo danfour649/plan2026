@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Fragment } from "react";
 
 import { PublicPageShell } from "@/components/PublicPageShell";
 import { getLocaleForRequest } from "@/lib/account-preferences";
-import { getTranslations } from "@/lib/i18n";
+import { getTranslations, type Messages } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -13,6 +14,47 @@ export const metadata: Metadata = {
 };
 
 const GITHUB_PROFILE_URL = "https://github.com/danfour649";
+
+function GoogleUserDataSection({ copy }: { copy: Messages["privacy"]["googleUserData"] }) {
+  return (
+    <section id={copy.anchorId} className="scroll-mt-6">
+      <h2 className="text-sm font-semibold text-blue-950 dark:text-zinc-100">{copy.title}</h2>
+      <div className="mt-2 space-y-2">
+        {copy.paragraphs.map((paragraph) => (
+          <p key={paragraph} className="text-sm text-secondary">
+            {paragraph}
+          </p>
+        ))}
+        <p className="text-sm text-secondary">
+          {copy.revokeBefore}
+          <a
+            href={copy.revokeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300"
+          >
+            {copy.revokeLinkLabel}
+          </a>
+          {copy.revokeAfter}
+        </p>
+        <p className="text-sm text-secondary">{copy.deletionStatement}</p>
+        <p className="text-sm text-secondary">{copy.aiStatement}</p>
+        <p className="text-sm text-secondary">
+          {copy.limitedUseBefore}
+          <a
+            href={copy.policyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-accent-blue underline hover:text-blue-800 dark:hover:text-blue-300"
+          >
+            {copy.limitedUseLinkLabel}
+          </a>
+          {copy.limitedUseAfter}
+        </p>
+      </div>
+    </section>
+  );
+}
 
 export default async function PrivacyPage() {
   const locale = await getLocaleForRequest();
@@ -33,16 +75,21 @@ export default async function PrivacyPage() {
 
           <div className="space-y-8 px-6 py-6 sm:px-8">
             {t.privacy.sections.map((section) => (
-              <section key={section.title}>
-                <h2 className="text-sm font-semibold text-blue-950 dark:text-zinc-100">{section.title}</h2>
-                <div className="mt-2 space-y-2">
-                  {section.paragraphs.map((paragraph) => (
-                    <p key={paragraph} className="text-sm text-secondary">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </section>
+              <Fragment key={section.title}>
+                <section>
+                  <h2 className="text-sm font-semibold text-blue-950 dark:text-zinc-100">{section.title}</h2>
+                  <div className="mt-2 space-y-2">
+                    {section.paragraphs.map((paragraph) => (
+                      <p key={paragraph} className="text-sm text-secondary">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                </section>
+                {section.title === t.privacy.googleUserData.insertAfterTitle ? (
+                  <GoogleUserDataSection copy={t.privacy.googleUserData} />
+                ) : null}
+              </Fragment>
             ))}
 
             <section>
