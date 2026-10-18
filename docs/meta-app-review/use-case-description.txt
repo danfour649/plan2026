@@ -6,4 +6,4 @@ We request only public_profile and email:
 
 We use server-side OAuth (NextAuth). We do not use the Facebook JavaScript SDK, do not post on behalf of users, and do not access friends, Pages, or any other Facebook data.
 
-After sign-in, users manage personal tasks and shared plans. Profile data is stored in our PostgreSQL database for authentication and display only. It is not sold. Deletion instructions are at https://plan2026.ca/privacy#data-deletion, and removing the app in Facebook Settings → Apps and Websites triggers our automatic Data Deletion Callback (status page: https://plan2026.ca/privacy/deletion-status).
+After sign-in, users manage personal tasks and shared plans. Profile data is stored in our PostgreSQL database for authentication and display only. It is not sold. Data deletion instructions are at https://plan2026.ca/privacy#data-deletion. Removing the app in Facebook Settings → Apps and Websites stops future Facebook sign-ins. Users delete stored Plan 2026 data with the request on that page.

@@ -1,6 +1,10 @@
 Plan 2026 — Facebook Login test instructions for Meta App Review
 ================================================================
 
+Paste this into Meta's "Provide testing instructions" field:
+
+Open https://plan2026.ca/login in a desktop or mobile browser. No separate Plan 2026 account is required. Click Continue with Facebook, sign in with your Facebook account, and approve public_profile and email. You are redirected to https://plan2026.ca/tasks, signed in, with your name in the header. Plan 2026 uses those two permissions only to sign you in and to display your name and profile picture. It does not post to Facebook, read your friends, or access any other Facebook data. Privacy policy: https://plan2026.ca/privacy. Data deletion instructions: https://plan2026.ca/privacy#data-deletion.
+
 App URL (production):
   https://plan2026.ca/login
 
@@ -21,10 +25,9 @@ How the app uses Meta APIs:
 Privacy and data deletion:
   - Privacy policy: https://plan2026.ca/privacy
   - Terms of service: https://plan2026.ca/terms
-  - Users can request account/data deletion by email (details at https://plan2026.ca/privacy#data-deletion).
-  - Removing the app in Facebook Settings → Apps and Websites also triggers our automatic
-    Data Deletion Callback; the confirmation code Facebook shows can be checked at
-    https://plan2026.ca/privacy/deletion-status.
+  - Data deletion instructions URL configured in the app: https://plan2026.ca/privacy#data-deletion
+  - Removing the app in Facebook Settings → Apps and Websites stops future Facebook sign-ins.
+    Stored Plan 2026 data is deleted via the email request on that page.
 
 OAuth redirect URI configured in Meta app:
   https://plan2026.ca/api/auth/callback/facebook

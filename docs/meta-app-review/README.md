@@ -21,17 +21,21 @@ In **App Review → Permissions and Features** (for `public_profile` and `email`
 
 - OAuth endpoints pin Graph API **v26.0** (`FACEBOOK_GRAPH_VERSION` in `src/lib/facebook-login.ts`); scopes requested are exactly `public_profile email`.
 - Profile mapping is null-safe (missing picture or no-email Facebook accounts sign in cleanly).
-- **Data deletion:** Meta Data Deletion Callback implemented at `POST /api/facebook/data-deletion` (HMAC-verified); users check status at https://plan2026.ca/privacy/deletion-status. Instructions URL: https://plan2026.ca/privacy#data-deletion
+- **Data deletion:** the Meta dashboard uses the instructions URL https://plan2026.ca/privacy#data-deletion (`id="data-deletion"` on the privacy page). An optional HMAC-verified callback exists at `POST /api/facebook/data-deletion`; its status page is https://plan2026.ca/privacy/deletion-status. Meta calls the callback only if that URL replaces the instructions URL.
 
-## Production checklist (done)
+## Dashboard snapshot (18 October 2026, 2:50 PM Halifax)
 
-- [x] `AUTH_FACEBOOK_ID` and `AUTH_FACEBOOK_SECRET` in Vercel Production
-- [x] `AUTH_FACEBOOK_ENABLED=true` in Vercel Production
-- [x] Production redeployed — button visible at https://plan2026.ca/login
-- [ ] Meta app: Valid OAuth Redirect URI `https://plan2026.ca/api/auth/callback/facebook`
-- [ ] Business verification complete (if required)
-- [ ] Submit App Review for `public_profile` + `email` (Advanced Access)
-- [ ] After approval: switch Meta app from **Development** to **Live**
+App **plan 2026** (App ID `1579063466974896`) belongs to **Anthony & Omolola Enterprises**, which is **Verified**. Data access renewal is complete.
+
+- [x] `AUTH_FACEBOOK_ID`, `AUTH_FACEBOOK_SECRET`, and `AUTH_FACEBOOK_ENABLED=true` in Vercel Production
+- [x] Production shows **Continue with Facebook**; authorize URL is Graph `v26.0` with `public_profile email`
+- [x] Privacy, Terms, data deletion instructions URL, category, and icon are set
+- [x] Redirect URI is only `https://plan2026.ca/api/auth/callback/facebook` (localhost removed). Strict mode and Enforce HTTPS are on
+- [x] `public_profile` has Advanced access
+- [x] Business verification and data access renewal
+- [ ] App domain `plan2026.ca` — being added; confirm it saved
+- [ ] `email` is Standard access with **Verification required**
+- [ ] Switch from Development to Live (in progress on 18 Oct 2026)
 
 Full checklist: [GO-LIVE-FACEBOOK.md](../../GO-LIVE-FACEBOOK.md)
 
@@ -39,4 +43,4 @@ Full checklist: [GO-LIVE-FACEBOOK.md](../../GO-LIVE-FACEBOOK.md)
 
 Windows: **Win + G** (Xbox Game Bar) → Record, or **Snipping Tool → Record**.
 
-Use a Facebook account that can sign in to the app (Developer/Administrator on the Meta app while in Development mode, or any account after Live mode).
+Until the app shows Live, use a Facebook account that is an Administrator, Developer, or Tester. After Live, any Facebook account can sign in. `email` is still Standard access with Verification required, so a non-role account may sign in without an email until that step finishes.

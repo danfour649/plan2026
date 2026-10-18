@@ -32,9 +32,9 @@ Optional Facebook Login (see **[GO-LIVE-FACEBOOK.md](./GO-LIVE-FACEBOOK.md)**):
 
 | Variable | Notes |
 |----------|--------|
-| `AUTH_FACEBOOK_ID` | Meta App ID — set after App Review + Live mode |
-| `AUTH_FACEBOOK_SECRET` | Meta App Secret |
-| `AUTH_FACEBOOK_ENABLED` | Set to `true` to re-enable after approval (off by default in app) |
+| `AUTH_FACEBOOK_ID` | Meta App ID `1579063466974896` — already set in Vercel Production |
+| `AUTH_FACEBOOK_SECRET` | Meta App Secret — already set in Vercel Production |
+| `AUTH_FACEBOOK_ENABLED` | Already `true` in Vercel Production |
 
 After any env change: **Redeploy** Production.
 
@@ -121,7 +121,7 @@ On `https://plan2026.ca`:
 
 ## Phase 6 — Demo hygiene (recommended)
 
-- [ ] **Facebook:** Follow **[GO-LIVE-FACEBOOK.md](./GO-LIVE-FACEBOOK.md)**. Login is disabled until Meta App Review; then set `AUTH_FACEBOOK_ENABLED=true` in Vercel.
+- [ ] **Facebook:** Follow **[GO-LIVE-FACEBOOK.md](./GO-LIVE-FACEBOOK.md)**. Vercel Production already has the Facebook env vars. Remaining Meta steps (18 Oct 2026): save app domain `plan2026.ca`, finish `email` verification, and confirm the app is Live.
 - [ ] Confirm no secrets are committed to git (`.env` stays local).
 - [ ] Update `DEPLOY.md` / roadmap when verification is complete.
 

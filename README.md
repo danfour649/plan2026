@@ -57,7 +57,7 @@ Set these in `.env` for local development:
 - `BLOB_READ_WRITE_TOKEN` - (optional) Vercel Blob token for task file attachments; create a Blob store in the Vercel project and pull env with `vercel env pull`
 - `AUTH_FACEBOOK_ID` - (optional) Facebook app client ID for Facebook login
 - `AUTH_FACEBOOK_SECRET` - (optional) Facebook app client secret
-- `AUTH_FACEBOOK_ENABLED` - (optional) Set to `true` to show Facebook login (requires ID + secret). Off by default until Meta App Review is complete.
+- `AUTH_FACEBOOK_ENABLED` - (optional) Set to `true` to show Facebook login (requires ID + secret). Production already has this set.
 
 ## Local development
 
@@ -139,13 +139,13 @@ Google sign-in forces a fresh Google consent step so revoked Calendar permission
 To enable "Continue with Facebook" on the login page:
 
 1. Create an app at [developers.facebook.com](https://developers.facebook.com/) and add the **Facebook Login** product.
-2. In Facebook Login settings, add a **Valid OAuth Redirect URI**: `https://<your-domain>/api/auth/callback/facebook` (e.g. `http://localhost:3000/api/auth/callback/facebook` for local dev).
-3. Set `AUTH_FACEBOOK_ID`, `AUTH_FACEBOOK_SECRET`, and `AUTH_FACEBOOK_ENABLED=true` in your environment.
-4. Request only the permissions you need (`email`, `public_profile`). App Review and business verification are required for Live mode with external users.
+2. In Facebook Login settings, add a **Valid OAuth Redirect URI**: `https://<your-domain>/api/auth/callback/facebook`. Production lists only `https://plan2026.ca/api/auth/callback/facebook` (localhost is not listed; Strict mode is on).
+3. Set `AUTH_FACEBOOK_ID`, `AUTH_FACEBOOK_SECRET`, and `AUTH_FACEBOOK_ENABLED=true` in your environment. Vercel Production already has all three.
+4. Request only `public_profile` and `email`. As of 18 October 2026, `public_profile` has Advanced access and `email` is Standard access with Verification required. The business **Anthony & Omolola Enterprises** is Verified.
 
-The OAuth endpoints pin Graph API **v26.0** (`FACEBOOK_GRAPH_VERSION` in `src/lib/facebook-login.ts`; NextAuth v4's default still points at the retired v11.0). Meta's Data Deletion Callback is implemented at `POST /api/facebook/data-deletion`, with a user-facing status page at `/privacy/deletion-status` and instructions at `/privacy#data-deletion`.
+The OAuth endpoints pin Graph API **v26.0** (`FACEBOOK_GRAPH_VERSION` in `src/lib/facebook-login.ts`; NextAuth v4's default still points at the retired v11.0). Data deletion instructions are at `/privacy#data-deletion`. An optional Data Deletion Callback is implemented at `POST /api/facebook/data-deletion`, with a status page at `/privacy/deletion-status`. Meta calls it only if that URL is set instead of the instructions URL.
 
-**Production go-live:** follow **[GO-LIVE-FACEBOOK.md](./GO-LIVE-FACEBOOK.md)** (Meta App Review, Vercel env, screencast). Facebook login is off by default until `AUTH_FACEBOOK_ENABLED=true`.
+**Production go-live:** follow **[GO-LIVE-FACEBOOK.md](./GO-LIVE-FACEBOOK.md)**.
 
 ## API
 
