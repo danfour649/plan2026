@@ -209,6 +209,10 @@ export const updatePlanSchema = basePlanSchema
     status: z.enum(PLAN_STATUS_VALUES, {
       message: "Status must be draft, started, on hold, completed, or abandoned",
     }),
+    // Unlike create, update treats an omitted taskIds as "leave plan
+    // membership unchanged". Only an explicitly provided list (including an
+    // empty one) resets which tasks belong to the plan.
+    taskIds: z.array(z.string().min(1)).optional(),
   })
   .refine(
     (data) => data.endAt >= data.startAt,

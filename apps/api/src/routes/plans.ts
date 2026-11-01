@@ -389,7 +389,9 @@ app.openapi(updatePlanRoute, async (c) => {
     notes: body.notes,
     color: body.color,
     imageUrl: body.imageUrl,
-    taskIds: body.taskIds ?? [],
+    // Pass taskIds through untouched: when the client omits it, the update
+    // must leave the plan's task links unchanged (not reset them to []).
+    taskIds: body.taskIds,
     newTasks: [],
     status: body.status ?? "draft",
   });
