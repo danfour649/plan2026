@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const session = await getServerAuthSession();
-  if (session?.user) redirect("/tasks");
+  if (session?.user) redirect("/dashboard");
 
   const locale = await getLocaleForRequest();
   const t = getTranslations(locale);

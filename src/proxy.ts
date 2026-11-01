@@ -32,6 +32,7 @@ export function proxy(request: NextRequest) {
 
   // Protect app routes: require session cookie so we redirect before layout runs
   if (
+    pathname.startsWith("/dashboard") ||
     pathname.startsWith("/tasks") ||
     pathname.startsWith("/actions") ||
     pathname.startsWith("/settings") ||

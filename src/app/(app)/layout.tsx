@@ -59,7 +59,12 @@ async function AppLayoutInner({ children }: { children: React.ReactNode }) {
               />
               <AppNavBar
                 initialCounts={{ remainingTaskCount: 0, activePlanCount: 0, suppliesCount: 0 }}
-                labels={{ plans: t.nav.plans, tasks: t.nav.tasks, supplies: t.nav.supplies }}
+                labels={{
+                  dashboard: t.nav.dashboard,
+                  plans: t.nav.plans,
+                  tasks: t.nav.tasks,
+                  supplies: t.nav.supplies,
+                }}
               />
             </div>
 

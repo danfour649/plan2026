@@ -29,7 +29,7 @@
 
 ```text
 src/
-  proxy.ts                              # Production host 308 → plan2026.ca; cookie guard for /tasks, /settings, /plans, /help, /about, /supplies
+  proxy.ts                              # Production host 308 → plan2026.ca; cookie guard for /dashboard, /tasks, /settings, /plans, /help, /about, /supplies
   auth.ts                               # NextAuth config, Google scopes, getServerAuthSession, getCurrentUserId, getCurrentUserIdForListPrefs
   app/
     share/[token]/page.tsx              # Public share page: resolve token → plan + tasks; read-only view; token-based "Mark done" / "Restore" (no login). Invalid/expired show same message.
@@ -37,6 +37,7 @@ src/
       layout.tsx                        # Authenticated shell; logo links to /actions; tasks nav, plans nav, help, about, settings gear, email, SignOutButton
       actions/page.tsx                  # Urgent and upcoming tasks (urgency 6+ or due in 3 days); overdue icon; edit, mark done, add to calendar
       tasks/page.tsx                    # Unified tasks page for remaining and optional completed items; filter from cookie; shows plan link when task has planId
+      dashboard/page.tsx              # Post-login dashboard: overall + per-plan progress dials, stat tiles, up-next tasks
       tasks/loading.tsx                 # Tasks page skeleton
       plans/page.tsx                    # Plans list (ordered by priority); refresh, show completed/abandoned toggle (cookie); per-row Edit and status dropdown; links to /plans/new and /plans/[id]
       plans/new/page.tsx                # Full-page create plan form; optional "Start from template" (see src/data/planTemplates.ts)
@@ -45,7 +46,7 @@ src/
       about/page.tsx                    # About: app name, version (from package.json), contributors, recent updates (from CHANGELOG via sync-about-changelog.mjs)
       settings/page.tsx                 # Calendar connection settings
     login/
-      page.tsx                          # Login page; redirects signed-in users to /tasks
+      page.tsx                          # Login page; redirects signed-in users to /dashboard
       GoogleSignInButton.tsx
     api/
       auth/[...nextauth]/route.ts
@@ -55,7 +56,7 @@ src/
       tasks/[id]/attachments/route.ts   # POST upload file for task (Vercel Blob)
       tasks/[id]/attachments/[attachmentId]/route.ts  # DELETE attachment
     layout.tsx                          # Root layout with Sonner Toaster
-    page.tsx                            # Redirects to /tasks
+    page.tsx                            # Public landing; redirects signed-in users to /dashboard
   components/
     AddTaskDialog.tsx                   # Modal wrapper for task creation
     EditTaskDialog.tsx                  # Modal wrapper for task editing/deletion
@@ -281,7 +282,7 @@ Error conventions across task APIs:
 ## 6. Conventions and Constraints
 
 - **Canonical user identity:** prefer `getCurrentUserId()` for task/settings server actions and pages; `getServerAuthSession()` is still used in the authenticated app layout
-- **Protected app routes:** `/tasks`, `/settings`, `/plans`, `/help`, `/about`. **Public routes:** `/login`, `/privacy`, `/invite/[token]`, `/share/[token]` (no auth required).
+- **Protected app routes:** `/dashboard`, `/tasks`, `/settings`, `/plans`, `/help`, `/about`. **Public routes:** `/login`, `/privacy`, `/invite/[token]`, `/share/[token]` (no auth required).
 - **Canonical task UI route:** `/tasks`; **Plans UI routes:** `/plans`, `/plans/new`, `/plans/[id]`; **Help:** `/help`; **About:** `/about`
 - **Prisma runtime:** task APIs explicitly use `runtime = "nodejs"`
 - **Database provider:** Prisma datasource is `postgresql`; there is no SQLite path anymore
