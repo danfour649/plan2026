@@ -107,6 +107,12 @@ function extractLeadingGlobals(argv: string[]): { globals: string[]; rest: strin
 }
 
 async function main(rawArgv: string[]): Promise<void> {
+  // A closed stdout pipe (e.g. `plan2026-api tasks list | head`) raises EPIPE
+  // on write; exit quietly instead of crashing with an unhandled error.
+  process.stdout.on("error", (err: NodeJS.ErrnoException) => {
+    if (err.code === "EPIPE") process.exit(0);
+  });
+
   const stripped = rawArgv[0] === "--" ? rawArgv.slice(1) : rawArgv;
   const { globals, rest: argv } = extractLeadingGlobals(stripped);
 

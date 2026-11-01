@@ -127,18 +127,22 @@ export async function updatePlanForUser(
 
     if (updateResult.count === 0) return { count: 0 as const };
 
-    const desiredIds = new Set<string>(taskIds);
+    // taskIds omitted (undefined) means "leave plan membership unchanged";
+    // only an explicitly provided list (including []) resets the task set.
+    if (taskIds !== undefined) {
+      const desiredIds = new Set<string>(taskIds);
 
-    await tx.task.updateMany({
-      where: { userId, planId },
-      data: { planId: null },
-    });
-
-    if (desiredIds.size > 0) {
       await tx.task.updateMany({
-        where: { id: { in: [...desiredIds] }, userId },
-        data: { planId },
+        where: { userId, planId },
+        data: { planId: null },
       });
+
+      if (desiredIds.size > 0) {
+        await tx.task.updateMany({
+          where: { id: { in: [...desiredIds] }, userId },
+          data: { planId },
+        });
+      }
     }
 
     if (newTasks.length > 0) {
