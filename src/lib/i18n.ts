@@ -15,7 +15,7 @@ export type Messages = typeof messages.en;
 
 const messages = {
   en: {
-    nav: { plans: "Plans", tasks: "Tasks", supplies: "Supplies", settings: "Settings", help: "Help", about: "About", menu: "Menu" },
+    nav: { dashboard: "Dashboard", plans: "Plans", tasks: "Tasks", supplies: "Supplies", settings: "Settings", help: "Help", about: "About", menu: "Menu" },
     upgradePage: {
       title: "Upgrade",
       pageDescription:
@@ -117,6 +117,26 @@ const messages = {
       emptyDescription: "No tasks with high urgency or due in the next three days. Add a task or view your plans.",
       viewPlans: "View plans",
       addTask: "Add task",
+    },
+    dashboard: {
+      title: "Dashboard",
+      greeting: "Welcome back, {{name}}",
+      overviewTitle: "Your progress at a glance",
+      overallLabel: "Overall completion",
+      overallSummary: "{{completed}} of {{total}} tasks completed across {{plans}} active plans",
+      activePlans: "Active plans",
+      tasksRemaining: "Tasks remaining",
+      completedLast7Days: "Completed in the last 7 days",
+      dueNext7Days: "Due in the next 7 days",
+      yourPlans: "Your plans",
+      viewAllPlans: "View all plans",
+      upNext: "Up next",
+      noUpcoming: "Nothing due in the next 7 days. You're ahead of schedule.",
+      noPlansTitle: "No active plans yet",
+      noPlansDescription: "Create a plan to group tasks and track progress here.",
+      createPlan: "Create a plan",
+      percentCompleteAria: "{{percent}}% complete",
+      overdue: "Overdue",
     },
     plansPage: {
       title: "Plans",
@@ -664,7 +684,7 @@ const messages = {
     },
   },
   fr: {
-    nav: { plans: "Plans", tasks: "Tâches", supplies: "Fournitures", settings: "Paramètres", help: "Aide", about: "À propos", menu: "Menu" },
+    nav: { dashboard: "Tableau de bord", plans: "Plans", tasks: "Tâches", supplies: "Fournitures", settings: "Paramètres", help: "Aide", about: "À propos", menu: "Menu" },
     upgradePage: {
       title: "Passer à Pro",
       pageDescription:
@@ -767,6 +787,26 @@ const messages = {
       emptyDescription: "Aucune tâche très urgente ou due dans les trois prochains jours. Ajoutez une tâche ou consultez vos plans.",
       viewPlans: "Voir les plans",
       addTask: "Ajouter une tâche",
+    },
+    dashboard: {
+      title: "Tableau de bord",
+      greeting: "Bon retour, {{name}}",
+      overviewTitle: "Votre progression en un coup d'œil",
+      overallLabel: "Progression globale",
+      overallSummary: "{{completed}} tâches sur {{total}} terminées dans {{plans}} plans actifs",
+      activePlans: "Plans actifs",
+      tasksRemaining: "Tâches restantes",
+      completedLast7Days: "Terminées au cours des 7 derniers jours",
+      dueNext7Days: "À échéance dans les 7 prochains jours",
+      yourPlans: "Vos plans",
+      viewAllPlans: "Voir tous les plans",
+      upNext: "À venir",
+      noUpcoming: "Rien à échéance dans les 7 prochains jours. Vous avez de l'avance.",
+      noPlansTitle: "Aucun plan actif pour le moment",
+      noPlansDescription: "Créez un plan pour regrouper vos tâches et suivre votre progression ici.",
+      createPlan: "Créer un plan",
+      percentCompleteAria: "{{percent}} % terminé",
+      overdue: "En retard",
     },
     plansPage: {
       title: "Plans",
@@ -1312,7 +1352,7 @@ const messages = {
     },
   },
   pidgin: {
-    nav: { plans: "Plans", tasks: "Work", supplies: "Supplies", settings: "Settings", help: "Help", about: "About", menu: "Menu" },
+    nav: { dashboard: "Dashboard", plans: "Plans", tasks: "Work", supplies: "Supplies", settings: "Settings", help: "Help", about: "About", menu: "Menu" },
     upgradePage: {
       title: "Upgrade",
       pageDescription:
@@ -1414,6 +1454,26 @@ const messages = {
       emptyDescription: "No work with high urgency or wey go finish for di next three days. Put work or go see your plans.",
       viewPlans: "See plans",
       addTask: "Put work",
+    },
+    dashboard: {
+      title: "Dashboard",
+      greeting: "Welcome back, {{name}}",
+      overviewTitle: "Your progress as you look am",
+      overallLabel: "Overall completion",
+      overallSummary: "{{completed}} of {{total}} work don finish for {{plans}} plans wey dey active",
+      activePlans: "Plans wey dey active",
+      tasksRemaining: "Work wey remain",
+      completedLast7Days: "Work wey don finish for last 7 days",
+      dueNext7Days: "Work wey go due for next 7 days",
+      yourPlans: "Your plans dem",
+      viewAllPlans: "See all the plans",
+      upNext: "Wetin dey come next",
+      noUpcoming: "Nothing go due for next 7 days. You dey ahead well-well.",
+      noPlansTitle: "No plan dey active yet",
+      noPlansDescription: "Make one plan to group your work and track how e dey go for here.",
+      createPlan: "Make a plan",
+      percentCompleteAria: "{{percent}}% don complete",
+      overdue: "E don late",
     },
     plansPage: {
       title: "Plans",

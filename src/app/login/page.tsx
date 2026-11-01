@@ -27,7 +27,7 @@ export default async function LoginPage({
 }) {
   const session = await getServerAuthSession();
   const resolved = await searchParams?.catch((): { callbackUrl?: string; error?: string } => ({}));
-  const callbackUrl = resolved?.callbackUrl ?? "/tasks";
+  const callbackUrl = resolved?.callbackUrl ?? "/dashboard";
   const authError = resolved?.error;
   if (session?.user) {
     if (authError) {

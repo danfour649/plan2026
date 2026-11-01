@@ -1,13 +1,14 @@
 "use client";
 
 import { AppNavLink } from "@/components/AppNavLink";
-import { CheckboxIcon, CurrencyIcon, LightbulbIcon } from "@/components/NavIcons";
+import { CheckboxIcon, CurrencyIcon, GaugeIcon, LightbulbIcon } from "@/components/NavIcons";
 import { useNavCounts } from "@/components/NavCountsBadges";
 import type { NavCounts } from "@/lib/data-cache";
 
 type AppNavBarProps = {
   initialCounts: NavCounts;
   labels: {
+    dashboard: string;
     plans: string;
     tasks: string;
     supplies: string;
@@ -20,6 +21,18 @@ export function AppNavBar({ initialCounts, labels }: AppNavBarProps) {
   return (
     <nav className="flex min-w-0 shrink items-center gap-0 text-sm text-secondary sm:gap-4">
       <div className="flex min-w-0 shrink items-center gap-0 sm:gap-2 md:gap-3">
+        <AppNavLink
+          href="/dashboard"
+          accent="blue"
+          ariaLabel={labels.dashboard}
+          prefetch={false}
+          className="-mx-1 shrink-0 gap-0 rounded-full px-0.5 py-0.5 text-sm sm:mx-0 sm:gap-2 sm:px-3 sm:py-1.5 md:text-base"
+        >
+          <span className="inline-flex mt-0.5 sm:mt-0 sm:hidden">
+            <GaugeIcon className="h-8 w-8" />
+          </span>
+          <span className="hidden sm:inline">{labels.dashboard}</span>
+        </AppNavLink>
         <AppNavLink
           href="/plans"
           accent="blue"

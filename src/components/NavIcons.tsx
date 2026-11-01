@@ -1,4 +1,24 @@
 /** Icons for main nav (mobile: icon only; desktop: text). All 24x24 viewBox. */
+export function GaugeIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      {/* Speedometer arc + needle for the dashboard */}
+      <path d="M4.5 15.5a8 8 0 1 1 15 0" />
+      <path d="M12 15.5l4.5-4.5" />
+      <circle cx="12" cy="15.5" r="1.4" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 export function LightbulbIcon({ className }: { className?: string }) {
   return (
     <svg
