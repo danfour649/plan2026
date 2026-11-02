@@ -221,3 +221,62 @@ export const updatePlanSchema = basePlanSchema
 
 export type CreatePlanInput = z.infer<typeof createPlanSchema>;
 export type UpdatePlanInput = z.infer<typeof updatePlanSchema>;
+
+/** Fields a caller may provide in a partial plan update (e.g. an API PATCH body). */
+export interface PlanPatchFields {
+  name?: string;
+  description?: string;
+  goal?: string;
+  startAt?: string;
+  endAt?: string;
+  actualStartAt?: string;
+  actualEndAt?: string;
+  priority?: number;
+  percentCompleted?: number;
+  notes?: string;
+  color?: string;
+  imageUrl?: string;
+  status?: PlanStatus;
+}
+
+/** A plan's current field values, with dates as ISO strings. */
+export interface PlanCurrentFields {
+  name: string;
+  description?: string | null;
+  goal?: string | null;
+  startAt: string;
+  endAt: string;
+  actualStartAt?: string | null;
+  actualEndAt?: string | null;
+  priority: number;
+  percentCompleted: number;
+  notes?: string | null;
+  color?: string | null;
+  imageUrl?: string | null;
+  status: PlanStatus;
+}
+
+/**
+ * Resolve a partial plan update against the plan's current values: a field
+ * the caller omitted keeps its current value; a field the caller provided
+ * wins. The result is the complete field set updatePlanSchema expects —
+ * "missing field = no change" (see docs/task-planId-loss.md). Membership
+ * (taskIds) is deliberately not handled here; it passes through untouched.
+ */
+export function mergePlanUpdate(current: PlanCurrentFields, patch: PlanPatchFields) {
+  return {
+    name: patch.name ?? current.name,
+    description: patch.description ?? current.description ?? undefined,
+    goal: patch.goal ?? current.goal ?? undefined,
+    startAt: patch.startAt ?? current.startAt,
+    endAt: patch.endAt ?? current.endAt,
+    actualStartAt: patch.actualStartAt ?? current.actualStartAt ?? undefined,
+    actualEndAt: patch.actualEndAt ?? current.actualEndAt ?? undefined,
+    priority: patch.priority ?? current.priority,
+    percentCompleted: patch.percentCompleted ?? current.percentCompleted,
+    notes: patch.notes ?? current.notes ?? undefined,
+    color: patch.color ?? current.color ?? undefined,
+    imageUrl: patch.imageUrl ?? current.imageUrl ?? undefined,
+    status: patch.status ?? current.status,
+  };
+}

@@ -12,6 +12,7 @@ import { prisma } from "@/lib/prisma";
 import {
   createPlanSchema,
   isValidPlanId,
+  mergePlanUpdate,
   PLAN_STATUS_VALUES,
   updatePlanSchema,
 } from "@/lib/validations/plan";
@@ -147,6 +148,10 @@ const planWriteBodySchema = z.object({
   status: z.enum(PLAN_STATUS_VALUES).optional(),
 });
 
+// PATCH is a partial update: every field is optional, and an omitted field
+// leaves the plan's current value unchanged (see mergePlanUpdate).
+const planPatchBodySchema = planWriteBodySchema.partial();
+
 const listPlansRoute = createRoute({
   method: "get",
   path: "/plans",
@@ -232,7 +237,7 @@ const updatePlanRoute = createRoute({
   request: {
     params: planIdParam,
     body: {
-      content: { "application/json": { schema: planWriteBodySchema } },
+      content: { "application/json": { schema: planPatchBodySchema } },
     },
   },
   responses: {
@@ -374,26 +379,39 @@ app.openapi(updatePlanRoute, async (c) => {
     return c.json({ error: "Forbidden: only the plan owner can update" }, 403);
   }
 
+  const existing = await getPlanForUser(userId, id);
+  if (!existing) return c.json({ error: "Plan not found" }, 404);
+
   const body = c.req.valid("json");
+  // Partial update: fields the client omitted keep the plan's current
+  // values — never defaults. (A plan with no stored dates gets "" here and
+  // fails validation until the client supplies them, rather than inventing
+  // dates.) taskIds passes through untouched for the same reason: when the
+  // client omits it, the update must leave the plan's task links unchanged
+  // (not reset them to []).
+  const merged = mergePlanUpdate(
+    {
+      name: existing.name,
+      description: existing.description,
+      goal: existing.goal,
+      startAt: existing.startAt?.toISOString() ?? "",
+      endAt: existing.endAt?.toISOString() ?? "",
+      actualStartAt: existing.actualStartAt?.toISOString() ?? null,
+      actualEndAt: existing.actualEndAt?.toISOString() ?? null,
+      priority: existing.priority,
+      percentCompleted: existing.percentCompleted,
+      notes: existing.notes,
+      color: existing.color,
+      imageUrl: existing.imageUrl,
+      status: existing.status as (typeof PLAN_STATUS_VALUES)[number],
+    },
+    body,
+  );
   const parsed = updatePlanSchema.safeParse({
     planId: id,
-    name: body.name,
-    description: body.description,
-    goal: body.goal,
-    startAt: body.startAt,
-    endAt: body.endAt,
-    actualStartAt: body.actualStartAt,
-    actualEndAt: body.actualEndAt,
-    priority: body.priority ?? 4,
-    percentCompleted: body.percentCompleted ?? 0,
-    notes: body.notes,
-    color: body.color,
-    imageUrl: body.imageUrl,
-    // Pass taskIds through untouched: when the client omits it, the update
-    // must leave the plan's task links unchanged (not reset them to []).
+    ...merged,
     taskIds: body.taskIds,
     newTasks: [],
-    status: body.status ?? "draft",
   });
 
   if (!parsed.success) {
