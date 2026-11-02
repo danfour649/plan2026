@@ -8,7 +8,12 @@ import {
   getTaskForUser,
   updateTaskForUser,
 } from "@/lib/task-service";
-import { addTaskSchema, isValidTaskId, updateTaskSchema } from "@/lib/validations/task";
+import {
+  addTaskSchema,
+  isValidTaskId,
+  mergeTaskUpdate,
+  updateTaskSchema,
+} from "@/lib/validations/task";
 
 import type { ApiAuthVariables } from "@api/middleware/auth";
 import { requireBearerAuth } from "@api/middleware/auth";
@@ -194,7 +199,9 @@ const getTaskRoute = createRoute({
 });
 
 const updateTaskBodySchema = z.object({
-  title: z.string().min(1),
+  // PATCH is a partial update: every field is optional, and an omitted
+  // field leaves the task's current value unchanged (see mergeTaskUpdate).
+  title: z.string().min(1).optional(),
   content: z.string().optional(),
   dueAt: z.string().optional(),
   timeZone: z.string().optional(),
@@ -369,18 +376,31 @@ app.openapi(updateTaskRoute, async (c) => {
   const { id } = c.req.valid("param");
   if (!isValidTaskId(id)) return c.json({ error: "Task not found" }, 404);
 
+  const current = await getTaskForUser(userId, id);
+  if (!current) return c.json({ error: "Task not found" }, 404);
+
   const body = c.req.valid("json");
+  // Partial update: fields the client omitted keep the task's current
+  // values — never defaults. (Create is the only place urgency defaults
+  // to 4.) planId passes through untouched: string links, null unlinks,
+  // omitted leaves the link unchanged.
+  const merged = mergeTaskUpdate(
+    {
+      title: current.title,
+      content: current.content,
+      dueAt: current.dueAt?.toISOString() ?? null,
+      dueTimeZone: current.dueTimeZone,
+      dueAllDay: current.dueAllDay,
+      urgency: current.urgency,
+      status: current.status,
+      recurrence: current.recurrence,
+    },
+    body,
+  );
   const parsed = updateTaskSchema.safeParse({
     taskId: id,
-    title: body.title ?? "",
-    content: body.content,
-    dueAt: body.dueAt,
-    timeZone: body.timeZone,
-    dueAllDay: body.dueAllDay,
-    urgency: body.urgency ?? 4,
+    ...merged,
     planId: body.planId === null ? undefined : body.planId,
-    status: body.status,
-    recurrence: body.recurrence,
   });
 
   if (!parsed.success) {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { mergePlanUpdate, type PlanCurrentFields } from "./plan";
+import { createPlanSchema, mergePlanUpdate, type PlanCurrentFields } from "./plan";
 
 const current: PlanCurrentFields = {
   name: "MVTF6 — MVT Fredericton",
@@ -69,5 +69,34 @@ describe("mergePlanUpdate", () => {
     expect(merged.startAt).toBe("2026-12-01T00:00:00.000Z");
     expect(merged.notes).toBe("New notes");
     expect(merged.endAt).toBe(current.endAt);
+  });
+});
+
+describe("createPlanSchema status", () => {
+  const baseInput = {
+    name: "New plan",
+    startAt: "2026-11-02",
+    endAt: "2026-11-09",
+    priority: 4,
+    percentCompleted: 0,
+    taskIds: [],
+    newTasks: [],
+  };
+
+  it("defaults status to draft when omitted", () => {
+    const parsed = createPlanSchema.safeParse(baseInput);
+    expect(parsed.success).toBe(true);
+    if (parsed.success) expect(parsed.data.status).toBe("draft");
+  });
+
+  it("honors a provided status instead of dropping it", () => {
+    const parsed = createPlanSchema.safeParse({ ...baseInput, status: "started" });
+    expect(parsed.success).toBe(true);
+    if (parsed.success) expect(parsed.data.status).toBe("started");
+  });
+
+  it("rejects an unknown status", () => {
+    const parsed = createPlanSchema.safeParse({ ...baseInput, status: "bogus" });
+    expect(parsed.success).toBe(false);
   });
 });

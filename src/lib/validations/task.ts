@@ -113,3 +113,51 @@ function withParsedDue<
 
 export const addTaskSchema = taskBodySchema.transform(withParsedDue);
 export const updateTaskSchema = taskBodySchema.merge(taskIdSchema).transform(withParsedDue);
+
+/** Fields a caller may provide in a partial task update (e.g. an API PATCH body). */
+export interface TaskPatchFields {
+  title?: string;
+  content?: string;
+  dueAt?: string;
+  timeZone?: string;
+  dueAllDay?: boolean | string;
+  urgency?: number;
+  status?: TaskStatusActiveOrOnHold;
+  recurrence?: string;
+}
+
+/** A task's current field values, with dueAt as an ISO string. */
+export interface TaskCurrentFields {
+  title: string;
+  content: string | null;
+  dueAt: string | null;
+  dueTimeZone: string | null;
+  dueAllDay: boolean;
+  urgency: number;
+  status: "active" | "on_hold" | "completed";
+  recurrence: TaskRecurrenceFormValue | null;
+}
+
+/**
+ * Resolve a partial task update against the task's current values: a field
+ * the caller omitted keeps its current value; a field the caller provided
+ * wins — including an explicit "" for content/dueAt, which the update
+ * schema turns into a clear. The result is the complete field set
+ * updateTaskSchema expects — "missing field = no change" (see
+ * docs/task-planId-loss.md). planId is deliberately not handled here: the
+ * API route passes it through untouched (string = link, null = unlink,
+ * omitted = unchanged). For a completed task the returned status is a
+ * placeholder — the service keeps completed tasks completed until restore.
+ */
+export function mergeTaskUpdate(current: TaskCurrentFields, patch: TaskPatchFields) {
+  return {
+    title: patch.title ?? current.title,
+    content: patch.content ?? current.content ?? undefined,
+    dueAt: patch.dueAt ?? current.dueAt ?? undefined,
+    timeZone: patch.timeZone ?? current.dueTimeZone ?? undefined,
+    dueAllDay: patch.dueAllDay ?? current.dueAllDay,
+    urgency: patch.urgency ?? current.urgency,
+    status: patch.status ?? (current.status === "on_hold" ? "on_hold" : "active"),
+    recurrence: patch.recurrence ?? current.recurrence ?? undefined,
+  };
+}

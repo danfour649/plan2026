@@ -59,7 +59,7 @@ export async function createPlanForUser(
         endAt: planData.endAt,
         actualStartAt: planData.actualStartAt ?? null,
         actualEndAt: planData.actualEndAt ?? null,
-        status: "draft",
+        status: planData.status,
         priority: planData.priority,
         percentCompleted: planData.percentCompleted,
         notes: planData.notes ?? null,

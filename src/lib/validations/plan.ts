@@ -194,10 +194,20 @@ const basePlanSchema = z.object({
   newTasks: z.array(newPlanTaskSchema).default([]),
 });
 
-export const createPlanSchema = basePlanSchema.refine(
-  (data) => data.endAt >= data.startAt,
-  { message: "End date must be on or after start date", path: ["endAt"] },
-);
+export const createPlanSchema = basePlanSchema
+  .extend({
+    // Optional on create (defaults to "draft") so API callers can create a
+    // plan directly in another status instead of having it silently dropped.
+    status: z
+      .enum(PLAN_STATUS_VALUES, {
+        message: "Status must be draft, started, on hold, completed, or abandoned",
+      })
+      .default("draft"),
+  })
+  .refine((data) => data.endAt >= data.startAt, {
+    message: "End date must be on or after start date",
+    path: ["endAt"],
+  });
 
 export const planIdSchema = z.object({
   planId: z.string().min(1, "Plan ID is required"),
