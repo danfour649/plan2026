@@ -353,6 +353,7 @@ app.openapi(createPlanRoute, async (c) => {
     notes: body.notes,
     color: body.color,
     imageUrl: body.imageUrl,
+    status: body.status,
     taskIds: body.taskIds ?? [],
     newTasks: [],
   });
